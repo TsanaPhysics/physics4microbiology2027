@@ -1,0 +1,24 @@
+# Ignore macOS & LaTeX auxiliary files
+.DS_Store
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.idx
+*.ilg
+*.ind
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Ignore multi-hundred-MB legacy archive duplicates (>50MB binary archives)
+01_Books_and_PDFs/
+04_physics_ai_microbiology/
+05_fundamentalphysics2026/
+06_fundamental_physics_handout/
+07_Fundamental_Physics_2025_1/
+09_General_Physics_LifeSciences_LaTeX/
+03_physics4microbio2026/images/
+แผนการสอน 2027/เอกสารคำสอนและข้อสอบ/02_ฟิสิกส์สำหรับนักจุลชีววิทยา_ชีวะ_ทัศนา_ฉบับสมบูรณ์_พร้อมปก.pdf
