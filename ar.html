@@ -2,16 +2,28 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <title>กำลังเข้าสู่แอปสมาร์ทโฟน 3D WebAR ArUco — 4011111 ฟิสิกส์สำหรับจุลชีววิทยา</title>
+  <title>3D WebAR ArUco Hyper-Realistic Lab — 4011111 ฟิสิกส์สำหรับจุลชีววิทยา (v2027.3)</title>
   <script>
-    const q = window.location.search ? (window.location.search + "&v=2027.3") : "?v=2027.3";
-    const target = "แผนการสอน%202027/เอกสารคำสอน_3D_AR_ArUco/webar_aruco/ar_aruco_textbook.html" + q + window.location.hash;
-    window.location.replace(target);
+    (async function () {
+      const baseDir = "แผนการสอน%202027/เอกสารคำสอน_3D_AR_ArUco/webar_aruco/";
+      try {
+        const res = await fetch(baseDir + "ar_aruco_textbook.html?v=" + Date.now(), { cache: "no-store" });
+        let html = await res.text();
+        html = html.replace("<head>", '<head><base href="' + baseDir + '" />');
+        html = html.replace("</body>", '<script src="ar_scanner_v3.js?v=2027.3"><\/script></body>');
+        document.open();
+        document.write(html);
+        document.close();
+      } catch (e) {
+        const q = window.location.search ? (window.location.search + "&v=2027.3") : "?v=2027.3";
+        window.location.replace(baseDir + "ar_aruco_textbook.html" + q + window.location.hash);
+      }
+    })();
   </script>
 </head>
 <body style="background:#020617;color:#38bdf8;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;">
-  <p>กำลังเปิดแอปพลิเคชัน 3D WebAR + ArUco Scanner (v2027.3)... <a href="แผนการสอน%202027/เอกสารคำสอน_3D_AR_ArUco/webar_aruco/ar_aruco_textbook.html?v=2027.3" style="color:#10b981;">คลิกที่นี่หากไม่เปลี่ยนหน้าอัตโนมัติ</a></p>
+  <p>กำลังเปิดระบบ 3D WebAR + Multi-Scale ArUco Scanner (v2027.3)...</p>
 </body>
 </html>
