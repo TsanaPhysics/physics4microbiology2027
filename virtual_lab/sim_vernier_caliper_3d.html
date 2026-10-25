@@ -930,7 +930,7 @@
       camera = new THREE.PerspectiveCamera(38, rect.width / rect.height, 1, 2000);
       camera.position.set(85, 22, 195);
 
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(rect.width, rect.height);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -938,6 +938,14 @@
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       mount.appendChild(renderer.domElement);
+
+      window.captureSimulatorScreenshot = function() {
+        if (renderer && scene && camera) {
+          renderer.render(scene, camera);
+          return renderer.domElement.toDataURL('image/png');
+        }
+        return null;
+      };
 
       scene.environment = createStudioEnvMap(renderer);
 

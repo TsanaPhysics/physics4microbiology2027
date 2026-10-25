@@ -1,0 +1,2691 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Micrometer Simulator (0–25 mm) | จำลองการใช้งานไมโครมิเตอร์วัดนอก 3 มิติ</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Prompt (Thai UI) & JetBrains Mono (Metrology Figures) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Three.js & OrbitControls CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            lab: {
+              950: '#050911',
+              900: '#0b1220',
+              850: '#111b2e',
+              800: '#182640',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: #050911;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+
+    input[type="number"], input[type="text"] {
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    /* Custom Precision Slider */
+    input[type="range"].mic-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, #1e293b 0%, #334155 100%);
+      border-radius: 999px;
+      outline: none;
+      border: 1px solid #475569;
+    }
+    input[type="range"].mic-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      border: 2px solid #f8fafc;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.55);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    input[type="range"].mic-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.12);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.85);
+    }
+    input[type="range"].mic-slider:disabled::-webkit-slider-thumb {
+      background: #64748b;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b1220;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    /* 3D Anatomical Callout Pins */
+    .part-pin {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+      z-index: 20;
+      transition: opacity 0.2s ease;
+    }
+    .part-pin-tooltip {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(6px);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .part-pin:hover .part-pin-tooltip,
+    .part-pin.active .part-pin-tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    @keyframes clickPop {
+      0% { transform: scale(0.85); opacity: 0; }
+      35% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); opacity: 0; }
+    }
+    .ratchet-pop {
+      animation: clickPop 0.55s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen lg:h-screen flex flex-col bg-lab-950 text-slate-100">
+
+  <!-- ==================== TOP HEADER BAR ==================== -->
+  <header class="shrink-0 h-auto sm:h-14 px-3 sm:px-5 py-2 sm:py-0 bg-lab-900/95 border-b border-slate-800/90 flex flex-wrap items-center justify-between gap-2 z-30 backdrop-blur-md">
+    <!-- Brand & Title -->
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/20 shrink-0">
+        <!-- Micrometer Icon SVG -->
+        <svg class="w-5 h-5 text-slate-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 7v4a6 6 0 0 0 12 0V7"/>
+          <line x1="4" y1="8" x2="7" y2="8"/>
+          <line x1="11" y1="8" x2="21" y2="8"/>
+          <rect x="16" y="6" width="4" height="4" rx="0.8"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-sm sm:text-base font-bold tracking-tight text-white flex items-center gap-2">
+          <span>3D Micrometer Simulator</span>
+          <span class="hidden md:inline-block text-[11px] font-mono font-semibold px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30">0–25 mm</span>
+        </h1>
+        <p class="text-[11px] text-slate-400 leading-tight">จำลองการใช้งานและการอ่านค่าไมโครมิเตอร์วัดนอก 3 มิติ</p>
+      </div>
+    </div>
+
+    <!-- Mode Switcher, Sound Toggle & Guide -->
+    <div class="flex items-center gap-2 ml-auto sm:ml-0">
+      <div class="inline-flex p-1 rounded-xl bg-slate-950 border border-slate-800">
+        <button id="btnModeLearn" onclick="setAppMode('learn')" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          <span>โหมดเรียนรู้</span>
+        </button>
+        <button id="btnModeQuiz" onclick="setAppMode('quiz')" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 text-slate-400 hover:text-white">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span>โหมดฝึกทำโจทย์</span>
+        </button>
+      </div>
+
+      <!-- Sound Toggle -->
+      <button id="btnSoundToggle" onclick="toggleSound()" class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-sky-300 border border-slate-700/80 transition" title="เปิด/ปิดเสียงคลิก Ratchet Stop">
+        <span id="soundIcon" class="text-xs leading-none">🔊</span>
+      </button>
+
+      <!-- Guide Button -->
+      <button onclick="toggleHelpModal(true)" class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/80 transition" title="คู่มือการอ่านค่าไมโครมิเตอร์">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN WORKSPACE ==================== -->
+  <main class="flex-1 lg:overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+
+    <!-- ==================== LEFT/CENTER: 3D VIEWPORT + 2D MAGNIFIER ==================== -->
+    <section class="lg:col-span-8 flex flex-col lg:h-full border-b lg:border-b-0 lg:border-r border-slate-800/90 overflow-hidden">
+
+      <!-- 3D Viewport Container -->
+      <div id="viewportContainer" class="relative flex-1 min-h-[340px] sm:min-h-[410px] lg:min-h-0 bg-gradient-to-b from-lab-900 via-lab-950 to-lab-900 overflow-hidden">
+        <!-- Three.js Canvas Mount -->
+        <div id="threeMount" class="w-full h-full"></div>
+
+        <!-- Top Overlay: Camera Presets & 3D Callout Toggle -->
+        <div class="absolute top-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 pointer-events-none z-20">
+          <div class="flex flex-wrap items-center gap-1.5 pointer-events-auto bg-slate-950/80 backdrop-blur-md p-1.5 rounded-xl border border-slate-800/90 shadow-lg">
+            <span class="text-[10px] uppercase tracking-wider text-slate-400 px-1.5 font-semibold hidden sm:inline">มุมกล้อง:</span>
+            <button onclick="setCameraPreset('default')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-800/90 hover:bg-sky-500/20 hover:text-sky-300 text-slate-200 border border-slate-700/70 transition">มุมมองปกติ</button>
+            <button onclick="setCameraPreset('scale')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-800/90 hover:bg-sky-500/20 hover:text-sky-300 text-slate-200 border border-slate-700/70 transition">ซูมสเกลปลอกหมุน</button>
+            <button onclick="setCameraPreset('jaws')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-800/90 hover:bg-sky-500/20 hover:text-sky-300 text-slate-200 border border-slate-700/70 transition">ซูมปากวัด & ชิ้นงาน</button>
+            <button onclick="setCameraPreset('top')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-800/90 hover:bg-sky-500/20 hover:text-sky-300 text-slate-200 border border-slate-700/70 transition">ด้านบน</button>
+          </div>
+
+          <div class="flex items-center gap-1.5 pointer-events-auto">
+            <button id="btnToggleLabels" onclick="togglePartLabels()" class="px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/40 backdrop-blur-md hover:bg-sky-500/30 transition flex items-center gap-1.5 shadow-lg">
+              <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+              <span>ป้ายส่วนประกอบ</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Visual Ratchet "CLICK!" Pop Indicator -->
+        <div id="ratchetPopBadge" class="hidden pointer-events-none absolute top-16 right-6 z-30 px-3.5 py-1.5 rounded-full bg-emerald-500/25 border border-emerald-400/70 text-emerald-200 font-mono text-xs font-bold shadow-xl backdrop-blur-md">
+          🔊 CLICK! (แรงกดวัดพอดี)
+        </div>
+
+        <!-- Bottom Overlay: Interactive Hints & Status Badges -->
+        <div class="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 pointer-events-none z-20">
+          <div class="px-3 py-1.5 rounded-xl bg-slate-950/75 backdrop-blur-md border border-slate-800/80 text-[11px] text-slate-300 flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-sky-400"></span>
+            <span>ลากขึ้น/ลงที่ <strong class="text-sky-300">ปลอกหมุน (Thimble)</strong> เพื่อหมุนวัด • คลิก <strong class="text-emerald-300">Ratchet</strong> เพื่อตึงมือ • Scroll เมาส์ปรับละเอียด</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div id="badgeContact" class="hidden px-3 py-1 rounded-xl bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[11px] font-semibold backdrop-blur-md shadow-lg">
+              ✓ สัมผัสผิววัดพอดี (Contact)
+            </div>
+            <div id="badgeLocked" class="hidden px-3 py-1 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[11px] font-semibold backdrop-blur-md shadow-lg">
+              🔒 ล็อกแกนวัดอยู่ (Spindle Locked)
+            </div>
+          </div>
+        </div>
+
+        <!-- 3D Anatomical Callout Pins Overlay -->
+        <div id="labelsOverlay" class="absolute inset-0 pointer-events-none overflow-hidden z-10"></div>
+
+        <!-- Toast Feedback Banner -->
+        <div id="toastBanner" class="pointer-events-none opacity-0 transition-all duration-300 transform -translate-y-2 absolute top-16 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-xl bg-slate-900/95 border border-sky-500/40 text-xs font-medium text-sky-200 shadow-2xl">
+          แจ้งเตือนระบบ
+        </div>
+      </div>
+
+      <!-- ==================== 2D SYNCHRONIZED HIGH-PRECISION SCALE MAGNIFIER ==================== -->
+      <div class="shrink-0 bg-lab-900 border-t border-slate-800 px-3 sm:px-4 py-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="p-1 rounded-lg bg-sky-500/15 text-sky-400 border border-sky-500/30">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            </span>
+            <div>
+              <h2 class="text-xs font-bold text-slate-100 flex items-center gap-2">
+                <span>แว่นขยายอ่านค่าสเกล 2 มิติ (Synchronized Sleeve & Thimble Magnifier)</span>
+                <span class="hidden md:inline text-[10px] font-normal text-slate-400">— ลากขึ้น/ลงบนปลอกหมุนขวาเพื่อหมุนปรับค่าได้ทันที</span>
+              </h2>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 text-[11px]">
+            <button id="btnToggleGuides" onclick="toggleReadingGuides()" class="px-2.5 py-1 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 font-medium transition">
+              เส้นช่วยอ่านค่า: เปิด
+            </button>
+            <button id="btnLoupeZoom" onclick="toggleLoupeZoom()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-mono text-[11px] transition">
+              ซูม: 1.0x
+            </button>
+          </div>
+        </div>
+
+        <!-- Crisp 2D Unwrapped/Projected Micrometer Scale Canvas -->
+        <div class="relative w-full h-[168px] sm:h-[178px] rounded-xl overflow-hidden border border-slate-700/80 shadow-inner bg-slate-950">
+          <canvas id="loupeCanvas" class="w-full h-full block cursor-ns-resize"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== RIGHT SIDEBAR: READOUT, QUIZ & TABBED LAB CONTROLS ==================== -->
+    <aside class="lg:col-span-4 lg:h-full lg:overflow-y-auto p-3.5 sm:p-4 space-y-3.5 bg-lab-950/95">
+
+      <!-- 1A. LEARNING MODE: DIGITAL READOUT & STEP-BY-STEP FORMULA CARD -->
+      <div id="panelLearnReadout" class="p-3.5 rounded-2xl bg-gradient-to-br from-slate-900 to-lab-900 border border-slate-800 shadow-xl space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+            ค่าที่อ่านได้สุทธิ (Total Reading)
+          </span>
+          <span id="badgeResolutionTop" class="font-mono text-[11px] px-2 py-0.5 rounded-md bg-sky-500/15 text-sky-300 border border-sky-500/30">
+            Res: 0.01 mm
+          </span>
+        </div>
+
+        <!-- Primary Digital Figure -->
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800/90 flex items-baseline justify-between">
+          <div>
+            <div class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Millimeters (มิลลิเมตร)</div>
+            <div id="readoutMM" class="font-mono text-2xl sm:text-3xl font-bold text-sky-300 tracking-tight">4.78 <span class="text-sm font-normal text-slate-400">mm</span></div>
+          </div>
+          <div class="text-right">
+            <div class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Micrometers (ไมครอน)</div>
+            <div id="readoutUM" class="font-mono text-base font-semibold text-emerald-300">4,780 <span class="text-xs font-normal text-slate-400">µm</span></div>
+          </div>
+        </div>
+
+        <!-- Step-by-Step Metrology Breakdown -->
+        <div id="breakdownRowsContainer" class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1.5 text-xs">
+          <div class="flex justify-between items-center text-slate-300">
+            <span>1. สเกลหลักบนปลอก <span class="text-sky-400 font-medium">(SR)</span></span>
+            <span id="bdSleeve" class="font-mono font-semibold text-sky-300">4.50 mm</span>
+          </div>
+          <div class="flex justify-between items-center text-slate-300">
+            <span>2. สเกลปลอกหมุน <span class="text-emerald-400 font-medium">(TR: <span id="bdThimbleIdx">28</span> × 0.01)</span></span>
+            <span id="bdThimble" class="font-mono font-semibold text-emerald-300">+ 0.28 mm</span>
+          </div>
+          <div id="rowVernierBreakdown" class="hidden justify-between items-center text-slate-300">
+            <span>3. สเกลเวอร์เนียร์ <span class="text-fuchsia-400 font-medium">(VR: <span id="bdVernierIdx">0</span> × 0.001)</span></span>
+            <span id="bdVernier" class="font-mono font-semibold text-fuchsia-300">+ 0.000 mm</span>
+          </div>
+          <div class="flex justify-between items-center text-slate-300 border-b border-slate-800 pb-1.5">
+            <span>ชดเชยค่าศูนย์ <span class="text-amber-400 font-medium">(− Zero Error)</span></span>
+            <span id="bdZeroError" class="font-mono font-semibold text-amber-300">− (0.00 mm)</span>
+          </div>
+          <div class="pt-0.5 flex justify-between items-center font-semibold text-[11px] text-slate-200">
+            <span id="bdFormulaLabel" class="font-mono text-slate-400">SR + TR − ZE</span>
+            <span id="bdEquation" class="font-mono text-white text-right">4.50 + 0.28 − 0.00 = 4.78 mm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1B. QUIZ MODE: CHALLENGE & ANSWER SUBMISSION CARD -->
+      <div id="panelQuizCard" class="hidden p-3.5 rounded-2xl bg-gradient-to-br from-indigo-950/60 via-slate-900 to-lab-900 border border-indigo-500/40 shadow-xl space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
+            <span>🎯 โหมดฝึกทำโจทย์วัดผล (Quiz Mode)</span>
+          </span>
+          <div class="flex items-center gap-2 font-mono text-xs">
+            <span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">คะแนน: <strong id="quizScore">0/0</strong></span>
+            <span class="px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30">🔥 <strong id="quizStreak">0</strong></span>
+          </div>
+        </div>
+
+        <!-- Quiz Type & Difficulty Row -->
+        <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800 text-[11px]">
+          <button id="btnQuizTypeScale" onclick="setQuizType('scale')" class="py-1.5 px-2 rounded-lg font-semibold bg-indigo-500 text-white transition">อ่านค่าจากสเกลล็อก</button>
+          <button id="btnQuizTypeObject" onclick="setQuizType('object')" class="py-1.5 px-2 rounded-lg font-semibold text-slate-400 hover:text-white transition">หมุนวัดชิ้นงานปริศนา</button>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] bg-slate-950/70 px-2.5 py-1.5 rounded-xl border border-slate-800">
+          <label class="flex items-center gap-1.5 text-slate-300 cursor-pointer">
+            <input id="chkQuizIncludeZE" type="checkbox" onchange="generateNewQuizQuestion()" class="rounded border-slate-600 bg-slate-900 text-indigo-500" />
+            <span>สุ่มโจทย์แบบมี Zero Error</span>
+          </label>
+          <span id="quizResBadge" class="font-mono text-sky-300">ความละเอียด 0.01 mm</span>
+        </div>
+
+        <div id="quizPromptText" class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 leading-relaxed">
+          อ่านค่าจากสเกลไมโครมิเตอร์แล้วกรอกคำตอบในหน่วย <strong>mm</strong>
+        </div>
+
+        <!-- Answer Input -->
+        <div class="flex gap-2">
+          <div class="relative flex-1">
+            <input id="quizInput" type="number" step="0.001" placeholder="เช่น 6.35" onkeydown="if(event.key==='Enter') submitQuizAnswer()" class="w-full px-3 py-2 pr-11 rounded-xl bg-slate-950 border border-slate-700 focus:border-sky-400 focus:outline-none font-mono text-sm text-white" />
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono text-slate-400">mm</span>
+          </div>
+          <button id="btnSubmitQuiz" onclick="submitQuizAnswer()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-sky-500/20 transition shrink-0">
+            ตรวจคำตอบ
+          </button>
+        </div>
+
+        <button onclick="generateNewQuizQuestion()" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-1.5">
+          <span>🎲 สุ่มโจทย์ข้อถัดไป (Next Challenge)</span>
+        </button>
+
+        <!-- Step-by-Step Worked Solution Box -->
+        <div id="quizFeedbackBox" class="hidden p-3 rounded-xl border text-xs space-y-1.5"></div>
+      </div>
+
+      <!-- ==================== TABBED CONTROL SIDEBAR ==================== -->
+      <div class="rounded-2xl bg-slate-900/90 border border-slate-800 overflow-hidden shadow-lg">
+        <!-- Tab Headers -->
+        <div class="grid grid-cols-3 bg-slate-950 border-b border-slate-800 p-1 gap-1 text-[11px] font-semibold">
+          <button id="tabBtnControl" onclick="switchSidebarTab('control')" class="py-2 rounded-xl bg-slate-800 text-sky-300 shadow transition">
+            🎛️ ควบคุม & ชิ้นงาน
+          </button>
+          <button id="tabBtnMetrology" onclick="switchSidebarTab('metrology')" class="py-2 rounded-xl text-slate-400 hover:text-white transition">
+            ⚙️ ความละเอียด & ศูนย์
+          </button>
+          <button id="tabBtnTheory" onclick="switchSidebarTab('theory')" class="py-2 rounded-xl text-slate-400 hover:text-white transition">
+            📐 สูตร & วิธีใช้
+          </button>
+        </div>
+
+        <!-- TAB 1: SPINDLE CONTROL, RATCHET & SAMPLE OBJECTS -->
+        <div id="tabPanelControl" class="p-3.5 space-y-3.5">
+          <!-- Spindle / Thimble Control -->
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-200">หมุนปรับแกนวัด (Spindle Travel)</span>
+              <span id="spindleGapHint" class="font-mono text-[11px] text-slate-400">ระยะปากวัด: 4.78 mm</span>
+            </div>
+
+            <div>
+              <input id="mainRangeSlider" type="range" min="0" max="25" step="0.01" value="4.78" class="mic-slider" oninput="onSliderInput(this.value)" />
+              <div class="flex justify-between font-mono text-[10px] text-slate-500 mt-1">
+                <span>0 mm</span>
+                <span>5</span>
+                <span>10</span>
+                <span>15</span>
+                <span>20</span>
+                <span>25 mm</span>
+              </div>
+            </div>
+
+            <!-- Fine & Coarse Step Buttons -->
+            <div class="grid grid-cols-4 gap-1.5">
+              <button onclick="stepMicrometer(-0.50)" class="py-1.5 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 border border-slate-700 font-mono text-xs text-slate-200 transition" title="หมุนปิด 1 รอบเต็ม">-0.50</button>
+              <button id="btnStepMinusFine" onclick="stepByLeastCount(-1)" class="py-1.5 px-2 rounded-xl bg-slate-800 hover:bg-sky-500/20 hover:border-sky-500/40 active:scale-95 border border-slate-700 font-mono text-xs text-sky-300 transition">-0.01</button>
+              <button id="btnStepPlusFine" onclick="stepByLeastCount(1)" class="py-1.5 px-2 rounded-xl bg-slate-800 hover:bg-sky-500/20 hover:border-sky-500/40 active:scale-95 border border-slate-700 font-mono text-xs text-sky-300 transition">+0.01</button>
+              <button onclick="stepMicrometer(0.50)" class="py-1.5 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 border border-slate-700 font-mono text-xs text-slate-200 transition" title="หมุนเปิด 1 รอบเต็ม">+0.50</button>
+            </div>
+
+            <!-- Ratchet Auto-Tighten & Spindle Lock -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 pt-0.5">
+              <button onclick="runRatchetMeasure()" class="sm:col-span-7 py-2 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-sm">
+                <span>🔊 หมุน Ratchet จนตึงมือ (3 คลิก!)</span>
+              </button>
+              <button id="btnLockToggle" onclick="toggleSpindleLock()" class="sm:col-span-5 py-2 px-3 rounded-xl bg-slate-800 hover:bg-amber-500/20 border border-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-1.5">
+                <span id="lockBtnIcon">🔓</span>
+                <span id="lockBtnLabel">ล็อกแกนวัด</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Sample Objects Section -->
+          <div class="pt-3 border-t border-slate-800 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-200">ชิ้นงานตัวอย่างทดลองวัด (Sample Objects)</span>
+              <button id="btnRandomMystery" onclick="randomizeCurrentSample()" class="hidden text-[10px] px-2 py-0.5 rounded-lg bg-sky-500/15 text-sky-300 border border-sky-500/30 hover:bg-sky-500/25 transition">
+                🔄 สุ่มขนาดใหม่
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-1.5 text-[11px]">
+              <button data-obj="none" onclick="selectSampleObject('none')" class="obj-btn py-2 px-2.5 rounded-xl border text-left font-medium transition bg-sky-500/20 border-sky-500/50 text-sky-200">
+                ✕ ไม่มีชิ้นงาน (เช็คศูนย์)
+              </button>
+              <button data-obj="wire" onclick="selectSampleObject('wire')" class="obj-btn py-2 px-2.5 rounded-xl border text-left font-medium transition bg-slate-950/70 border-slate-800 text-slate-300 hover:border-slate-600">
+                🟠 ลวดทองแดงอาบน้ำยา
+              </button>
+              <button data-obj="slide" onclick="selectSampleObject('slide')" class="obj-btn py-2 px-2.5 rounded-xl border text-left font-medium transition bg-slate-950/70 border-slate-800 text-slate-300 hover:border-slate-600">
+                🧪 กระจกสไลด์จุลทรรศน์
+              </button>
+              <button data-obj="coverslip" onclick="selectSampleObject('coverslip')" class="obj-btn py-2 px-2.5 rounded-xl border text-left font-medium transition bg-slate-950/70 border-slate-800 text-slate-300 hover:border-slate-600">
+                📄 แผ่นกระจกปิดสไลด์
+              </button>
+              <button data-obj="ball" onclick="selectSampleObject('ball')" class="obj-btn py-2 px-2.5 rounded-xl border text-left font-medium transition bg-slate-950/70 border-slate-800 text-slate-300 hover:border-slate-600">
+                ⚪ ลูกปืนเหล็กกล้า
+              </button>
+              <button data-obj="gauge" onclick="selectSampleObject('gauge')" class="obj-btn py-2 px-2.5 rounded-xl border text-left font-medium transition bg-slate-950/70 border-slate-800 text-slate-300 hover:border-slate-600">
+                🟨 แท่งเกจบล็อกมาตรฐาน
+              </button>
+              <button data-obj="mystery" onclick="selectSampleObject('mystery')" class="obj-btn col-span-2 py-2 px-2.5 rounded-xl border text-center font-semibold transition bg-slate-950/70 border-slate-800 text-indigo-300 hover:border-indigo-500/50">
+                🎲 สุ่มขนาดชิ้นงานทรงกระบอกปริศนา (Mystery Cylinder)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: METROLOGY RESOLUTION & ZERO ERROR -->
+        <div id="tabPanelMetrology" class="hidden p-3.5 space-y-4">
+          <!-- Resolution Selector -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-semibold text-slate-200">ความละเอียดไมโครมิเตอร์ (Resolution)</label>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button id="btnRes001" onclick="setResolution(0.01)" class="p-2.5 rounded-xl border text-left transition bg-sky-500/20 border-sky-500/50 text-sky-200">
+                <div class="font-mono text-sm font-bold">0.01 mm</div>
+                <div class="text-[10px] text-slate-300 mt-0.5">ไมโครมิเตอร์มาตรฐาน (SR + TR)</div>
+              </button>
+              <button id="btnRes0001" onclick="setResolution(0.001)" class="p-2.5 rounded-xl border text-left transition bg-slate-950 border-slate-800 text-slate-400 hover:text-white">
+                <div class="font-mono text-sm font-bold">0.001 mm</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">มีสเกลเวอร์เนียร์บนปลอก (+VR)</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Zero Error Simulator -->
+          <div class="pt-3 border-t border-slate-800 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-semibold text-slate-200">จำลองค่าความคลาดเคลื่อนศูนย์ (Zero Error)</label>
+              <span id="zeroErrorBadge" class="font-mono text-xs font-semibold text-amber-300">0.00 mm</span>
+            </div>
+
+            <!-- Preset Buttons -->
+            <div class="grid grid-cols-5 gap-1 font-mono text-[11px]">
+              <button onclick="setZeroError(-0.05)" class="ze-btn py-1.5 rounded-lg border bg-slate-950 border-slate-800 text-slate-300 hover:border-amber-400/50 transition">-0.05</button>
+              <button onclick="setZeroError(-0.03)" class="ze-btn py-1.5 rounded-lg border bg-slate-950 border-slate-800 text-slate-300 hover:border-amber-400/50 transition">-0.03</button>
+              <button onclick="setZeroError(0.00)" class="ze-btn py-1.5 rounded-lg border bg-amber-500/25 border-amber-400/60 text-amber-200 font-bold transition">0.00</button>
+              <button onclick="setZeroError(0.02)" class="ze-btn py-1.5 rounded-lg border bg-slate-950 border-slate-800 text-slate-300 hover:border-amber-400/50 transition">+0.02</button>
+              <button onclick="setZeroError(0.04)" class="ze-btn py-1.5 rounded-lg border bg-slate-950 border-slate-800 text-slate-300 hover:border-amber-400/50 transition">+0.04</button>
+            </div>
+
+            <!-- Fine Zero Error Slider -->
+            <div>
+              <input id="zeroErrorSlider" type="range" min="-0.06" max="0.06" step="0.01" value="0" class="mic-slider" oninput="setZeroError(parseFloat(this.value))" />
+              <div class="flex justify-between font-mono text-[10px] text-slate-500 mt-1">
+                <span>-0.06 mm (ลบ)</span>
+                <span>0.00</span>
+                <span>+0.06 mm (บวก)</span>
+              </div>
+            </div>
+
+            <div id="zeroErrorExplainBox" class="p-2.5 rounded-xl bg-slate-950/90 border border-slate-800 text-[11px] text-slate-300 leading-relaxed">
+              ขีด <code class="text-sky-300">0</code> บนปลอกหมุนตรงกับเส้นอ้างอิงพอดีเมื่อทั่งรับและแกนวัดสัมผัสกัน (ไม่มีความคลาดเคลื่อนศูนย์)
+            </div>
+
+            <button onclick="inspectZeroPoint()" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 transition">
+              🔍 นำชิ้นงานออก & หมุนปิดเช็คจุดศูนย์ (Check Zero)
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 3: QUICK PRINCIPLES & METROLOGY SUMMARY -->
+        <div id="tabPanelTheory" class="hidden p-3.5 space-y-3 text-xs text-slate-300 leading-relaxed">
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+            <div class="font-bold text-sky-300">กลไกเกลียวไมโครมิเตอร์ (Lead Screw Pitch)</div>
+            <p class="text-[11px] text-slate-400">
+              ระยะพิตช์เกลียว = <strong class="text-slate-200">0.50 mm ต่อการหมุน 1 รอบ (360°)</strong> รอบปลอกหมุนแบ่งเป็น 50 ช่องเท่ากัน จึงอ่านละเอียดช่องละ <code class="text-emerald-300">0.50 ÷ 50 = 0.01 mm</code>
+            </p>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+            <div class="font-bold text-amber-300">การชดเชย Zero Error (ZE)</div>
+            <ul class="list-disc list-inside text-[11px] text-slate-400 space-y-1">
+              <li><strong class="text-slate-200">ค่าศูนย์บวก (+ZE):</strong> ปิดแกนวัดสนิทแล้วขีด 0 อยู่<em>ต่ำกว่า</em>เส้นอ้างอิง → อ่านค่าได้มากกว่าจริง ต้องลบออก</li>
+              <li><strong class="text-slate-200">ค่าศูนย์ลบ (-ZE):</strong> ปิดแกนวัดสนิทแล้วขีด 0 เลย<em>สูงกว่า</em>เส้นอ้างอิง → อ่านค่าได้น้อยกว่าจริง ลบด้วยค่าลบจึงเป็นการบวกเพิ่ม</li>
+            </ul>
+          </div>
+
+          <button onclick="toggleHelpModal(true)" class="w-full py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 text-sky-300 font-semibold text-xs transition">
+            📘 เปิดคู่มือขั้นตอนการอ่านค่าแบบละเอียด
+          </button>
+        </div>
+      </div>
+
+    </aside>
+  </main>
+
+  <!-- ==================== FULL EDUCATIONAL GUIDE MODAL ==================== -->
+  <div id="helpModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
+    <div class="max-w-2xl w-full rounded-2xl bg-lab-900 border border-slate-700 shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <span class="text-sky-400">📘</span> หลักการใช้และอ่านค่าไมโครมิเตอร์วัดนอก (Outside Micrometer Guide)
+        </h3>
+        <button onclick="toggleHelpModal(false)" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">✕</button>
+      </div>
+
+      <div class="p-5 space-y-4 text-xs sm:text-sm text-slate-300 max-h-[75vh] overflow-y-auto leading-relaxed">
+        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <h4 class="font-bold text-sky-300">ขั้นตอนการอ่านค่าไมโครมิเตอร์ (0.01 mm & 0.001 mm)</h4>
+          <ol class="list-decimal list-inside space-y-1.5">
+            <li><strong class="text-white">สเกลหลักบนปลอก (Sleeve Reading - SR):</strong> ดูขีดมิลลิเมตรเต็มด้านบนเส้นอ้างอิง (Datum Line) และสังเกตว่าขีดครึ่งมิลลิเมตร (<code class="text-sky-300">0.50 mm</code>) ด้านล่างโผล่พ้นขอบปลอกหมุนออกมาหรือยัง</li>
+            <li><strong class="text-white">สเกลปลอกหมุน (Thimble Reading - TR):</strong> ดูขีดบนปลอกหมุนที่ตรงกับเส้นอ้างอิง (หรืออยู่ต่ำกว่าเส้นอ้างอิงเล็กน้อยเมื่ออยู่ในโหมด 0.001 mm) แล้วคูณด้วย <code class="text-emerald-300">0.01 mm</code></li>
+            <li><strong class="text-white">สเกลเวอร์เนียร์ช่วยอ่าน (Vernier Reading - VR, เฉพาะรุ่น 0.001 mm):</strong> ดูขีดแนวนอนด้านบนปลอกสเกลหลัก (เลข 0–10) ว่าขีดใดตรงกับขีดบนปลอกหมุนมากที่สุด แล้วคูณด้วย <code class="text-fuchsia-300">0.001 mm</code></li>
+            <li><strong class="text-white">หักลบค่าความคลาดเคลื่อนศูนย์ (Zero Error - ZE):</strong></li>
+          </ol>
+          <div class="mt-2 p-2.5 rounded-lg bg-sky-500/10 border border-sky-500/30 font-mono text-center text-sky-200 font-semibold">
+            ค่าที่วัดได้สุทธิ = SR + TR + VR − Zero Error
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="font-bold text-emerald-300 mb-1">ทำไมต้องหมุนที่ Ratchet Stop?</div>
+            <p class="text-slate-400">เมื่อแกนวัดใกล้สัมผัสชิ้นงาน ต้องเปลี่ยนมาหมุนที่หัวหมุนกระทบเลื่อน (Ratchet Stop) จนได้ยินเสียง <strong>"คลิก! คลิก! คลิก!"</strong> ประมาณ 2–3 ครั้ง เพื่อควบคุมแรงกดวัดให้สม่ำเสมอและไม่ทำให้เกลียวหรือชิ้นงานเสียรูป</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="font-bold text-amber-300 mb-1">การควบคุมในโปรแกรมจำลอง</div>
+            <p class="text-slate-400">ลากเมาส์ขึ้น/ลงบนปลอกหมุนทั้งในจอ 3 มิติและจอแว่นขยาย 2 มิติ, หมุนลูกกลิ้งเมาส์ (Scroll Wheel) เพื่อขยับทีละช่องละเอียด หรือกดปุ่มลูกศร <kbd class="px-1.5 py-0.5 bg-slate-800 rounded">↑</kbd> <kbd class="px-1.5 py-0.5 bg-slate-800 rounded">↓</kbd> บนคีย์บอร์ด</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-5 py-3 bg-slate-900 border-t border-slate-800 flex justify-end">
+        <button onclick="toggleHelpModal(false)" class="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition">เข้าใจแล้ว เริ่มทดลองวัด</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CORE METROLOGY, AUDIO & 3D SCRIPT ==================== -->
+  <script>
+    // Include full 3D Micrometer script logic as provided
+    const SAMPLE_CATALOG = {
+      none: { name: 'ไม่มีชิ้นงาน (ตรวจสอบศูนย์)', default01: 0.00, default001: 0.000 },
+      wire: { name: 'ลวดทองแดงอาบน้ำยา (Enamel Copper Wire)', default01: 1.24, default001: 1.246 },
+      slide: { name: 'กระจกสไลด์จุลทรรศน์ (Microscope Glass Slide)', default01: 1.12, default001: 1.124 },
+      coverslip: { name: 'แผ่นกระจกปิดสไลด์ (Cover Slip)', default01: 0.17, default001: 0.173 },
+      ball: { name: 'ลูกปืนเหล็กกล้า (Steel Ball Bearing)', default01: 6.35, default001: 6.350 },
+      gauge: { name: 'แท่งเกจบล็อกมาตรฐาน (Gauge Block)', default01: 12.50, default001: 12.500 },
+      mystery: { name: 'ชิ้นงานทรงกระบอกปริศนา (Mystery Cylinder)', default01: 8.43, default001: 8.437 }
+    };
+
+    const state = {
+      appMode: 'learn',
+      resolution: 0.01,
+      zeroError: 0.00,
+      physicalOpening: 4.78,
+      autoTargetOpening: null,
+      ratchetClicksPending: 0,
+      isLocked: false,
+      soundEnabled: true,
+      showLabels: true,
+      showReadingGuides: true,
+      loupeZoom: 1.0,
+      sampleType: 'none',
+      sampleSize: 0.00,
+      quizType: 'scale',
+      quizAnswered: false,
+      quizExpectedAnswer: 0,
+      quizScoreRight: 0,
+      quizScoreTotal: 0,
+      quizStreak: 0
+    };
+
+    const MAX_MM = 25.0;
+    const PITCH_MM = 0.50;
+    const SLEEVE_START_X = 39.5;
+    const SLEEVE_ZERO_X = 44.0;
+    const SLEEVE_LEN = 33.5;
+    const R_SLEEVE = 5.6;
+
+    let scene, camera, renderer, controls;
+    let spindleGroup, thimbleGroup, ratchetGroup, lockLeverGroup, sampleGroup;
+    let framePlaqueTexture, sleeveTexture, thimbleTexture;
+    let framePlaqueCanvas, sleeveCanvas, thimbleCanvas;
+    let thimbleInteractMeshes = [];
+    let ratchetInteractMeshes = [];
+    let lockInteractMeshes = [];
+
+    let ratchetSlipOffsetRad = 0;
+    let ratchetTargetSlipRad = 0;
+
+    const camTween = {
+      active: false,
+      pos: new THREE.Vector3(),
+      target: new THREE.Vector3()
+    };
+
+    const ANATOMY_PARTS = [
+      {
+        id: 'c_frame',
+        num: '1',
+        th: 'โครงไมโครมิเตอร์',
+        en: 'C-Frame & Heat Insulator',
+        desc: 'โครงเหล็กหล่อรูปตัว C แข็งแรงสูง พร้อมแผ่นฉนวนกันความร้อนจากมือผู้วัดเพื่อลดการขยายตัวทางความร้อน',
+        getPos: () => new THREE.Vector3(13, -24.5, 4.2)
+      },
+      {
+        id: 'anvil',
+        num: '2',
+        th: 'ทั่งรับ',
+        en: 'Anvil (Carbide Tipped)',
+        desc: 'แป้นรับชิ้นงานด้านซ้ายที่อยู่นิ่ง เสริมผิวหน้าด้วยทังสเตนคาร์ไบด์ขัดเรียบทนการสึกหรอ',
+        getPos: () => new THREE.Vector3(-1.8, 4.2, 1.5)
+      },
+      {
+        id: 'spindle',
+        num: '3',
+        th: 'แกนวัด',
+        en: 'Spindle',
+        desc: 'แกนโลหะเคลื่อนที่ตามแนวแกนเมื่อหมุนปลอกหมุน เพื่อเลื่อนเข้าสัมผัสผิวชิ้นงานอย่างเที่ยงตรง',
+        getPos: () => new THREE.Vector3(Math.min(27, state.physicalOpening + 5.5), 4.2, 1.5)
+      },
+      {
+        id: 'lock_nut',
+        num: '4',
+        th: 'ก้านล็อกแกนวัด',
+        en: 'Lock Nut / Spindle Lever',
+        desc: 'ใช้โยกล็อกตรึงแกนวัดให้อยู่กับที่หลังจากวัดขนาดเสร็จ เพื่ออ่านค่าสเกลได้โดยค่าไม่คลาดเคลื่อน',
+        getPos: () => new THREE.Vector3(34.5, 8.2, 4.5)
+      },
+      {
+        id: 'sleeve',
+        num: '5',
+        th: 'ปลอกสเกลหลัก',
+        en: 'Sleeve / Barrel',
+        desc: 'สลักเส้นอ้างอิง (Datum Line) ขีดสเกลบน 1.0 mm ขีดสเกลล่าง 0.5 mm และสเกลเวอร์เนียร์ 0.001 mm',
+        getPos: () => new THREE.Vector3(SLEEVE_ZERO_X + Math.max(2, state.physicalOpening * 0.45), 6.5, 3.5)
+      },
+      {
+        id: 'thimble',
+        num: '6',
+        th: 'ปลอกหมุนวัด',
+        en: 'Thimble (50 Divisions)',
+        desc: 'แบ่งสเกลรอบวงเป็น 50 ช่องเท่ากัน หมุนครบรอบ (360°) แกนวัดจะเคลื่อนที่ 0.50 mm (ช่องละ 0.01 mm)',
+        getPos: () => new THREE.Vector3(SLEEVE_ZERO_X + state.physicalOpening + 18, 8.2, 3.0)
+      },
+      {
+        id: 'ratchet',
+        num: '7',
+        th: 'หัวหมุนกระทบเลื่อน',
+        en: 'Ratchet Stop',
+        desc: 'จำกัดแรงบิดขณะแกนวัดสัมผัสชิ้นงาน เมื่อตึงมือแล้วกลไกจะฟรีและส่งเสียง "คลิก!" ให้แรงกดเท่ากันทุกครั้ง',
+        getPos: () => new THREE.Vector3(SLEEVE_ZERO_X + state.physicalOpening + 47, 5.2, 2.0)
+      }
+    ];
+
+    let audioCtx = null;
+    function ensureAudioContext() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playRatchetClickSound() {
+      const pop = document.getElementById('ratchetPopBadge');
+      if (pop) {
+        pop.classList.remove('hidden', 'ratchet-pop');
+        void pop.offsetWidth;
+        pop.classList.add('ratchet-pop');
+      }
+
+      if (!state.soundEnabled) return;
+      try {
+        ensureAudioContext();
+        if (!audioCtx) return;
+        const now = audioCtx.currentTime;
+        const bufferSize = Math.floor(audioCtx.sampleRate * 0.016);
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.25));
+        }
+
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = noiseBuffer;
+        const bandpass = audioCtx.createBiquadFilter();
+        bandpass.type = 'bandpass';
+        bandpass.frequency.setValueAtTime(3400, now);
+        bandpass.Q.setValueAtTime(3.2, now);
+
+        const noiseGain = audioCtx.createGain();
+        noiseGain.gain.setValueAtTime(0.45, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.016);
+        noise.connect(bandpass);
+        bandpass.connect(noiseGain);
+        noiseGain.connect(audioCtx.destination);
+        noise.start(now);
+
+        const osc = audioCtx.createOscillator();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(3100, now);
+        osc.frequency.exponentialRampToValueAtTime(920, now + 0.028);
+
+        const oscGain = audioCtx.createGain();
+        oscGain.gain.setValueAtTime(0.28, now);
+        oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.032);
+        osc.connect(oscGain);
+        oscGain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.034);
+      } catch (_) {}
+    }
+
+    function toggleSound() {
+      state.soundEnabled = !state.soundEnabled;
+      document.getElementById('soundIcon').textContent = state.soundEnabled ? '🔊' : '🔇';
+      const btn = document.getElementById('btnSoundToggle');
+      btn.className = state.soundEnabled
+        ? 'p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-sky-300 border border-slate-700/80 transition'
+        : 'p-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-500 border border-slate-800 transition';
+      if (state.soundEnabled) playRatchetClickSound();
+    }
+
+    function quantizeVal(val, step = state.resolution) {
+      const decimals = step < 0.005 ? 3 : 2;
+      return Number((Math.round(val / step) * step).toFixed(decimals));
+    }
+
+    function getMinAllowedOpening() {
+      return state.sampleType === 'none' ? 0.0 : state.sampleSize;
+    }
+
+    function computeMetrology() {
+      const res = state.resolution;
+      const decimals = res === 0.001 ? 3 : 2;
+      const ze = Number(state.zeroError.toFixed(decimals));
+      const trueGap = Number(state.physicalOpening.toFixed(decimals));
+      const uncorrected = Number((trueGap + ze).toFixed(decimals));
+
+      if (uncorrected < -1e-6) {
+        const negCents = Math.round(Math.abs(uncorrected) * 100);
+        const alignedThimbleIdx = (50 - (negCents % 50)) % 50;
+        return {
+          isNegativeZeroCheck: true,
+          res,
+          decimals,
+          ze,
+          uncorrected,
+          srWhole: 0,
+          srHalf: 0,
+          sr: 0,
+          trIdx: alignedThimbleIdx,
+          tr: 0,
+          vrIdx: 0,
+          vr: 0,
+          corrected: trueGap
+        };
+      }
+
+      if (res === 0.01) {
+        const uCents = Math.round(uncorrected * 100);
+        const halfCount = Math.floor(uCents / 50);
+        const srWhole = Math.floor(halfCount / 2);
+        const srHalf = (halfCount % 2) * 0.5;
+        const sr = srWhole + srHalf;
+        const trIdx = uCents % 50;
+        const tr = Number((trIdx * 0.01).toFixed(2));
+        return {
+          isNegativeZeroCheck: false,
+          res,
+          decimals,
+          ze,
+          uncorrected,
+          srWhole,
+          srHalf,
+          sr,
+          trIdx,
+          tr,
+          vrIdx: 0,
+          vr: 0,
+          corrected: trueGap
+        };
+      } else {
+        const uMills = Math.round(uncorrected * 1000);
+        const halfCount = Math.floor(uMills / 500);
+        const srWhole = Math.floor(halfCount / 2);
+        const srHalf = (halfCount % 2) * 0.5;
+        const sr = srWhole + srHalf;
+        const remMills = uMills % 500;
+        const trIdx = Math.floor(remMills / 10);
+        const tr = Number((trIdx * 0.01).toFixed(2));
+        const vrIdx = remMills % 10;
+        const vr = Number((vrIdx * 0.001).toFixed(3));
+        return {
+          isNegativeZeroCheck: false,
+          res,
+          decimals,
+          ze,
+          uncorrected,
+          srWhole,
+          srHalf,
+          sr,
+          trIdx,
+          tr,
+          vrIdx,
+          vr,
+          corrected: trueGap
+        };
+      }
+    }
+
+    function createHorizontalTubeGeometry(rLeft, rRight, length, radialSegs = 72) {
+      const geo = new THREE.BufferGeometry();
+      const positions = [];
+      const normals = [];
+      const uvs = [];
+      const indices = [];
+
+      const slopeY = (rLeft - rRight) / length;
+      const normLen = Math.hypot(1, slopeY);
+
+      for (let ix = 0; ix <= 1; ix++) {
+        const x = ix * length;
+        const r = ix === 0 ? rLeft : rRight;
+
+        for (let ir = 0; ir <= radialSegs; ir++) {
+          const frac = ir / radialSegs;
+          const alpha = (frac - 0.5) * Math.PI * 2;
+          const sinA = Math.sin(alpha);
+          const cosA = Math.cos(alpha);
+
+          positions.push(x, r * sinA, r * cosA);
+          normals.push(slopeY / normLen, sinA / normLen, cosA / normLen);
+          uvs.push(ix, frac);
+        }
+      }
+
+      const stride = radialSegs + 1;
+      for (let ir = 0; ir < radialSegs; ir++) {
+        const a = ir;
+        const b = ir + stride;
+        const c = ir + 1 + stride;
+        const d = ir + 1;
+        indices.push(a, b, d);
+        indices.push(b, c, d);
+      }
+
+      geo.setIndex(indices);
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geo.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+      geo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+      return geo;
+    }
+
+    function createStudioEnvMap(rendererInstance) {
+      const pmrem = new THREE.PMREMGenerator(rendererInstance);
+      pmrem.compileEquirectangularShader();
+
+      const envScene = new THREE.Scene();
+      envScene.background = new THREE.Color(0x162032);
+
+      const stripGeo = new THREE.PlaneGeometry(130, 36);
+      const topStrip = new THREE.Mesh(stripGeo, new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide }));
+      topStrip.position.set(20, 65, 45);
+      topStrip.lookAt(20, 0, 0);
+      envScene.add(topStrip);
+
+      const frontStrip = new THREE.Mesh(stripGeo, new THREE.MeshBasicMaterial({ color: 0xe0f2fe, side: THREE.DoubleSide }));
+      frontStrip.position.set(25, 10, 85);
+      frontStrip.lookAt(25, 0, 0);
+      envScene.add(frontStrip);
+
+      const lowerStrip = new THREE.Mesh(stripGeo, new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide }));
+      lowerStrip.position.set(0, -60, 40);
+      lowerStrip.lookAt(20, 0, 0);
+      envScene.add(lowerStrip);
+
+      const rt = pmrem.fromScene(envScene, 0.04);
+      pmrem.dispose();
+      return rt.texture;
+    }
+
+    function createDiamondKnurlBumpTexture() {
+      const c = document.createElement('canvas');
+      c.width = 512;
+      c.height = 512;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#555555';
+      ctx.fillRect(0, 0, 512, 512);
+
+      ctx.strokeStyle = '#e5e5e5';
+      ctx.lineWidth = 3.2;
+      const step = 16;
+      for (let i = -512; i < 1024; i += step) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i + 512, 512);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(i, 512);
+        ctx.lineTo(i + 512, 0);
+        ctx.stroke();
+      }
+      const tex = new THREE.CanvasTexture(c);
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(3, 5);
+      return tex;
+    }
+
+    function createHammeredIronBumpTexture() {
+      const c = document.createElement('canvas');
+      c.width = 256;
+      c.height = 256;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#808080';
+      ctx.fillRect(0, 0, 256, 256);
+
+      for (let i = 0; i < 420; i++) {
+        const x = Math.random() * 256;
+        const y = Math.random() * 256;
+        const r = 4 + Math.random() * 9;
+        const g = ctx.createRadialGradient(x, y, 0.5, x, y, r);
+        const bright = 105 + Math.floor(Math.random() * 45);
+        g.addColorStop(0, `rgb(${bright},${bright},${bright})`);
+        g.addColorStop(1, 'rgba(128,128,128,0)');
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      const tex = new THREE.CanvasTexture(c);
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(2, 2);
+      return tex;
+    }
+
+    function updateFramePlaqueTexture() {
+      if (!framePlaqueCanvas) {
+        framePlaqueCanvas = document.createElement('canvas');
+        framePlaqueCanvas.width = 1024;
+        framePlaqueCanvas.height = 512;
+      }
+      const ctx = framePlaqueCanvas.getContext('2d');
+      const W = framePlaqueCanvas.width;
+      const H = framePlaqueCanvas.height;
+
+      ctx.fillStyle = '#111827';
+      ctx.fillRect(0, 0, W, H);
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 8;
+      ctx.strokeRect(20, 20, W - 40, H - 40);
+
+      ctx.fillStyle = '#cbd5e1';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = '700 84px "JetBrains Mono", monospace';
+      ctx.fillText(`${state.resolution.toFixed(state.resolution === 0.001 ? 3 : 2)}mm`, W * 0.5, H * 0.42);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = '700 76px "JetBrains Mono", monospace';
+      ctx.fillText('0-25mm', W * 0.5, H * 0.68);
+
+      if (!framePlaqueTexture) framePlaqueTexture = new THREE.CanvasTexture(framePlaqueCanvas);
+      framePlaqueTexture.needsUpdate = true;
+      return framePlaqueTexture;
+    }
+
+    function updateSleeveTexture() {
+      if (!sleeveCanvas) {
+        sleeveCanvas = document.createElement('canvas');
+        sleeveCanvas.width = 2048;
+        sleeveCanvas.height = 2048;
+      }
+      const ctx = sleeveCanvas.getContext('2d');
+      const W = sleeveCanvas.width;
+      const H = sleeveCanvas.height;
+
+      const bg = ctx.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, '#cbd5e1');
+      bg.addColorStop(0.45, '#f1f5f9');
+      bg.addColorStop(0.55, '#f8fafc');
+      bg.addColorStop(1, '#cbd5e1');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+
+      const xToPx = (mmFromZero) => ((4.5 + mmFromZero) / SLEEVE_LEN) * W;
+      const alphaToPy = (alphaRad) => (0.5 - alphaRad / (Math.PI * 2)) * H;
+      const datumY = alphaToPy(0);
+
+      ctx.strokeStyle = '#090d16';
+      ctx.lineWidth = 5.5;
+      ctx.beginPath();
+      ctx.moveTo(xToPx(-1.5), datumY);
+      ctx.lineTo(xToPx(26.5), datumY);
+      ctx.stroke();
+
+      ctx.fillStyle = '#090d16';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+
+      for (let m = 0; m <= 25; m++) {
+        const px = xToPx(m);
+        const isMajor5 = (m % 5 === 0);
+        const tickLenPx = isMajor5 ? 64 : 42;
+
+        ctx.lineWidth = isMajor5 ? 5.2 : 3.8;
+        ctx.beginPath();
+        ctx.moveTo(px, datumY);
+        ctx.lineTo(px, datumY - tickLenPx);
+        ctx.stroke();
+
+        if (isMajor5) {
+          ctx.font = '700 44px "JetBrains Mono", monospace';
+          ctx.fillText(String(m), px, datumY - tickLenPx - 6);
+        }
+      }
+
+      for (let m = 0; m < 25; m++) {
+        const px = xToPx(m + 0.5);
+        ctx.lineWidth = 3.6;
+        ctx.beginPath();
+        ctx.moveTo(px, datumY);
+        ctx.lineTo(px, datumY + 42);
+        ctx.stroke();
+      }
+
+      if (state.resolution === 0.001) {
+        const vernierStartPx = xToPx(-2.0);
+        const vernierEndPx = xToPx(26.2);
+
+        for (let j = 1; j <= 10; j++) {
+          const alphaJ = (j * 0.9 / 50) * Math.PI * 2;
+          const py = alphaToPy(alphaJ);
+
+          ctx.strokeStyle = '#0f172a';
+          ctx.lineWidth = (j % 2 === 0) ? 3.2 : 2.2;
+          ctx.beginPath();
+          ctx.moveTo(vernierStartPx, py);
+          ctx.lineTo(vernierEndPx, py);
+          ctx.stroke();
+
+          if (j % 2 === 0) {
+            const label = j === 10 ? '0' : String(j);
+            ctx.font = '700 28px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#0f172a';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(label, vernierStartPx - 10, py);
+          }
+        }
+      }
+
+      if (!sleeveTexture) {
+        sleeveTexture = new THREE.CanvasTexture(sleeveCanvas);
+        sleeveTexture.anisotropy = renderer ? renderer.capabilities.getMaxAnisotropy() : 8;
+      }
+      sleeveTexture.needsUpdate = true;
+      return sleeveTexture;
+    }
+
+    function buildThimbleBevelTexture() {
+      if (!thimbleCanvas) {
+        thimbleCanvas = document.createElement('canvas');
+        thimbleCanvas.width = 1024;
+        thimbleCanvas.height = 2048;
+      }
+      const ctx = thimbleCanvas.getContext('2d');
+      const W = thimbleCanvas.width;
+      const H = thimbleCanvas.height;
+
+      const grad = ctx.createLinearGradient(0, 0, W, 0);
+      grad.addColorStop(0, '#e2e8f0');
+      grad.addColorStop(0.5, '#f8fafc');
+      grad.addColorStop(1, '#cbd5e1');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, 10, H);
+
+      ctx.strokeStyle = '#090d16';
+      ctx.fillStyle = '#090d16';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+
+      const drawTickAtY = (py, k) => {
+        const isMajor5 = (k % 5 === 0);
+        const tickLenW = isMajor5 ? W * 0.44 : W * 0.28;
+        ctx.lineWidth = isMajor5 ? 5.2 : 3.4;
+        ctx.beginPath();
+        ctx.moveTo(0, py);
+        ctx.lineTo(tickLenW, py);
+        ctx.stroke();
+
+        if (isMajor5) {
+          ctx.font = '700 44px "JetBrains Mono", monospace';
+          ctx.fillText(String(k), tickLenW + 22, py);
+        }
+      };
+
+      for (let k = 0; k < 50; k++) {
+        let frac = (k / 50);
+        if (frac > 0.5) frac -= 1.0;
+        const py = (0.5 - frac) * H;
+        drawTickAtY(py, k);
+        if (k === 25) {
+          drawTickAtY(H, 25);
+          drawTickAtY(0, 25);
+        }
+      }
+
+      if (!thimbleTexture) {
+        thimbleTexture = new THREE.CanvasTexture(thimbleCanvas);
+        thimbleTexture.anisotropy = renderer ? renderer.capabilities.getMaxAnisotropy() : 8;
+      }
+      thimbleTexture.needsUpdate = true;
+      return thimbleTexture;
+    }
+
+    function initThreeScene() {
+      const mount = document.getElementById('threeMount');
+      const rect = mount.getBoundingClientRect();
+
+      scene = new THREE.Scene();
+
+      camera = new THREE.PerspectiveCamera(36, rect.width / rect.height, 0.5, 1000);
+      camera.position.set(42, 16, 118);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(rect.width, rect.height);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.1;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      mount.appendChild(renderer.domElement);
+
+      window.captureSimulatorScreenshot = function() {
+        if (renderer && scene && camera) {
+          renderer.render(scene, camera);
+          return renderer.domElement.toDataURL('image/png');
+        }
+        return null;
+      };
+
+      scene.environment = createStudioEnvMap(renderer);
+
+      scene.add(new THREE.AmbientLight(0xdbeafe, 0.55));
+
+      const keyLight = new THREE.DirectionalLight(0xffffff, 1.15);
+      keyLight.position.set(45, 85, 95);
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.set(2048, 2048);
+      scene.add(keyLight);
+
+      const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.5);
+      rimLight.position.set(-40, 25, -70);
+      scene.add(rimLight);
+
+      const bottomFill = new THREE.DirectionalLight(0xfde68a, 0.28);
+      bottomFill.position.set(60, -50, 70);
+      scene.add(bottomFill);
+
+      const grid = new THREE.GridHelper(320, 32, 0x1e3a5f, 0x0f1a2c);
+      grid.position.set(40, -40, 0);
+      scene.add(grid);
+
+      const bench = new THREE.Mesh(
+        new THREE.PlaneGeometry(320, 220),
+        new THREE.MeshStandardMaterial({ color: 0x060b16, roughness: 0.9, metalness: 0.1 })
+      );
+      bench.rotation.x = -Math.PI / 2;
+      bench.position.set(40, -40.2, 0);
+      bench.receiveShadow = true;
+      scene.add(bench);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.target.set(38, -4, 0);
+      controls.minDistance = 24;
+      controls.maxDistance = 240;
+      controls.maxPolarAngle = Math.PI * 0.85;
+
+      buildMicrometer3D();
+      sampleGroup = new THREE.Group();
+      scene.add(sampleGroup);
+
+      initPartLabelDOM();
+      setupInteractions();
+    }
+
+    function buildMicrometer3D() {
+      const knurlBump = createDiamondKnurlBumpTexture();
+      const ironBump = createHammeredIronBumpTexture();
+
+      const castIronMat = new THREE.MeshStandardMaterial({
+        color: 0x263142,
+        metalness: 0.45,
+        roughness: 0.52,
+        bumpMap: ironBump,
+        bumpScale: 0.12
+      });
+
+      const chromeSteelMat = new THREE.MeshStandardMaterial({
+        color: 0xe2e8f0,
+        metalness: 0.88,
+        roughness: 0.16
+      });
+
+      const satinChromeMat = new THREE.MeshStandardMaterial({
+        color: 0xd8e0ea,
+        metalness: 0.72,
+        roughness: 0.3
+      });
+
+      const carbideMat = new THREE.MeshStandardMaterial({
+        color: 0x64748b,
+        metalness: 0.92,
+        roughness: 0.12
+      });
+
+      const knurledMat = new THREE.MeshStandardMaterial({
+        color: 0xcbd5e1,
+        metalness: 0.8,
+        roughness: 0.34,
+        bumpMap: knurlBump,
+        bumpScale: 0.22
+      });
+
+      const root = new THREE.Group();
+      scene.add(root);
+
+      const frameShape = new THREE.Shape();
+      frameShape.moveTo(-10.5, 5.8);
+      frameShape.lineTo(-3.2, 5.8);
+      frameShape.lineTo(-3.2, -5.8);
+      frameShape.bezierCurveTo(-3.2, -23.5, 29.5, -23.5, 29.5, -5.8);
+      frameShape.lineTo(29.5, 6.6);
+      frameShape.lineTo(39.5, 6.6);
+      frameShape.lineTo(39.5, -6.8);
+      frameShape.bezierCurveTo(39.0, -37.0, -11.5, -37.0, -10.5, -5.8);
+      frameShape.closePath();
+
+      const frameGeo = new THREE.ExtrudeGeometry(frameShape, {
+        depth: 6.4,
+        bevelEnabled: true,
+        bevelThickness: 0.9,
+        bevelSize: 0.8,
+        bevelSegments: 3,
+        curveSegments: 36
+      });
+      frameGeo.translate(0, 0, -3.2);
+      const frameMesh = new THREE.Mesh(frameGeo, castIronMat);
+      frameMesh.castShadow = true;
+      frameMesh.receiveShadow = true;
+      root.add(frameMesh);
+
+      const leftBoss = new THREE.Mesh(new THREE.CylinderGeometry(5.5, 5.5, 7.6, 36), castIronMat);
+      leftBoss.rotation.z = -Math.PI / 2;
+      leftBoss.position.set(-6.8, 0, 0);
+      root.add(leftBoss);
+
+      const rightBoss = new THREE.Mesh(new THREE.CylinderGeometry(6.5, 6.5, 10.0, 36), satinChromeMat);
+      rightBoss.rotation.z = -Math.PI / 2;
+      rightBoss.position.set(34.5, 0, 0);
+      root.add(rightBoss);
+
+      updateFramePlaqueTexture();
+      const padShape = new THREE.Shape();
+      padShape.moveTo(-4.0, -15.5);
+      padShape.bezierCurveTo(2.0, -24.5, 24.0, -24.5, 30.0, -15.5);
+      padShape.bezierCurveTo(25.5, -31.5, 0.5, -31.5, -4.0, -15.5);
+
+      const padGeo = new THREE.ExtrudeGeometry(padShape, {
+        depth: 8.6,
+        bevelEnabled: true,
+        bevelThickness: 0.35,
+        bevelSize: 0.35,
+        bevelSegments: 2,
+        curveSegments: 28
+      });
+      padGeo.translate(0, 0, -4.3);
+      const padMat = new THREE.MeshStandardMaterial({
+        color: 0x0f172a,
+        roughness: 0.78,
+        metalness: 0.1
+      });
+      const padMesh = new THREE.Mesh(padGeo, padMat);
+      root.add(padMesh);
+
+      const specPlane = new THREE.Mesh(
+        new THREE.PlaneGeometry(18.5, 7.4),
+        new THREE.MeshStandardMaterial({ map: framePlaqueTexture, roughness: 0.45, metalness: 0.2 })
+      );
+      specPlane.position.set(13.0, -24.0, 4.72);
+      root.add(specPlane);
+
+      const anvilBody = new THREE.Mesh(new THREE.CylinderGeometry(3.25, 3.25, 2.2, 40), chromeSteelMat);
+      anvilBody.rotation.z = -Math.PI / 2;
+      anvilBody.position.set(-2.3, 0, 0);
+      root.add(anvilBody);
+
+      const anvilCarbide = new THREE.Mesh(new THREE.CylinderGeometry(3.25, 3.25, 1.2, 40), carbideMat);
+      anvilCarbide.rotation.z = -Math.PI / 2;
+      anvilCarbide.position.set(-0.6, 0, 0);
+      root.add(anvilCarbide);
+
+      spindleGroup = new THREE.Group();
+      spindleGroup.position.x = state.physicalOpening;
+      root.add(spindleGroup);
+
+      const spindleCarbide = new THREE.Mesh(new THREE.CylinderGeometry(3.25, 3.25, 1.2, 40), carbideMat);
+      spindleCarbide.rotation.z = -Math.PI / 2;
+      spindleCarbide.position.set(0.6, 0, 0);
+      spindleGroup.add(spindleCarbide);
+
+      const spindleShaftLen = 44.0;
+      const spindleShaft = new THREE.Mesh(new THREE.CylinderGeometry(3.25, 3.25, spindleShaftLen, 40), chromeSteelMat);
+      spindleShaft.rotation.z = -Math.PI / 2;
+      spindleShaft.position.set(1.2 + spindleShaftLen / 2, 0, 0);
+      spindleShaft.castShadow = true;
+      spindleGroup.add(spindleShaft);
+
+      lockLeverGroup = new THREE.Group();
+      lockLeverGroup.position.set(34.5, 0, 0);
+      root.add(lockLeverGroup);
+
+      const lockCollar = new THREE.Mesh(new THREE.CylinderGeometry(6.85, 6.85, 3.2, 36), knurledMat);
+      lockCollar.rotation.z = -Math.PI / 2;
+      lockLeverGroup.add(lockCollar);
+      lockInteractMeshes.push(lockCollar);
+
+      const leverArm = new THREE.Mesh(new THREE.BoxGeometry(2.2, 6.2, 2.0), chromeSteelMat);
+      leverArm.position.set(0, 7.6, 1.8);
+      leverArm.rotation.x = 0.35;
+      lockLeverGroup.add(leverArm);
+      lockInteractMeshes.push(leverArm);
+
+      const leverTip = new THREE.Mesh(
+        new THREE.SphereGeometry(1.7, 20, 16),
+        new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.35, metalness: 0.3 })
+      );
+      leverTip.position.set(0, 10.4, 2.9);
+      lockLeverGroup.add(leverTip);
+      lockInteractMeshes.push(leverTip);
+
+      updateSleeveTexture();
+      const sleeveGeo = createHorizontalTubeGeometry(R_SLEEVE, R_SLEEVE, SLEEVE_LEN, 80);
+      const sleeveMesh = new THREE.Mesh(
+        sleeveGeo,
+        new THREE.MeshStandardMaterial({
+          map: sleeveTexture,
+          metalness: 0.42,
+          roughness: 0.34
+        })
+      );
+      sleeveMesh.position.set(SLEEVE_START_X, 0, 0);
+      sleeveMesh.castShadow = true;
+      root.add(sleeveMesh);
+
+      const sleeveEndCap = new THREE.Mesh(new THREE.CylinderGeometry(R_SLEEVE - 0.05, R_SLEEVE - 0.05, 0.5, 36), satinChromeMat);
+      sleeveEndCap.rotation.z = -Math.PI / 2;
+      sleeveEndCap.position.set(SLEEVE_START_X + SLEEVE_LEN - 0.25, 0, 0);
+      root.add(sleeveEndCap);
+
+      thimbleGroup = new THREE.Group();
+      root.add(thimbleGroup);
+
+      buildThimbleBevelTexture();
+      const bevelLen = 11.5;
+      const rBevelTip = R_SLEEVE + 0.07;
+      const rThimbleBody = 7.35;
+
+      const bevelGeo = createHorizontalTubeGeometry(rBevelTip, rThimbleBody, bevelLen, 80);
+      const bevelMesh = new THREE.Mesh(
+        bevelGeo,
+        new THREE.MeshStandardMaterial({
+          map: thimbleTexture,
+          metalness: 0.42,
+          roughness: 0.34
+        })
+      );
+      thimbleGroup.add(bevelMesh);
+      thimbleInteractMeshes.push(bevelMesh);
+
+      const innerRing = new THREE.Mesh(new THREE.CylinderGeometry(rBevelTip, rBevelTip, 0.6, 48), satinChromeMat);
+      innerRing.rotation.z = -Math.PI / 2;
+      innerRing.position.set(0.3, 0, 0);
+      thimbleGroup.add(innerRing);
+
+      const smoothCollar = new THREE.Mesh(new THREE.CylinderGeometry(rThimbleBody, rThimbleBody, 6.0, 56), satinChromeMat);
+      smoothCollar.rotation.z = -Math.PI / 2;
+      smoothCollar.position.set(14.5, 0, 0);
+      smoothCollar.castShadow = true;
+      thimbleGroup.add(smoothCollar);
+      thimbleInteractMeshes.push(smoothCollar);
+
+      const knurlGrip = new THREE.Mesh(new THREE.CylinderGeometry(rThimbleBody + 0.18, rThimbleBody + 0.18, 21.0, 56), knurledMat);
+      knurlGrip.rotation.z = -Math.PI / 2;
+      knurlGrip.position.set(28.0, 0, 0);
+      knurlGrip.castShadow = true;
+      thimbleGroup.add(knurlGrip);
+      thimbleInteractMeshes.push(knurlGrip);
+
+      const rearTaper = new THREE.Mesh(new THREE.CylinderGeometry(4.6, rThimbleBody + 0.15, 3.0, 48), satinChromeMat);
+      rearTaper.rotation.z = -Math.PI / 2;
+      rearTaper.position.set(40.0, 0, 0);
+      thimbleGroup.add(rearTaper);
+      thimbleInteractMeshes.push(rearTaper);
+
+      ratchetGroup = new THREE.Group();
+      ratchetGroup.position.set(41.5, 0, 0);
+      thimbleGroup.add(ratchetGroup);
+
+      const ratchetNeck = new THREE.Mesh(new THREE.CylinderGeometry(3.6, 3.6, 2.2, 36), chromeSteelMat);
+      ratchetNeck.rotation.z = -Math.PI / 2;
+      ratchetNeck.position.set(1.1, 0, 0);
+      ratchetGroup.add(ratchetNeck);
+      ratchetInteractMeshes.push(ratchetNeck);
+
+      const ratchetKnob = new THREE.Mesh(
+        new THREE.CylinderGeometry(4.6, 4.6, 8.8, 48),
+        new THREE.MeshStandardMaterial({
+          color: 0x334155,
+          metalness: 0.72,
+          roughness: 0.36,
+          bumpMap: knurlBump,
+          bumpScale: 0.25
+        })
+      );
+      ratchetKnob.rotation.z = -Math.PI / 2;
+      ratchetKnob.position.set(6.6, 0, 0);
+      ratchetKnob.castShadow = true;
+      ratchetGroup.add(ratchetKnob);
+      ratchetInteractMeshes.push(ratchetKnob);
+
+      const ratchetCap = new THREE.Mesh(new THREE.SphereGeometry(4.55, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), satinChromeMat);
+      ratchetCap.rotation.z = -Math.PI / 2;
+      ratchetCap.scale.y = 0.28;
+      ratchetCap.position.set(11.0, 0, 0);
+      ratchetGroup.add(ratchetCap);
+      ratchetInteractMeshes.push(ratchetCap);
+    }
+
+    function rebuildSampleObject3D() {
+      while (sampleGroup.children.length > 0) {
+        const child = sampleGroup.children[0];
+        sampleGroup.remove(child);
+        if (child.geometry) child.geometry.dispose();
+      }
+
+      if (state.sampleType === 'none') return;
+      const D = state.sampleSize;
+
+      if (state.sampleType === 'wire') {
+        const r = D / 2;
+        const wireMat = new THREE.MeshStandardMaterial({
+          color: 0xd97706,
+          metalness: 0.88,
+          roughness: 0.18
+        });
+        const wire = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 28, 36), wireMat);
+        wire.position.set(r, -2, 0);
+        sampleGroup.add(wire);
+
+        const tip = new THREE.Mesh(
+          new THREE.CylinderGeometry(r * 0.92, r * 0.92, 5, 32),
+          new THREE.MeshStandardMaterial({ color: 0xfdba74, metalness: 0.92, roughness: 0.14 })
+        );
+        tip.position.set(r, 14.5, 0);
+        sampleGroup.add(tip);
+
+      } else if (state.sampleType === 'slide') {
+        const glassMat = new THREE.MeshStandardMaterial({
+          color: 0xbae6fd,
+          metalness: 0.1,
+          roughness: 0.08,
+          transparent: true,
+          opacity: 0.55
+        });
+        const slide = new THREE.Mesh(new THREE.BoxGeometry(D, 32, 12), glassMat);
+        slide.position.set(D / 2, 1.5, 0);
+        sampleGroup.add(slide);
+
+        const frosted = new THREE.Mesh(
+          new THREE.BoxGeometry(D + 0.04, 8, 12.04),
+          new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.7, transparent: true, opacity: 0.9 })
+        );
+        frosted.position.set(D / 2, 13.5, 0);
+        sampleGroup.add(frosted);
+
+      } else if (state.sampleType === 'coverslip') {
+        const slip = new THREE.Mesh(
+          new THREE.BoxGeometry(Math.max(0.08, D), 16, 16),
+          new THREE.MeshStandardMaterial({
+            color: 0x7dd3fc,
+            metalness: 0.15,
+            roughness: 0.06,
+            transparent: true,
+            opacity: 0.62
+          })
+        );
+        slip.position.set(D / 2, 0, 0);
+        sampleGroup.add(slip);
+
+      } else if (state.sampleType === 'ball') {
+        const r = D / 2;
+        const ball = new THREE.Mesh(
+          new THREE.SphereGeometry(r, 48, 36),
+          new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.96, roughness: 0.08 })
+        );
+        ball.position.set(r, 0, 0);
+        ball.castShadow = true;
+        sampleGroup.add(ball);
+
+      } else if (state.sampleType === 'gauge') {
+        const block = new THREE.Mesh(
+          new THREE.BoxGeometry(D, 9.5, 16),
+          new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.85, roughness: 0.16 })
+        );
+        block.position.set(D / 2, 0, 0);
+        block.castShadow = true;
+        sampleGroup.add(block);
+
+      } else if (state.sampleType === 'mystery') {
+        const r = D / 2;
+        const cyl = new THREE.Mesh(
+          new THREE.CylinderGeometry(r, r, 20, 48),
+          new THREE.MeshStandardMaterial({ color: 0x818cf8, metalness: 0.78, roughness: 0.22 })
+        );
+        cyl.position.set(r, 0, 0);
+        cyl.castShadow = true;
+        sampleGroup.add(cyl);
+      }
+    }
+
+    function renderLoupe2D() {
+      const canvas = document.getElementById('loupeCanvas');
+      if (!canvas) return;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+
+      const targetW = Math.round(rect.width * dpr);
+      const targetH = Math.round(rect.height * dpr);
+      if (canvas.width !== targetW || canvas.height !== targetH) {
+        canvas.width = targetW;
+        canvas.height = targetH;
+      }
+
+      const ctx = canvas.getContext('2d');
+      ctx.save();
+      ctx.scale(dpr, dpr);
+
+      const W = rect.width;
+      const H = rect.height;
+
+      ctx.fillStyle = '#070c18';
+      ctx.fillRect(0, 0, W, H);
+
+      const metro = computeMetrology();
+      const showGuides = state.showReadingGuides && ((state.appMode === 'learn') || (state.appMode === 'quiz' && state.quizAnswered));
+
+      const datumY = Math.round(H * 0.56);
+      const pxPerMM = 22.0 * state.loupeZoom;
+      const bevelScreenX = Math.round(W * 0.54);
+      const thimbleZeroMM = state.physicalOpening + state.zeroError;
+      const mmToScreenX = (mm) => bevelScreenX + (mm - thimbleZeroMM) * pxPerMM;
+
+      const pxPerDivY = (state.resolution === 0.001 ? 8.2 : 9.2) * state.loupeZoom;
+      const sleeveHalfH = Math.min(H * 0.44, 72 * state.loupeZoom);
+
+      const sleeveLeftX = Math.max(12, mmToScreenX(-3.0));
+      const sleeveTopY = datumY - sleeveHalfH;
+      const sleeveBotY = datumY + sleeveHalfH * 0.72;
+
+      const sleeveGrad = ctx.createLinearGradient(0, sleeveTopY, 0, sleeveBotY);
+      sleeveGrad.addColorStop(0, '#94a3b8');
+      sleeveGrad.addColorStop(0.28, '#e2e8f0');
+      sleeveGrad.addColorStop(0.58, '#f8fafc');
+      sleeveGrad.addColorStop(1, '#94a3b8');
+      ctx.fillStyle = sleeveGrad;
+      ctx.fillRect(sleeveLeftX, sleeveTopY, Math.max(0, bevelScreenX - sleeveLeftX + 2), sleeveBotY - sleeveTopY);
+
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1.2;
+      ctx.strokeRect(sleeveLeftX, sleeveTopY, Math.max(0, bevelScreenX - sleeveLeftX + 2), sleeveBotY - sleeveTopY);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(sleeveLeftX, sleeveTopY, Math.max(0, bevelScreenX - sleeveLeftX), sleeveBotY - sleeveTopY);
+      ctx.clip();
+
+      if (state.resolution === 0.001) {
+        const vLineStartX = Math.max(sleeveLeftX + 22, mmToScreenX(-2.2));
+        for (let j = 1; j <= 10; j++) {
+          const vy = datumY - (j * 0.9 * pxPerDivY);
+          if (vy < sleeveTopY + 3) continue;
+
+          const isAlignedVernier = showGuides && !metro.isNegativeZeroCheck && (j === metro.vrIdx || (metro.vrIdx === 0 && j === 10));
+          ctx.strokeStyle = isAlignedVernier ? '#c026d3' : 'rgba(15, 23, 42, 0.72)';
+          ctx.lineWidth = isAlignedVernier ? 2.4 : 1.1;
+          ctx.beginPath();
+          ctx.moveTo(vLineStartX, vy);
+          ctx.lineTo(bevelScreenX, vy);
+          ctx.stroke();
+
+          if (j % 2 === 0) {
+            ctx.font = '700 10px "JetBrains Mono", monospace';
+            ctx.fillStyle = isAlignedVernier ? '#a21caf' : '#1e293b';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(j === 10 ? '0' : String(j), vLineStartX - 4, vy);
+          }
+        }
+      }
+
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 2.0;
+      ctx.beginPath();
+      ctx.moveTo(mmToScreenX(-1.8), datumY);
+      ctx.lineTo(bevelScreenX, datumY);
+      ctx.stroke();
+
+      for (let m = 0; m <= 25; m++) {
+        const sx = mmToScreenX(m);
+        if (sx < sleeveLeftX - 20 || sx > bevelScreenX + 5) continue;
+
+        const isMajor5 = (m % 5 === 0);
+        const tickH = isMajor5 ? 24 : 15;
+        const isLastWhole = showGuides && !metro.isNegativeZeroCheck && (m === metro.srWhole) && (metro.srHalf === 0);
+
+        ctx.strokeStyle = isLastWhole ? '#0284c7' : '#0f172a';
+        ctx.lineWidth = isLastWhole ? 2.8 : (isMajor5 ? 1.9 : 1.35);
+        ctx.beginPath();
+        ctx.moveTo(sx, datumY);
+        ctx.lineTo(sx, datumY - tickH);
+        ctx.stroke();
+
+        if (isMajor5) {
+          ctx.font = '700 12px "JetBrains Mono", monospace';
+          ctx.fillStyle = isLastWhole ? '#0369a1' : '#0f172a';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText(String(m), sx, datumY - tickH - 3);
+        }
+      }
+
+      for (let m = 0; m < 25; m++) {
+        const sx = mmToScreenX(m + 0.5);
+        if (sx < sleeveLeftX - 10 || sx > bevelScreenX + 5) continue;
+
+        const isLastHalf = showGuides && !metro.isNegativeZeroCheck && (m === metro.srWhole) && (metro.srHalf > 0);
+        ctx.strokeStyle = isLastHalf ? '#0284c7' : '#0f172a';
+        ctx.lineWidth = isLastHalf ? 2.8 : 1.35;
+        ctx.beginPath();
+        ctx.moveTo(sx, datumY);
+        ctx.lineTo(sx, datumY + 16);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      const bevelWidthPx = Math.min(130, W * 0.24);
+      const thimbleRightX = W - 12;
+      const thimbleHalfH = Math.min(H * 0.48, 86 * state.loupeZoom);
+
+      ctx.beginPath();
+      ctx.moveTo(bevelScreenX, sleeveTopY - 2);
+      ctx.lineTo(bevelScreenX + bevelWidthPx, datumY - thimbleHalfH);
+      ctx.lineTo(thimbleRightX, datumY - thimbleHalfH);
+      ctx.lineTo(thimbleRightX, datumY + thimbleHalfH * 0.78);
+      ctx.lineTo(bevelScreenX + bevelWidthPx, datumY + thimbleHalfH * 0.78);
+      ctx.lineTo(bevelScreenX, sleeveBotY + 2);
+      ctx.closePath();
+
+      const thimGrad = ctx.createLinearGradient(0, datumY - thimbleHalfH, 0, datumY + thimbleHalfH * 0.78);
+      thimGrad.addColorStop(0, '#64748b');
+      thimGrad.addColorStop(0.22, '#cbd5e1');
+      thimGrad.addColorStop(0.52, '#f8fafc');
+      thimGrad.addColorStop(0.82, '#cbd5e1');
+      thimGrad.addColorStop(1, '#64748b');
+      ctx.fillStyle = thimGrad;
+      ctx.fill();
+
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1.6;
+      ctx.stroke();
+
+      const knurlStartX = bevelScreenX + bevelWidthPx + 14;
+      if (thimbleRightX > knurlStartX + 12) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(knurlStartX, datumY - thimbleHalfH + 2, thimbleRightX - knurlStartX - 2, thimbleHalfH * 1.78 - 4);
+        ctx.clip();
+
+        ctx.fillStyle = 'rgba(51, 65, 85, 0.16)';
+        ctx.fillRect(knurlStartX, datumY - thimbleHalfH, thimbleRightX - knurlStartX, thimbleHalfH * 1.78);
+        ctx.strokeStyle = 'rgba(15, 23, 42, 0.25)';
+        ctx.lineWidth = 1;
+        for (let k = -180; k < 260; k += 8) {
+          ctx.beginPath();
+          ctx.moveTo(knurlStartX, datumY - thimbleHalfH + k);
+          ctx.lineTo(thimbleRightX, datumY - thimbleHalfH + k + 70);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(knurlStartX, datumY - thimbleHalfH + k + 70);
+          ctx.lineTo(thimbleRightX, datumY - thimbleHalfH + k);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(bevelScreenX, sleeveTopY - 2);
+      ctx.lineTo(bevelScreenX + bevelWidthPx, datumY - thimbleHalfH);
+      ctx.lineTo(bevelScreenX + bevelWidthPx, datumY + thimbleHalfH * 0.78);
+      ctx.lineTo(bevelScreenX, sleeveBotY + 2);
+      ctx.closePath();
+      ctx.clip();
+
+      const exactDivPos = (thimbleZeroMM / PITCH_MM) * 50;
+
+      for (let offset = -12; offset <= 14; offset++) {
+        const rawIdx = Math.round(exactDivPos) + offset;
+        const k = ((rawIdx % 50) + 50) % 50;
+        const diffDiv = rawIdx - exactDivPos;
+        const ty = datumY - diffDiv * pxPerDivY;
+
+        const isMajor5 = (k % 5 === 0);
+        const tickLen = isMajor5 ? bevelWidthPx * 0.46 : bevelWidthPx * 0.28;
+
+        const isTRMark = showGuides && (k === metro.trIdx) && (Math.abs(diffDiv) < 1.1);
+        const alignedVernierTick = (metro.trIdx + metro.vrIdx) % 50;
+        const isVRCoincideTick = showGuides && (state.resolution === 0.001) && !metro.isNegativeZeroCheck && (k === alignedVernierTick) && (diffDiv >= -0.2 && diffDiv <= 9.5);
+
+        ctx.beginPath();
+        ctx.moveTo(bevelScreenX, ty);
+        ctx.lineTo(bevelScreenX + tickLen, ty);
+
+        if (isTRMark) {
+          ctx.strokeStyle = '#059669';
+          ctx.lineWidth = 2.8;
+        } else if (isVRCoincideTick) {
+          ctx.strokeStyle = '#c026d3';
+          ctx.lineWidth = 2.4;
+        } else {
+          ctx.strokeStyle = '#0f172a';
+          ctx.lineWidth = isMajor5 ? 1.9 : 1.2;
+        }
+        ctx.stroke();
+
+        if (isMajor5) {
+          ctx.font = '700 12px "JetBrains Mono", monospace';
+          ctx.fillStyle = isTRMark ? '#047857' : '#0f172a';
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(String(k), bevelScreenX + tickLen + 6, ty);
+        }
+      }
+      ctx.restore();
+
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.moveTo(bevelScreenX, sleeveTopY - 2);
+      ctx.lineTo(bevelScreenX, sleeveBotY + 2);
+      ctx.stroke();
+
+      if (showGuides && !metro.isNegativeZeroCheck) {
+        const lastSRX = mmToScreenX(metro.sr);
+        const srBadgeText = `SR = ${metro.sr.toFixed(2)} mm`;
+        ctx.font = '700 11px "JetBrains Mono", monospace';
+        const srW = ctx.measureText(srBadgeText).width + 14;
+        const srBX = Math.max(10, Math.min(bevelScreenX - srW - 6, lastSRX - srW / 2));
+
+        ctx.fillStyle = '#0c4a6e';
+        ctx.fillRect(srBX, 6, srW, 20);
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 1.2;
+        ctx.strokeRect(srBX, 6, srW, 20);
+        ctx.fillStyle = '#bae6fd';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(srBadgeText, srBX + srW / 2, 16);
+
+        const trBadgeText = `TR = ขีด ${metro.trIdx} (+${metro.tr.toFixed(2)})`;
+        ctx.font = '700 11px "Prompt", monospace';
+        const trW = ctx.measureText(trBadgeText).width + 14;
+        const trBX = Math.min(W - trW - 8, bevelScreenX + 8);
+
+        ctx.fillStyle = '#064e3b';
+        ctx.fillRect(trBX, H - 25, trW, 20);
+        ctx.strokeStyle = '#34d399';
+        ctx.strokeRect(trBX, H - 25, trW, 20);
+        ctx.fillStyle = '#a7f3d0';
+        ctx.fillText(trBadgeText, trBX + trW / 2, H - 15);
+
+        if (state.resolution === 0.001) {
+          const vrBadgeText = `VR = ขีด ${metro.vrIdx} (+${metro.vr.toFixed(3)})`;
+          const vrW = ctx.measureText(vrBadgeText).width + 14;
+          const vrBX = Math.min(W - vrW - 8, bevelScreenX + 8);
+          ctx.fillStyle = '#4a044e';
+          ctx.fillRect(vrBX, 6, vrW, 20);
+          ctx.strokeStyle = '#e879f9';
+          ctx.strokeRect(vrBX, 6, vrW, 20);
+          ctx.fillStyle = '#f5d0fe';
+          ctx.fillText(vrBadgeText, vrBX + vrW / 2, 16);
+        }
+      }
+
+      if (state.zeroError !== 0 && showGuides) {
+        const zeStr = `Zero Error: ${state.zeroError > 0 ? '+' : ''}${state.zeroError.toFixed(2)} mm`;
+        ctx.font = '700 11px "JetBrains Mono", monospace';
+        const zw = ctx.measureText(zeStr).width + 14;
+        ctx.fillStyle = '#451a03';
+        ctx.fillRect(10, H - 25, zw, 20);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.strokeRect(10, H - 25, zw, 20);
+        ctx.fillStyle = '#fde68a';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(zeStr, 10 + zw / 2, H - 15);
+      }
+
+      ctx.restore();
+    }
+
+    function setPhysicalOpening(newVal, options = {}) {
+      const { fromAuto = false, triggerClickOnStop = true } = options;
+
+      if (state.isLocked && !fromAuto) {
+        showToast('🔒 ก้านล็อกแกนวัดทำงานอยู่ กรุณาปลดล็อกก่อนหมุนปรับ');
+        syncUI();
+        return;
+      }
+
+      if (!fromAuto) {
+        state.autoTargetOpening = null;
+        state.ratchetClicksPending = 0;
+      }
+
+      const minGap = getMinAllowedOpening();
+      let clamped = Math.max(minGap, Math.min(MAX_MM, newVal));
+      clamped = quantizeVal(clamped, state.resolution);
+
+      const hitStop = (newVal < minGap - 1e-5) || (Math.abs(clamped - minGap) < 1e-5 && state.physicalOpening > minGap + 1e-5);
+      state.physicalOpening = clamped;
+
+      if (hitStop && triggerClickOnStop) {
+        ratchetTargetSlipRad += (Math.PI / 6);
+        playRatchetClickSound();
+      }
+
+      update3DMicrometerTransforms();
+      syncUI();
+      renderLoupe2D();
+    }
+
+    function update3DMicrometerTransforms() {
+      if (!spindleGroup || !thimbleGroup) return;
+      spindleGroup.position.x = state.physicalOpening;
+      const uncorrected = state.physicalOpening + state.zeroError;
+      thimbleGroup.position.x = SLEEVE_ZERO_X + uncorrected;
+      thimbleGroup.rotation.x = (uncorrected / PITCH_MM) * Math.PI * 2;
+    }
+
+    function syncUI() {
+      const metro = computeMetrology();
+      const d = metro.decimals;
+      const minGap = getMinAllowedOpening();
+
+      const slider = document.getElementById('mainRangeSlider');
+      slider.step = state.resolution;
+      slider.value = state.physicalOpening;
+      slider.disabled = state.isLocked;
+
+      const stepLabel = state.resolution.toFixed(d);
+      document.getElementById('btnStepMinusFine').textContent = `-${stepLabel}`;
+      document.getElementById('btnStepPlusFine').textContent = `+${stepLabel}`;
+
+      const gapHint = document.getElementById('spindleGapHint');
+      if (state.appMode === 'quiz' && !state.quizAnswered) {
+        gapHint.textContent = 'โหมดทดสอบ: ซ่อนตัวเลขดิจิทัล';
+      } else {
+        gapHint.textContent = `ระยะปากวัดจริง: ${state.physicalOpening.toFixed(d)} mm`;
+      }
+
+      const isContacting = Math.abs(state.physicalOpening - minGap) < 1e-5;
+      const badgeContact = document.getElementById('badgeContact');
+      badgeContact.textContent = state.sampleType === 'none'
+        ? '✓ แกนวัดชนทั่งรับสนิท (Zero Point)'
+        : '✓ แกนวัดสัมผัสชิ้นงานพอดี (Contact)';
+      badgeContact.classList.toggle('hidden', !isContacting);
+
+      document.getElementById('badgeResolutionTop').textContent = `Res: ${state.resolution.toFixed(d)} mm`;
+      document.getElementById('quizResBadge').textContent = `ความละเอียด ${state.resolution.toFixed(d)} mm`;
+
+      document.getElementById('readoutMM').innerHTML = `${metro.corrected.toFixed(d)} <span class="text-sm font-normal text-slate-400">mm</span>`;
+      const microns = Math.round(metro.corrected * 1000).toLocaleString();
+      document.getElementById('readoutUM').innerHTML = `${microns} <span class="text-xs font-normal text-slate-400">µm</span>`;
+
+      const vernierRow = document.getElementById('rowVernierBreakdown');
+      if (state.resolution === 0.001) {
+        vernierRow.classList.remove('hidden');
+        vernierRow.classList.add('flex');
+      } else {
+        vernierRow.classList.add('hidden');
+        vernierRow.classList.remove('flex');
+      }
+
+      if (metro.isNegativeZeroCheck) {
+        document.getElementById('bdSleeve').textContent = 'ต่ำกว่า 0 (เช็คศูนย์)';
+        document.getElementById('bdThimbleIdx').textContent = `${metro.trIdx}`;
+        document.getElementById('bdThimble').textContent = `ขีด ${metro.trIdx} ตรงเส้นอ้างอิง`;
+        document.getElementById('bdZeroError').textContent = `ZE = ${metro.ze.toFixed(2)} mm`;
+        document.getElementById('bdFormulaLabel').textContent = 'Closed Jaws';
+        document.getElementById('bdEquation').textContent = `ขีด 0 เลยขึ้นไป ${Math.round(Math.abs(metro.ze) * 100)} ช่อง → 0.00 mm`;
+      } else {
+        const srNote = metro.srHalf > 0 ? `${metro.srWhole} + 0.50 = ${metro.sr.toFixed(2)} mm` : `${metro.sr.toFixed(2)} mm`;
+        document.getElementById('bdSleeve').textContent = srNote;
+        document.getElementById('bdThimbleIdx').textContent = `${metro.trIdx}`;
+        document.getElementById('bdThimble').textContent = `+ ${metro.tr.toFixed(2)} mm`;
+
+        const zeStr = `${metro.ze >= 0 ? '+' : ''}${metro.ze.toFixed(2)} mm`;
+        document.getElementById('bdZeroError').textContent = `− (${zeStr})`;
+
+        if (state.resolution === 0.001) {
+          document.getElementById('bdVernierIdx').textContent = `${metro.vrIdx}`;
+          document.getElementById('bdVernier').textContent = `+ ${metro.vr.toFixed(3)} mm`;
+          document.getElementById('bdFormulaLabel').textContent = 'SR + TR + VR − ZE';
+          document.getElementById('bdEquation').textContent =
+            `${metro.sr.toFixed(2)} + ${metro.tr.toFixed(2)} + ${metro.vr.toFixed(3)} − (${metro.ze.toFixed(2)}) = ${metro.corrected.toFixed(3)}`;
+        } else {
+          document.getElementById('bdFormulaLabel').textContent = 'SR + TR − ZE';
+          document.getElementById('bdEquation').textContent =
+            `${metro.sr.toFixed(2)} + ${metro.tr.toFixed(2)} − (${metro.ze.toFixed(2)}) = ${metro.corrected.toFixed(2)} mm`;
+        }
+      }
+    }
+
+    function onSliderInput(val) {
+      ensureAudioContext();
+      setPhysicalOpening(parseFloat(val));
+    }
+
+    function stepMicrometer(deltaMM) {
+      ensureAudioContext();
+      setPhysicalOpening(state.physicalOpening + deltaMM);
+    }
+
+    function stepByLeastCount(steps) {
+      ensureAudioContext();
+      setPhysicalOpening(state.physicalOpening + steps * state.resolution);
+    }
+
+    function runRatchetMeasure() {
+      ensureAudioContext();
+      if (state.isLocked) toggleSpindleLock(false);
+
+      const target = getMinAllowedOpening();
+      if (Math.abs(state.physicalOpening - target) <= state.resolution) {
+        setPhysicalOpening(target, { fromAuto: true, triggerClickOnStop: false });
+        triggerThreeRatchetClicks();
+      } else {
+        state.autoTargetOpening = target;
+        state.ratchetClicksPending = 3;
+      }
+    }
+
+    function triggerThreeRatchetClicks() {
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          ratchetTargetSlipRad += (Math.PI / 5);
+          playRatchetClickSound();
+        }, i * 135);
+      }
+      showToast('🔊 คลิก! คลิก! คลิก! — แรงกดวัดสม่ำเสมอพร้อมอ่านค่า');
+    }
+
+    function toggleSpindleLock(forceState) {
+      state.isLocked = (typeof forceState === 'boolean') ? forceState : !state.isLocked;
+
+      const btn = document.getElementById('btnLockToggle');
+      const icon = document.getElementById('lockBtnIcon');
+      const label = document.getElementById('lockBtnLabel');
+      const badge = document.getElementById('badgeLocked');
+
+      if (state.isLocked) {
+        btn.className = 'sm:col-span-5 py-2 px-3 rounded-xl bg-amber-500/25 border border-amber-400/60 text-xs font-semibold text-amber-200 transition flex items-center justify-center gap-1.5';
+        icon.textContent = '🔒';
+        label.textContent = 'ปลดล็อก';
+        badge.classList.remove('hidden');
+      } else {
+        btn.className = 'sm:col-span-5 py-2 px-3 rounded-xl bg-slate-800 hover:bg-amber-500/20 border border-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-1.5';
+        icon.textContent = '🔓';
+        label.textContent = 'ล็อกแกนวัด';
+        badge.classList.add('hidden');
+      }
+      syncUI();
+    }
+
+    function setResolution(res) {
+      state.resolution = res;
+
+      document.getElementById('btnRes001').className = res === 0.01
+        ? 'p-2.5 rounded-xl border text-left transition bg-sky-500/20 border-sky-500/50 text-sky-200'
+        : 'p-2.5 rounded-xl border text-left transition bg-slate-950 border-slate-800 text-slate-400 hover:text-white';
+      document.getElementById('btnRes0001').className = res === 0.001
+        ? 'p-2.5 rounded-xl border text-left transition bg-fuchsia-500/20 border-fuchsia-500/50 text-fuchsia-200'
+        : 'p-2.5 rounded-xl border text-left transition bg-slate-950 border-slate-800 text-slate-400 hover:text-white';
+
+      if (state.sampleType !== 'none' && state.sampleType !== 'mystery') {
+        const cat = SAMPLE_CATALOG[state.sampleType];
+        state.sampleSize = res === 0.001 ? cat.default001 : cat.default01;
+      } else if (state.sampleType === 'mystery') {
+        state.sampleSize = quantizeVal(state.sampleSize, res);
+      }
+
+      state.physicalOpening = Math.max(getMinAllowedOpening(), quantizeVal(state.physicalOpening, res));
+
+      updateFramePlaqueTexture();
+      updateSleeveTexture();
+      rebuildSampleObject3D();
+      update3DMicrometerTransforms();
+      syncUI();
+      renderLoupe2D();
+    }
+
+    function setZeroError(val) {
+      state.zeroError = Number(val.toFixed(2));
+      document.getElementById('zeroErrorSlider').value = state.zeroError;
+
+      const labelStr = state.zeroError === 0
+        ? '0.00 mm (ปกติ)'
+        : `${state.zeroError > 0 ? '+' : ''}${state.zeroError.toFixed(2)} mm`;
+      document.getElementById('zeroErrorBadge').textContent = labelStr;
+
+      document.querySelectorAll('.ze-btn').forEach(btn => {
+        const bVal = parseFloat(btn.textContent);
+        const active = Math.abs(bVal - state.zeroError) < 1e-4;
+        btn.className = active
+          ? 'ze-btn py-1.5 rounded-lg border bg-amber-500/25 border-amber-400/60 text-amber-200 font-bold transition'
+          : 'ze-btn py-1.5 rounded-lg border bg-slate-950 border-slate-800 text-slate-300 hover:border-amber-400/50 transition';
+      });
+
+      const explain = document.getElementById('zeroErrorExplainBox');
+      if (Math.abs(state.zeroError) < 1e-4) {
+        explain.innerHTML = 'ขีด <code class="text-sky-300">0</code> บนปลอกหมุนตรงกับเส้นอ้างอิงพอดีเมื่อทั่งรับและแกนวัดสัมผัสกัน (ไม่มีความคลาดเคลื่อนศูนย์)';
+      } else if (state.zeroError > 0) {
+        const divs = Math.round(state.zeroError * 100);
+        explain.innerHTML = `<strong class="text-amber-300">Positive Zero Error (+${state.zeroError.toFixed(2)} mm):</strong> เมื่อปิดแกนวัดสนิท ขีด 0 อยู่ต่ำกว่าเส้นอ้างอิง ${divs} ช่อง ต้องนำค่า <code>+${state.zeroError.toFixed(2)}</code> ไปลบออกจากค่าที่อ่านได้`;
+      } else {
+        const divs = Math.round(Math.abs(state.zeroError) * 100);
+        explain.innerHTML = `<strong class="text-rose-300">Negative Zero Error (${state.zeroError.toFixed(2)} mm):</strong> เมื่อปิดแกนวัดสนิท ขีด 0 เลยเส้นอ้างอิงขึ้นไป ${divs} ช่อง (ตรงขีด ${50 - divs}) ต้องลบด้วย <code>(${state.zeroError.toFixed(2)})</code> หรือบวกชดเชยเพิ่ม`;
+      }
+
+      update3DMicrometerTransforms();
+      syncUI();
+      renderLoupe2D();
+    }
+
+    function inspectZeroPoint() {
+      selectSampleObject('none');
+      runRatchetMeasure();
+      setCameraPreset('scale');
+    }
+
+    function selectSampleObject(type, keepLock = false) {
+      if (state.isLocked && !keepLock) toggleSpindleLock(false);
+      state.sampleType = type;
+
+      document.querySelectorAll('.obj-btn').forEach(btn => {
+        const active = btn.dataset.obj === type;
+        const extraSpan = btn.dataset.obj === 'mystery' ? 'col-span-2 text-center font-semibold ' : 'text-left font-medium ';
+        btn.className = active
+          ? `obj-btn ${extraSpan}py-2 px-2.5 rounded-xl border transition bg-sky-500/20 border-sky-500/50 text-sky-200`
+          : `obj-btn ${extraSpan}py-2 px-2.5 rounded-xl border transition bg-slate-950/70 border-slate-800 text-slate-300 hover:border-slate-600`;
+      });
+
+      const btnRand = document.getElementById('btnRandomMystery');
+      btnRand.classList.toggle('hidden', type === 'none');
+
+      if (type === 'none') {
+        state.sampleSize = 0.0;
+        rebuildSampleObject3D();
+        syncUI();
+        return;
+      }
+
+      if (type === 'mystery') {
+        const raw = 1.5 + Math.random() * 19.5;
+        state.sampleSize = quantizeVal(raw, state.resolution);
+      } else {
+        const cat = SAMPLE_CATALOG[type];
+        state.sampleSize = state.resolution === 0.001 ? cat.default001 : cat.default01;
+      }
+
+      rebuildSampleObject3D();
+      state.physicalOpening = quantizeVal(Math.min(MAX_MM, state.sampleSize + 1.85), state.resolution);
+      update3DMicrometerTransforms();
+      setCameraPreset('jaws');
+      syncUI();
+      renderLoupe2D();
+    }
+
+    function randomizeCurrentSample() {
+      if (state.sampleType === 'none') return;
+      let min = 0.8, max = 18.0;
+      if (state.sampleType === 'coverslip') { min = 0.13; max = 0.25; }
+      else if (state.sampleType === 'wire') { min = 0.45; max = 2.60; }
+      else if (state.sampleType === 'slide') { min = 0.95; max = 1.35; }
+      else if (state.sampleType === 'ball') { min = 3.00; max = 12.70; }
+      else if (state.sampleType === 'gauge') { min = 5.00; max = 22.00; }
+
+      state.sampleSize = quantizeVal(min + Math.random() * (max - min), state.resolution);
+      rebuildSampleObject3D();
+      state.physicalOpening = quantizeVal(Math.min(MAX_MM, state.sampleSize + 1.5), state.resolution);
+      update3DMicrometerTransforms();
+      syncUI();
+      renderLoupe2D();
+      showToast('🔄 สุ่มขนาดชิ้นงานใหม่แล้ว หมุน Ratchet เพื่อวัดขนาด');
+    }
+
+    function switchSidebarTab(tab) {
+      const tabs = ['control', 'metrology', 'theory'];
+      tabs.forEach(t => {
+        const panel = document.getElementById(`tabPanel${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        const btn = document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        if (t === tab) {
+          panel.classList.remove('hidden');
+          btn.className = 'py-2 rounded-xl bg-slate-800 text-sky-300 shadow transition';
+        } else {
+          panel.classList.add('hidden');
+          btn.className = 'py-2 rounded-xl text-slate-400 hover:text-white transition';
+        }
+      });
+    }
+
+    function setCameraPreset(preset) {
+      camTween.active = true;
+      if (preset === 'scale') {
+        const focusX = SLEEVE_ZERO_X + state.physicalOpening;
+        camTween.pos.set(focusX - 2, 2.5, 42);
+        camTween.target.set(focusX - 2, 0.5, 0);
+      } else if (preset === 'jaws') {
+        const midX = Math.max(4, state.physicalOpening * 0.5);
+        camTween.pos.set(midX + 2, 5, 52);
+        camTween.target.set(midX, -1, 0);
+      } else if (preset === 'top') {
+        camTween.pos.set(42, 95, 8);
+        camTween.target.set(42, 0, 0);
+      } else {
+        camTween.pos.set(42, 16, 118);
+        camTween.target.set(38, -4, 0);
+      }
+    }
+
+    function initPartLabelDOM() {
+      const overlay = document.getElementById('labelsOverlay');
+      overlay.innerHTML = '';
+
+      ANATOMY_PARTS.forEach(part => {
+        const el = document.createElement('div');
+        el.id = `pin_${part.id}`;
+        el.className = 'part-pin';
+        el.innerHTML = `
+          <div class="px-2 py-0.5 rounded-full bg-slate-950/90 hover:bg-sky-500 hover:text-slate-950 text-sky-300 border border-sky-400/60 text-[11px] font-semibold shadow-lg cursor-pointer flex items-center gap-1 transition">
+            <span class="w-4 h-4 rounded-full bg-sky-500/25 text-[10px] font-mono flex items-center justify-center font-bold">${part.num}</span>
+            <span class="whitespace-nowrap">${part.th}</span>
+          </div>
+          <div class="part-pin-tooltip absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-56 p-2.5 rounded-xl bg-slate-900/95 border border-sky-500/40 shadow-2xl text-left">
+            <div class="text-xs font-bold text-sky-300">${part.th}</div>
+            <div class="text-[10px] font-mono text-slate-400 mb-1">${part.en}</div>
+            <div class="text-[11px] text-slate-200 leading-snug">${part.desc}</div>
+          </div>
+        `;
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          el.classList.toggle('active');
+        });
+        overlay.appendChild(el);
+      });
+    }
+
+    function togglePartLabels() {
+      state.showLabels = !state.showLabels;
+      document.getElementById('labelsOverlay').style.display = state.showLabels ? 'block' : 'none';
+      document.getElementById('btnToggleLabels').className = state.showLabels
+        ? 'px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/40 backdrop-blur-md hover:bg-sky-500/30 transition flex items-center gap-1.5 shadow-lg'
+        : 'px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-slate-900/80 text-slate-400 border border-slate-700 backdrop-blur-md hover:text-white transition flex items-center gap-1.5 shadow-lg';
+    }
+
+    function updatePartLabelsProjection() {
+      if (!state.showLabels || !camera || !renderer) return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      if (rect.width === 0) return;
+
+      ANATOMY_PARTS.forEach(part => {
+        const el = document.getElementById(`pin_${part.id}`);
+        if (!el) return;
+        const projected = part.getPos().project(camera);
+        if (projected.z > 1) {
+          el.style.opacity = '0';
+          return;
+        }
+        const x = (projected.x * 0.5 + 0.5) * rect.width;
+        const y = (-projected.y * 0.5 + 0.5) * rect.height;
+        el.style.opacity = '1';
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+      });
+    }
+
+    function toggleReadingGuides() {
+      state.showReadingGuides = !state.showReadingGuides;
+      const btn = document.getElementById('btnToggleGuides');
+      btn.textContent = `เส้นช่วยอ่านค่า: ${state.showReadingGuides ? 'เปิด' : 'ปิด'}`;
+      btn.className = state.showReadingGuides
+        ? 'px-2.5 py-1 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 font-medium transition'
+        : 'px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 font-medium transition';
+      renderLoupe2D();
+    }
+
+    function toggleLoupeZoom() {
+      state.loupeZoom = state.loupeZoom === 1.0 ? 1.45 : 1.0;
+      document.getElementById('btnLoupeZoom').textContent = `ซูม: ${state.loupeZoom.toFixed(2)}x`;
+      renderLoupe2D();
+    }
+
+    function toggleHelpModal(show) {
+      const modal = document.getElementById('helpModal');
+      modal.classList.toggle('hidden', !show);
+      modal.classList.toggle('flex', show);
+    }
+
+    function setAppMode(mode) {
+      state.appMode = mode;
+      const btnLearn = document.getElementById('btnModeLearn');
+      const btnQuiz = document.getElementById('btnModeQuiz');
+      const panelLearn = document.getElementById('panelLearnReadout');
+      const panelQuiz = document.getElementById('panelQuizCard');
+
+      if (mode === 'learn') {
+        btnLearn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20';
+        btnQuiz.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 text-slate-400 hover:text-white';
+        panelLearn.classList.remove('hidden');
+        panelQuiz.classList.add('hidden');
+        toggleSpindleLock(false);
+      } else {
+        btnQuiz.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 bg-indigo-500 text-white shadow-md shadow-indigo-500/30';
+        btnLearn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 text-slate-400 hover:text-white';
+        panelLearn.classList.add('hidden');
+        panelQuiz.classList.remove('hidden');
+        generateNewQuizQuestion();
+      }
+
+      syncUI();
+      renderLoupe2D();
+    }
+
+    function setQuizType(type) {
+      state.quizType = type;
+      document.getElementById('btnQuizTypeScale').className = type === 'scale'
+        ? 'py-1.5 px-2 rounded-lg font-semibold bg-indigo-500 text-white transition'
+        : 'py-1.5 px-2 rounded-lg font-semibold text-slate-400 hover:text-white transition';
+      document.getElementById('btnQuizTypeObject').className = type === 'object'
+        ? 'py-1.5 px-2 rounded-lg font-semibold bg-indigo-500 text-white transition'
+        : 'py-1.5 px-2 rounded-lg font-semibold text-slate-400 hover:text-white transition';
+      generateNewQuizQuestion();
+    }
+
+    function generateNewQuizQuestion() {
+      state.quizAnswered = false;
+      const input = document.getElementById('quizInput');
+      const feedback = document.getElementById('quizFeedbackBox');
+      const promptEl = document.getElementById('quizPromptText');
+      const includeZE = document.getElementById('chkQuizIncludeZE').checked;
+
+      input.value = '';
+      feedback.classList.add('hidden');
+
+      if (includeZE) {
+        const zeChoices = [-0.04, -0.03, -0.02, 0.02, 0.03, 0.04];
+        setZeroError(zeChoices[Math.floor(Math.random() * zeChoices.length)]);
+      } else {
+        setZeroError(0.00);
+      }
+
+      const d = state.resolution === 0.001 ? 3 : 2;
+      const zeNotice = state.zeroError !== 0
+        ? ` <span class="text-amber-300 font-semibold">(Zero Error = ${state.zeroError > 0 ? '+' : ''}${state.zeroError.toFixed(2)} mm)</span>`
+        : '';
+
+      if (state.quizType === 'scale') {
+        selectSampleObject('none', true);
+        const target = quantizeVal(0.65 + Math.random() * 22.8, state.resolution);
+        state.physicalOpening = target;
+        state.quizExpectedAnswer = Number(target.toFixed(d));
+        update3DMicrometerTransforms();
+        toggleSpindleLock(true);
+        setCameraPreset('scale');
+
+        promptEl.innerHTML = `<strong>โจทย์อ่านค่าสเกล:</strong> แกนวัดถูกล็อกไว้แล้ว จงอ่านค่าความยาวสุทธิในหน่วย <strong>mm</strong>${zeNotice}`;
+      } else {
+        toggleSpindleLock(false);
+        selectSampleObject('mystery', true);
+        state.quizExpectedAnswer = Number(state.sampleSize.toFixed(d));
+
+        promptEl.innerHTML = `<strong>โจทย์วัดชิ้นงานปริศนา:</strong> กดหมุน Ratchet หรือลากปลอกหมุนเข้าสัมผัสชิ้นงานให้ตึงมือ แล้วอ่านขนาดจริงของชิ้นงานในหน่วย <strong>mm</strong>${zeNotice}`;
+      }
+
+      syncUI();
+      renderLoupe2D();
+    }
+
+    function submitQuizAnswer() {
+      if (state.quizAnswered) return;
+      const input = document.getElementById('quizInput');
+      const raw = parseFloat(input.value);
+
+      if (Number.isNaN(raw)) {
+        showToast('กรุณากรอกตัวเลขคำตอบในหน่วย mm ก่อนตรวจคำตอบ');
+        return;
+      }
+
+      if (state.quizType === 'object' && Math.abs(state.physicalOpening - state.sampleSize) > 1e-5) {
+        state.physicalOpening = state.sampleSize;
+        update3DMicrometerTransforms();
+      }
+
+      state.quizAnswered = true;
+      state.quizScoreTotal += 1;
+
+      const d = state.resolution === 0.001 ? 3 : 2;
+      const expected = state.quizExpectedAnswer;
+      const tol = state.resolution * 0.45;
+      const isCorrect = Math.abs(raw - expected) <= tol;
+
+      if (isCorrect) {
+        state.quizScoreRight += 1;
+        state.quizStreak += 1;
+      } else {
+        state.quizStreak = 0;
+      }
+
+      document.getElementById('quizScore').textContent = `${state.quizScoreRight}/${state.quizScoreTotal}`;
+      document.getElementById('quizStreak').textContent = `${state.quizStreak}`;
+
+      const metro = computeMetrology();
+      const vrPart = state.resolution === 0.001 ? ` + VR [ขีด ${metro.vrIdx} = ${metro.vr.toFixed(3)}]` : '';
+      const feedback = document.getElementById('quizFeedbackBox');
+      feedback.classList.remove('hidden');
+
+      if (isCorrect) {
+        feedback.className = 'p-3 rounded-xl border border-emerald-500/50 bg-emerald-950/50 text-xs space-y-1 text-emerald-200';
+        feedback.innerHTML = `
+          <div class="font-bold text-emerald-300 text-sm">✅ ถูกต้องแม่นยำ! (${expected.toFixed(d)} mm)</div>
+          <div class="font-mono text-[11px] text-slate-200">
+            SR (${metro.sr.toFixed(2)}) + TR [ขีด ${metro.trIdx} = ${metro.tr.toFixed(2)}]${vrPart} − ZE (${metro.ze.toFixed(2)}) = <strong>${expected.toFixed(d)} mm</strong>
+          </div>
+        `;
+      } else {
+        feedback.className = 'p-3 rounded-xl border border-rose-500/50 bg-rose-950/50 text-xs space-y-1 text-rose-200';
+        feedback.innerHTML = `
+          <div class="font-bold text-rose-300 text-sm">❌ ยังไม่ตรง (คุณตอบ ${raw.toFixed(d)} mm • เฉลยคือ ${expected.toFixed(d)} mm)</div>
+          <div class="font-mono text-[11px] text-slate-200">
+            เฉลยวิธีคิด: SR = ${metro.sr.toFixed(2)} mm | TR = ขีด ${metro.trIdx} (+${metro.tr.toFixed(2)})${vrPart} | ZE = ${metro.ze.toFixed(2)} mm
+          </div>
+          <div class="text-[11px] text-sky-300">สังเกตกรอบชี้ตำแหน่ง SR / TR บนจอแว่นขยาย 2 มิติประกอบ</div>
+        `;
+      }
+
+      syncUI();
+      renderLoupe2D();
+    }
+
+    function setupInteractions() {
+      const dom = renderer.domElement;
+      const raycaster = new THREE.Raycaster();
+      const ndc = new THREE.Vector2();
+
+      let dragMode = null;
+      let startClientY = 0;
+      let startOpening = 0;
+
+      const updateNDC = (e) => {
+        const r = dom.getBoundingClientRect();
+        ndc.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+        ndc.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+        raycaster.setFromCamera(ndc, camera);
+      };
+
+      dom.addEventListener('pointerdown', (e) => {
+        ensureAudioContext();
+        updateNDC(e);
+
+        if (raycaster.intersectObjects(lockInteractMeshes, false).length > 0) {
+          toggleSpindleLock();
+          return;
+        }
+
+        if (raycaster.intersectObjects(ratchetInteractMeshes, false).length > 0) {
+          if (state.isLocked) {
+            showToast('🔒 ก้านล็อกแกนวัดทำงานอยู่ ปลดล็อกก่อนหมุน Ratchet');
+            return;
+          }
+          const minGap = getMinAllowedOpening();
+          if (Math.abs(state.physicalOpening - minGap) < 1e-5) {
+            ratchetTargetSlipRad += (Math.PI / 5);
+            playRatchetClickSound();
+          }
+          dragMode = 'ratchet';
+          startClientY = e.clientY;
+          startOpening = state.physicalOpening;
+          controls.enabled = false;
+          camTween.active = false;
+          dom.setPointerCapture(e.pointerId);
+          return;
+        }
+
+        if (raycaster.intersectObjects(thimbleInteractMeshes, false).length > 0) {
+          if (state.isLocked) {
+            showToast('🔒 ก้านล็อกแกนวัดทำงานอยู่ กรุณาปลดล็อกก่อนหมุนปรับ');
+            return;
+          }
+          dragMode = 'thimble';
+          startClientY = e.clientY;
+          startOpening = state.physicalOpening;
+          controls.enabled = false;
+          camTween.active = false;
+          dom.style.cursor = 'ns-resize';
+          dom.setPointerCapture(e.pointerId);
+          return;
+        }
+
+        camTween.active = false;
+      });
+
+      dom.addEventListener('pointermove', (e) => {
+        if (dragMode === 'thimble' || dragMode === 'ratchet') {
+          const dy = e.clientY - startClientY;
+          const mmPerPixel = dragMode === 'ratchet' ? 0.004 : 0.008;
+          setPhysicalOpening(startOpening + dy * mmPerPixel);
+          return;
+        }
+
+        updateNDC(e);
+        if (raycaster.intersectObjects(lockInteractMeshes, false).length > 0) {
+          dom.style.cursor = 'pointer';
+        } else if (
+          raycaster.intersectObjects(thimbleInteractMeshes, false).length > 0 ||
+          raycaster.intersectObjects(ratchetInteractMeshes, false).length > 0
+        ) {
+          dom.style.cursor = state.isLocked ? 'not-allowed' : 'ns-resize';
+        } else {
+          dom.style.cursor = 'grab';
+        }
+      });
+
+      const endPointer = (e) => {
+        if (dragMode) {
+          dragMode = null;
+          controls.enabled = true;
+          dom.style.cursor = 'grab';
+          try { dom.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+      };
+      dom.addEventListener('pointerup', endPointer);
+      dom.addEventListener('pointercancel', endPointer);
+
+      dom.addEventListener('wheel', (e) => {
+        updateNDC(e);
+        const overKnob = raycaster.intersectObjects(thimbleInteractMeshes, false).length > 0 ||
+                         raycaster.intersectObjects(ratchetInteractMeshes, false).length > 0;
+        if (overKnob) {
+          e.preventDefault();
+          e.stopPropagation();
+          ensureAudioContext();
+          const dir = e.deltaY > 0 ? 1 : -1;
+          stepByLeastCount(dir * (e.shiftKey ? 10 : 1));
+        }
+      }, { passive: false });
+
+      const loupe = document.getElementById('loupeCanvas');
+      let loupeDrag = { active: false, startY: 0, startOpening: 0 };
+
+      loupe.addEventListener('pointerdown', (e) => {
+        ensureAudioContext();
+        if (state.isLocked) {
+          showToast('🔒 ก้านล็อกแกนวัดทำงานอยู่ กรุณาปลดล็อกก่อนหมุนปรับ');
+          return;
+        }
+        loupeDrag.active = true;
+        loupeDrag.startY = e.clientY;
+        loupeDrag.startOpening = state.physicalOpening;
+        loupe.setPointerCapture(e.pointerId);
+      });
+
+      loupe.addEventListener('pointermove', (e) => {
+        if (!loupeDrag.active) return;
+        const pxPerDivY = (state.resolution === 0.001 ? 8.2 : 9.2) * state.loupeZoom;
+        const deltaDivs = (e.clientY - loupeDrag.startY) / pxPerDivY;
+        setPhysicalOpening(loupeDrag.startOpening + deltaDivs * 0.01);
+      });
+
+      const endLoupe = (e) => {
+        if (loupeDrag.active) {
+          loupeDrag.active = false;
+          try { loupe.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+      };
+      loupe.addEventListener('pointerup', endLoupe);
+      loupe.addEventListener('pointercancel', endLoupe);
+
+      loupe.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        ensureAudioContext();
+        const dir = e.deltaY > 0 ? 1 : -1;
+        stepByLeastCount(dir * (e.shiftKey ? 10 : 1));
+      }, { passive: false });
+
+      window.addEventListener('keydown', (e) => {
+        if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+        if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          ensureAudioContext();
+          if (e.shiftKey) stepMicrometer(0.50);
+          else stepByLeastCount(1);
+        } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          ensureAudioContext();
+          if (e.shiftKey) stepMicrometer(-0.50);
+          else stepByLeastCount(-1);
+        }
+      });
+
+      window.addEventListener('resize', handleResize);
+    }
+
+    function handleResize() {
+      if (!renderer || !camera) return;
+      const mount = document.getElementById('threeMount');
+      const rect = mount.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        camera.aspect = rect.width / rect.height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(rect.width, rect.height);
+      }
+      renderLoupe2D();
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const banner = document.getElementById('toastBanner');
+      banner.textContent = msg;
+      banner.classList.remove('opacity-0', '-translate-y-2');
+      banner.classList.add('opacity-100', 'translate-y-0');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        banner.classList.remove('opacity-100', 'translate-y-0');
+        banner.classList.add('opacity-0', '-translate-y-2');
+      }, 2400);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (state.autoTargetOpening !== null) {
+        const diff = state.autoTargetOpening - state.physicalOpening;
+        if (Math.abs(diff) <= state.resolution * 1.5) {
+          setPhysicalOpening(state.autoTargetOpening, { fromAuto: true, triggerClickOnStop: false });
+          state.autoTargetOpening = null;
+          if (state.ratchetClicksPending > 0) {
+            state.ratchetClicksPending = 0;
+            triggerThreeRatchetClicks();
+          }
+        } else {
+          const step = diff * 0.22;
+          state.physicalOpening = quantizeVal(state.physicalOpening + step, state.resolution);
+          update3DMicrometerTransforms();
+          syncUI();
+          renderLoupe2D();
+        }
+      }
+
+      if (lockLeverGroup) {
+        const targetRotX = state.isLocked ? 0.68 : 0.0;
+        lockLeverGroup.rotation.x += (targetRotX - lockLeverGroup.rotation.x) * 0.2;
+      }
+
+      if (ratchetGroup) {
+        ratchetSlipOffsetRad += (ratchetTargetSlipRad - ratchetSlipOffsetRad) * 0.25;
+        ratchetGroup.rotation.x = ratchetSlipOffsetRad;
+      }
+
+      if (camTween.active && camera && controls) {
+        camera.position.lerp(camTween.pos, 0.11);
+        controls.target.lerp(camTween.target, 0.11);
+        if (camera.position.distanceTo(camTween.pos) < 0.2 && controls.target.distanceTo(camTween.target) < 0.2) {
+          camTween.active = false;
+        }
+      }
+
+      if (controls) controls.update();
+      if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+        updatePartLabelsProjection();
+      }
+    }
+
+    window.onload = function () {
+      try {
+        initThreeScene();
+        update3DMicrometerTransforms();
+        syncUI();
+        handleResize();
+        animate();
+      } catch (err) {
+        console.error('3D Micrometer Simulator initialization error:', err);
+      }
+    };
+  </script>
+</body>
+</html>

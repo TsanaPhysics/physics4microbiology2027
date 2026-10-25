@@ -1,0 +1,2681 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Micropipette Simulator | จำลองการใช้งานไมโครปิเปต 3 มิติ (P2 / P20 / P200 / P1000)</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Prompt (Thai UI) & JetBrains Mono (Metrology Figures) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Three.js & OrbitControls CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            lab: {
+              950: '#050912',
+              900: '#0b1221',
+              850: '#111b30',
+              800: '#182642',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: #050912;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+
+    input[type="number"], input[type="text"] {
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    /* Custom Precision Sliders */
+    input[type="range"].lab-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, #1e293b 0%, #334155 100%);
+      border-radius: 999px;
+      outline: none;
+      border: 1px solid #475569;
+    }
+    input[type="range"].lab-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      border: 2px solid #f8fafc;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    input[type="range"].lab-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.12);
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.85);
+    }
+    input[type="range"].lab-slider:disabled::-webkit-slider-thumb {
+      background: #64748b;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* Plunger 2-Stop Tactile Track */
+    input[type="range"].plunger-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 12px;
+      background: linear-gradient(
+        90deg,
+        #0f172a 0%,
+        #0284c7 72%,
+        #f59e0b 74%,
+        #ef4444 100%
+      );
+      border-radius: 999px;
+      outline: none;
+      border: 1px solid #475569;
+    }
+    input[type="range"].plunger-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #f8fafc;
+      border: 3px solid #38bdf8;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
+      cursor: grab;
+    }
+    input[type="range"].plunger-slider:active::-webkit-slider-thumb {
+      cursor: grabbing;
+      transform: scale(1.1);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b1221;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    /* 3D Anatomical Callout Pins */
+    .part-pin {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+      z-index: 20;
+      transition: opacity 0.2s ease;
+    }
+    .part-pin-tooltip {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(6px);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .part-pin:hover .part-pin-tooltip,
+    .part-pin.active .part-pin-tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="min-h-screen lg:h-screen flex flex-col bg-lab-950 text-slate-100">
+
+  <!-- ==================== TOP HEADER BAR ==================== -->
+  <header class="shrink-0 h-auto sm:h-14 px-3 sm:px-5 py-2 sm:py-0 bg-lab-900/95 border-b border-slate-800/90 flex flex-wrap items-center justify-between gap-2 z-30 backdrop-blur-md">
+    <!-- Brand & Title -->
+    <div class="flex items-center gap-3">
+      <div id="brandIconBox" class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0 transition-all">
+        <!-- Micropipette Icon SVG -->
+        <svg class="w-5 h-5 text-slate-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 2h6M12 2v4M8 6h8l-1 8-2 8h-2l-2-8-1-8z"/>
+          <path d="M16 7h3a2 2 0 0 1 2 2v1"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-sm sm:text-base font-bold tracking-tight text-white flex items-center gap-2">
+          <span>3D Micropipette Simulator</span>
+          <span id="headerModelBadge" class="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">P200 (20–200 µL)</span>
+        </h1>
+        <p class="text-[11px] text-slate-400 leading-tight">จำลองการใช้งานไมโครปิเปตและเทคนิคปิเปตทางชีววิทยา-จุลชีววิทยา 3 มิติ</p>
+      </div>
+    </div>
+
+    <!-- 3 Learning Modes Switcher + Sound + Help -->
+    <div class="flex items-center gap-2 ml-auto sm:ml-0">
+      <div class="inline-flex p-1 rounded-xl bg-slate-950 border border-slate-800">
+        <button id="btnModeFree" onclick="setLearningMode('free')" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20">
+          <span>🧪 ฝึกอิสระ</span>
+        </button>
+        <button id="btnModeMission" onclick="setLearningMode('mission')" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 text-slate-400 hover:text-white">
+          <span>🎯 ภารกิจแล็บ</span>
+        </button>
+        <button id="btnModeQuiz" onclick="setLearningMode('quiz')" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 text-slate-400 hover:text-white">
+          <span>📐 ทดสอบสเกล</span>
+        </button>
+      </div>
+
+      <button id="btnSoundToggle" onclick="toggleSound()" class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-sky-300 border border-slate-700/80 transition" title="เปิด/ปิดเสียงคลิกกลไกและของเหลว">
+        <span id="soundIcon" class="text-xs leading-none">🔊</span>
+      </button>
+
+      <button onclick="toggleHelpModal(true)" class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/80 transition" title="คู่มือการใช้ไมโครปิเปตและการอ่านสเกล 4 รุ่น">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN WORKSPACE ==================== -->
+  <main class="flex-1 lg:overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+
+    <!-- ==================== LEFT/CENTER: 3D LAB BENCH + 2D MAGNIFIER & PISTON ==================== -->
+    <section class="lg:col-span-8 flex flex-col lg:h-full border-b lg:border-b-0 lg:border-r border-slate-800/90 overflow-hidden">
+
+      <!-- 3D Viewport Wrapper -->
+      <div id="viewportContainer" class="relative flex-1 min-h-[340px] sm:min-h-[410px] lg:min-h-0 bg-gradient-to-b from-lab-900 via-lab-950 to-lab-900 overflow-hidden">
+        <!-- Three.js Canvas Mount -->
+        <div id="threeMount" class="w-full h-full"></div>
+
+        <!-- Top Overlay: Camera Presets & 3D Labels Toggle -->
+        <div class="absolute top-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 pointer-events-none z-20">
+          <div class="flex flex-wrap items-center gap-1.5 pointer-events-auto bg-slate-950/85 backdrop-blur-md p-1.5 rounded-xl border border-slate-800/90 shadow-lg">
+            <span class="text-[10px] uppercase tracking-wider text-slate-400 px-1.5 font-semibold hidden sm:inline">มุมกล้อง:</span>
+            <button onclick="setCameraPreset('bench')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-800/90 hover:bg-sky-500/20 hover:text-sky-300 text-slate-200 border border-slate-700/70 transition">โต๊ะแล็บ (Overview)</button>
+            <button onclick="setCameraPreset('window')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-800/90 hover:bg-sky-500/20 hover:text-sky-300 text-slate-200 border border-slate-700/70 transition">หน้าต่างตัวเลข 3 หลัก</button>
+            <button onclick="setCameraPreset('tip')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-800/90 hover:bg-sky-500/20 hover:text-sky-300 text-slate-200 border border-slate-700/70 transition">ปลายทิป & การดูดสาร</button>
+            <button onclick="setCameraPreset('plunger')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-800/90 hover:bg-sky-500/20 hover:text-sky-300 text-slate-200 border border-slate-700/70 transition">หัวกด Plunger</button>
+          </div>
+
+          <div class="flex items-center gap-1.5 pointer-events-auto">
+            <button id="btnToggleLabels" onclick="togglePartLabels()" class="px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/40 backdrop-blur-md hover:bg-sky-500/30 transition flex items-center gap-1.5 shadow-lg">
+              <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+              <span>ป้ายส่วนประกอบ</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Diagnostic Warning / Feedback Banner -->
+        <div id="diagnosticToast" class="pointer-events-none opacity-0 transition-all duration-300 transform -translate-y-2 absolute top-14 left-1/2 -translate-x-1/2 z-30 max-w-lg w-[92%] sm:w-auto px-4 py-2.5 rounded-xl bg-slate-900/95 border border-sky-500/50 text-xs font-medium text-sky-200 shadow-2xl text-center">
+          แจ้งเตือนระบบปฏิบัติการ
+        </div>
+
+        <!-- Bottom Overlay: Interactive Hints & Status Pills -->
+        <div class="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 pointer-events-none z-20">
+          <div class="px-3 py-1.5 rounded-xl bg-slate-950/80 backdrop-blur-md border border-slate-800/80 text-[11px] text-slate-300 flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>คลิกอุปกรณ์บนโต๊ะ 3D เพื่อย้ายตำแหน่ง • คลิกปุ่มหัวกด/ปลดทิปบนตัวด้ามได้โดยตรง</span>
+          </div>
+
+          <!-- Real-Time Pipette State Badges -->
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span id="badgeTipState" class="px-2.5 py-1 rounded-xl bg-rose-500/20 border border-rose-400/50 text-rose-300 text-[11px] font-semibold backdrop-blur-md">
+              ⚠ ยังไม่สวมทิป
+            </span>
+            <span id="badgeStopState" class="px-2.5 py-1 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-300 text-[11px] font-mono font-semibold backdrop-blur-md">
+              Plunger: ปกติ (0%)
+            </span>
+            <span id="badgeVolLock" class="hidden px-2.5 py-1 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[11px] font-semibold backdrop-blur-md">
+              🔒 ล็อกปริมาตร
+            </span>
+          </div>
+        </div>
+
+        <!-- 3D Anatomical Callout Pins Layer -->
+        <div id="labelsOverlay" class="absolute inset-0 pointer-events-none overflow-hidden z-10"></div>
+      </div>
+
+      <!-- ==================== 2D SYNCHRONIZED COUNTER MAGNIFIER & AIR-CUSHION PISTON ==================== -->
+      <div class="shrink-0 bg-lab-900 border-t border-slate-800 px-3 sm:px-4 py-2.5">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-stretch">
+
+          <!-- LEFT 2D PANEL: 3-Digit Rolling Drum Window Magnifier -->
+          <div class="md:col-span-5 flex flex-col justify-between bg-slate-950/90 rounded-xl border border-slate-800 p-2.5">
+            <div class="flex items-center justify-between gap-2 mb-1.5">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-bold text-white">หน้าต่างตัวเลข 3 หลัก (2D Loupe)</span>
+              </div>
+              <button id="btnVolLock" onclick="toggleVolumeLock()" class="px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[10px] font-semibold text-slate-300 transition">
+                🔓 ปลดล็อกวงล้อ
+              </button>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <div class="w-[106px] h-[134px] shrink-0 rounded-xl overflow-hidden border border-slate-700 bg-slate-900 shadow-inner">
+                <canvas id="counter2DCanvas" class="w-full h-full block cursor-ns-resize" title="ลากขึ้น/ลง หรือ Scroll เมาส์เพื่อหมุนปรับปริมาตร"></canvas>
+              </div>
+
+              <div id="placeValuePanel" class="flex-1 min-w-0 space-y-1.5 text-[11px]">
+                <div id="pvModelSpec" class="font-mono text-[10px] text-amber-300 font-semibold">P200 • ช่วง 20–200 µL</div>
+                <div id="pvDigitsExplain" class="space-y-1 text-slate-300 leading-tight"></div>
+                <div id="pvLiveReadoutBox" class="pt-1 border-t border-slate-800 flex items-baseline justify-between">
+                  <span class="text-[10px] text-slate-400">ค่าที่ตั้ง:</span>
+                  <span id="pvReadoutUL" class="font-mono text-sm font-bold text-sky-300">125.0 µL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT 2D PANEL: Air-Cushion Piston Cross-Section & 6-Step Forward Pipetting Guide -->
+          <div class="md:col-span-7 flex flex-col justify-between bg-slate-950/90 rounded-xl border border-slate-800 p-2.5">
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <span class="text-xs font-bold text-white">แผนภาพตัดขวางลูกสูบ Air-Cushion & ขั้นตอน Forward Pipetting</span>
+              <span id="stepTrackerLabel" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30">ขั้นตอนที่ 1/6: สวมทิปปลอดเชื้อ</span>
+            </div>
+
+            <div class="w-full h-[134px] rounded-xl overflow-hidden border border-slate-800/90 bg-lab-950">
+              <canvas id="piston2DCanvas" class="w-full h-full block"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== RIGHT SIDEBAR: MODEL SELECTOR, MODES & LAB DECK ==================== -->
+    <aside class="lg:col-span-4 lg:h-full lg:overflow-y-auto p-3.5 sm:p-4 space-y-3.5 bg-lab-950/95">
+
+      <!-- 1. PIPETTE MODEL SELECTOR & VOLUME SETTING -->
+      <div class="p-3.5 rounded-2xl bg-slate-900/95 border border-slate-800 shadow-lg space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-white">1. เลือกรุ่นไมโครปิเปต (Select Model)</span>
+          <span id="modelTipBadge" class="text-[10px] px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30 font-medium">ใช้ทิปสีเหลือง (Yellow Tip)</span>
+        </div>
+
+        <div class="grid grid-cols-4 gap-1.5">
+          <button data-model="P2" onclick="selectPipetteModel('P2')" class="model-btn py-2 px-1.5 rounded-xl border text-center transition bg-slate-950 border-slate-800 text-slate-300 hover:border-orange-500/50">
+            <div class="font-mono text-xs font-bold text-orange-400">P2</div>
+            <div class="text-[9px] text-slate-400">0.2–2 µL</div>
+          </button>
+          <button data-model="P20" onclick="selectPipetteModel('P20')" class="model-btn py-2 px-1.5 rounded-xl border text-center transition bg-slate-950 border-slate-800 text-slate-300 hover:border-yellow-400/50">
+            <div class="font-mono text-xs font-bold text-yellow-300">P20</div>
+            <div class="text-[9px] text-slate-400">2–20 µL</div>
+          </button>
+          <button data-model="P200" onclick="selectPipetteModel('P200')" class="model-btn py-2 px-1.5 rounded-xl border text-center transition bg-amber-500/20 border-amber-400/60 text-white shadow">
+            <div class="font-mono text-xs font-bold text-amber-300">P200</div>
+            <div class="text-[9px] text-amber-200/80">20–200 µL</div>
+          </button>
+          <button data-model="P1000" onclick="selectPipetteModel('P1000')" class="model-btn py-2 px-1.5 rounded-xl border text-center transition bg-slate-950 border-slate-800 text-slate-300 hover:border-blue-500/50">
+            <div class="font-mono text-xs font-bold text-blue-400">P1000</div>
+            <div class="text-[9px] text-slate-400">100–1000</div>
+          </button>
+        </div>
+
+        <!-- Volume Thumbwheel Control -->
+        <div id="volumeControlBlock" class="pt-2 border-t border-slate-800/90 space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-semibold text-slate-200">หมุนวงล้อตั้งปริมาตร (Thumbwheel)</span>
+            <span id="volRangeHint" class="font-mono text-[11px] text-slate-400">ความละเอียด 1 µL</span>
+          </div>
+
+          <input id="volumeSlider" type="range" min="20" max="200" step="0.2" value="125" class="lab-slider" oninput="onVolumeSliderInput(this.value)" />
+
+          <div class="grid grid-cols-4 gap-1.5">
+            <button id="btnVolCoarseMinus" onclick="stepVolume('coarse', -1)" class="py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono text-xs text-slate-200 transition">-10</button>
+            <button id="btnVolFineMinus" onclick="stepVolume('std', -1)" class="py-1.5 rounded-xl bg-slate-800 hover:bg-sky-500/20 border border-slate-700 font-mono text-xs text-sky-300 transition">-1</button>
+            <button id="btnVolFinePlus" onclick="stepVolume('std', 1)" class="py-1.5 rounded-xl bg-slate-800 hover:bg-sky-500/20 border border-slate-700 font-mono text-xs text-sky-300 transition">+1</button>
+            <button id="btnVolCoarsePlus" onclick="stepVolume('coarse', 1)" class="py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 font-mono text-xs text-slate-200 transition">+10</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODE CARD A: MISSION BRIEFING -->
+      <div id="panelMissionCard" class="hidden p-3.5 rounded-2xl bg-gradient-to-br from-emerald-950/60 via-slate-900 to-lab-900 border border-emerald-500/40 shadow-xl space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-emerald-300">🎯 ภารกิจฝึกปฏิบัติการปิเปต (Lab Mission)</span>
+          <span class="font-mono text-xs px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">ผ่านแล้ว: <strong id="missionPassCount">0</strong></span>
+        </div>
+
+        <div id="missionDescBox" class="p-2.5 rounded-xl bg-slate-950/90 border border-slate-800 text-xs text-slate-200 leading-relaxed">
+          กำลังโหลดภารกิจ...
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="evaluateMission()" class="py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold text-xs shadow-lg transition">
+            ✓ ส่งตรวจผลภารกิจ
+          </button>
+          <button onclick="generateNewMission()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold text-xs transition">
+            🎲 สุ่มภารกิจใหม่
+          </button>
+        </div>
+
+        <div id="missionResultBox" class="hidden p-3 rounded-xl border text-xs space-y-1"></div>
+      </div>
+
+      <!-- MODE CARD B: SCALE QUIZ -->
+      <div id="panelQuizCard" class="hidden p-3.5 rounded-2xl bg-gradient-to-br from-indigo-950/70 via-slate-900 to-lab-900 border border-indigo-500/40 shadow-xl space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-indigo-300">📐 แบบทดสอบอ่านและตั้งค่าสเกล</span>
+          <div class="flex items-center gap-1.5 font-mono text-xs">
+            <span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">คะแนน: <strong id="quizScoreText">0/0</strong></span>
+            <span class="px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30">🔥 <strong id="quizStreakText">0</strong></span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800 text-[11px]">
+          <button id="btnQuizRead" onclick="setQuizSubMode('read')" class="py-1.5 px-2 rounded-lg font-semibold bg-indigo-500 text-white transition">อ่านค่าจากหน้าต่าง 3 หลัก</button>
+          <button id="btnQuizSet" onclick="setQuizSubMode('set')" class="py-1.5 px-2 rounded-lg font-semibold text-slate-400 hover:text-white transition">เลือกรุ่น & หมุนตั้งค่า</button>
+        </div>
+
+        <div id="quizQuestionBox" class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 text-xs text-slate-200 leading-relaxed">
+          โจทย์ทดสอบ
+        </div>
+
+        <div id="quizReadInputGroup" class="grid grid-cols-2 gap-2">
+          <div class="relative">
+            <input id="quizInputUL" type="number" step="0.01" placeholder="ค่าในหน่วย µL" onkeydown="if(event.key==='Enter') submitScaleQuiz()" class="w-full px-3 py-2 pr-9 rounded-xl bg-slate-950 border border-slate-700 focus:border-sky-400 focus:outline-none font-mono text-xs text-white" />
+            <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] font-mono text-slate-400">µL</span>
+          </div>
+          <div class="relative">
+            <input id="quizInputML" type="number" step="0.0001" placeholder="ค่าในหน่วย mL" onkeydown="if(event.key==='Enter') submitScaleQuiz()" class="w-full px-3 py-2 pr-9 rounded-xl bg-slate-950 border border-slate-700 focus:border-sky-400 focus:outline-none font-mono text-xs text-white" />
+            <span class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] font-mono text-slate-400">mL</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="submitScaleQuiz()" class="py-2 px-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs shadow-lg transition">
+            ตรวจคำตอบ
+          </button>
+          <button onclick="generateScaleQuizQuestion()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold text-xs transition">
+            🎲 ข้อถัดไป
+          </button>
+        </div>
+
+        <div id="quizFeedbackBox" class="hidden p-3 rounded-xl border text-xs space-y-1.5"></div>
+      </div>
+
+      <!-- 2. INTERACTIVE PIPETTING WORKBENCH DECK -->
+      <div id="pipettingOperationsDeck" class="space-y-3.5">
+
+        <div class="p-3.5 rounded-2xl bg-gradient-to-br from-slate-900 to-lab-900 border border-slate-800 shadow-lg space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-white">สถานะปริมาตรจริง (Live Volume Telemetry)</span>
+            <button onclick="resetReceivingTube()" class="text-[10px] px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+              ล้างหลอดรับ (0 µL)
+            </button>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="p-2 rounded-xl bg-slate-950 border border-slate-800">
+              <div class="text-[10px] text-slate-400">ปริมาตรที่ตั้ง</div>
+              <div id="teleSetUL" class="font-mono text-sm font-bold text-sky-300 mt-0.5">125.0 µL</div>
+            </div>
+            <div class="p-2 rounded-xl bg-slate-950 border border-slate-800">
+              <div class="text-[10px] text-slate-400">ในทิปขณะนี้</div>
+              <div id="teleTipUL" class="font-mono text-sm font-bold text-emerald-300 mt-0.5">0.0 µL</div>
+            </div>
+            <div class="p-2 rounded-xl bg-slate-950 border border-slate-800">
+              <div class="text-[10px] text-slate-400">สะสมในหลอดรับ</div>
+              <div id="teleDestUL" class="font-mono text-sm font-bold text-amber-300 mt-0.5">0.0 µL</div>
+            </div>
+          </div>
+
+          <div class="pt-1">
+            <div class="flex items-center justify-between text-[11px] mb-1">
+              <span class="text-slate-300 font-medium">สารตัวอย่างต้นทาง (Source Reagent):</span>
+            </div>
+            <div class="grid grid-cols-2 gap-1.5 text-[11px]">
+              <button data-reag="blue" onclick="selectReagent('blue')" class="reag-btn py-1.5 px-2 rounded-lg border text-left transition bg-blue-500/20 border-blue-400/60 text-blue-200 font-medium flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0"></span>
+                <span class="truncate">Bromophenol Blue</span>
+              </button>
+              <button data-reag="bacteria" onclick="selectReagent('bacteria')" class="reag-btn py-1.5 px-2 rounded-lg border text-left transition bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-600 flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-300 shrink-0"></span>
+                <span class="truncate">เชื้อแบคทีเรีย OD600</span>
+              </button>
+              <button data-reag="buffer" onclick="selectReagent('buffer')" class="reag-btn py-1.5 px-2 rounded-lg border text-left transition bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-600 flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-cyan-200 shrink-0"></span>
+                <span class="truncate">TE Buffer (ใส)</span>
+              </button>
+              <button data-reag="safranin" onclick="selectReagent('safranin')" class="reag-btn py-1.5 px-2 rounded-lg border text-left transition bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-600 flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0"></span>
+                <span class="truncate">สีแดง Safranin</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-slate-900/95 border border-slate-800 shadow-lg space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-white">2. ตำแหน่งสถานี & การจุ่มทิป (Lab Stations)</span>
+            <span id="stationCurrentLabel" class="text-[11px] font-semibold text-sky-300">เหนือกล่องทิป</span>
+          </div>
+
+          <div class="grid grid-cols-4 gap-1.5 text-[11px]">
+            <button data-st="rack" onclick="moveToStation('rack')" class="st-btn py-2 px-1 rounded-xl border text-center font-semibold transition bg-sky-500/20 border-sky-400/60 text-sky-200">
+              <div>📦</div>
+              <div class="mt-0.5">กล่องทิป</div>
+            </button>
+            <button data-st="source" onclick="moveToStation('source')" class="st-btn py-2 px-1 rounded-xl border text-center font-semibold transition bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-600">
+              <div>🧪</div>
+              <div class="mt-0.5">หลอดสาร</div>
+            </button>
+            <button data-st="dest" onclick="moveToStation('dest')" class="st-btn py-2 px-1 rounded-xl border text-center font-semibold transition bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-600">
+              <div>💧</div>
+              <div class="mt-0.5">หลอดรับ</div>
+            </button>
+            <button data-st="waste" onclick="moveToStation('waste')" class="st-btn py-2 px-1 rounded-xl border text-center font-semibold transition bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-600">
+              <div>☣️</div>
+              <div class="mt-0.5">ถังทิ้งทิป</div>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <button id="btnVerticalAction" onclick="triggerVerticalStationAction()" class="py-2 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold transition flex items-center justify-center gap-1.5">
+              <span>⬇ กดสวมทิปปลอดเชื้อ</span>
+            </button>
+            <button id="btnEjectTip" onclick="ejectTipAction()" class="py-2 px-3 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-300 text-xs font-bold transition flex items-center justify-center gap-1.5">
+              <span>⏏ กดปุ่มปลดทิปทิ้ง</span>
+            </button>
+          </div>
+
+          <div class="pt-2.5 border-t border-slate-800 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-white">3. ก้านกด Plunger 2 จังหวะ (1st & 2nd Stop)</span>
+              <span id="plungerStrokeReadout" class="font-mono text-[11px] text-sky-300">ปกติ (0%)</span>
+            </div>
+
+            <div class="relative pt-1 pb-3">
+              <input id="plungerSlider" type="range" min="0" max="1.35" step="0.01" value="0" class="plunger-slider" oninput="onPlungerSliderInput(parseFloat(this.value))" />
+              <div class="relative w-full text-[10px] font-mono text-slate-400 mt-1 flex justify-between">
+                <span>0% (ปล่อย)</span>
+                <span class="text-amber-300 font-bold" style="margin-left: 34%;">▲ จังหวะ 1 (ดูดสาร)</span>
+                <span class="text-rose-400 font-bold">▲ จังหวะ 2 (ไล่หยด)</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-1.5 text-[11px]">
+              <button onclick="animatePlungerTo(1.00)" class="py-2 px-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-200 font-semibold transition">
+                กดค้างจังหวะ 1
+              </button>
+              <button onclick="animatePlungerTo(0.00)" class="py-2 px-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 text-sky-200 font-semibold transition">
+                ปล่อยปุ่มช้าๆ
+              </button>
+              <button onclick="animatePlungerTo(1.35)" class="py-2 px-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-200 font-semibold transition">
+                กดสุดจังหวะ 2
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-200">📋 บันทึกตรวจสอบเทคนิคปิเปต (Diagnostics)</span>
+            <span id="diagStatusDot" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">พร้อมปฏิบัติงาน</span>
+          </div>
+          <div id="diagnosticsLog" class="text-[11px] text-slate-300 space-y-1 max-h-28 overflow-y-auto pr-1">
+            <div class="text-slate-400">• เลือกรุ่นปิเปต ตั้งปริมาตร และสวมทิปปลอดเชื้อก่อนเริ่มดูดสารละลาย</div>
+          </div>
+        </div>
+
+      </div>
+
+    </aside>
+  </main>
+
+  <!-- ==================== EDUCATIONAL GUIDE MODAL ==================== -->
+  <div id="helpModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
+    <div class="max-w-3xl w-full rounded-2xl bg-lab-900 border border-slate-700 shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <span class="text-sky-400">📘</span> คู่มือการอ่านค่าหน้าต่างตัวเลข 4 รุ่น และเทคนิค Forward Pipetting
+        </h3>
+        <button onclick="toggleHelpModal(false)" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">✕</button>
+      </div>
+
+      <div class="p-5 space-y-4 text-xs sm:text-sm text-slate-300 max-h-[76vh] overflow-y-auto leading-relaxed">
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-950 text-slate-300 border-b border-slate-800">
+              <tr>
+                <th class="p-2.5">รุ่น (Model)</th>
+                <th class="p-2.5">ช่วงปริมาตร</th>
+                <th class="p-2.5">หลักบน → กลาง → ล่าง</th>
+                <th class="p-2.5">ตัวอย่างหน้าต่าง `1 - 2 - 5`</th>
+                <th class="p-2.5">สีปุ่ม / ทิป</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/80 bg-slate-900/60">
+              <tr>
+                <td class="p-2.5 font-mono font-bold text-orange-400">P2</td>
+                <td class="p-2.5 font-mono">0.20 – 2.00 µL</td>
+                <td class="p-2.5">หน่วย (ดำ) | <span class="text-rose-400">ส่วนสิบ (แดง)</span> • <span class="text-rose-400">ส่วนร้อย (แดง)</span></td>
+                <td class="p-2.5 font-mono text-sky-300">1.25 µL</td>
+                <td class="p-2.5">ส้ม-แดง / ทิปใสสั้น</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-mono font-bold text-yellow-300">P20</td>
+                <td class="p-2.5 font-mono">2.0 – 20.0 µL</td>
+                <td class="p-2.5">สิบ (ดำ) • หน่วย (ดำ) | <span class="text-rose-400">ส่วนสิบ (แดง)</span></td>
+                <td class="p-2.5 font-mono text-sky-300">12.5 µL</td>
+                <td class="p-2.5">เหลือง / ทิปเหลือง</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-mono font-bold text-amber-300">P200</td>
+                <td class="p-2.5 font-mono">20 – 200 µL</td>
+                <td class="p-2.5">ร้อย (ดำ) • สิบ (ดำ) • หน่วย (ดำ)</td>
+                <td class="p-2.5 font-mono text-sky-300">125 µL</td>
+                <td class="p-2.5">เหลือง / ทิปเหลือง</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-mono font-bold text-blue-400">P1000</td>
+                <td class="p-2.5 font-mono">100 – 1000 µL</td>
+                <td class="p-2.5"><span class="text-rose-400">พันหรือ mL (แดง)</span> | ร้อย (ดำ) • สิบ (ดำ)</td>
+                <td class="p-2.5 font-mono text-sky-300">0.75 mL = 750 µL (0-7-5)</td>
+                <td class="p-2.5">น้ำเงิน / ทิปฟ้า</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <h4 class="font-bold text-emerald-300">ขั้นตอนมาตรฐาน Forward Pipetting 6 ขั้นตอน (ไม่ให้ปริมาตรคลาดเคลื่อน)</h4>
+          <ol class="list-decimal list-inside space-y-1 text-xs text-slate-300">
+            <li><strong class="text-white">สวมทิปปลอดเชื้อ (Attach Tip):</strong> เลือกขนาดทิปให้ตรงรุ่นปิเปต กดสวมให้แน่นพอดี</li>
+            <li><strong class="text-white">กดปุ่ม Plunger ค้างที่จังหวะที่ 1 (1st Stop):</strong> กดไล่อากาศในกระบอกสูบออกเท่ากับปริมาตรที่ตั้งไว้ <em>ก่อน</em> จุ่มทิปลงในสารละลาย</li>
+            <li><strong class="text-white">จุ่มปลายทิป & ค่อยๆ ผ่อนปุ่มขึ้น (Aspirate):</strong> จุ่มปลายทิปใต้ผิวน้ำเล็กน้อย (2–5 mm) แล้วค่อยๆ ปล่อยปุ่มกลับสู่ตำแหน่งปกติอย่างช้าๆ เพื่อไม่ให้ของเหลวกระเด็นเข้าก้านสูบ</li>
+            <li><strong class="text-white">ย้ายไปยังหลอดรับ & กดจังหวะที่ 1:</strong> แตะปลายทิปข้างผนังหลอดรับแล้วกดปุ่มลงถึงจังหวะที่ 1</li>
+            <li><strong class="text-white">กดย้ำถึงจังหวะที่ 2 (2nd Stop / Blow-out):</strong> กดต่อลงไปจนสุดจังหวะที่ 2 เพื่อไล่หยดของเหลวสุดท้ายที่ค้างปลายทิปออกให้หมด</li>
+            <li><strong class="text-white">ยกทิปขึ้นก่อนปล่อยปุ่ม & ดีดทิปทิ้งถังติดเชื้อ:</strong> ยกปลายทิปพ้นของเหลวก่อนผ่อนปุ่มกลับ (ป้องกันการดูดสารกลับ!) แล้วปลดทิปทิ้งลงถัง Biohazard</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="px-5 py-3 bg-slate-900 border-t border-slate-800 flex justify-end">
+        <button onclick="toggleHelpModal(false)" class="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition">เข้าใจแล้ว เริ่มฝึกปิเปต</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CORE SIMULATION, AUDIO & 3D ENGINE ==================== -->
+  <script>
+    const PIPETTE_MODELS = {
+      P2: {
+        id: 'P2',
+        name: 'P2 (0.20–2.00 µL)',
+        minUL: 0.20,
+        maxUL: 2.00,
+        stdStepUL: 0.01,
+        fineStepUL: 0.002,
+        coarseStepUL: 0.10,
+        bottomUnitUL: 0.01,
+        decimalsUL: 2,
+        plungerHex: 0xf97316,
+        badgeBg: 'bg-orange-500/20 text-orange-300 border-orange-500/40',
+        tipLabel: 'ทิปใสสั้น (Clear Micro Tip 10 µL)',
+        tipColorHex: 0xe2e8f0,
+        tipOpacity: 0.42,
+        tipLength: 14.5,
+        tipRadiusTop: 1.55,
+        digitColors: ['#0f172a', '#dc2626', '#dc2626'],
+        lineAfterDigit: 0,
+        placeLabels: [
+          { name: 'หลักบน (ดำ)', role: 'หลักหน่วย (1 µL)' },
+          { name: 'หลักกลาง (แดง)', role: 'ทศนิยมตำแหน่งที่ 1 (0.1 µL)' },
+          { name: 'หลักล่าง (แดง)', role: 'ทศนิยมตำแหน่งที่ 2 (0.01 µL) + ขีด 0.002' }
+        ]
+      },
+      P20: {
+        id: 'P20',
+        name: 'P20 (2.0–20.0 µL)',
+        minUL: 2.0,
+        maxUL: 20.0,
+        stdStepUL: 0.1,
+        fineStepUL: 0.02,
+        coarseStepUL: 1.0,
+        bottomUnitUL: 0.1,
+        decimalsUL: 1,
+        plungerHex: 0xeab308,
+        badgeBg: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/40',
+        tipLabel: 'ทิปสีเหลือง (Yellow Tip 200 µL)',
+        tipColorHex: 0xfef08a,
+        tipOpacity: 0.46,
+        tipLength: 19.5,
+        tipRadiusTop: 1.85,
+        digitColors: ['#0f172a', '#0f172a', '#dc2626'],
+        lineAfterDigit: 1,
+        placeLabels: [
+          { name: 'หลักบน (ดำ)', role: 'หลักสิบ (10 µL)' },
+          { name: 'หลักกลาง (ดำ)', role: 'หลักหน่วย (1 µL)' },
+          { name: 'หลักล่าง (แดง)', role: 'ทศนิยม 0.1 µL + ขีดละเอียด 0.02 µL' }
+        ]
+      },
+      P200: {
+        id: 'P200',
+        name: 'P200 (20–200 µL)',
+        minUL: 20,
+        maxUL: 200,
+        stdStepUL: 1,
+        fineStepUL: 0.2,
+        coarseStepUL: 10,
+        bottomUnitUL: 1.0,
+        decimalsUL: 1,
+        plungerHex: 0xfacc15,
+        badgeBg: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+        tipLabel: 'ทิปสีเหลือง (Yellow Tip 200 µL)',
+        tipColorHex: 0xfde047,
+        tipOpacity: 0.46,
+        tipLength: 20.0,
+        tipRadiusTop: 1.9,
+        digitColors: ['#0f172a', '#0f172a', '#0f172a'],
+        lineAfterDigit: -1,
+        placeLabels: [
+          { name: 'หลักบน (ดำ)', role: 'หลักร้อย (100 µL)' },
+          { name: 'หลักกลาง (ดำ)', role: 'หลักสิบ (10 µL)' },
+          { name: 'หลักล่าง (ดำ)', role: 'หลักหน่วย (1 µL) + ขีดละเอียด 0.2 µL' }
+        ]
+      },
+      P1000: {
+        id: 'P1000',
+        name: 'P1000 (100–1000 µL)',
+        minUL: 100,
+        maxUL: 1000,
+        stdStepUL: 10,
+        fineStepUL: 2,
+        coarseStepUL: 100,
+        bottomUnitUL: 10.0,
+        decimalsUL: 0,
+        plungerHex: 0x2563eb,
+        badgeBg: 'bg-blue-500/20 text-blue-300 border-blue-500/40',
+        tipLabel: 'ทิปสีฟ้าขนาดใหญ่ (Blue Tip 1000 µL)',
+        tipColorHex: 0x60a5fa,
+        tipOpacity: 0.48,
+        tipLength: 25.5,
+        tipRadiusTop: 2.35,
+        digitColors: ['#dc2626', '#0f172a', '#0f172a'],
+        lineAfterDigit: 0,
+        placeLabels: [
+          { name: 'หลักบน (แดง)', role: 'หลักพัน µL / มิลลิลิตร (1000 µL = 1 mL)' },
+          { name: 'หลักกลาง (ดำ)', role: 'หลักร้อย (100 µL)' },
+          { name: 'หลักล่าง (ดำ)', role: 'หลักสิบ (10 µL) + ขีดละเอียด 2 µL' }
+        ]
+      }
+    };
+
+    const REAGENTS = {
+      blue: { id: 'blue', name: 'สีย้อม Bromophenol Blue', hex: 0x1d4ed8, css: '#2563eb', opacity: 0.88 },
+      bacteria: { id: 'bacteria', name: 'เชื้อแบคทีเรีย E. coli (OD600)', hex: 0xeab308, css: '#eab308', opacity: 0.78 },
+      buffer: { id: 'buffer', name: 'สารละลาย TE Buffer (ใส)', hex: 0x7dd3fc, css: '#7dd3fc', opacity: 0.45 },
+      safranin: { id: 'safranin', name: 'สารละลายสีแดง Safranin', hex: 0xe11d48, css: '#e11d48', opacity: 0.86 }
+    };
+
+    const STATION_X = {
+      rack: -44,
+      source: -14,
+      dest: 18,
+      waste: 50
+    };
+
+    const state = {
+      learningMode: 'free',
+      modelId: 'P200',
+      setVolumeUL: 125.0,
+      volumeLocked: false,
+      soundEnabled: true,
+      showLabels: true,
+      station: 'rack',
+      isLowered: false,
+      hasTip: false,
+      tipModelId: null,
+      tipLiquidUL: 0.0,
+      tipReagentId: null,
+      usedTipHistoryReagent: null,
+      plungerPos: 0.0,
+      targetPlungerPos: null,
+      maxPlungerInAir: 0.0,
+      ejectorPressed: 0.0,
+      activeReagentId: 'blue',
+      destVolumeUL: 0.0,
+      destColorRGB: { r: 37, g: 99, b: 235 },
+      lastErrorType: null,
+      sessionErrors: [],
+      mission: null,
+      missionPassedCount: 0,
+      quizSubMode: 'read',
+      quizTargetModel: 'P20',
+      quizTargetUL: 14.5,
+      quizAnswered: false,
+      quizScoreRight: 0,
+      quizScoreTotal: 0,
+      quizStreak: 0
+    };
+
+    let audioCtx = null;
+    function ensureAudio() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playLabSound(type) {
+      if (!state.soundEnabled) return;
+      try {
+        ensureAudio();
+        if (!audioCtx) return;
+        const now = audioCtx.currentTime;
+
+        if (type === 'stop1' || type === 'stop2') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(type === 'stop1' ? 1450 : 2150, now);
+          osc.frequency.exponentialRampToValueAtTime(420, now + 0.032);
+          gain.gain.setValueAtTime(0.24, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.038);
+        } else if (type === 'tip_on') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(980, now + 0.055);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.065);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.07);
+        } else if (type === 'eject') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(780, now);
+          osc.frequency.exponentialRampToValueAtTime(210, now + 0.09);
+          gain.gain.setValueAtTime(0.22, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.095);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.1);
+        } else if (type === 'wheel') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1900, now);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.012);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.014);
+        } else if (type === 'warn') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(260, now);
+          osc.frequency.setValueAtTime(210, now + 0.08);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.19);
+        }
+      } catch (_) {}
+    }
+
+    function toggleSound() {
+      state.soundEnabled = !state.soundEnabled;
+      document.getElementById('soundIcon').textContent = state.soundEnabled ? '🔊' : '🔇';
+      if (state.soundEnabled) playLabSound('stop1');
+    }
+
+    let window3DCanvas = null;
+    let window3DTexture = null;
+
+    function getCounterDigitsState(modelId, volumeUL) {
+      const spec = PIPETTE_MODELS[modelId];
+      const u = volumeUL / spec.bottomUnitUL;
+      const dBottom = u % 10;
+      const intTens = Math.floor((u + 1e-6) / 10);
+      let dMiddle = intTens % 10;
+      const fracBottom = dBottom - Math.floor(dBottom);
+      if (Math.floor(dBottom) === 9 && fracBottom > 0.25) {
+        dMiddle += (fracBottom - 0.25) / 0.75;
+      }
+
+      let dTop = Math.floor((u + 1e-6) / 100);
+      if (intTens % 10 === 9 && Math.floor(dBottom) === 9 && fracBottom > 0.25) {
+        dTop += (fracBottom - 0.25) / 0.75;
+      }
+
+      return { spec, u, drums: [dTop, dMiddle, dBottom] };
+    }
+
+    function draw3DigitCounterToCanvas(ctx, W, H, modelId, volumeUL) {
+      const { spec, drums } = getCounterDigitsState(modelId, volumeUL);
+
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, W, H);
+
+      const padX = W * 0.12;
+      const padY = H * 0.06;
+      const winW = W - padX * 2;
+      const winH = H - padY * 2;
+      const cellH = winH / 3;
+
+      const drumGrad = ctx.createLinearGradient(padX, 0, padX + winW, 0);
+      drumGrad.addColorStop(0, '#cbd5e1');
+      drumGrad.addColorStop(0.2, '#f8fafc');
+      drumGrad.addColorStop(0.8, '#ffffff');
+      drumGrad.addColorStop(1, '#cbd5e1');
+      ctx.fillStyle = drumGrad;
+      ctx.fillRect(padX, padY, winW, winH);
+
+      for (let slot = 0; slot < 3; slot++) {
+        const slotTop = padY + slot * cellH;
+        const slotCenterY = slotTop + cellH * 0.5;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(padX, slotTop, winW, cellH);
+        ctx.clip();
+
+        const cellShade = ctx.createLinearGradient(0, slotTop, 0, slotTop + cellH);
+        cellShade.addColorStop(0, 'rgba(15,23,42,0.18)');
+        cellShade.addColorStop(0.25, 'rgba(15,23,42,0)');
+        cellShade.addColorStop(0.75, 'rgba(15,23,42,0)');
+        cellShade.addColorStop(1, 'rgba(15,23,42,0.18)');
+        ctx.fillStyle = cellShade;
+        ctx.fillRect(padX, slotTop, winW, cellH);
+
+        const val = drums[slot];
+        const baseDigit = Math.floor(val);
+        const offsetFrac = val - baseDigit;
+
+        ctx.fillStyle = spec.digitColors[slot];
+        ctx.font = `700 ${Math.round(cellH * 0.66)}px "JetBrains Mono", monospace`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        for (let delta = -1; delta <= 2; delta++) {
+          const dNum = ((baseDigit + delta) % 10 + 10) % 10;
+          const dy = (delta - offsetFrac) * cellH * 0.86;
+          const drawX = slot === 2 ? padX + winW * 0.40 : padX + winW * 0.50;
+          ctx.fillText(String(dNum), drawX, slotCenterY - dy);
+        }
+
+        if (slot === 2) {
+          const tickRight = padX + winW - 3;
+          for (let sub = -6; sub <= 10; sub++) {
+            const subVal = Math.floor(val * 5) + sub;
+            const diffUnits = (subVal / 5) - val;
+            const ty = slotCenterY - diffUnits * cellH * 0.86;
+            const isWhole = (subVal % 5 === 0);
+            const tLen = isWhole ? winW * 0.24 : winW * 0.14;
+
+            ctx.strokeStyle = isWhole ? spec.digitColors[2] : '#475569';
+            ctx.lineWidth = isWhole ? 2.0 : 1.2;
+            ctx.beginPath();
+            ctx.moveTo(tickRight - tLen, ty);
+            ctx.lineTo(tickRight, ty);
+            ctx.stroke();
+          }
+
+          ctx.fillStyle = '#dc2626';
+          ctx.beginPath();
+          ctx.moveTo(padX + winW, slotCenterY);
+          ctx.lineTo(padX + winW - 6, slotCenterY - 4);
+          ctx.lineTo(padX + winW - 6, slotCenterY + 4);
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        ctx.restore();
+
+        if (slot < 2) {
+          ctx.strokeStyle = '#94a3b8';
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.moveTo(padX, slotTop + cellH);
+          ctx.lineTo(padX + winW, slotTop + cellH);
+          ctx.stroke();
+        }
+      }
+
+      if (spec.lineAfterDigit >= 0) {
+        const sepY = padY + (spec.lineAfterDigit + 1) * cellH;
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = Math.max(3.2, H * 0.024);
+        ctx.beginPath();
+        ctx.moveTo(padX - 4, sepY);
+        ctx.lineTo(padX + winW + 4, sepY);
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 2.2;
+      ctx.strokeRect(padX, padY, winW, winH);
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = `700 ${Math.round(H * 0.042)}px "JetBrains Mono", monospace`;
+      ctx.textAlign = 'center';
+      ctx.fillText(modelId === 'P1000' ? 'mL / µL' : 'µL', W * 0.5, H - padY * 0.35);
+    }
+
+    function updateCounterCanvases() {
+      if (!window3DCanvas) {
+        window3DCanvas = document.createElement('canvas');
+        window3DCanvas.width = 256;
+        window3DCanvas.height = 384;
+      }
+      draw3DigitCounterToCanvas(
+        window3DCanvas.getContext('2d'),
+        window3DCanvas.width,
+        window3DCanvas.height,
+        state.modelId,
+        state.setVolumeUL
+      );
+      if (!window3DTexture) {
+        window3DTexture = new THREE.CanvasTexture(window3DCanvas);
+      }
+      window3DTexture.needsUpdate = true;
+
+      const c2d = document.getElementById('counter2DCanvas');
+      if (!c2d) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+      const rect = c2d.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        c2d.width = Math.round(rect.width * dpr);
+        c2d.height = Math.round(rect.height * dpr);
+        const ctx = c2d.getContext('2d');
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        draw3DigitCounterToCanvas(ctx, rect.width, rect.height, state.modelId, state.setVolumeUL);
+        ctx.restore();
+      }
+    }
+
+    function getActiveWorkflowStep() {
+      if (!state.hasTip) return { step: 1, title: 'ขั้นตอนที่ 1/6: สวมทิปปลอดเชื้อที่กล่องทิป' };
+      if (state.tipLiquidUL <= 1e-4 && state.plungerPos < 0.85 && !state.isLowered) {
+        return { step: 2, title: 'ขั้นตอนที่ 2/6: กด Plunger ค้างที่จังหวะ 1 ก่อนจุ่มสาร' };
+      }
+      if (state.tipLiquidUL <= 1e-4 && (state.plungerPos >= 0.85 || state.station === 'source')) {
+        return { step: 3, title: 'ขั้นตอนที่ 3/6: จุ่มทิปในหลอดสาร แล้วค่อยๆ ปล่อยปุ่มดูดสาร' };
+      }
+      if (state.tipLiquidUL > 1e-4 && state.station !== 'dest') {
+        return { step: 4, title: 'ขั้นตอนที่ 4/6: ย้ายปิเปตไปยังหลอดรับปลายทาง (1.5 mL)' };
+      }
+      if (state.tipLiquidUL > 1e-4 && state.station === 'dest') {
+        return { step: 5, title: 'ขั้นตอนที่ 5/6: กดจังหวะ 1 และกดสุดจังหวะ 2 (Blow-out) เพื่อปล่อยสาร' };
+      }
+      return { step: 6, title: 'ขั้นตอนที่ 6/6: ย้ายไปถังขยะติดเชื้อแล้วกดปุ่มปลดทิปทิ้ง' };
+    }
+
+    function renderPistonCrossSection2D() {
+      const canvas = document.getElementById('piston2DCanvas');
+      if (!canvas) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+
+      const ctx = canvas.getContext('2d');
+      ctx.save();
+      ctx.scale(dpr, dpr);
+
+      const W = rect.width;
+      const H = rect.height;
+
+      ctx.fillStyle = '#060b16';
+      ctx.fillRect(0, 0, W, H);
+
+      const wf = getActiveWorkflowStep();
+      document.getElementById('stepTrackerLabel').textContent = wf.title;
+
+      const cx = 64;
+      const cylTop = 12;
+      const cylH = 54;
+      const cylW = 28;
+
+      ctx.fillStyle = '#1e293b';
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 1.5;
+      ctx.fillRect(cx - cylW / 2, cylTop, cylW, cylH);
+      ctx.strokeRect(cx - cylW / 2, cylTop, cylW, cylH);
+
+      const restY = cylTop + 10;
+      const stop1Y = cylTop + 36;
+      const stop2Y = cylTop + 48;
+
+      ctx.setLineDash([2, 2]);
+      ctx.strokeStyle = '#f59e0b';
+      ctx.beginPath();
+      ctx.moveTo(cx - cylW / 2 - 8, stop1Y);
+      ctx.lineTo(cx + cylW / 2 + 28, stop1Y);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.moveTo(cx - cylW / 2 - 8, stop2Y);
+      ctx.lineTo(cx + cylW / 2 + 28, stop2Y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.font = '600 9px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#fbbf24';
+      ctx.fillText('1st', cx + cylW / 2 + 6, stop1Y - 2);
+      ctx.fillStyle = '#f87171';
+      ctx.fillText('2nd', cx + cylW / 2 + 6, stop2Y + 7);
+
+      let pistonFaceY = restY;
+      if (state.plungerPos <= 1.0) {
+        pistonFaceY = restY + state.plungerPos * (stop1Y - restY);
+      } else {
+        pistonFaceY = stop1Y + ((state.plungerPos - 1.0) / 0.35) * (stop2Y - stop1Y);
+      }
+
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.14)';
+      ctx.fillRect(cx - cylW / 2 + 2, pistonFaceY, cylW - 4, cylTop + cylH - pistonFaceY);
+
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fillRect(cx - 4, 2, 8, pistonFaceY - 6);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillRect(cx - cylW / 2 + 2, pistonFaceY - 6, cylW - 4, 6);
+
+      const tipTop = cylTop + cylH;
+      const tipBot = H - 8;
+      ctx.beginPath();
+      ctx.moveTo(cx - 9, tipTop);
+      ctx.lineTo(cx + 9, tipTop);
+      ctx.lineTo(cx + 3, tipBot);
+      ctx.lineTo(cx - 3, tipBot);
+      ctx.closePath();
+
+      if (state.hasTip) {
+        ctx.fillStyle = 'rgba(148, 163, 184, 0.16)';
+        ctx.fill();
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 1.4;
+        ctx.stroke();
+
+        const spec = PIPETTE_MODELS[state.modelId];
+        const visualRatio = state.tipLiquidUL > 0
+          ? Math.max(0.14, Math.min(0.92, (state.tipLiquidUL / Math.max(spec.minUL, state.setVolumeUL)) * 0.62))
+          : 0;
+
+        if (visualRatio > 0) {
+          const liqH = (tipBot - tipTop - 4) * visualRatio;
+          const liqTopY = tipBot - liqH;
+          const topHalfW = 3 + (9 - 3) * (liqH / (tipBot - tipTop));
+          const reag = REAGENTS[state.tipReagentId || state.activeReagentId];
+
+          ctx.beginPath();
+          ctx.moveTo(cx - topHalfW, liqTopY);
+          ctx.lineTo(cx + topHalfW, liqTopY);
+          ctx.lineTo(cx + 2.8, tipBot - 1);
+          ctx.lineTo(cx - 2.8, tipBot - 1);
+          ctx.closePath();
+          ctx.fillStyle = reag.css;
+          ctx.fill();
+        }
+      } else {
+        ctx.strokeStyle = 'rgba(244, 63, 94, 0.45)';
+        ctx.setLineDash([3, 3]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      ctx.font = '500 10px "Prompt", sans-serif';
+      ctx.fillStyle = '#7dd3fc';
+      ctx.fillText('ชั้นอากาศกั้น (Air Cushion)', 118, cylTop + 26);
+      ctx.fillStyle = state.hasTip ? '#a7f3d0' : '#fda4af';
+      ctx.fillText(
+        state.hasTip ? `ของเหลวในทิป: ${formatUL(state.tipLiquidUL)} µL` : '⚠ ยังไม่ได้สวมทิปพลาสติก',
+        118,
+        tipTop + 22
+      );
+
+      const steps = ['1.สวมทิป', '2.กดขั้น1', '3.ดูดสาร', '4.ย้ายหลอด', '5.กดขั้น2', '6.ทิ้งทิป'];
+      const startX = 118;
+      const availW = Math.max(160, W - startX - 10);
+      const pillW = (availW - 15) / 3;
+      const pillH = 19;
+
+      steps.forEach((label, idx) => {
+        const sNum = idx + 1;
+        const col = idx % 3;
+        const row = Math.floor(idx / 3);
+        const px = startX + col * (pillW + 5);
+        const py = H - 46 + row * (pillH + 4);
+
+        const isActive = (wf.step === sNum);
+        const isDone = (wf.step > sNum);
+
+        ctx.fillStyle = isActive ? '#0284c7' : (isDone ? '#064e3b' : '#0f172a');
+        ctx.strokeStyle = isActive ? '#7dd3fc' : (isDone ? '#10b981' : '#334155');
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(px, py, pillW, pillH, 5);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = isActive ? '#ffffff' : (isDone ? '#6ee7b7' : '#94a3b8');
+        ctx.font = '600 9.5px "Prompt", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, px + pillW / 2, py + pillH / 2 + 0.5);
+      });
+
+      ctx.restore();
+    }
+
+    let scene, camera, renderer, controls;
+    let pipetteAssembly, plungerCapMesh, plungerRodMesh, thumbwheelMesh, ejectorBtnMesh, ejectorCollarGroup;
+    let tipGroup, tipConeMesh, tipLiquidMesh;
+    let sourceLiquidMesh, destLiquidMesh;
+    let rackStationMesh, sourceStationMesh, destStationMesh, wasteStationMesh;
+    let fallingTips = [];
+
+    const anim3D = {
+      pipetteX: STATION_X.rack,
+      pipetteY: 36,
+      camActive: false,
+      camPos: new THREE.Vector3(),
+      camTarget: new THREE.Vector3()
+    };
+
+    let clickable3DObjects = [];
+
+    const ANATOMY_PARTS = [
+      {
+        id: 'plunger_btn',
+        num: '1',
+        th: 'ปุ่มกดสูบ-ปล่อย (Plunger)',
+        en: 'Color-Coded Plunger Button',
+        desc: 'กดจังหวะที่ 1 เพื่อดูดสารตามปริมาตรที่ตั้ง และกดสุดจังหวะที่ 2 (Blow-out) เพื่อไล่หยดสุดท้ายออก',
+        getPos: () => new THREE.Vector3(anim3D.pipetteX, anim3D.pipetteY + 37 - state.plungerPos * 4.2, 2.5)
+      },
+      {
+        id: 'ejector_btn',
+        num: '2',
+        th: 'ปุ่มกดปลดทิป',
+        en: 'Tip Ejector Button',
+        desc: 'กดเพื่อดันปลอกปลดทิป (Ejector Collar) ดีดทิปที่ใช้แล้วลงถังติดเชื้อโดยไม่ต้องใช้มือสัมผัส',
+        getPos: () => new THREE.Vector3(anim3D.pipetteX - 4.8, anim3D.pipetteY + 28, 1.5)
+      },
+      {
+        id: 'thumbwheel',
+        num: '3',
+        th: 'วงล้อปรับปริมาตร & ขอพยุงนิ้ว',
+        en: 'Thumbwheel & Finger Hook',
+        desc: 'หมุนตั้งค่าปริมาตรภายในช่วงของปิเปตแต่ละรุ่น พร้อมขอเกี่ยวพยุงนิ้วชี้ตามหลักสรีรศาสตร์',
+        getPos: () => new THREE.Vector3(anim3D.pipetteX + 3.5, anim3D.pipetteY + 23.5, 2.5)
+      },
+      {
+        id: 'vol_window',
+        num: '4',
+        th: 'หน้าต่างตัวเลข 3 หลัก',
+        en: 'Digital Volume Display Window',
+        desc: 'แสดงตัวเลขปริมาตร 3 หลักจากบนลงล่าง สังเกตสีตัวเลขและขีดคั่นทศนิยมตามรุ่น P2 / P20 / P200 / P1000',
+        getPos: () => new THREE.Vector3(anim3D.pipetteX, anim3D.pipetteY + 12.5, 3.8)
+      },
+      {
+        id: 'shaft_cone',
+        num: '5',
+        th: 'ก้านสวมทิป & ปลอกดีดทิป',
+        en: 'Shaft / Nose Cone & Ejector Arm',
+        desc: 'ส่วนปลายสำหรับสวมทิปพลาสติก ห้ามดูดของเหลวโดยไม่สวมทิปหรือวางนอนขณะมีสารละลายในทิป',
+        getPos: () => new THREE.Vector3(anim3D.pipetteX, anim3D.pipetteY - 12, 2.2)
+      },
+      {
+        id: 'pipette_tip',
+        num: '6',
+        th: 'ทิปไมโครปิเปตปลอดเชื้อ',
+        en: 'Disposable Pipette Tip',
+        desc: 'ทิปพลาสติกโปร่งแสงแยกขนาดตามรุ่น มองเห็นระดับของเหลว (Meniscus) และเปลี่ยนใหม่ทุกครั้งเมื่อเปลี่ยนสาร',
+        getPos: () => new THREE.Vector3(anim3D.pipetteX, anim3D.pipetteY - 28, 1.5)
+      }
+    ];
+
+    function createThumbwheelBump() {
+      const c = document.createElement('canvas');
+      c.width = 256;
+      c.height = 64;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#404040';
+      ctx.fillRect(0, 0, 256, 64);
+      ctx.fillStyle = '#e5e5e5';
+      for (let x = 0; x < 256; x += 8) ctx.fillRect(x, 0, 4, 64);
+      const tex = new THREE.CanvasTexture(c);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(3, 1);
+      return tex;
+    }
+
+    function createBiohazardStickerTexture() {
+      const c = document.createElement('canvas');
+      c.width = 256;
+      c.height = 256;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#dc2626';
+      ctx.fillRect(0, 0, 256, 256);
+      ctx.strokeStyle = '#fef08a';
+      ctx.lineWidth = 8;
+      ctx.strokeRect(10, 10, 236, 236);
+
+      ctx.fillStyle = '#fef08a';
+      ctx.font = '700 30px "Prompt", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('☣ BIOHAZARD', 128, 95);
+      ctx.font = '600 24px "Prompt", sans-serif';
+      ctx.fillText('ถังทิ้งทิปติดเชื้อ', 128, 145);
+      ctx.font = '500 18px "JetBrains Mono", monospace';
+      ctx.fillText('USED TIPS ONLY', 128, 185);
+      return new THREE.CanvasTexture(c);
+    }
+
+    function initThreeScene() {
+      const mount = document.getElementById('threeMount');
+      const rect = mount.getBoundingClientRect();
+
+      scene = new THREE.Scene();
+
+      camera = new THREE.PerspectiveCamera(38, rect.width / rect.height, 0.5, 1000);
+      camera.position.set(2, 34, 148);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(rect.width, rect.height);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.1;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      mount.appendChild(renderer.domElement);
+
+      window.captureSimulatorScreenshot = function() {
+        if (renderer && scene && camera) {
+          renderer.render(scene, camera);
+          return renderer.domElement.toDataURL('image/png');
+        }
+        return null;
+      };
+
+      scene.add(new THREE.AmbientLight(0xe0f2fe, 0.68));
+
+      const keyLight = new THREE.DirectionalLight(0xffffff, 1.05);
+      keyLight.position.set(35, 95, 85);
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.set(2048, 2048);
+      scene.add(keyLight);
+
+      const fillLight = new THREE.DirectionalLight(0x38bdf8, 0.42);
+      fillLight.position.set(-60, 40, -50);
+      scene.add(fillLight);
+
+      const benchTop = new THREE.Mesh(
+        new THREE.BoxGeometry(190, 4, 86),
+        new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.72, metalness: 0.15 })
+      );
+      benchTop.position.set(2, -26, 0);
+      benchTop.receiveShadow = true;
+      scene.add(benchTop);
+
+      const benchTrim = new THREE.Mesh(
+        new THREE.BoxGeometry(190.4, 1.2, 86.4),
+        new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.5 })
+      );
+      benchTrim.position.set(2, -24.2, 0);
+      scene.add(benchTrim);
+
+      const grid = new THREE.GridHelper(186, 30, 0x1e3a5f, 0x132038);
+      grid.position.set(2, -23.95, 0);
+      scene.add(grid);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.target.set(2, 8, 0);
+      controls.minDistance = 24;
+      controls.maxDistance = 240;
+      controls.maxPolarAngle = Math.PI * 0.54;
+
+      buildLabBenchStations3D();
+      buildMicropipette3D();
+      initPartLabelDOM();
+      setup3DInteractions();
+    }
+
+    function buildLabBenchStations3D() {
+      const rackGroup = new THREE.Group();
+      rackGroup.position.set(STATION_X.rack, -24, 0);
+      scene.add(rackGroup);
+
+      const rackBox = new THREE.Mesh(
+        new THREE.BoxGeometry(22, 13, 18),
+        new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.35, metalness: 0.2 })
+      );
+      rackBox.position.y = 6.5;
+      rackBox.castShadow = true;
+      rackBox.userData = { action: 'station', station: 'rack' };
+      rackGroup.add(rackBox);
+      clickable3DObjects.push(rackBox);
+
+      rackStationMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(20.6, 1.6, 16.6),
+        new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.3 })
+      );
+      rackStationMesh.position.y = 13.4;
+      rackStationMesh.userData = { action: 'station', station: 'rack' };
+      rackGroup.add(rackStationMesh);
+      clickable3DObjects.push(rackStationMesh);
+
+      const collarMat = new THREE.MeshStandardMaterial({ color: 0xfef08a, transparent: true, opacity: 0.72, roughness: 0.2 });
+      for (let gx = -6.5; gx <= 6.5; gx += 4.3) {
+        for (let gz = -4.5; gz <= 4.5; gz += 4.5) {
+          const tipCollar = new THREE.Mesh(new THREE.CylinderGeometry(1.45, 1.2, 2.6, 16), collarMat);
+          tipCollar.position.set(gx, 14.8, gz);
+          rackGroup.add(tipCollar);
+        }
+      }
+
+      const lid = new THREE.Mesh(
+        new THREE.BoxGeometry(22, 15, 1.0),
+        new THREE.MeshStandardMaterial({ color: 0xbae6fd, transparent: true, opacity: 0.24, roughness: 0.1 })
+      );
+      lid.position.set(0, 20, -9.2);
+      lid.rotation.x = -0.22;
+      rackGroup.add(lid);
+
+      const sourceGroup = new THREE.Group();
+      sourceGroup.position.set(STATION_X.source, -24, 0);
+      scene.add(sourceGroup);
+
+      const sourceStand = new THREE.Mesh(
+        new THREE.CylinderGeometry(7.5, 8.5, 5.5, 32),
+        new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.45 })
+      );
+      sourceStand.position.y = 2.75;
+      sourceStand.userData = { action: 'station', station: 'source' };
+      sourceGroup.add(sourceStand);
+      clickable3DObjects.push(sourceStand);
+
+      const glassMat = new THREE.MeshStandardMaterial({
+        color: 0xe0f2fe,
+        transparent: true,
+        opacity: 0.34,
+        roughness: 0.08,
+        side: THREE.DoubleSide
+      });
+
+      sourceStationMesh = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 3.6, 21, 32, 1, true), glassMat);
+      sourceStationMesh.position.y = 13.5;
+      sourceStationMesh.userData = { action: 'station', station: 'source' };
+      sourceGroup.add(sourceStationMesh);
+      clickable3DObjects.push(sourceStationMesh);
+
+      const sourceRim = new THREE.Mesh(new THREE.TorusGeometry(4.3, 0.45, 12, 32), glassMat);
+      sourceRim.rotation.x = Math.PI / 2;
+      sourceRim.position.y = 24.0;
+      sourceGroup.add(sourceRim);
+
+      sourceLiquidMesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(3.85, 3.35, 16.5, 32),
+        new THREE.MeshStandardMaterial({ color: REAGENTS.blue.hex, transparent: true, opacity: 0.86, roughness: 0.15 })
+      );
+      sourceLiquidMesh.position.y = 11.4;
+      sourceLiquidMesh.userData = { action: 'station', station: 'source' };
+      sourceGroup.add(sourceLiquidMesh);
+      clickable3DObjects.push(sourceLiquidMesh);
+
+      const destGroup = new THREE.Group();
+      destGroup.position.set(STATION_X.dest, -24, 0);
+      scene.add(destGroup);
+
+      const destStand = new THREE.Mesh(
+        new THREE.BoxGeometry(14, 6.5, 14),
+        new THREE.MeshStandardMaterial({ color: 0x0f766e, roughness: 0.4 })
+      );
+      destStand.position.y = 3.25;
+      destStand.userData = { action: 'station', station: 'dest' };
+      destGroup.add(destStand);
+      clickable3DObjects.push(destStand);
+
+      const polyMat = new THREE.MeshStandardMaterial({
+        color: 0xf1f5f9,
+        transparent: true,
+        opacity: 0.38,
+        roughness: 0.15,
+        side: THREE.DoubleSide
+      });
+
+      destStationMesh = new THREE.Mesh(new THREE.CylinderGeometry(3.5, 3.5, 12, 32, 1, true), polyMat);
+      destStationMesh.position.y = 16.5;
+      destStationMesh.userData = { action: 'station', station: 'dest' };
+      destGroup.add(destStationMesh);
+      clickable3DObjects.push(destStationMesh);
+
+      const eppCone = new THREE.Mesh(new THREE.CylinderGeometry(3.5, 1.1, 7.5, 32, 1, true), polyMat);
+      eppCone.position.y = 6.75;
+      destGroup.add(eppCone);
+
+      const snapCap = new THREE.Mesh(new THREE.CylinderGeometry(3.9, 3.9, 1.4, 28), polyMat);
+      snapCap.position.set(6.8, 22.8, 0);
+      snapCap.rotation.z = -0.35;
+      destGroup.add(snapCap);
+
+      destLiquidMesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(3.15, 1.2, 1.0, 32),
+        new THREE.MeshStandardMaterial({ color: 0x2563eb, transparent: true, opacity: 0.86, roughness: 0.15 })
+      );
+      destLiquidMesh.position.y = 4.0;
+      destLiquidMesh.visible = false;
+      destGroup.add(destLiquidMesh);
+
+      const wasteGroup = new THREE.Group();
+      wasteGroup.position.set(STATION_X.waste, -24, 0);
+      scene.add(wasteGroup);
+
+      const wasteMat = new THREE.MeshStandardMaterial({ color: 0xb91c1c, roughness: 0.45, metalness: 0.1 });
+      wasteStationMesh = new THREE.Mesh(new THREE.CylinderGeometry(8.8, 7.2, 22, 36, 1, true), wasteMat);
+      wasteStationMesh.position.y = 11.0;
+      wasteStationMesh.castShadow = true;
+      wasteStationMesh.userData = { action: 'station', station: 'waste' };
+      wasteGroup.add(wasteStationMesh);
+      clickable3DObjects.push(wasteStationMesh);
+
+      const wasteBottom = new THREE.Mesh(new THREE.CircleGeometry(7.2, 32), wasteMat);
+      wasteBottom.rotation.x = -Math.PI / 2;
+      wasteBottom.position.y = 0.2;
+      wasteGroup.add(wasteBottom);
+
+      const wasteRim = new THREE.Mesh(
+        new THREE.TorusGeometry(8.8, 0.75, 14, 36),
+        new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.4 })
+      );
+      wasteRim.rotation.x = Math.PI / 2;
+      wasteRim.position.y = 22.0;
+      wasteRim.userData = { action: 'station', station: 'waste' };
+      wasteGroup.add(wasteRim);
+      clickable3DObjects.push(wasteRim);
+
+      const sticker = new THREE.Mesh(
+        new THREE.PlaneGeometry(10.5, 10.5),
+        new THREE.MeshStandardMaterial({ map: createBiohazardStickerTexture(), roughness: 0.5 })
+      );
+      sticker.position.set(0, 11.5, 8.25);
+      wasteGroup.add(sticker);
+    }
+
+    function buildMicropipette3D() {
+      pipetteAssembly = new THREE.Group();
+      pipetteAssembly.position.set(anim3D.pipetteX, anim3D.pipetteY, 0);
+      scene.add(pipetteAssembly);
+
+      const bodyWhiteMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.28, metalness: 0.08 });
+      const bodySlateMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.42, metalness: 0.2 });
+      const darkPolymerMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.35, metalness: 0.25 });
+      const chromeMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.2, metalness: 0.85 });
+
+      const handleBody = new THREE.Mesh(new THREE.CylinderGeometry(3.8, 3.35, 21, 36), bodyWhiteMat);
+      handleBody.position.y = 12.0;
+      handleBody.scale.set(1.0, 1.0, 0.88);
+      handleBody.castShadow = true;
+      pipetteAssembly.add(handleBody);
+
+      const hookCurve = new THREE.Mesh(new THREE.TorusGeometry(4.2, 0.95, 14, 28, Math.PI * 0.72), bodyWhiteMat);
+      hookCurve.position.set(3.2, 19.2, 0);
+      hookCurve.rotation.z = -0.35;
+      pipetteAssembly.add(hookCurve);
+
+      const accentRing = new THREE.Mesh(
+        new THREE.CylinderGeometry(3.88, 3.85, 2.0, 36),
+        new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.3 })
+      );
+      accentRing.position.y = 20.8;
+      accentRing.scale.set(1.0, 1.0, 0.88);
+      pipetteAssembly.add(accentRing);
+
+      updateCounterCanvases();
+      const winFrame = new THREE.Mesh(
+        new THREE.BoxGeometry(4.4, 7.6, 0.9),
+        new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4 })
+      );
+      winFrame.position.set(0, 12.2, 3.05);
+      pipetteAssembly.add(winFrame);
+
+      const winPlane = new THREE.Mesh(
+        new THREE.PlaneGeometry(3.8, 6.8),
+        new THREE.MeshBasicMaterial({ map: window3DTexture })
+      );
+      winPlane.position.set(0, 12.2, 3.55);
+      pipetteAssembly.add(winPlane);
+
+      thumbwheelMesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(3.55, 3.55, 3.8, 40),
+        new THREE.MeshStandardMaterial({
+          color: 0x1e293b,
+          roughness: 0.45,
+          bumpMap: createThumbwheelBump(),
+          bumpScale: 0.25
+        })
+      );
+      thumbwheelMesh.position.y = 24.4;
+      pipetteAssembly.add(thumbwheelMesh);
+
+      plungerRodMesh = new THREE.Mesh(new THREE.CylinderGeometry(1.35, 1.35, 11.5, 28), chromeMat);
+      plungerRodMesh.position.y = 30.8;
+      pipetteAssembly.add(plungerRodMesh);
+
+      plungerCapMesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(3.3, 2.7, 2.6, 36),
+        new THREE.MeshStandardMaterial({ color: PIPETTE_MODELS.P200.plungerHex, roughness: 0.28, metalness: 0.15 })
+      );
+      plungerCapMesh.position.y = 36.8;
+      plungerCapMesh.userData = { action: 'plunger_click' };
+      pipetteAssembly.add(plungerCapMesh);
+      clickable3DObjects.push(plungerCapMesh);
+
+      ejectorBtnMesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(1.75, 1.6, 3.6, 28),
+        new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.3, metalness: 0.3 })
+      );
+      ejectorBtnMesh.position.set(-4.3, 27.5, 0);
+      ejectorBtnMesh.userData = { action: 'eject_click' };
+      pipetteAssembly.add(ejectorBtnMesh);
+      clickable3DObjects.push(ejectorBtnMesh);
+
+      ejectorCollarGroup = new THREE.Group();
+      pipetteAssembly.add(ejectorCollarGroup);
+
+      const ejectorBar = new THREE.Mesh(new THREE.BoxGeometry(1.2, 29, 1.6), bodySlateMat);
+      ejectorBar.position.set(-4.1, 11.5, 0);
+      ejectorCollarGroup.add(ejectorBar);
+
+      const ejectorSleeve = new THREE.Mesh(new THREE.CylinderGeometry(2.55, 2.15, 11.5, 32), bodySlateMat);
+      ejectorSleeve.position.set(0, -8.5, 0);
+      ejectorCollarGroup.add(ejectorSleeve);
+
+      const upperShaft = new THREE.Mesh(new THREE.CylinderGeometry(3.1, 2.2, 9.0, 32), darkPolymerMat);
+      upperShaft.position.y = -3.0;
+      pipetteAssembly.add(upperShaft);
+
+      const noseCone = new THREE.Mesh(new THREE.CylinderGeometry(2.1, 1.15, 13.5, 32), darkPolymerMat);
+      noseCone.position.y = -14.0;
+      pipetteAssembly.add(noseCone);
+
+      tipGroup = new THREE.Group();
+      tipGroup.position.y = -19.2;
+      tipGroup.visible = false;
+      pipetteAssembly.add(tipGroup);
+
+      rebuildMountedTip3D();
+    }
+
+    function rebuildMountedTip3D() {
+      if (!tipGroup) return;
+      while (tipGroup.children.length > 0) {
+        const ch = tipGroup.children[0];
+        tipGroup.remove(ch);
+        if (ch.geometry) ch.geometry.dispose();
+      }
+
+      const mId = state.tipModelId || state.modelId;
+      const spec = PIPETTE_MODELS[mId];
+      const L = spec.tipLength;
+      const rTop = spec.tipRadiusTop;
+      const rBot = 0.36;
+
+      const tipMat = new THREE.MeshStandardMaterial({
+        color: spec.tipColorHex,
+        transparent: true,
+        opacity: spec.tipOpacity,
+        roughness: 0.14,
+        metalness: 0.05,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+
+      const collar = new THREE.Mesh(new THREE.CylinderGeometry(rTop + 0.25, rTop, 3.2, 28, 1, true), tipMat);
+      collar.position.y = -1.6;
+      tipGroup.add(collar);
+
+      tipConeMesh = new THREE.Mesh(new THREE.CylinderGeometry(rTop, rBot, L, 28, 1, true), tipMat);
+      tipConeMesh.position.y = -3.2 - L / 2;
+      tipGroup.add(tipConeMesh);
+
+      tipLiquidMesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(1, 1, 1, 24),
+        new THREE.MeshStandardMaterial({
+          color: REAGENTS[state.activeReagentId].hex,
+          transparent: true,
+          opacity: 0.9,
+          roughness: 0.12
+        })
+      );
+      tipLiquidMesh.visible = false;
+      tipGroup.add(tipLiquidMesh);
+
+      update3DTipMeniscus();
+    }
+
+    function update3DTipMeniscus() {
+      if (!tipGroup || !tipLiquidMesh) return;
+      tipGroup.visible = state.hasTip;
+      if (!state.hasTip || state.tipLiquidUL <= 1e-5) {
+        tipLiquidMesh.visible = false;
+        return;
+      }
+
+      const mId = state.tipModelId || state.modelId;
+      const spec = PIPETTE_MODELS[mId];
+      const L = spec.tipLength;
+      const rTop = spec.tipRadiusTop * 0.88;
+      const rBot = 0.32;
+
+      const ratio = Math.max(0.08, Math.min(0.92, (state.tipLiquidUL / (spec.maxUL * 1.15)) * 0.78 + 0.12));
+      const hLiq = L * ratio;
+      const rMeniscus = rBot + (rTop - rBot) * ratio;
+
+      tipLiquidMesh.geometry.dispose();
+      tipLiquidMesh.geometry = new THREE.CylinderGeometry(rMeniscus, rBot, hLiq, 24);
+      tipLiquidMesh.position.y = (-3.2 - L) + hLiq / 2;
+
+      const reag = REAGENTS[state.tipReagentId || state.activeReagentId];
+      tipLiquidMesh.material.color.setHex(reag.hex);
+      tipLiquidMesh.material.opacity = reag.opacity;
+      tipLiquidMesh.visible = true;
+    }
+
+    function update3DReceivingTubeLiquid() {
+      if (!destLiquidMesh) return;
+      if (state.destVolumeUL <= 0.05) {
+        destLiquidMesh.visible = false;
+        return;
+      }
+
+      const fillFrac = Math.max(0.08, Math.min(1.0, Math.pow(state.destVolumeUL / 1500, 0.55)));
+      const h = 16.5 * fillFrac;
+      const topR = 1.2 + Math.min(1.0, h / 7.5) * (3.18 - 1.2);
+
+      destLiquidMesh.geometry.dispose();
+      destLiquidMesh.geometry = new THREE.CylinderGeometry(topR, 1.15, h, 28);
+      destLiquidMesh.position.y = 3.2 + h / 2;
+
+      const { r, g, b } = state.destColorRGB;
+      destLiquidMesh.material.color.setRGB(r / 255, g / 255, b / 255);
+      destLiquidMesh.visible = true;
+    }
+
+    function spawnFallingEjectedTip() {
+      const mId = state.tipModelId || state.modelId;
+      const spec = PIPETTE_MODELS[mId];
+      const mesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(spec.tipRadiusTop, 0.35, spec.tipLength, 20),
+        new THREE.MeshStandardMaterial({
+          color: spec.tipColorHex,
+          transparent: true,
+          opacity: 0.65,
+          roughness: 0.2
+        })
+      );
+      mesh.position.set(anim3D.pipetteX, anim3D.pipetteY - 26, 0);
+      scene.add(mesh);
+      fallingTips.push({ mesh, vy: -0.45, vr: (Math.random() - 0.5) * 0.14, life: 55 });
+    }
+
+    function formatUL(val, modelId = state.modelId) {
+      const d = PIPETTE_MODELS[modelId].decimalsUL;
+      if (Math.abs(val) < 1e-5) return (0).toFixed(d);
+      return Number(val).toFixed(Math.max(d, val < 2 ? 2 : 1));
+    }
+
+    function logDiagnostic(message, level = 'info') {
+      const log = document.getElementById('diagnosticsLog');
+      const dot = document.getElementById('diagStatusDot');
+
+      const colorMap = {
+        error: 'text-rose-300 font-semibold',
+        warn: 'text-amber-300 font-medium',
+        ok: 'text-emerald-300 font-medium',
+        info: 'text-slate-300'
+      };
+
+      const item = document.createElement('div');
+      item.className = colorMap[level] || colorMap.info;
+      const prefix = level === 'error' ? '❌ ' : (level === 'warn' ? '⚠️ ' : (level === 'ok' ? '✅ ' : '• '));
+      item.textContent = prefix + message;
+      log.prepend(item);
+
+      while (log.children.length > 8) {
+        log.removeChild(log.lastChild);
+      }
+
+      if (level === 'error' || level === 'warn') {
+        state.sessionErrors.push(message);
+        dot.textContent = 'พบข้อควรระวัง!';
+        dot.className = 'text-[10px] px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 font-semibold';
+        showToast(prefix + message, level);
+        playLabSound('warn');
+      } else if (level === 'ok') {
+        dot.textContent = 'เทคนิคถูกต้อง';
+        dot.className = 'text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold';
+        showToast(prefix + message, 'ok');
+      }
+    }
+
+    let toastTimer = null;
+    function showToast(msg, level = 'info') {
+      const banner = document.getElementById('diagnosticToast');
+      banner.textContent = msg;
+      const borderCls = level === 'error'
+        ? 'border-rose-500/70 text-rose-200'
+        : (level === 'warn' ? 'border-amber-400/70 text-amber-200' : 'border-emerald-400/60 text-emerald-200');
+      banner.className = `pointer-events-none opacity-100 translate-y-0 transition-all duration-300 transform absolute top-14 left-1/2 -translate-x-1/2 z-30 max-w-lg w-[92%] sm:w-auto px-4 py-2 rounded-xl bg-slate-900/95 border ${borderCls} text-xs font-medium shadow-2xl text-center`;
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        banner.classList.remove('opacity-100', 'translate-y-0');
+        banner.classList.add('opacity-0', '-translate-y-2');
+      }, 3100);
+    }
+
+    function hexToRgbObj(hex) {
+      return {
+        r: (hex >> 16) & 255,
+        g: (hex >> 8) & 255,
+        b: hex & 255
+      };
+    }
+
+    function addLiquidToReceivingTube(addedUL, reagentId) {
+      if (addedUL <= 0) return;
+      const reag = REAGENTS[reagentId || state.activeReagentId];
+      const newCol = hexToRgbObj(reag.hex);
+      const prevV = state.destVolumeUL;
+      const totalV = prevV + addedUL;
+
+      if (prevV <= 0.01) {
+        state.destColorRGB = newCol;
+      } else {
+        state.destColorRGB = {
+          r: Math.round((state.destColorRGB.r * prevV + newCol.r * addedUL) / totalV),
+          g: Math.round((state.destColorRGB.g * prevV + newCol.g * addedUL) / totalV),
+          b: Math.round((state.destColorRGB.b * prevV + newCol.b * addedUL) / totalV)
+        };
+      }
+      state.destVolumeUL = totalV;
+      update3DReceivingTubeLiquid();
+    }
+
+    function setPlungerPosition(newPos, fromAuto = false) {
+      const clamped = Math.max(0.0, Math.min(1.35, newPos));
+      const prev = state.plungerPos;
+      const dp = clamped - prev;
+      if (Math.abs(dp) < 1e-5) return;
+
+      if (!fromAuto) state.targetPlungerPos = null;
+
+      if ((prev < 0.99 && clamped >= 0.99) || (prev > 1.01 && clamped <= 1.01)) {
+        playLabSound('stop1');
+      } else if (prev < 1.32 && clamped >= 1.32) {
+        playLabSound('stop2');
+      }
+
+      if (!state.isLowered) {
+        if (clamped > state.maxPlungerInAir) state.maxPlungerInAir = clamped;
+        if (clamped < 0.05 && state.tipLiquidUL <= 1e-4) state.maxPlungerInAir = 0.0;
+      }
+
+      if (state.isLowered && state.station === 'source') {
+        if (!state.hasTip) {
+          logDiagnostic('ห้ามจุ่มและดูดสารโดยไม่สวมทิป! ของเหลวจะเข้าทำลายลูกสูบภายในก้านปิเปต', 'error');
+        } else if (dp > 0) {
+          if (state.tipLiquidUL > 0) {
+            state.tipLiquidUL = Math.max(0, state.tipLiquidUL - dp * state.setVolumeUL);
+          } else if (dp > 0.08) {
+            logDiagnostic('เกิดฟองอากาศในหลอดตัวอย่าง! ต้องกด Plunger จังหวะที่ 1 ให้เสร็จก่อนจุ่มทิปลงน้ำ', 'warn');
+          }
+        } else if (dp < 0) {
+          if (state.usedTipHistoryReagent && state.usedTipHistoryReagent !== state.activeReagentId) {
+            logDiagnostic('เกิดการปนเปื้อนข้าม (Cross-contamination)! ใช้ทิปเดิมดูดสารต่างชนิดโดยไม่เปลี่ยนทิปใหม่', 'error');
+          }
+
+          const aspirateGain = (-dp) * state.setVolumeUL;
+          const maxCap = PIPETTE_MODELS[state.tipModelId || state.modelId].maxUL * 1.45;
+          state.tipLiquidUL = Math.min(maxCap, state.tipLiquidUL + aspirateGain);
+          state.tipReagentId = state.activeReagentId;
+          state.usedTipHistoryReagent = state.activeReagentId;
+
+          if (clamped <= 0.02 && state.maxPlungerInAir > 1.06) {
+            logDiagnostic(
+              `กดเลยจังหวะที่ 1 ก่อนดูดสาร! ทำให้ดูดสารเกินจริง (${formatUL(state.tipLiquidUL)} µL แทนที่จะเป็น ${formatUL(state.setVolumeUL)} µL)`,
+              'error'
+            );
+            state.maxPlungerInAir = 0.0;
+          } else if (clamped <= 0.02 && Math.abs(state.tipLiquidUL - state.setVolumeUL) <= state.setVolumeUL * 0.02) {
+            logDiagnostic(`ดูดสาร ${REAGENTS[state.activeReagentId].name} ปริมาตร ${formatUL(state.tipLiquidUL)} µL สำเร็จ`, 'ok');
+            state.maxPlungerInAir = 0.0;
+          }
+        }
+      } else if (dp > 0 && state.hasTip && state.tipLiquidUL > 1e-5) {
+        let expelled = 0;
+        if (clamped <= 1.0) {
+          const capHold = 0.04 * state.setVolumeUL;
+          const maxExpelAtStop1 = Math.max(0, state.tipLiquidUL - capHold);
+          expelled = Math.min(maxExpelAtStop1, dp * 0.96 * state.setVolumeUL);
+        } else {
+          const blowStepFrac = dp / 0.35;
+          expelled = Math.min(state.tipLiquidUL, blowStepFrac * (0.45 * state.setVolumeUL) + 0.02 * state.setVolumeUL);
+          if (clamped >= 1.32) expelled = state.tipLiquidUL;
+        }
+
+        state.tipLiquidUL = Math.max(0, state.tipLiquidUL - expelled);
+        if (state.station === 'dest') {
+          addLiquidToReceivingTube(expelled, state.tipReagentId);
+          if (clamped >= 1.32 && expelled > 0) {
+            logDiagnostic(`กดจังหวะที่ 2 (Blow-out) ไล่หยดสุดท้ายลงหลอดรับครบถ้วนแล้ว (รวมในหลอดรับ ${formatUL(state.destVolumeUL)} µL)`, 'ok');
+          }
+        }
+      } else if (dp < -0.05 && state.isLowered && state.station === 'dest' && state.destVolumeUL > 0) {
+        const suckedBack = Math.min(state.destVolumeUL, (-dp) * state.setVolumeUL * 0.6);
+        state.destVolumeUL -= suckedBack;
+        state.tipLiquidUL += suckedBack;
+        update3DReceivingTubeLiquid();
+        logDiagnostic('ระวัง! เผลอปล่อยปุ่ม Plunger ขณะปลายทิปจุ่มอยู่ในหลอดรับ ทำให้ดูดสารกลับเข้าทิป!', 'error');
+      }
+
+      state.plungerPos = clamped;
+      update3DPlungerVisuals();
+      update3DTipMeniscus();
+      syncAllUI();
+      renderPistonCrossSection2D();
+    }
+
+    function onPlungerSliderInput(val) {
+      ensureAudio();
+      if (Math.abs(val - 1.00) < 0.035) val = 1.00;
+      setPlungerPosition(val, false);
+    }
+
+    function animatePlungerTo(targetVal) {
+      ensureAudio();
+      state.targetPlungerPos = targetVal;
+    }
+
+    function update3DPlungerVisuals() {
+      if (!plungerCapMesh || !plungerRodMesh) return;
+      const dropMM = state.plungerPos * 4.4;
+      plungerCapMesh.position.y = 36.8 - dropMM;
+      plungerRodMesh.position.y = 30.8 - dropMM;
+    }
+
+    function moveToStation(targetStation) {
+      ensureAudio();
+      if (state.station === 'dest' && targetStation !== 'dest' && state.tipLiquidUL > 0 && state.tipLiquidUL < state.setVolumeUL * 0.12) {
+        logDiagnostic(`ยังมีสารค้างปลายทิป ${formatUL(state.tipLiquidUL)} µL เพราะไม่ได้กดย้ำถึงจังหวะที่ 2 (Blow-out)!`, 'warn');
+      }
+
+      state.isLowered = false;
+      state.station = targetStation;
+      anim3D.pipetteX = STATION_X[targetStation];
+
+      document.querySelectorAll('.st-btn').forEach(btn => {
+        const active = btn.dataset.st === targetStation;
+        btn.className = active
+          ? 'st-btn py-2 px-1 rounded-xl border text-center font-semibold transition bg-sky-500/20 border-sky-400/60 text-sky-200'
+          : 'st-btn py-2 px-1 rounded-xl border text-center font-semibold transition bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-600';
+      });
+
+      syncAllUI();
+      renderPistonCrossSection2D();
+    }
+
+    function triggerVerticalStationAction() {
+      ensureAudio();
+
+      if (state.station === 'rack') {
+        if (state.hasTip) {
+          logDiagnostic('มีทิปสวมอยู่แล้ว! กรุณาปลดทิปเก่าทิ้งลงถังขยะติดเชื้อก่อนสวมทิปใหม่', 'warn');
+          return;
+        }
+        state.isLowered = true;
+        state.hasTip = true;
+        state.tipModelId = state.modelId;
+        state.tipLiquidUL = 0;
+        state.tipReagentId = null;
+        state.usedTipHistoryReagent = null;
+        rebuildMountedTip3D();
+        playLabSound('tip_on');
+        logDiagnostic(`สวม ${PIPETTE_MODELS[state.modelId].tipLabel} เรียบร้อย`, 'ok');
+
+        setTimeout(() => {
+          state.isLowered = false;
+          syncAllUI();
+        }, 420);
+      } else if (state.station === 'source') {
+        if (!state.hasTip) {
+          logDiagnostic('ยังไม่ได้สวมทิปปลอดเชื้อ! กรุณาไปที่กล่องทิปเพื่อสวมทิปก่อนจุ่มสาร', 'error');
+          return;
+        }
+        state.isLowered = !state.isLowered;
+        if (state.isLowered && state.plungerPos < 0.85 && state.tipLiquidUL <= 1e-4) {
+          logDiagnostic('คำแนะนำ: ควรกด Plunger ค้างที่จังหวะที่ 1 ก่อนจุ่มทิปลงในสารละลายเพื่อป้องกันฟองอากาศ', 'warn');
+        }
+      } else if (state.station === 'dest') {
+        if (!state.hasTip) {
+          logDiagnostic('ยังไม่ได้สวมทิป!', 'warn');
+          return;
+        }
+        state.isLowered = !state.isLowered;
+      } else if (state.station === 'waste') {
+        ejectTipAction();
+      }
+
+      syncAllUI();
+      renderPistonCrossSection2D();
+    }
+
+    function ejectTipAction() {
+      ensureAudio();
+      state.ejectorPressed = 1.0;
+      setTimeout(() => { state.ejectorPressed = 0.0; }, 280);
+
+      if (!state.hasTip) {
+        playLabSound('stop1');
+        showToast('ไม่มีทิปสวมอยู่ที่ปลายปิเปต', 'info');
+        return;
+      }
+
+      if (state.station !== 'waste') {
+        logDiagnostic('ห้ามดีดทิปใช้แล้วลงบนโต๊ะหรือหลอดสาร! ต้องย้ายไปที่ถังทิ้งทิปติดเชื้อ (Biohazard) ก่อน', 'error');
+        return;
+      }
+
+      playLabSound('eject');
+      spawnFallingEjectedTip();
+      state.hasTip = false;
+      state.tipModelId = null;
+      state.tipLiquidUL = 0.0;
+      state.tipReagentId = null;
+      state.usedTipHistoryReagent = null;
+      state.isLowered = false;
+
+      update3DTipMeniscus();
+      logDiagnostic('ดีดทิปใช้แล้วทิ้งลงถังขยะติดเชื้อปลอดภัยเรียบร้อย', 'ok');
+      syncAllUI();
+      renderPistonCrossSection2D();
+    }
+
+    function selectPipetteModel(modelId) {
+      if (state.hasTip && state.tipModelId && state.tipModelId !== modelId) {
+        state.hasTip = false;
+        state.tipModelId = null;
+        state.tipLiquidUL = 0;
+        state.usedTipHistoryReagent = null;
+      }
+
+      state.modelId = modelId;
+      const spec = PIPETTE_MODELS[modelId];
+
+      if (state.setVolumeUL < spec.minUL || state.setVolumeUL > spec.maxUL) {
+        const defaults = { P2: 1.25, P20: 12.5, P200: 125, P1000: 750 };
+        state.setVolumeUL = defaults[modelId];
+      } else {
+        state.setVolumeUL = Number((Math.round(state.setVolumeUL / spec.fineStepUL) * spec.fineStepUL).toFixed(3));
+      }
+
+      document.querySelectorAll('.model-btn').forEach(btn => {
+        const active = btn.dataset.model === modelId;
+        btn.className = active
+          ? 'model-btn py-2 px-1.5 rounded-xl border text-center transition bg-sky-500/20 border-sky-400/70 text-white shadow'
+          : 'model-btn py-2 px-1.5 rounded-xl border text-center transition bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-600';
+      });
+
+      if (plungerCapMesh) plungerCapMesh.material.color.setHex(spec.plungerHex);
+      if (rackStationMesh) rackStationMesh.material.color.setHex(spec.tipColorHex);
+
+      const vSlider = document.getElementById('volumeSlider');
+      vSlider.min = spec.minUL;
+      vSlider.max = spec.maxUL;
+      vSlider.step = spec.fineStepUL;
+      vSlider.value = state.setVolumeUL;
+
+      document.getElementById('btnVolCoarseMinus').textContent = `-${spec.coarseStepUL}`;
+      document.getElementById('btnVolFineMinus').textContent = `-${spec.stdStepUL}`;
+      document.getElementById('btnVolFinePlus').textContent = `+${spec.stdStepUL}`;
+      document.getElementById('btnVolCoarsePlus').textContent = `+${spec.coarseStepUL}`;
+
+      rebuildMountedTip3D();
+      updateCounterCanvases();
+      syncAllUI();
+      renderPistonCrossSection2D();
+    }
+
+    function setPipetteVolume(newUL) {
+      if (state.volumeLocked) {
+        showToast('🔒 วงล้อล็อกปริมาตรทำงานอยู่ กรุณาปลดล็อกก่อนหมุนปรับค่า', 'warn');
+        syncAllUI();
+        return;
+      }
+
+      const spec = PIPETTE_MODELS[state.modelId];
+      if (newUL < spec.minUL - 1e-6 || newUL > spec.maxUL + 1e-6) {
+        logDiagnostic(`ห้ามหมุนเกินช่วงปริมาตรของ ${spec.id} (${spec.minUL}–${spec.maxUL} µL)! อาจทำให้เฟืองกลไกเสียหาย`, 'warn');
+      }
+
+      const clamped = Math.max(spec.minUL, Math.min(spec.maxUL, newUL));
+      const quantized = Number((Math.round(clamped / spec.fineStepUL) * spec.fineStepUL).toFixed(3));
+
+      if (Math.abs(quantized - state.setVolumeUL) > 1e-6) {
+        state.setVolumeUL = quantized;
+        if (thumbwheelMesh) {
+          thumbwheelMesh.rotation.y = (state.setVolumeUL / spec.stdStepUL) * 0.25;
+        }
+        playLabSound('wheel');
+      }
+
+      updateCounterCanvases();
+      syncAllUI();
+      renderPistonCrossSection2D();
+    }
+
+    function onVolumeSliderInput(val) {
+      ensureAudio();
+      setPipetteVolume(parseFloat(val));
+    }
+
+    function stepVolume(mode, dir) {
+      ensureAudio();
+      const spec = PIPETTE_MODELS[state.modelId];
+      const delta = mode === 'coarse' ? spec.coarseStepUL : spec.stdStepUL;
+      setPipetteVolume(state.setVolumeUL + dir * delta);
+    }
+
+    function toggleVolumeLock(forceState) {
+      state.volumeLocked = typeof forceState === 'boolean' ? forceState : !state.volumeLocked;
+      const btn = document.getElementById('btnVolLock');
+      const badge = document.getElementById('badgeVolLock');
+      document.getElementById('volumeSlider').disabled = state.volumeLocked;
+
+      if (state.volumeLocked) {
+        btn.textContent = '🔒 ล็อกอยู่ (กดเพื่อปลด)';
+        btn.className = 'px-2 py-0.5 rounded-lg bg-amber-500/25 border border-amber-400/60 text-[10px] font-semibold text-amber-200 transition';
+        badge.classList.remove('hidden');
+      } else {
+        btn.textContent = '🔓 ปลดล็อกวงล้อ';
+        btn.className = 'px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-[10px] font-semibold text-slate-300 transition';
+        badge.classList.add('hidden');
+      }
+    }
+
+    function selectReagent(reagId) {
+      state.activeReagentId = reagId;
+      const reag = REAGENTS[reagId];
+
+      if (sourceLiquidMesh) {
+        sourceLiquidMesh.material.color.setHex(reag.hex);
+        sourceLiquidMesh.material.opacity = reag.opacity;
+      }
+
+      document.querySelectorAll('.reag-btn').forEach(btn => {
+        const active = btn.dataset.reag === reagId;
+        btn.className = active
+          ? 'reag-btn py-1.5 px-2 rounded-lg border text-left transition bg-sky-500/20 border-sky-400/60 text-sky-200 font-medium flex items-center gap-1.5'
+          : 'reag-btn py-1.5 px-2 rounded-lg border text-left transition bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-600 flex items-center gap-1.5';
+      });
+    }
+
+    function resetReceivingTube() {
+      state.destVolumeUL = 0.0;
+      update3DReceivingTubeLiquid();
+      syncAllUI();
+      showToast('ล้างหลอดไมโครเซนทริฟิวจ์ปลายทางเป็น 0.0 µL แล้ว', 'ok');
+    }
+
+    function syncAllUI() {
+      const spec = PIPETTE_MODELS[state.modelId];
+
+      const hBadge = document.getElementById('headerModelBadge');
+      hBadge.textContent = spec.name;
+      hBadge.className = `text-[11px] font-mono font-bold px-2 py-0.5 rounded-full border ${spec.badgeBg}`;
+
+      document.getElementById('modelTipBadge').textContent = spec.tipLabel;
+      document.getElementById('volRangeHint').textContent = `ความละเอียด ${spec.stdStepUL} µL (ขีดย่อย ${spec.fineStepUL} µL)`;
+      document.getElementById('volumeSlider').value = state.setVolumeUL;
+
+      const hideReadout = (state.learningMode === 'quiz' && state.quizSubMode === 'read' && !state.quizAnswered);
+
+      document.getElementById('pvModelSpec').textContent = `${spec.id} • ช่วงวัด ${spec.minUL}–${spec.maxUL} µL`;
+      const explainEl = document.getElementById('pvDigitsExplain');
+      explainEl.innerHTML = spec.placeLabels.map(p =>
+        `<div class="flex justify-between gap-1"><span class="text-slate-400">${p.name}:</span><span class="font-medium text-slate-200 text-right">${p.role}</span></div>`
+      ).join('');
+
+      document.getElementById('pvReadoutUL').textContent = hideReadout
+        ? '??? µL'
+        : `${formatUL(state.setVolumeUL)} µL (${(state.setVolumeUL / 1000).toFixed(4).replace(/0+$/, '').replace(/\.$/, '')} mL)`;
+
+      document.getElementById('teleSetUL').textContent = hideReadout ? '??? µL' : `${formatUL(state.setVolumeUL)} µL`;
+      document.getElementById('teleTipUL').textContent = `${formatUL(state.tipLiquidUL)} µL`;
+      document.getElementById('teleDestUL').textContent = `${formatUL(state.destVolumeUL)} µL`;
+
+      document.getElementById('plungerSlider').value = state.plungerPos;
+      let stopText = `ปกติ (${Math.round(state.plungerPos * 100)}%)`;
+      if (Math.abs(state.plungerPos - 1.0) <= 0.04) stopText = 'จังหวะที่ 1 (1st Stop)';
+      else if (state.plungerPos > 1.04) stopText = 'จังหวะที่ 2 (Blow-out!)';
+
+      document.getElementById('plungerStrokeReadout').textContent = stopText;
+      document.getElementById('badgeStopState').textContent = `Plunger: ${stopText}`;
+
+      const tipBadge = document.getElementById('badgeTipState');
+      if (state.hasTip) {
+        tipBadge.textContent = `✓ สวมทิป ${state.tipModelId} แล้ว`;
+        tipBadge.className = 'px-2.5 py-1 rounded-xl bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[11px] font-semibold backdrop-blur-md';
+      } else {
+        tipBadge.textContent = '⚠ ยังไม่สวมทิป';
+        tipBadge.className = 'px-2.5 py-1 rounded-xl bg-rose-500/20 border border-rose-400/50 text-rose-300 text-[11px] font-semibold backdrop-blur-md';
+      }
+
+      const stNames = {
+        rack: 'เหนือกล่องทิปปลอดเชื้อ',
+        source: state.isLowered ? 'จุ่มในหลอดสารตัวอย่าง' : 'เหนือหลอดสารตัวอย่าง',
+        dest: state.isLowered ? 'แตะผนังในหลอดรับ 1.5 mL' : 'เหนือหลอดรับ 1.5 mL',
+        waste: 'เหนือถังทิ้งทิปติดเชื้อ'
+      };
+      document.getElementById('stationCurrentLabel').textContent = stNames[state.station];
+
+      const vBtn = document.getElementById('btnVerticalAction');
+      if (state.station === 'rack') {
+        vBtn.innerHTML = '<span>⬇ กดสวมทิปปลอดเชื้อ</span>';
+      } else if (state.station === 'source') {
+        vBtn.innerHTML = state.isLowered ? '<span>⬆ ยกปลายทิปขึ้นจากสาร</span>' : '<span>⬇ จุ่มปลายทิปลงในสาร</span>';
+      } else if (state.station === 'dest') {
+        vBtn.innerHTML = state.isLowered ? '<span>⬆ ยกทิปออกจากหลอดรับ</span>' : '<span>⬇ ลดปลายทิปแตะข้างหลอดรับ</span>';
+      } else {
+        vBtn.innerHTML = '<span>☣ พร้อมดีดทิปลงถัง</span>';
+      }
+    }
+
+    const MISSION_TEMPLATES = [
+      { targetUL: 1.45, bestModel: 'P2', reagentId: 'blue', title: 'เตรียมปฏิกิริยา PCR Master Mix' },
+      { targetUL: 0.85, bestModel: 'P2', reagentId: 'buffer', title: 'ดูดเอนไซม์ตัดจำเพาะ (Restriction Enzyme)' },
+      { targetUL: 14.5, bestModel: 'P20', reagentId: 'blue', title: 'เตรียมตัวอย่าง Loading Dye สำหรับ Gel Electrophoresis' },
+      { targetUL: 7.5, bestModel: 'P20', reagentId: 'safranin', title: 'หยดสีย้อมย้อมเซลล์จุลินทรีย์' },
+      { targetUL: 145, bestModel: 'P200', reagentId: 'bacteria', title: 'ถ่ายเชื้อแบคทีเรีย E. coli OD600 ลงหลอดทดลอง' },
+      { targetUL: 68, bestModel: 'P200', reagentId: 'buffer', title: 'เจือจางสารละลายด้วย TE Buffer' },
+      { targetUL: 750, bestModel: 'P1000', reagentId: 'bacteria', title: 'เตรียมอาหารเลี้ยงเชื้อเหลวปริมาตร 0.75 mL' },
+      { targetUL: 450, bestModel: 'P1000', reagentId: 'safranin', title: 'ตวงสารละลายย้อมสี Safranin 450 µL' }
+    ];
+
+    function generateNewMission() {
+      const item = MISSION_TEMPLATES[Math.floor(Math.random() * MISSION_TEMPLATES.length)];
+      state.mission = { ...item };
+      state.destVolumeUL = 0.0;
+      state.sessionErrors = [];
+      state.tipLiquidUL = 0.0;
+      state.hasTip = false;
+      state.isLowered = false;
+      state.plungerPos = 0.0;
+      update3DPlungerVisuals();
+      update3DTipMeniscus();
+      update3DReceivingTubeLiquid();
+      moveToStation('rack');
+
+      document.getElementById('missionResultBox').classList.add('hidden');
+      const reagName = REAGENTS[item.reagentId].name;
+      document.getElementById('missionDescBox').innerHTML = `
+        <div class="font-bold text-emerald-300 mb-1">${item.title}</div>
+        <div>จงเลือกรุ่นปิเปตที่เหมาะสมที่สุดเพื่อดูด <strong class="text-sky-300">${reagName}</strong> ปริมาตร <strong class="font-mono text-amber-300">${item.targetUL} µL</strong> ลงสู่หลอดรับ 1.5 mL และปลดทิปทิ้งถังติดเชื้อเมื่อเสร็จสิ้น</div>
+      `;
+      syncAllUI();
+    }
+
+    function evaluateMission() {
+      if (!state.mission) return;
+      const m = state.mission;
+      const delivered = state.destVolumeUL;
+      const pctError = Math.abs(delivered - m.targetUL) / m.targetUL * 100;
+      const rightModel = (state.modelId === m.bestModel);
+      const tipDisposed = !state.hasTip;
+      const zeroTechErrors = state.sessionErrors.length === 0;
+
+      const box = document.getElementById('missionResultBox');
+      box.classList.remove('hidden');
+
+      if (pctError <= 1.5 && rightModel && tipDisposed && zeroTechErrors) {
+        state.missionPassedCount += 1;
+        document.getElementById('missionPassCount').textContent = String(state.missionPassedCount);
+        box.className = 'p-3 rounded-xl border border-emerald-500/50 bg-emerald-950/60 text-xs space-y-1 text-emerald-200';
+        box.innerHTML = `
+          <div class="font-bold text-emerald-300 text-sm">🏆 ภารกิจสมบูรณ์แบบ! (ความคลาดเคลื่อน ${pctError.toFixed(2)}%)</div>
+          <div>• เลือกรุ่น <strong>${m.bestModel}</strong> เหมาะสมที่สุด • ปริมาตรในหลอดรับ <strong>${delivered.toFixed(2)} µL</strong> • ปลดทิปทิ้งปลอดเชื้อครบทุกขั้นตอน</div>
+        `;
+        playLabSound('tip_on');
+      } else {
+        box.className = 'p-3 rounded-xl border border-amber-500/50 bg-amber-950/50 text-xs space-y-1 text-amber-100';
+        const notes = [];
+        if (pctError > 1.5) notes.push(`ปริมาตรในหลอดรับได้ ${delivered.toFixed(2)} µL (เป้าหมาย ${m.targetUL} µL, คลาดเคลื่อน ${pctError.toFixed(1)}%)`);
+        if (!rightModel) notes.push(`รุ่นปิเปตที่แม่นยำที่สุดสำหรับ ${m.targetUL} µL คือรุ่น ${m.bestModel}`);
+        if (!tipDisposed) notes.push(`ยังไม่ได้ปลดทิปใช้แล้วทิ้งลงถังติดเชื้อ (Biohazard)`);
+        if (!zeroTechErrors) notes.push(`พบข้อผิดพลาดทางเทคนิคระหว่างทำ (${state.sessionErrors[state.sessionErrors.length - 1]})`);
+
+        box.innerHTML = `
+          <div class="font-bold text-amber-300 text-sm">🔍 ผลการประเมินภารกิจ (ลองปรับปรุงอีกครั้ง)</div>
+          <ul class="list-disc list-inside space-y-0.5 text-[11px]">${notes.map(n => `<li>${n}</li>`).join('')}</ul>
+        `;
+      }
+    }
+
+    function setQuizSubMode(sub) {
+      state.quizSubMode = sub;
+      document.getElementById('btnQuizRead').className = sub === 'read'
+        ? 'py-1.5 px-2 rounded-lg font-semibold bg-indigo-500 text-white transition'
+        : 'py-1.5 px-2 rounded-lg font-semibold text-slate-400 hover:text-white transition';
+      document.getElementById('btnQuizSet').className = sub === 'set'
+        ? 'py-1.5 px-2 rounded-lg font-semibold bg-indigo-500 text-white transition'
+        : 'py-1.5 px-2 rounded-lg font-semibold text-slate-400 hover:text-white transition';
+
+      document.getElementById('quizReadInputGroup').classList.toggle('hidden', sub !== 'read');
+      generateScaleQuizQuestion();
+    }
+
+    function getBestModelForVolume(volUL) {
+      if (volUL <= 2.0) return 'P2';
+      if (volUL <= 20.0) return 'P20';
+      if (volUL <= 200.0) return 'P200';
+      return 'P1000';
+    }
+
+    function generateScaleQuizQuestion() {
+      state.quizAnswered = false;
+      document.getElementById('quizFeedbackBox').classList.add('hidden');
+      document.getElementById('quizInputUL').value = '';
+      document.getElementById('quizInputML').value = '';
+
+      const models = ['P2', 'P20', 'P200', 'P1000'];
+      const chosenModel = models[Math.floor(Math.random() * models.length)];
+      const spec = PIPETTE_MODELS[chosenModel];
+
+      const minOptimal = chosenModel === 'P2' ? 0.25 : (chosenModel === 'P20' ? 2.5 : (chosenModel === 'P200' ? 25 : 220));
+      const stepsCount = Math.round((spec.maxUL - minOptimal) / spec.stdStepUL);
+      const randVol = Number((minOptimal + Math.floor(Math.random() * (stepsCount + 1)) * spec.stdStepUL).toFixed(2));
+
+      state.quizTargetModel = chosenModel;
+      state.quizTargetUL = randVol;
+
+      const qBox = document.getElementById('quizQuestionBox');
+      if (state.quizSubMode === 'read') {
+        toggleVolumeLock(false);
+        selectPipetteModel(chosenModel);
+        setPipetteVolume(randVol);
+        toggleVolumeLock(true);
+        setCameraPreset('window');
+        qBox.innerHTML = `หน้าต่างสเกลของไมโครปิเปตรุ่น <strong class="font-mono text-sky-300">${chosenModel}</strong> ถูกล็อกไว้ดังภาพ จงอ่านค่าปริมาตรทั้งในหน่วย <strong>µL</strong> และ <strong>mL</strong>`;
+      } else {
+        toggleVolumeLock(false);
+        selectPipetteModel('P200');
+        setPipetteVolume(100);
+        setCameraPreset('window');
+        const askInML = (chosenModel === 'P1000' && Math.random() > 0.45);
+        const promptVal = askInML ? `${(randVol / 1000).toFixed(2)} mL` : `${randVol} µL`;
+        qBox.innerHTML = `ต้องการดูดสารละลายปริมาตร <strong class="font-mono text-amber-300 text-sm">${promptVal}</strong><br/>จง <strong>1) เลือกรุ่นไมโครปิเปตที่เหมาะสมที่สุด</strong> และ <strong>2) หมุนตั้งค่าหน้าต่างตัวเลข</strong> ให้ตรงตามโจทย์`;
+      }
+
+      syncAllUI();
+    }
+
+    function submitScaleQuiz() {
+      if (state.quizAnswered) return;
+
+      const targetM = state.quizTargetModel;
+      const targetUL = state.quizTargetUL;
+      const targetML = targetUL / 1000;
+      const spec = PIPETTE_MODELS[targetM];
+      const { drums } = getCounterDigitsState(targetM, targetUL);
+      const dTop = Math.floor(drums[0] + 1e-4);
+      const dMid = Math.floor(drums[1] + 1e-4);
+      const dBot = Math.round(drums[2]);
+
+      let isCorrect = false;
+      let userSummary = '';
+
+      if (state.quizSubMode === 'read') {
+        const inUL = parseFloat(document.getElementById('quizInputUL').value);
+        const inML = parseFloat(document.getElementById('quizInputML').value);
+        if (Number.isNaN(inUL) || Number.isNaN(inML)) {
+          showToast('กรุณากรอกคำตอบให้ครบทั้งช่อง µL และ mL', 'warn');
+          return;
+        }
+        const okUL = Math.abs(inUL - targetUL) <= spec.fineStepUL * 0.6;
+        const okML = Math.abs(inML - targetML) <= (spec.fineStepUL / 1000) * 0.8;
+        isCorrect = okUL && okML;
+        userSummary = `คุณตอบ ${inUL} µL (${inML} mL)`;
+      } else {
+        const bestM = getBestModelForVolume(targetUL);
+        const okModel = (state.modelId === bestM);
+        const okVol = Math.abs(state.setVolumeUL - targetUL) <= spec.fineStepUL * 0.5;
+        isCorrect = okModel && okVol;
+        userSummary = `คุณเลือกรุ่น ${state.modelId} ตั้งค่า ${formatUL(state.setVolumeUL)} µL`;
+      }
+
+      state.quizAnswered = true;
+      state.quizScoreTotal += 1;
+      if (isCorrect) {
+        state.quizScoreRight += 1;
+        state.quizStreak += 1;
+        playLabSound('tip_on');
+      } else {
+        state.quizStreak = 0;
+        playLabSound('warn');
+      }
+
+      document.getElementById('quizScoreText').textContent = `${state.quizScoreRight}/${state.quizScoreTotal}`;
+      document.getElementById('quizStreakText').textContent = String(state.quizStreak);
+
+      const fb = document.getElementById('quizFeedbackBox');
+      fb.classList.remove('hidden');
+      fb.className = isCorrect
+        ? 'p-3 rounded-xl border border-emerald-500/50 bg-emerald-950/60 text-xs space-y-1 text-emerald-200'
+        : 'p-3 rounded-xl border border-rose-500/50 bg-rose-950/60 text-xs space-y-1 text-rose-200';
+
+      fb.innerHTML = `
+        <div class="font-bold text-sm">${isCorrect ? '✅ ถูกต้องแม่นยำ!' : `❌ ยังไม่ตรง (${userSummary})`}</div>
+        <div class="text-slate-200">เฉลย: รุ่น <strong class="font-mono text-sky-300">${targetM}</strong> หน้าต่างตัวเลขบนลงล่าง <strong class="font-mono">[ ${dTop} - ${dMid} - ${dBot} ]</strong></div>
+        <div class="font-mono text-[11px] text-amber-200">= ${targetUL} µL หรือ ${targetML} mL</div>
+      `;
+
+      syncAllUI();
+    }
+
+    function setCameraPreset(preset) {
+      anim3D.camActive = true;
+      const px = anim3D.pipetteX;
+      const py = anim3D.pipetteY;
+
+      if (preset === 'window') {
+        anim3D.camPos.set(px, py + 12.5, 34);
+        anim3D.camTarget.set(px, py + 12.5, 0);
+      } else if (preset === 'tip') {
+        anim3D.camPos.set(px + 6, -6, 56);
+        anim3D.camTarget.set(px, -12, 0);
+      } else if (preset === 'plunger') {
+        anim3D.camPos.set(px + 8, py + 31, 40);
+        anim3D.camTarget.set(px, py + 27, 0);
+      } else {
+        anim3D.camPos.set(2, 34, 148);
+        anim3D.camTarget.set(2, 8, 0);
+      }
+    }
+
+    function initPartLabelDOM() {
+      const overlay = document.getElementById('labelsOverlay');
+      overlay.innerHTML = '';
+
+      ANATOMY_PARTS.forEach(part => {
+        const el = document.createElement('div');
+        el.id = `pin_${part.id}`;
+        el.className = 'part-pin';
+        el.innerHTML = `
+          <div class="px-2 py-0.5 rounded-full bg-slate-950/90 hover:bg-sky-500 hover:text-slate-950 text-sky-300 border border-sky-400/60 text-[10px] font-semibold shadow-lg cursor-pointer flex items-center gap-1 transition">
+            <span class="w-4 h-4 rounded-full bg-sky-500/25 font-mono flex items-center justify-center font-bold">${part.num}</span>
+            <span class="whitespace-nowrap">${part.th}</span>
+          </div>
+          <div class="part-pin-tooltip absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-56 p-2.5 rounded-xl bg-slate-900/95 border border-sky-500/40 shadow-2xl text-left">
+            <div class="text-xs font-bold text-sky-300">${part.th}</div>
+            <div class="text-[10px] font-mono text-slate-400 mb-1">${part.en}</div>
+            <div class="text-[11px] text-slate-200 leading-snug">${part.desc}</div>
+          </div>
+        `;
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          el.classList.toggle('active');
+        });
+        overlay.appendChild(el);
+      });
+    }
+
+    function togglePartLabels() {
+      state.showLabels = !state.showLabels;
+      document.getElementById('labelsOverlay').style.display = state.showLabels ? 'block' : 'none';
+      document.getElementById('btnToggleLabels').className = state.showLabels
+        ? 'px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/40 backdrop-blur-md hover:bg-sky-500/30 transition flex items-center gap-1.5 shadow-lg'
+        : 'px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-slate-900/80 text-slate-400 border border-slate-700 backdrop-blur-md hover:text-white transition flex items-center gap-1.5 shadow-lg';
+    }
+
+    function updatePartLabelsProjection() {
+      if (!state.showLabels || !camera || !renderer) return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      if (rect.width === 0) return;
+
+      ANATOMY_PARTS.forEach(part => {
+        const el = document.getElementById(`pin_${part.id}`);
+        if (!el) return;
+        const proj = part.getPos().project(camera);
+        if (proj.z > 1) {
+          el.style.opacity = '0';
+          return;
+        }
+        el.style.opacity = '1';
+        el.style.left = `${(proj.x * 0.5 + 0.5) * rect.width}px`;
+        el.style.top = `${(-proj.y * 0.5 + 0.5) * rect.height}px`;
+      });
+    }
+
+    function setup3DInteractions() {
+      const dom = renderer.domElement;
+      const raycaster = new THREE.Raycaster();
+      const ndc = new THREE.Vector2();
+      let pointerDownPos = { x: 0, y: 0 };
+
+      dom.addEventListener('pointerdown', (e) => {
+        anim3D.camActive = false;
+        pointerDownPos = { x: e.clientX, y: e.clientY };
+      });
+
+      dom.addEventListener('pointerup', (e) => {
+        const dist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y);
+        if (dist > 6) return;
+
+        const rect = dom.getBoundingClientRect();
+        ndc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        ndc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(ndc, camera);
+
+        const hits = raycaster.intersectObjects(clickable3DObjects, false);
+        if (hits.length > 0) {
+          ensureAudio();
+          const data = hits[0].object.userData;
+          if (data.action === 'station') {
+            if (state.station === data.station) triggerVerticalStationAction();
+            else moveToStation(data.station);
+          } else if (data.action === 'plunger_click') {
+            if (state.plungerPos < 0.85) animatePlungerTo(1.00);
+            else if (state.plungerPos < 1.25) animatePlungerTo(1.35);
+            else animatePlungerTo(0.00);
+          } else if (data.action === 'eject_click') {
+            ejectTipAction();
+          }
+        }
+      });
+
+      const c2d = document.getElementById('counter2DCanvas');
+      let drumDrag = { active: false, startY: 0, startVol: 0 };
+
+      c2d.addEventListener('pointerdown', (e) => {
+        ensureAudio();
+        if (state.volumeLocked) {
+          showToast('🔒 วงล้อล็อกปริมาตรอยู่ กดปลดล็อกก่อนหมุนปรับค่า', 'warn');
+          return;
+        }
+        drumDrag.active = true;
+        drumDrag.startY = e.clientY;
+        drumDrag.startVol = state.setVolumeUL;
+        c2d.setPointerCapture(e.pointerId);
+      });
+
+      c2d.addEventListener('pointermove', (e) => {
+        if (!drumDrag.active) return;
+        const spec = PIPETTE_MODELS[state.modelId];
+        const dy = drumDrag.startY - e.clientY;
+        setPipetteVolume(drumDrag.startVol + (dy / 10) * spec.fineStepUL);
+      });
+
+      const endDrumDrag = (e) => {
+        if (drumDrag.active) {
+          drumDrag.active = false;
+          try { c2d.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+      };
+      c2d.addEventListener('pointerup', endDrumDrag);
+      c2d.addEventListener('pointercancel', endDrumDrag);
+
+      c2d.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        ensureAudio();
+        const spec = PIPETTE_MODELS[state.modelId];
+        const dir = e.deltaY < 0 ? 1 : -1;
+        const step = e.shiftKey ? spec.stdStepUL : spec.fineStepUL;
+        setPipetteVolume(state.setVolumeUL + dir * step);
+      }, { passive: false });
+
+      window.addEventListener('resize', handleResize);
+    }
+
+    function toggleHelpModal(show) {
+      const m = document.getElementById('helpModal');
+      m.classList.toggle('hidden', !show);
+      m.classList.toggle('flex', show);
+    }
+
+    function handleResize() {
+      if (!renderer || !camera) return;
+      const mount = document.getElementById('threeMount');
+      const rect = mount.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        camera.aspect = rect.width / rect.height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(rect.width, rect.height);
+      }
+      updateCounterCanvases();
+      renderPistonCrossSection2D();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (pipetteAssembly) {
+        let targetY = 35.0;
+        if (state.isLowered) {
+          if (state.station === 'rack') targetY = 9.0;
+          else if (state.station === 'source') targetY = 23.0;
+          else if (state.station === 'dest') targetY = 25.5;
+        }
+        anim3D.pipetteY += (targetY - anim3D.pipetteY) * 0.16;
+        pipetteAssembly.position.x += (anim3D.pipetteX - pipetteAssembly.position.x) * 0.14;
+        pipetteAssembly.position.y = anim3D.pipetteY;
+
+        const targetRotZ = (state.station === 'dest' && state.isLowered) ? 0.08 : 0.0;
+        pipetteAssembly.rotation.z += (targetRotZ - pipetteAssembly.rotation.z) * 0.15;
+      }
+
+      if (ejectorBtnMesh && ejectorCollarGroup) {
+        const ejDrop = state.ejectorPressed * 3.2;
+        ejectorBtnMesh.position.y += ((27.5 - ejDrop) - ejectorBtnMesh.position.y) * 0.3;
+        ejectorCollarGroup.position.y += ((-ejDrop) - ejectorCollarGroup.position.y) * 0.3;
+      }
+
+      if (state.targetPlungerPos !== null) {
+        const diff = state.targetPlungerPos - state.plungerPos;
+        if (Math.abs(diff) <= 0.015) {
+          setPlungerPosition(state.targetPlungerPos, true);
+          state.targetPlungerPos = null;
+        } else {
+          const speed = state.targetPlungerPos < state.plungerPos ? 0.045 : 0.09;
+          setPlungerPosition(state.plungerPos + Math.sign(diff) * Math.min(Math.abs(diff), speed), true);
+        }
+      }
+
+      for (let i = fallingTips.length - 1; i >= 0; i--) {
+        const item = fallingTips[i];
+        item.vy -= 0.06;
+        item.mesh.position.y += item.vy;
+        item.mesh.rotation.z += item.vr;
+        item.life -= 1;
+        if (item.mesh.position.y < -16 || item.life <= 0) {
+          scene.remove(item.mesh);
+          item.mesh.geometry.dispose();
+          fallingTips.splice(i, 1);
+        }
+      }
+
+      if (anim3D.camActive && camera && controls) {
+        camera.position.lerp(anim3D.camPos, 0.11);
+        controls.target.lerp(anim3D.camTarget, 0.11);
+        if (camera.position.distanceTo(anim3D.camPos) < 0.25 && controls.target.distanceTo(anim3D.camTarget) < 0.25) {
+          anim3D.camActive = false;
+        }
+      }
+
+      if (controls) controls.update();
+      if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+        updatePartLabelsProjection();
+      }
+    }
+
+    window.onload = function () {
+      try {
+        initThreeScene();
+        selectPipetteModel('P200');
+        selectReagent('blue');
+        handleResize();
+        animate();
+      } catch (err) {
+        console.error('3D Micropipette Simulator initialization error:', err);
+      }
+    };
+  </script>
+</body>
+</html>
