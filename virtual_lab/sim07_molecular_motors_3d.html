@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องปฏิบัติการ 3D กลศาสตร์ชีวเคมีและโมเลกุลมอเตอร์ (Biochemical Mechanics & Molecular Motors 3D)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js r128 & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- Google Fonts & Font Awesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #030712; color: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .font-digital { font-family: 'Orbitron', monospace; }
+    
+    /* Pure CSS Vector Typography Standard (Zero Tofu Box □) */
+    .vec {
+      display: inline-block;
+      position: relative;
+      font-family: 'Times New Roman', Cambria, serif;
+      font-style: italic;
+      font-weight: bold;
+      line-height: 1;
+      margin-top: 0.25em;
+    }
+    .vec::after {
+      content: '→';
+      position: absolute;
+      top: -0.45em;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0.85);
+      font-size: 0.72em;
+      font-style: normal;
+      font-weight: bold;
+      line-height: 1;
+      color: inherit;
+      pointer-events: none;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.3); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(168, 85, 247, 0.6); }
+
+    /* Digital LED Glow */
+    .led-glow-purple {
+      text-shadow: 0 0 10px rgba(168, 85, 247, 0.7), 0 0 20px rgba(168, 85, 247, 0.4);
+    }
+    .led-glow-amber {
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.7), 0 0 20px rgba(245, 158, 11, 0.4);
+    }
+    .led-glow-emerald {
+      text-shadow: 0 0 10px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+    .led-glow-sky {
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.7), 0 0 20px rgba(56, 189, 248, 0.4);
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col select-none overflow-hidden bg-slate-950">
+
+  <!-- Main Simulator Layout Grid -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 h-full overflow-hidden relative">
+
+    <!-- 3D Viewport Column -->
+    <div id="viewportContainer" class="lg:col-span-8 w-full h-[360px] sm:h-[440px] lg:h-full relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden transition-all duration-300">
+      
+      <!-- Three.js Canvas Mount Container -->
+      <div id="threeMount" class="w-full h-full block cursor-grab active:cursor-grabbing"></div>
+
+      <!-- Top-Left HUD: Molecular Motor Telemetry & Energetics -->
+      <div id="motorHUD" class="absolute top-3 left-3 bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-purple-500/30 shadow-2xl text-xs z-10 space-y-2 pointer-events-auto w-64 sm:w-72 shadow-purple-950/20">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5 gap-2">
+          <span class="font-bold text-purple-400 font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-gear text-purple-300 animate-spin" style="animation-duration: 4s;"></i> ROTOR TELEMETRY
+          </span>
+          <div class="flex items-center gap-1.5">
+            <span id="motorStateBadge" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono">
+              ROTATING
+            </span>
+            <button onclick="toggleCardBody('motorHUD')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="motorHUD_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('motorHUD')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="motorHUD_body" class="space-y-2.5 transition-all">
+          <!-- Digital Velocity Readout Box -->
+          <div class="bg-black/90 p-2.5 rounded-xl border border-purple-500/30 text-center space-y-1 shadow-inner">
+            <div class="text-[10px] font-mono text-slate-400 flex justify-between px-1">
+              <span>ROTATIONAL SPEED (f)</span>
+              <span id="hudRpmDisplay" class="text-purple-400 font-mono">10,800 RPM</span>
+            </div>
+            <div id="hudHzDisplay" class="text-3xl font-digital font-bold text-purple-400 led-glow-purple tracking-wider">
+              180.0 <span class="text-xs text-purple-500 font-sans">Hz</span>
+            </div>
+            <div class="grid grid-cols-2 gap-1 text-[10px] font-mono text-slate-300 pt-1 border-t border-white/10">
+              <div class="text-left px-1">
+                <span class="text-slate-400">Torque (&tau;):</span>
+                <span id="hudTorque" class="text-amber-400 font-bold block">2,450 pN·nm</span>
+              </div>
+              <div class="text-right px-1">
+                <span id="hudProductLabel" class="text-slate-400">ATP Synthesized:</span>
+                <span id="hudProductValue" class="text-emerald-400 font-bold block">540 ATP/s</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Energetics & PMF Telemetry -->
+          <div class="space-y-1 font-mono text-[10px] text-slate-300 bg-slate-950/80 p-2.5 rounded-xl border border-white/5">
+            <div class="flex justify-between">
+              <span>พลังขับเคลื่อนโปรตอน (PMF):</span>
+              <span id="hudPmfVal" class="text-cyan-300 font-bold">-180.5 mV</span>
+            </div>
+            <div class="flex justify-between">
+              <span>กำลังงานกล (P<sub>mech</sub> = &tau;&omega;):</span>
+              <span id="hudPowerMech" class="text-amber-300 font-bold">2.77 fW</span>
+            </div>
+            <div class="flex justify-between">
+              <span>ประสิทธิภาพเชิงกลเคมี (&eta;):</span>
+              <span id="hudEfficiency" class="text-emerald-400 font-bold">88.5%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top-Right: 2D Synchronized Catalytic Loupe -->
+      <div id="catalyticLoupeCard" class="absolute top-3 right-3 bg-slate-900/95 backdrop-blur-md p-3 rounded-2xl border border-amber-500/30 shadow-2xl z-10 w-48 sm:w-56 pointer-events-auto shadow-amber-950/20">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5 mb-2 gap-2">
+          <span class="font-bold text-amber-400 text-xs font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-certificate text-amber-300"></i> CATALYTIC LOUPE
+          </span>
+          <div class="flex items-center gap-1.5">
+            <button onclick="toggleCardBody('catalyticLoupeCard')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="catalyticLoupeCard_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('catalyticLoupeCard')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="catalyticLoupeCard_body" class="space-y-2 transition-all">
+          <div class="relative w-full aspect-square bg-slate-950 rounded-xl overflow-hidden border border-amber-500/20 shadow-inner flex items-center justify-center">
+            <canvas id="loupeCanvas" width="180" height="180" class="w-full h-full block"></canvas>
+            <!-- Loupe Optical Reticle Overlay -->
+            <div class="absolute inset-0 pointer-events-none border border-amber-500/10 rounded-xl"></div>
+            <div class="absolute top-1 left-2 text-[9px] font-mono text-amber-400/80">Hexamer: &alpha;&beta;</div>
+            <div class="absolute bottom-1 right-2 text-[9px] font-mono text-slate-500">Boyer Model</div>
+          </div>
+          <div class="text-[10px] text-center font-mono text-slate-400 flex justify-between px-1">
+            <span id="loupeStateText" class="text-amber-400 font-bold">Tight (Catalysis)</span>
+            <span id="loupeCycleText" class="text-slate-400">&Delta;&theta; = 120°</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Floating Dock Bar: Camera, Minimize/Restore, Fullscreen -->
+      <div id="viewportDockBar" class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-2xl z-20 flex items-center gap-2 text-xs">
+        <!-- Re-open Hidden Cards Dropdown / Buttons -->
+        <div id="dockRestoreButtons" class="flex items-center gap-1.5 empty:hidden"></div>
+
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- Camera Preset Angles -->
+        <button onclick="setCameraView('overview')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="มุมมองภาพรวม 3 มิติ">
+          <i class="fa-solid fa-cube text-[9px]"></i> 3D
+        </button>
+        <button onclick="setCameraView('rotor')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="เจาะจงโรเตอร์ F0/MS-Ring">
+          <i class="fa-solid fa-circle-notch text-[9px]"></i> Rotor
+        </button>
+        <button onclick="setCameraView('head')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="เจาะจงหัว F1 / แคทาไลติก">
+          <i class="fa-solid fa-dharmachakra text-[9px]"></i> Head/Stalk
+        </button>
+
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- Fullscreen / Sidebar Toggle -->
+        <button onclick="toggleSidebar()" id="btnToggleSidebar" class="px-2.5 py-1 rounded-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 font-medium text-[10px] flex items-center gap-1 transition" title="ขยายจอภาพ 3D เต็มความกว้าง">
+          <i class="fa-solid fa-expand text-[9px]"></i> <span id="toggleSidebarLabel">ขยายจอเต็ม</span>
+        </button>
+        <button onclick="captureSimulatorScreenshot()" class="px-2.5 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-medium text-[10px] flex items-center gap-1 transition" title="บันทึกภาพหน้าจอหลักฐาน">
+          <i class="fa-solid fa-camera text-[9px]"></i> แคปเจอร์
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Interactive Control Panel Sidebar -->
+    <div id="controlSidebar" class="lg:col-span-4 h-full bg-slate-900/95 border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col overflow-y-auto p-4 space-y-4">
+      
+      <!-- Panel Header -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div>
+          <h2 class="text-sm font-bold text-purple-400 flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-purple-400"></i> แผงควบคุมกลศาสตร์โมเลกุลมอเตอร์
+          </h2>
+          <p class="text-[11px] text-slate-400">Proton Motive Force &amp; Nanomotor Mechanics</p>
+        </div>
+        <button onclick="resetParameters()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition flex items-center gap-1">
+          <i class="fa-solid fa-rotate-right"></i> รีเซ็ต
+        </button>
+      </div>
+
+      <!-- Audio Synthesizer Status & Sound Toggle -->
+      <div class="flex items-center justify-between bg-slate-950/60 p-2.5 rounded-xl border border-white/5">
+        <span class="text-xs text-slate-300 flex items-center gap-2">
+          <i class="fa-solid fa-volume-high text-purple-400"></i> ซาวด์สังเคราะห์เสียงหมุนโรเตอร์ FM
+        </span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="soundToggle" class="sr-only peer" checked onchange="toggleSound(this.checked)">
+          <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-500"></div>
+        </label>
+      </div>
+
+      <!-- Motor Type Selector Tabs -->
+      <div class="bg-slate-950 p-1.5 rounded-xl border border-white/5 grid grid-cols-2 gap-1 text-xs font-mono">
+        <button id="tabMotorAtp" onclick="switchMotorMode('atp')" class="py-1.5 rounded-lg bg-purple-600 text-white font-bold transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-dharmachakra"></i> F₀F₁-ATP Synthase
+        </button>
+        <button id="tabMotorFlagella" onclick="switchMotorMode('flagella')" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white font-medium transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-bacteria"></i> Flagellar Motor (BFM)
+        </button>
+      </div>
+
+      <!-- Membrane Potential (Delta Psi) Slider -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-bolt text-cyan-400"></i> ความต่างศักย์เมมเบรน (&Delta;&psi;)
+          </label>
+          <span id="psiDisplay" class="text-cyan-400 font-digital font-bold text-base">-140 mV</span>
+        </div>
+        <input type="range" id="psiSlider" min="0" max="220" step="5" value="140" oninput="onPsiChange(this.value)" class="w-full accent-cyan-500 cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>0 mV (Depolarized)</span>
+          <span>-140 mV (Normal)</span>
+          <span>-220 mV (Hyperpolarized)</span>
+        </div>
+      </div>
+
+      <!-- pH Difference (Delta pH) Slider -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-droplet text-rose-400"></i> ความต่างระดับ pH (&Delta;pH = pH<sub>in</sub> - pH<sub>out</sub>)
+          </label>
+          <span id="dpHDisplay" class="text-rose-400 font-mono font-bold text-xs">1.00 unit (-59.2 mV)</span>
+        </div>
+        <input type="range" id="dpHSlider" min="0" max="2.5" step="0.1" value="1.0" oninput="ondpHChange(this.value)" class="w-full accent-rose-500 cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>0.0 (No &Delta;pH)</span>
+          <span>1.0 unit</span>
+          <span>2.5 units (High Gradient)</span>
+        </div>
+      </div>
+
+      <!-- Medium Viscosity Slider (Low Reynolds Number Mechanics) -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-water text-amber-400"></i> ความหนืดตัวกลาง (&eta;, Viscosity)
+          </label>
+          <span id="viscDisplay" class="text-amber-400 font-mono font-bold text-xs">1.00 cP (Water)</span>
+        </div>
+        <input type="range" id="viscSlider" min="0.5" max="15.0" step="0.5" value="1.0" oninput="onViscChange(this.value)" class="w-full accent-amber-500 cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>0.5 cP</span>
+          <span>1.0 cP (Aqueous)</span>
+          <span>15.0 cP (Mucus/Biofilm)</span>
+        </div>
+      </div>
+
+      <!-- Driving Ion Species Selection & Uncoupler Toggle -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-atom text-emerald-400"></i> ชนิดไอออนขับเคลื่อน
+          </span>
+          <select id="ionSelect" onchange="onIonChange()" class="bg-slate-900 border border-white/10 rounded-lg px-2 py-1 text-xs text-slate-200 focus:outline-none focus:border-purple-500 font-mono">
+            <option value="H" selected>โปรตอน H⁺ (Proton Motor)</option>
+            <option value="Na">โซเดียมไอออน Na⁺ (Vibrio cholerae Motor)</option>
+          </select>
+        </div>
+        <div class="flex items-center justify-between pt-2 border-t border-white/5">
+          <span class="text-xs text-rose-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-skull text-rose-400"></i> สารปลดพันธะโปรตอน (CCCP / DNP Uncoupler)
+          </span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="uncouplerToggle" class="sr-only peer" onchange="toggleUncoupler(this.checked)">
+            <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-rose-600"></div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Simulation Action Buttons -->
+      <div class="space-y-2 pt-2">
+        <div class="grid grid-cols-2 gap-2">
+          <button id="btnRunMotor" onclick="toggleRunMotor()" class="py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-purple-950/40 flex items-center justify-center gap-2 transition active:scale-95">
+            <i id="btnRunIcon" class="fa-solid fa-pause"></i> <span id="btnRunLabel">หยุดชั่วคราว</span>
+          </button>
+          <button onclick="injectSubstratePulse()" class="py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-bold text-xs shadow-lg shadow-amber-950/40 flex items-center justify-center gap-2 transition active:scale-95">
+            <i class="fa-solid fa-bolt"></i> เติม ADP + P<sub>i</sub> พัลส์
+          </button>
+        </div>
+      </div>
+
+      <!-- Physics & Bioenergetics Application Tip -->
+      <div class="bg-purple-950/30 border border-purple-500/20 rounded-xl p-3 text-[11px] text-slate-300 space-y-1.5 mt-auto">
+        <div class="font-bold text-purple-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-info"></i> กลศาสตร์ในโลกเรย์โนลด์ต่ำ (Life at Low Reynolds Number):
+        </div>
+        <p class="leading-relaxed text-slate-300">
+          ในระดับโมเลกุลและแบคทีเรีย ($Re \ll 1$) ความเฉื่อยมีค่าน้อยมากจนเป็นศูนย์ แรงขับเคลื่อนจะถูกหน่วงด้วยความเสียดทานหนืดทันที ($\tau = \gamma \omega$) การหมุนควงของโรเตอร์ ATP Synthase ถูกขับเคลื่อนด้วยแรงบิดระดับ $40\text{ pN}\cdot\text{nm}$ ด้วยประสิทธิภาพทางอุณหพลศาสตร์สูงเกือบ $100\%$
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Audio Synthesizer Engine -->
+  <script>
+    let audioCtx = null;
+    let motorOsc = null;
+    let motorGain = null;
+    let protonNoiseNode = null;
+    let isSoundMuted = false;
+
+    function initAudio() {
+      if (audioCtx) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+
+        // 1. FM Motor Rotor Oscillator
+        motorOsc = audioCtx.createOscillator();
+        motorOsc.type = 'sawtooth';
+        motorOsc.frequency.setValueAtTime(120, audioCtx.currentTime);
+
+        const motorFilter = audioCtx.createBiquadFilter();
+        motorFilter.type = 'lowpass';
+        motorFilter.frequency.setValueAtTime(600, audioCtx.currentTime);
+
+        motorGain = audioCtx.createGain();
+        motorGain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+
+        motorOsc.connect(motorFilter);
+        motorFilter.connect(motorGain);
+        motorGain.connect(audioCtx.destination);
+        motorOsc.start();
+
+      } catch (e) {
+        console.warn('AudioContext error:', e);
+      }
+    }
+
+    function toggleSound(enabled) {
+      isSoundMuted = !enabled;
+      if (motorGain && audioCtx) {
+        motorGain.gain.setValueAtTime(isSoundMuted ? 0 : 0.02, audioCtx.currentTime);
+      }
+    }
+
+    function updateMotorAudio(hz, isRunning) {
+      if (isSoundMuted || !motorOsc || !motorGain || !audioCtx) return;
+      if (!isRunning || hz <= 0.1) {
+        motorGain.gain.setTargetAtTime(0.0, audioCtx.currentTime, 0.05);
+      } else {
+        const audioFreq = Math.max(40, Math.min(800, hz * 2.2));
+        motorOsc.frequency.setTargetAtTime(audioFreq, audioCtx.currentTime, 0.05);
+        motorGain.gain.setTargetAtTime(0.02, audioCtx.currentTime, 0.05);
+      }
+    }
+
+    function playChime(freq = 980, duration = 0.2) {
+      if (isSoundMuted) return;
+      initAudio();
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.07, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+  </script>
+
+  <!-- Three.js Simulation & Mechanics Logic -->
+  <script>
+    // State Variables
+    let motorMode = 'atp'; // 'atp' or 'flagella'
+    let isRunning = true;
+    let isUncoupled = false;
+    let drivingIon = 'H';
+
+    // Biophysical Parameters
+    let deltaPsi = -140.0; // mV
+    let deltadpH = 1.0; // pH units
+    let viscosity = 1.0; // cP
+    const R_GAS = 8.314462;
+    const FARADAY = 96485.33; // C/mol
+    const TEMP_K = 298.15; // K
+
+    // Computed Dynamic Physics Variables
+    let pmf = -199.2; // mV
+    let rotSpeedHz = 180.0; // Hz
+    let omega = 1130.97; // rad/s
+    let torque = 2450.0; // pN·nm
+    let powerMech = 2.77; // fW
+    let atpRate = 540.0; // ATP/s
+    let efficiency = 88.5; // %
+
+    // Three.js Objects
+    let scene, camera, renderer, controls;
+    let threeMount = document.getElementById('threeMount');
+
+    // 3D Model Groups
+    let atpGroup, flagellaGroup;
+    let cRingMesh, stalkMesh, hexamerMesh;
+    let bfmRotorMesh, bfmHookMesh, bfmFilamentMesh;
+    let protonParticles, atpParticles;
+    let protonPos = [], atpBurstList = [];
+
+    // 2D Loupe Canvas
+    let loupeCanvas = document.getElementById('loupeCanvas');
+    let loupeCtx = loupeCanvas.getContext('2d');
+    let catalyticAngle = 0;
+
+    // UI References
+    const hudHzDisplay = document.getElementById('hudHzDisplay');
+    const hudRpmDisplay = document.getElementById('hudRpmDisplay');
+    const hudTorque = document.getElementById('hudTorque');
+    const hudProductLabel = document.getElementById('hudProductLabel');
+    const hudProductValue = document.getElementById('hudProductValue');
+    const hudPmfVal = document.getElementById('hudPmfVal');
+    const hudPowerMech = document.getElementById('hudPowerMech');
+    const hudEfficiency = document.getElementById('hudEfficiency');
+    const motorStateBadge = document.getElementById('motorStateBadge');
+    const psiDisplay = document.getElementById('psiDisplay');
+    const dpHDisplay = document.getElementById('dpHDisplay');
+    const viscDisplay = document.getElementById('viscDisplay');
+    const btnRunIcon = document.getElementById('btnRunIcon');
+    const btnRunLabel = document.getElementById('btnRunLabel');
+
+    function init() {
+      // 1. Scene
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+      scene.fog = new THREE.FogExp2(0x030712, 0.02);
+
+      // 2. Camera
+      camera = new THREE.PerspectiveCamera(45, threeMount.clientWidth / threeMount.clientHeight, 0.1, 100);
+      camera.position.set(0, 3.8, 9.2);
+
+      // 3. Renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+      renderer.setSize(threeMount.clientWidth, threeMount.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      threeMount.appendChild(renderer.domElement);
+
+      // 4. OrbitControls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 + 0.08;
+      controls.minDistance = 2.0;
+      controls.maxDistance = 24.0;
+      controls.target.set(0, 1.2, 0);
+
+      // 5. Lighting
+      setupLighting();
+
+      // 6. Environment & Lipid Bilayer
+      buildMembraneEnvironment();
+
+      // 7. ATP Synthase 3D Complex
+      buildAtpSynthaseModel();
+
+      // 8. Bacterial Flagellar Motor 3D Complex
+      buildFlagellarMotorModel();
+
+      // 9. Particles System (Proton flux & ATP release)
+      setupParticleSystems();
+
+      // 10. Event Listeners
+      window.addEventListener('resize', onWindowResize);
+
+      // Initial Physics Calculation
+      calculatePhysics();
+
+      // Start Loop
+      animate();
+    }
+
+    function setupLighting() {
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+      scene.add(ambientLight);
+
+      const mainLight = new THREE.DirectionalLight(0xf5d0fe, 1.3);
+      mainLight.position.set(6, 12, 8);
+      mainLight.castShadow = true;
+      mainLight.shadow.mapSize.width = 1024;
+      mainLight.shadow.mapSize.height = 1024;
+      scene.add(mainLight);
+
+      const fillLight = new THREE.PointLight(0xa855f7, 1.5, 18);
+      fillLight.position.set(-6, 4, -4);
+      scene.add(fillLight);
+
+      const bottomLight = new THREE.PointLight(0x06b6d4, 1.2, 16);
+      bottomLight.position.set(0, -3, 0);
+      scene.add(bottomLight);
+    }
+
+    function buildMembraneEnvironment() {
+      // Phospholipid Bilayer Membrane Slab
+      const membraneGeo = new THREE.BoxGeometry(16, 0.55, 12);
+      const membraneMat = new THREE.MeshStandardMaterial({
+        color: 0x1e1b4b,
+        roughness: 0.35,
+        metalness: 0.2,
+        transparent: true,
+        opacity: 0.8
+      });
+      const membrane = new THREE.Mesh(membraneGeo, membraneMat);
+      membrane.position.set(0, 0, 0);
+      scene.add(membrane);
+
+      // Hydrophilic Headgroups (upper and lower rows)
+      const headGroup = new THREE.Group();
+      const sphereGeo = new THREE.SphereGeometry(0.12, 8, 8);
+      const headMatUpper = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.2 });
+      const headMatLower = new THREE.MeshStandardMaterial({ color: 0xec4899, roughness: 0.2 });
+
+      for (let x = -7; x <= 7; x += 0.7) {
+        for (let z = -5; z <= 5; z += 0.7) {
+          // Avoid center hole for motors
+          if (Math.abs(x) < 2.0 && Math.abs(z) < 2.0) continue;
+          
+          const uSphere = new THREE.Mesh(sphereGeo, headMatUpper);
+          uSphere.position.set(x + (Math.random()-0.5)*0.15, 0.32, z + (Math.random()-0.5)*0.15);
+          headGroup.add(uSphere);
+
+          const lSphere = new THREE.Mesh(sphereGeo, headMatLower);
+          lSphere.position.set(x + (Math.random()-0.5)*0.15, -0.32, z + (Math.random()-0.5)*0.15);
+          headGroup.add(lSphere);
+        }
+      }
+      scene.add(headGroup);
+
+      // Compartment Labels 3D Sprites
+      const grid = new THREE.GridHelper(16, 32, 0xa855f7, 0x1e293b);
+      grid.position.y = -2.5;
+      scene.add(grid);
+    }
+
+    function buildAtpSynthaseModel() {
+      atpGroup = new THREE.Group();
+
+      // 1. F0 c-ring rotor (cylinder of 10 c-subunits)
+      const cRingGeo = new THREE.CylinderGeometry(0.75, 0.75, 0.7, 24);
+      const cRingMat = new THREE.MeshStandardMaterial({
+        color: 0x8b5cf6,
+        metalness: 0.4,
+        roughness: 0.3,
+        emissive: 0x6d28d9,
+        emissiveIntensity: 0.2
+      });
+      cRingMesh = new THREE.Mesh(cRingGeo, cRingMat);
+      cRingMesh.position.set(0, 0, 0);
+      atpGroup.add(cRingMesh);
+
+      // 2. F0 a-subunit stator (proton channel beside c-ring)
+      const aSubGeo = new THREE.BoxGeometry(0.65, 0.75, 0.7);
+      const aSubMat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, roughness: 0.3, metalness: 0.5 });
+      const aSub = new THREE.Mesh(aSubGeo, aSubMat);
+      aSub.position.set(1.15, 0, 0);
+      atpGroup.add(aSub);
+
+      // 3. Central asymmetric gamma-stalk (connecting c-ring up to F1 head)
+      const stalkGeo = new THREE.CylinderGeometry(0.18, 0.22, 1.6, 16);
+      const stalkMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.6, roughness: 0.2 });
+      stalkMesh = new THREE.Mesh(stalkGeo, stalkMat);
+      stalkMesh.position.set(0, 1.1, 0);
+      atpGroup.add(stalkMesh);
+
+      // 4. F1 alpha3 beta3 Catalytic Hexamer (Headpiece)
+      hexamerMesh = new THREE.Group();
+      hexamerMesh.position.set(0, 2.2, 0);
+
+      const alphaMat = new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.3 }); // Alpha
+      const betaMat = new THREE.MeshStandardMaterial({ color: 0xf97316, roughness: 0.3, emissive: 0xc2410c, emissiveIntensity: 0.2 }); // Beta
+
+      for (let i = 0; i < 6; i++) {
+        const angle = (i / 6) * Math.PI * 2;
+        const isBeta = (i % 2 === 1);
+        const subGeo = new THREE.SphereGeometry(0.48, 16, 16);
+        const subMesh = new THREE.Mesh(subGeo, isBeta ? betaMat : alphaMat);
+        subMesh.scale.set(0.9, 1.2, 0.9);
+        subMesh.position.set(Math.cos(angle) * 0.72, 0, Math.sin(angle) * 0.72);
+        hexamerMesh.add(subMesh);
+      }
+      atpGroup.add(hexamerMesh);
+
+      // 5. Stator Peripheral Arm (b2 delta stalk holding hexamer stationary)
+      const armCurve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(1.15, 0, 0),
+        new THREE.Vector3(1.4, 1.2, 0),
+        new THREE.Vector3(0.9, 2.6, 0),
+        new THREE.Vector3(0.3, 2.65, 0)
+      ]);
+      const armGeo = new THREE.TubeGeometry(armCurve, 20, 0.08, 8, false);
+      const armMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.7, roughness: 0.2 });
+      const statorArm = new THREE.Mesh(armGeo, armMat);
+      atpGroup.add(statorArm);
+
+      scene.add(atpGroup);
+    }
+
+    function buildFlagellarMotorModel() {
+      flagellaGroup = new THREE.Group();
+      flagellaGroup.visible = false;
+
+      // 1. MS and C rings (Rotor)
+      const bfmRotorGeo = new THREE.CylinderGeometry(0.9, 0.9, 0.8, 32);
+      const bfmRotorMat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, metalness: 0.6, roughness: 0.2 });
+      bfmRotorMesh = new THREE.Mesh(bfmRotorGeo, bfmRotorMat);
+      flagellaGroup.add(bfmRotorMesh);
+
+      // Stator units (MotA/MotB ring of 11 stators)
+      for (let i = 0; i < 11; i++) {
+        const a = (i / 11) * Math.PI * 2;
+        const statorGeo = new THREE.CylinderGeometry(0.15, 0.15, 0.9, 12);
+        const statorMat = new THREE.MeshStandardMaterial({ color: 0xf43f5e, metalness: 0.5, roughness: 0.3 });
+        const stat = new THREE.Mesh(statorGeo, statorMat);
+        stat.position.set(Math.cos(a) * 1.25, 0, Math.sin(a) * 1.25);
+        flagellaGroup.add(stat);
+      }
+
+      // Rod through membrane
+      const rodGeo = new THREE.CylinderGeometry(0.2, 0.2, 1.4, 16);
+      const rodMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.8, roughness: 0.1 });
+      const rod = new THREE.Mesh(rodGeo, rodMat);
+      rod.position.y = 0.9;
+      flagellaGroup.add(rod);
+
+      // Flexible Universal Hook (FlgE)
+      const hookCurve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, 1.5, 0),
+        new THREE.Vector3(0.2, 2.0, 0),
+        new THREE.Vector3(0.7, 2.4, 0),
+        new THREE.Vector3(1.3, 2.5, 0)
+      ]);
+      const hookGeo = new THREE.TubeGeometry(hookCurve, 20, 0.18, 12, false);
+      const hookMat = new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.3 });
+      bfmHookMesh = new THREE.Mesh(hookGeo, hookMat);
+      flagellaGroup.add(bfmHookMesh);
+
+      // Helical Flagellar Filament (FliC)
+      const helixPoints = [];
+      for (let t = 0; t <= 18; t += 0.2) {
+        const radius = 0.45;
+        const pitch = 0.35;
+        helixPoints.push(new THREE.Vector3(
+          1.3 + t * 0.45,
+          2.5 + Math.sin(t) * radius,
+          Math.cos(t) * radius
+        ));
+      }
+      const helixCurve = new THREE.CatmullRomCurve3(helixPoints);
+      const filamentGeo = new THREE.TubeGeometry(helixCurve, 64, 0.12, 8, false);
+      const filamentMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.2, metalness: 0.4 });
+      bfmFilamentMesh = new THREE.Mesh(filamentGeo, filamentMat);
+      flagellaGroup.add(bfmFilamentMesh);
+
+      scene.add(flagellaGroup);
+    }
+
+    function setupParticleSystems() {
+      // 1. Proton Stream Particles (glowing magenta dots rushing through F0 / MotA)
+      const count = 150;
+      const geo = new THREE.BufferGeometry();
+      const pos = new Float32Array(count * 3);
+
+      for (let i = 0; i < count; i++) {
+        pos[i * 3] = 1.15 + (Math.random() - 0.5) * 0.4;
+        pos[i * 3 + 1] = -1.2 + Math.random() * 2.4;
+        pos[i * 3 + 2] = (Math.random() - 0.5) * 0.4;
+        protonPos.push({ vy: 0.04 + Math.random() * 0.03 });
+      }
+
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      const mat = new THREE.PointsMaterial({
+        color: 0xf43f5e,
+        size: 0.1,
+        transparent: true,
+        opacity: 0.9,
+        blending: THREE.AdditiveBlending
+      });
+      protonParticles = new THREE.Points(geo, mat);
+      scene.add(protonParticles);
+    }
+
+    // Physical Calculations of Molecular Motors & Bioenergetics
+    function calculatePhysics() {
+      // 1. Calculate Proton Motive Force (PMF):
+      // PMF = Delta Psi - (2.303 * R * T / F) * Delta pH
+      // At 25 °C (298.15 K): 2.303 * R * T / F = 0.05916 V = 59.16 mV
+      const nernstFactor = (2.302585 * R_GAS * TEMP_K / FARADAY) * 1000.0; // ~59.16 mV
+      
+      if (isUncoupled) {
+        pmf = 0.0;
+        rotSpeedHz = 0.0;
+        torque = 0.0;
+        powerMech = 0.0;
+        atpRate = 0.0;
+        efficiency = 0.0;
+      } else {
+        // Normal PMF calculation in mV (negative inside cell)
+        pmf = deltaPsi - (nernstFactor * deltadpH);
+
+        // Torque is proportional to driving force: tau ~ n * e * |PMF| / (2*pi)
+        // Typically BFM reaches 2,000-4,000 pN·nm, ATP Synthase ~ 40-50 pN·nm per subunit
+        const pmfMag = Math.abs(pmf); // mV
+        
+        if (motorMode === 'atp') {
+          // ATP Synthase rotor speed: f ~ 100-350 Hz at high PMF
+          // Low Reynolds drag: tau = gamma * omega  =>  omega = tau / gamma
+          // High viscosity reduces rotational frequency
+          const baseTorque = (pmfMag / 200.0) * 45.0; // pN·nm
+          torque = baseTorque * (drivingIon === 'Na' ? 1.15 : 1.0);
+          
+          // Rotational frequency inversely related to viscosity
+          rotSpeedHz = (pmfMag * 1.1) / Math.pow(viscosity, 0.4);
+          omega = 2 * Math.PI * rotSpeedHz;
+
+          // 3 ATP molecules synthesized per full 360° rotation (Boyer binding change mechanism)
+          atpRate = 3.0 * rotSpeedHz;
+
+          // Mechanical power: P_mech = tau * omega
+          // 1 pN·nm * rad/s = 10^-12 N * 10^-9 m / s = 10^-21 W = 10^-6 fW
+          powerMech = (torque * omega) * 1e-3; // in fW (femtowatts)
+
+          // Efficiency: ~85-92%
+          efficiency = Math.min(95.0, Math.max(0.0, 85.0 + (pmfMag / 220.0) * 8.0 - (viscosity - 1.0) * 1.5));
+        } else {
+          // Flagellar Motor (BFM)
+          torque = (pmfMag / 200.0) * 2700.0; // pN·nm
+          rotSpeedHz = (pmfMag * 1.25) / Math.pow(viscosity, 0.7);
+          omega = 2 * Math.PI * rotSpeedHz;
+          atpRate = 0.0; // Flagella uses PMF directly for motility, not ATP synthesis
+          powerMech = (torque * omega) * 1e-3; // fW
+          efficiency = Math.min(98.0, Math.max(0.0, 90.0 - (viscosity - 1.0) * 1.2));
+        }
+      }
+
+      // Update UI Telemetry
+      const rpm = rotSpeedHz * 60;
+      hudHzDisplay.innerHTML = `${rotSpeedHz.toFixed(1)} <span class="text-xs text-purple-500 font-sans">Hz</span>`;
+      hudRpmDisplay.textContent = `${Math.round(rpm).toLocaleString()} RPM`;
+      hudTorque.textContent = `${torque.toFixed(0)} pN·nm`;
+      hudPmfVal.textContent = `${pmf.toFixed(1)} mV`;
+      hudPowerMech.textContent = `${powerMech.toFixed(2)} fW`;
+      hudEfficiency.textContent = `${efficiency.toFixed(1)}%`;
+
+      if (motorMode === 'atp') {
+        hudProductLabel.textContent = 'ATP Synthesized:';
+        hudProductValue.textContent = `${atpRate.toFixed(0)} ATP/s`;
+      } else {
+        hudProductLabel.textContent = 'Thrust Speed:';
+        hudProductValue.textContent = `${(rotSpeedHz * 0.18).toFixed(1)} &mu;m/s`;
+      }
+
+      // Status Badge
+      if (isUncoupled) {
+        motorStateBadge.textContent = 'UNCOUPLED (DNP)';
+        motorStateBadge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 font-mono';
+      } else if (rotSpeedHz > 0.1 && isRunning) {
+        motorStateBadge.textContent = 'ROTATING';
+        motorStateBadge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono';
+      } else {
+        motorStateBadge.textContent = 'PAUSED';
+        motorStateBadge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono';
+      }
+
+      updateMotorAudio(rotSpeedHz, isRunning && !isUncoupled);
+    }
+
+    // Handlers
+    function onPsiChange(val) {
+      deltaPsi = -parseFloat(val);
+      psiDisplay.textContent = `${deltaPsi.toFixed(0)} mV`;
+      calculatePhysics();
+    }
+
+    function ondpHChange(val) {
+      deltadpH = parseFloat(val);
+      const nernst = deltadpH * 59.16;
+      dpHDisplay.textContent = `${deltadpH.toFixed(2)} unit (-${nernst.toFixed(1)} mV)`;
+      calculatePhysics();
+    }
+
+    function onViscChange(val) {
+      viscosity = parseFloat(val);
+      viscDisplay.textContent = `${viscosity.toFixed(2)} cP`;
+      calculatePhysics();
+    }
+
+    function onIonChange() {
+      drivingIon = document.getElementById('ionSelect').value;
+      calculatePhysics();
+      playChime(650, 0.15);
+    }
+
+    function toggleUncoupler(checked) {
+      isUncoupled = checked;
+      calculatePhysics();
+      if (isUncoupled) {
+        playChime(220, 0.3);
+      } else {
+        playChime(780, 0.2);
+      }
+    }
+
+    function toggleRunMotor() {
+      isRunning = !isRunning;
+      initAudio();
+      if (isRunning) {
+        btnRunLabel.textContent = 'หยุดชั่วคราว';
+        btnRunIcon.className = 'fa-solid fa-pause';
+        playChime(600, 0.15);
+      } else {
+        btnRunLabel.textContent = 'เริ่มหมุนต่อ';
+        btnRunIcon.className = 'fa-solid fa-play';
+        playChime(400, 0.15);
+      }
+      calculatePhysics();
+    }
+
+    function injectSubstratePulse() {
+      if (motorMode === 'atp' && !isUncoupled) {
+        playChime(1046, 0.25);
+        // Visual particle flash
+        if (hexamerMesh) {
+          hexamerMesh.scale.set(1.15, 1.15, 1.15);
+          setTimeout(() => hexamerMesh.scale.set(1.0, 1.0, 1.0), 120);
+        }
+      } else {
+        playChime(520, 0.15);
+      }
+    }
+
+    function resetParameters() {
+      deltaPsi = -140.0;
+      deltadpH = 1.0;
+      viscosity = 1.0;
+      isUncoupled = false;
+      isRunning = true;
+
+      document.getElementById('psiSlider').value = 140;
+      document.getElementById('dpHSlider').value = 1.0;
+      document.getElementById('viscSlider').value = 1.0;
+      document.getElementById('uncouplerToggle').checked = false;
+      document.getElementById('ionSelect').value = 'H';
+
+      psiDisplay.textContent = '-140 mV';
+      dpHDisplay.textContent = '1.00 unit (-59.2 mV)';
+      viscDisplay.textContent = '1.00 cP (Water)';
+      btnRunLabel.textContent = 'หยุดชั่วคราว';
+      btnRunIcon.className = 'fa-solid fa-pause';
+
+      calculatePhysics();
+      playChime(440, 0.2);
+    }
+
+    function switchMotorMode(mode) {
+      motorMode = mode;
+      const btnAtp = document.getElementById('tabMotorAtp');
+      const btnFlagella = document.getElementById('tabMotorFlagella');
+
+      if (mode === 'atp') {
+        atpGroup.visible = true;
+        flagellaGroup.visible = false;
+        btnAtp.className = 'py-1.5 rounded-lg bg-purple-600 text-white font-bold transition flex items-center justify-center gap-1.5';
+        btnFlagella.className = 'py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white font-medium transition flex items-center justify-center gap-1.5';
+        setCameraView('overview');
+      } else {
+        atpGroup.visible = false;
+        flagellaGroup.visible = true;
+        btnFlagella.className = 'py-1.5 rounded-lg bg-purple-600 text-white font-bold transition flex items-center justify-center gap-1.5';
+        btnAtp.className = 'py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white font-medium transition flex items-center justify-center gap-1.5';
+        setCameraView('flagella');
+      }
+      calculatePhysics();
+      playChime(550, 0.15);
+    }
+
+    function setCameraView(preset) {
+      if (preset === 'overview') {
+        camera.position.set(0, 3.8, 9.2);
+        controls.target.set(0, 1.2, 0);
+      } else if (preset === 'rotor') {
+        camera.position.set(0, 0.8, 4.5);
+        controls.target.set(0, 0.2, 0);
+      } else if (preset === 'head') {
+        camera.position.set(0, 3.2, 5.2);
+        controls.target.set(0, 2.2, 0);
+      } else if (preset === 'flagella') {
+        camera.position.set(3.5, 3.5, 8.5);
+        controls.target.set(2.0, 2.0, 0);
+      }
+      controls.update();
+      playChime(620, 0.08);
+    }
+
+    // Animation Render Loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (isRunning && !isUncoupled && rotSpeedHz > 0.1) {
+        // Rotation step scaled for human visualization
+        const rotStep = (rotSpeedHz / 60.0) * 0.15;
+        catalyticAngle += rotStep;
+
+        if (motorMode === 'atp') {
+          if (cRingMesh) cRingMesh.rotation.y += rotStep;
+          if (stalkMesh) stalkMesh.rotation.y += rotStep;
+        } else {
+          if (bfmRotorMesh) bfmRotorMesh.rotation.y += rotStep;
+          if (bfmHookMesh) bfmHookMesh.rotation.x += rotStep;
+          if (bfmFilamentMesh) bfmFilamentMesh.rotation.x += rotStep;
+        }
+
+        // Animate proton particles stream
+        if (protonParticles) {
+          const pos = protonParticles.geometry.attributes.position.array;
+          for (let i = 0; i < protonPos.length; i++) {
+            pos[i * 3 + 1] += protonPos[i].vy;
+            if (pos[i * 3 + 1] > 1.2) {
+              pos[i * 3 + 1] = -1.2;
+            }
+          }
+          protonParticles.geometry.attributes.position.needsUpdate = true;
+        }
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+
+      // Render Synchronized 2D Catalytic Loupe
+      render2DLoupe();
+    }
+
+    // 2D Loupe Renderer (Boyer Binding Mechanism: Open, Loose, Tight)
+    function render2DLoupe() {
+      const w = loupeCanvas.width;
+      const h = loupeCanvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+
+      loupeCtx.clearRect(0, 0, w, h);
+
+      // Background
+      loupeCtx.fillStyle = '#030712';
+      loupeCtx.fillRect(0, 0, w, h);
+
+      if (motorMode === 'atp') {
+        // Draw 3 Catalytic Beta Subunits & Alpha Subunits
+        const rHex = 55;
+        const betaColors = ['#f59e0b', '#10b981', '#38bdf8']; // O, L, T
+        const betaNames = ['Open (O)', 'Loose (L)', 'Tight (T)'];
+
+        for (let i = 0; i < 3; i++) {
+          const a = (i / 3) * Math.PI * 2 + (catalyticAngle * 0.33);
+          const bx = cx + Math.cos(a) * rHex;
+          const by = cy + Math.sin(a) * rHex;
+
+          loupeCtx.beginPath();
+          loupeCtx.arc(bx, by, 18, 0, Math.PI * 2);
+          loupeCtx.fillStyle = betaColors[i];
+          loupeCtx.fill();
+          loupeCtx.strokeStyle = '#ffffff';
+          loupeCtx.lineWidth = 1.5;
+          loupeCtx.stroke();
+
+          // Subunit Name
+          loupeCtx.fillStyle = '#ffffff';
+          loupeCtx.font = 'bold 10px Prompt';
+          loupeCtx.textAlign = 'center';
+          loupeCtx.fillText(`β${i+1}`, bx, by + 4);
+        }
+
+        // Central rotating gamma stalk cross-section (elliptical cam)
+        loupeCtx.save();
+        loupeCtx.translate(cx, cy);
+        loupeCtx.rotate(catalyticAngle);
+        loupeCtx.beginPath();
+        loupeCtx.ellipse(0, 0, 8, 20, 0, 0, Math.PI * 2);
+        loupeCtx.fillStyle = '#e2e8f0';
+        loupeCtx.fill();
+        loupeCtx.strokeStyle = '#a855f7';
+        loupeCtx.lineWidth = 2;
+        loupeCtx.stroke();
+        loupeCtx.restore();
+
+        // Status
+        const curPhase = Math.floor(((catalyticAngle * 0.33) % (Math.PI * 2)) / (Math.PI * 2 / 3));
+        document.getElementById('loupeStateText').textContent = betaNames[(curPhase + 3) % 3];
+        document.getElementById('loupeCycleText').textContent = 'ATP Release';
+      } else {
+        // Flagellar Swimming & Trajectory Loupe
+        loupeCtx.beginPath();
+        loupeCtx.ellipse(cx, cy, 38, 18, catalyticAngle * 0.2, 0, Math.PI * 2);
+        loupeCtx.fillStyle = 'rgba(6, 182, 212, 0.7)';
+        loupeCtx.fill();
+        loupeCtx.strokeStyle = '#38bdf8';
+        loupeCtx.lineWidth = 2;
+        loupeCtx.stroke();
+
+        // Flagella wave trailing
+        loupeCtx.beginPath();
+        loupeCtx.moveTo(cx - 38, cy);
+        for (let x = cx - 38; x >= 10; x -= 5) {
+          const waveY = cy + Math.sin((x * 0.15) - catalyticAngle * 3) * 12;
+          loupeCtx.lineTo(x, waveY);
+        }
+        loupeCtx.strokeStyle = '#f59e0b';
+        loupeCtx.lineWidth = 3;
+        loupeCtx.stroke();
+
+        document.getElementById('loupeStateText').textContent = 'CCW Run (ว่ายตรง)';
+        document.getElementById('loupeCycleText').textContent = 'MotA/B Active';
+      }
+    }
+
+    // Window Resize
+    function onWindowResize() {
+      if (!camera || !renderer || !threeMount) return;
+      camera.aspect = threeMount.clientWidth / threeMount.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(threeMount.clientWidth, threeMount.clientHeight);
+    }
+
+    // Full-Width Sidebar Toggle
+    let isSidebarHidden = false;
+    function toggleSidebar() {
+      const sidebar = document.getElementById('controlSidebar');
+      const container = document.getElementById('viewportContainer');
+      const label = document.getElementById('toggleSidebarLabel');
+
+      isSidebarHidden = !isSidebarHidden;
+      if (isSidebarHidden) {
+        sidebar.classList.add('hidden');
+        container.classList.remove('lg:col-span-8');
+        container.classList.add('lg:col-span-12');
+        label.textContent = 'แสดงแถบควบคุม';
+      } else {
+        sidebar.classList.remove('hidden');
+        container.classList.remove('lg:col-span-12');
+        container.classList.add('lg:col-span-8');
+        label.textContent = 'ขยายจอเต็ม';
+      }
+      setTimeout(onWindowResize, 100);
+      playChime(500, 0.08);
+    }
+
+    // Card Minimization and Hide
+    function toggleCardBody(cardId) {
+      const body = document.getElementById(`${cardId}_body`);
+      const icon = document.getElementById(`${cardId}_icon`);
+      if (!body) return;
+
+      if (body.classList.contains('hidden')) {
+        body.classList.remove('hidden');
+        if (icon) {
+          icon.classList.remove('fa-plus');
+          icon.classList.add('fa-minus');
+        }
+      } else {
+        body.classList.add('hidden');
+        if (icon) {
+          icon.classList.remove('fa-minus');
+          icon.classList.add('fa-plus');
+        }
+      }
+      playChime(420, 0.06);
+    }
+
+    function hideCard(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      card.classList.add('hidden');
+
+      const dock = document.getElementById('dockRestoreButtons');
+      const cardNames = {
+        'motorHUD': 'โทรมาตรโรเตอร์',
+        'catalyticLoupeCard': 'เลนส์แคทาไลติก'
+      };
+
+      const btn = document.createElement('button');
+      btn.id = `restoreBtn_${cardId}`;
+      btn.className = 'px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-purple-400 font-mono text-[10px] flex items-center gap-1 transition';
+      btn.innerHTML = `<i class="fa-solid fa-window-restore text-[9px]"></i> ${cardNames[cardId] || cardId}`;
+      btn.onclick = function() {
+        card.classList.remove('hidden');
+        btn.remove();
+        playChime(550, 0.08);
+      };
+      dock.appendChild(btn);
+      playChime(350, 0.08);
+    }
+
+    // Screenshot Capture API
+    window.captureSimulatorScreenshot = function() {
+      if (!renderer) return null;
+      renderer.render(scene, camera);
+      const dataUrl = renderer.domElement.toDataURL('image/png');
+      
+      const link = document.createElement('a');
+      link.download = `molecular_motor_sim07_${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+
+      playChime(950, 0.15);
+      return dataUrl;
+    };
+
+    window.onload = init;
+  </script>
+</body>
+</html>
