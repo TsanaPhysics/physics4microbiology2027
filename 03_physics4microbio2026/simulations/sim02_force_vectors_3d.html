@@ -3,36 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3D Force Vectors & Microbial Sedimentation Simulator | จำลองเวกเตอร์ของแรงและสมดุลเซลล์จุลินทรีย์</title>
+  <title>3D Force Vectors & Stokes' Drag Simulator | Lab 02</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google Fonts: Prompt & JetBrains Mono -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-  <!-- Three.js & OrbitControls CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Prompt', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
+          colors: {
+            brand: {
+              gold: '#eab308',
+              amber: '#f59e0b',
+              sky: '#0284c7',
+              emerald: '#10b981',
+              rose: '#f43f5e',
+              slate: '#0f172a'
+            }
           }
         }
       }
-    };
+    }
   </script>
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- Google Fonts: Prompt & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Three.js r128 & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
   <style>
     * { box-sizing: border-box; }
@@ -47,10 +51,23 @@
     }
     input[type="range"]::-webkit-slider-thumb {
       appearance: none;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       cursor: pointer;
+    }
+    .scrollbar-thin::-webkit-scrollbar {
+      width: 6px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.25);
     }
   </style>
 </head>
@@ -68,7 +85,7 @@
           <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono">LAB 02</span>
         </h1>
         <p class="text-[10px] text-slate-400 hidden sm:block">
-          จำลองโต๊ะแรง 3 มิติ สมดุลแรงเวกเตอร์ และแรงหนืดต้านการตกตะกอนของเซลล์จุลินทรีย์ (Stokes' Law)
+          จำลองโต๊ะแรง 3 มิติ สมดุลแรงเวกเตอร์ และชุดกระบอกวัดแรงหนืดสโตกส์การตกตะกอนเซลล์จุลินทรีย์
         </p>
       </div>
     </div>
@@ -79,7 +96,7 @@
         <i class="fa-solid fa-scale-balanced"></i> <span class="hidden md:inline">1. โต๊ะแรงสมดุล 3 มิติ</span><span class="md:hidden">1. โต๊ะแรง</span>
       </button>
       <button id="btnModeStokes" onclick="switchMode('stokes')" class="px-3 py-1.5 rounded-lg font-medium text-slate-300 hover:text-white transition flex items-center gap-1.5">
-        <i class="fa-solid fa-bacteria"></i> <span class="hidden md:inline">2. การตกตะกอนเซลล์ (Stokes)</span><span class="md:hidden">2. Stokes</span>
+        <i class="fa-solid fa-bacteria"></i> <span class="hidden md:inline">2. ชุดวัดแรงหนืดสโตกส์ (Stokes)</span><span class="md:hidden">2. Stokes</span>
       </button>
       <button onclick="resetCamera()" class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition" title="รีเซ็ตมุมมอง 3D">
         <i class="fa-solid fa-rotate-left"></i>
@@ -99,7 +116,7 @@
       <!-- Three.js Canvas mounts here -->
       <div id="threeMount" class="w-full h-full"></div>
 
-      <!-- 2D Vector Polar Overlay (Top-Right) -->
+      <!-- Mode 1: 2D Vector Polar Overlay (Top-Right) -->
       <div id="polarOverlayCard" class="absolute top-3 right-3 bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl border border-white/10 shadow-2xl text-xs z-10 space-y-2 pointer-events-none">
         <div class="flex items-center justify-between gap-4 border-b border-white/10 pb-1.5">
           <span class="font-bold text-amber-400 font-mono flex items-center gap-1">
@@ -111,42 +128,92 @@
         </div>
         <canvas id="polarCanvas" width="170" height="170" class="rounded-xl bg-slate-950 border border-white/10 block"></canvas>
         <div id="polarReadout" class="font-mono text-[10px] space-y-0.5 text-slate-300">
-          <div>แรงลัพธ์ $\vec{R}$: <span id="hudRMag" class="text-rose-400 font-bold">0.00 N</span> @ <span id="hudRAng" class="text-rose-400 font-bold">0.0°</span></div>
-          <div>แรงสมดุล $\vec{E}$: <span id="hudEMag" class="text-emerald-400 font-bold">0.00 N</span> @ <span id="hudEAng" class="text-emerald-400 font-bold">0.0°</span></div>
+          <div>แรงลัพธ์ $ec{R}$: <span id="hudRMag" class="text-rose-400 font-bold">0.00 N</span> @ <span id="hudRAng" class="text-rose-400 font-bold">0.0°</span></div>
+          <div>แรงสมดุล $ec{E}$: <span id="hudEMag" class="text-emerald-400 font-bold">0.00 N</span> @ <span id="hudEAng" class="text-emerald-400 font-bold">0.0°</span></div>
         </div>
       </div>
 
-      <!-- Stokes Telemetry Overlay (Mode 2) -->
-      <div id="stokesOverlayCard" class="absolute top-3 right-3 bg-slate-900/90 backdrop-blur-md p-3.5 rounded-2xl border border-white/10 shadow-2xl text-xs z-10 hidden space-y-2 pointer-events-none w-64">
+      <!-- Mode 2: Stokes Optical Micro-Loupe & Force Vectors HUD (Top-Right) -->
+      <div id="stokesOverlayCard" class="absolute top-3 right-3 bg-slate-900/95 backdrop-blur-md p-3 rounded-2xl border border-sky-500/30 shadow-2xl text-xs z-10 hidden space-y-2.5 pointer-events-none w-72">
         <div class="border-b border-white/10 pb-1.5 flex items-center justify-between">
-          <span class="font-bold text-sky-400 font-mono">🦠 STOKES' TELEMETRY</span>
-          <span class="text-[10px] text-slate-400 font-mono">Re &lt;&lt; 1</span>
+          <span class="font-bold text-sky-400 font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-microscope text-sky-300"></i> MICRO-LOUPE 1000x
+          </span>
+          <span id="stkRegimeBadge" class="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30 font-bold">
+            Re &lt;&lt; 1 (Stokes)
+          </span>
         </div>
-        <div class="space-y-1 font-mono text-[11px] text-slate-300">
-          <div class="flex justify-between"><span>ชนิดเซลล์:</span><span id="stkCellName" class="text-white font-bold">S. aureus</span></div>
-          <div class="flex justify-between"><span>รัศมีเซลล์ ($r$):</span><span id="stkCellRadius" class="text-sky-300 font-bold">0.50 µm</span></div>
-          <div class="flex justify-between"><span>ความหนาแน่น ($\rho_c$):</span><span id="stkCellDensity" class="text-sky-300">1.10 g/cm³</span></div>
-          <div class="flex justify-between"><span>ความหนืดของไหล ($\eta$):</span><span id="stkFluidVisc" class="text-amber-300">1.00 mPa·s</span></div>
-          <div class="flex justify-between border-t border-white/10 pt-1">
-            <span>Terminal Velocity ($v_t$):</span>
-            <span id="stkTerminalVel" class="text-emerald-400 font-bold">0.054 µm/s</span>
+        
+        <!-- Synchronized Microscope Lens Canvas (Shows Cell + Streamlines + Fg, Fb, Fd vectors) -->
+        <div class="relative flex justify-center">
+          <canvas id="microLoupeCanvas" width="200" height="170" class="rounded-xl bg-slate-950 border border-sky-500/30 block shadow-inner"></canvas>
+          <div class="absolute bottom-1 right-2 text-[9px] font-mono text-slate-400 bg-slate-900/80 px-1.5 py-0.5 rounded">
+            Scale: 1000x
           </div>
-          <div class="flex justify-between"><span>เวลาทดลอง ($\Delta t$):</span><span id="stkTimer" class="text-white font-bold">0.0 s</span></div>
-          <div class="flex justify-between"><span>ระยะตกสะสม ($\Delta y$):</span><span id="stkDistance" class="text-emerald-300 font-bold">0.00 µm</span></div>
+        </div>
+
+        <!-- Dynamic Force Balance Telemetry on Single Cell -->
+        <div class="space-y-1 font-mono text-[10px] text-slate-300 bg-slate-950/80 p-2 rounded-xl border border-white/5">
+          <div class="flex justify-between items-center text-rose-300">
+            <span>แรงโน้มถ่วง $ec{F}_g$:</span>
+            <span id="loupeFg" class="font-bold">0.000 fN</span>
+          </div>
+          <div class="flex justify-between items-center text-sky-300">
+            <span>แรงพยุง $ec{F}_b$:</span>
+            <span id="loupeFb" class="font-bold">0.000 fN</span>
+          </div>
+          <div class="flex justify-between items-center text-emerald-300">
+            <span>แรงหนืด $ec{F}_d = 6\pi\eta r v$:</span>
+            <span id="loupeFd" class="font-bold">0.000 fN</span>
+          </div>
+          <div class="flex justify-between items-center border-t border-white/10 pt-1 text-white font-bold">
+            <span>แรงลัพธ์ $\sum ec{F}$:</span>
+            <span id="loupeFnet" class="text-amber-300">0.000 fN (สมดุล)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mode 2: Photogate Laser Chronometer Display (Top-Left) -->
+      <div id="photogateTimerHUD" class="absolute top-3 left-3 bg-slate-900/95 backdrop-blur-md p-3 rounded-2xl border border-rose-500/30 shadow-2xl text-xs z-10 hidden space-y-2 pointer-events-none w-64">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+          <span class="font-bold text-rose-400 font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-stopwatch"></i> DUAL PHOTOGATE
+          </span>
+          <span id="photogateStatus" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-800 text-slate-300 border border-white/10 font-mono">
+            ARMED
+          </span>
+        </div>
+        <!-- Digital 7-Segment style LED Time Display -->
+        <div class="bg-black/90 p-2 rounded-xl border border-rose-500/30 text-center space-y-0.5">
+          <div class="text-[10px] font-mono text-slate-400">TRANSIT TIME (Δt):</div>
+          <div id="ledTimerDigits" class="text-2xl font-bold font-mono text-rose-400 tracking-wider">
+            00.000 <span class="text-xs text-rose-500">s</span>
+          </div>
+        </div>
+        <div class="space-y-0.5 font-mono text-[10px] text-slate-300">
+          <div class="flex justify-between"><span>ระยะเกต (Δy):</span><span class="text-white font-bold">60.00 mm</span></div>
+          <div class="flex justify-between"><span>ความเร็วทดลอง (v_exp):</span><span id="pgExpVel" class="text-emerald-400 font-bold">-- µm/s</span></div>
+          <div class="flex justify-between"><span>ความเร็วทฤษฎี (v_th):</span><span id="pgThVel" class="text-sky-300 font-bold">-- µm/s</span></div>
+          <div class="flex justify-between border-t border-white/10 pt-1">
+            <span>ความคลาดเคลื่อน (%Error):</span>
+            <span id="pgErrorPercent" class="text-amber-400 font-bold">-- %</span>
+          </div>
         </div>
       </div>
 
       <!-- Quick Tips Floating Pill -->
       <div class="absolute bottom-3 left-3 bg-slate-950/85 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-white/10 text-[11px] text-slate-400 pointer-events-none flex items-center gap-2">
         <i class="fa-solid fa-circle-info text-amber-400"></i>
-        <span>คลิกค้างแล้วลากเพื่อหมุน 360° | เลื่อนสไลเดอร์เพื่อเปลี่ยนแรงและมุม</span>
+        <span>คลิกค้างแล้วลากเพื่อหมุน 360° | เลื่อนล้อเมาส์เพื่อซูมเข้า-ออก</span>
       </div>
     </div>
 
     <!-- Right Control Panel -->
-    <div class="lg:col-span-4 bg-slate-900 border-t lg:border-t-0 lg:border-l border-white/10 p-4 sm:p-5 overflow-y-auto max-h-[460px] lg:max-h-none space-y-4">
+    <div class="lg:col-span-4 bg-slate-900 border-t lg:border-t-0 lg:border-l border-white/10 p-4 sm:p-5 overflow-y-auto max-h-[460px] lg:max-h-none space-y-4 scrollbar-thin">
 
-      <!-- PANEL 1: FORCE TABLE CONTROLS -->
+      <!-- ========================================== -->
+      <!-- PANEL 1: FORCE TABLE CONTROLS              -->
+      <!-- ========================================== -->
       <div id="ctrlForceTable" class="space-y-4">
         
         <!-- Presets -->
@@ -160,15 +227,13 @@
               <div class="text-[10px] text-slate-400">200g@0°, 150g@90°</div>
             </button>
             <button onclick="setPresetSymmetric()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-left text-xs text-white border border-white/10 transition">
-              <div class="font-bold text-emerald-400">2. สามเหลี่ยมสมมาตร</div>
-              <div class="text-[10px] text-slate-400">100g ที่ 0°, 120°, 240°</div>
+              <div class="font-bold text-sky-300">2. สามเหลี่ยมสมมาตร</div>
+              <div class="text-[10px] text-slate-400">100g @ 0°, 120°, 240°</div>
             </button>
-            <button onclick="setPresetBioCentrifuge()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-left text-xs text-white border border-white/10 transition">
-              <div class="font-bold text-sky-400">3. เครื่องปั่นเหวี่ยง</div>
-              <div class="text-[10px] text-slate-400">150g@30°, 200g@135°</div>
-            </button>
-            <button onclick="autoBalanceEquilibrant()" class="p-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-left text-xs text-slate-950 font-bold transition flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-bullseye"></i> ปรับสมดุล F₃ อัตโนมัติ
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button onclick="autoBalanceEquilibrant()" class="flex-1 p-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-400 text-slate-950 font-bold text-xs shadow-md transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-compass-drafting"></i> หาแรงสมดุลอัตโนมัติ (E)
             </button>
           </div>
         </div>
@@ -177,7 +242,7 @@
         <div class="p-3.5 rounded-2xl bg-slate-950 border border-amber-500/30 space-y-2">
           <div class="flex items-center justify-between text-xs">
             <span class="font-bold text-amber-400 font-mono flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> รอกตัวที่ 1 (Force $\vec{F}_1$)
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> รอกตัวที่ 1 (Force $ec{F}_1$)
             </span>
             <span id="dispF1" class="font-mono font-bold text-amber-300">200 g (1.96 N) @ 0°</span>
           </div>
@@ -190,7 +255,7 @@
           </div>
           <div class="space-y-1">
             <div class="flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>มุมบนโต๊ะแรง ($\theta_1$):</span>
+              <span>มุมบนโต๊ะแรง ($	heta_1$):</span>
               <span id="dispF1Ang">0°</span>
             </div>
             <input type="range" id="sliderF1Ang" min="0" max="360" step="1" value="0" oninput="updateForceTable()" class="w-full accent-amber-400 h-1.5 bg-slate-800 rounded-lg">
@@ -201,7 +266,7 @@
         <div class="p-3.5 rounded-2xl bg-slate-950 border border-sky-500/30 space-y-2">
           <div class="flex items-center justify-between text-xs">
             <span class="font-bold text-sky-400 font-mono flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span> รอกตัวที่ 2 (Force $\vec{F}_2$)
+              <span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span> รอกตัวที่ 2 (Force $ec{F}_2$)
             </span>
             <span id="dispF2" class="font-mono font-bold text-sky-300">150 g (1.47 N) @ 90°</span>
           </div>
@@ -214,7 +279,7 @@
           </div>
           <div class="space-y-1">
             <div class="flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>มุมบนโต๊ะแรง ($\theta_2$):</span>
+              <span>มุมบนโต๊ะแรง ($	heta_2$):</span>
               <span id="dispF2Ang">90°</span>
             </div>
             <input type="range" id="sliderF2Ang" min="0" max="360" step="1" value="90" oninput="updateForceTable()" class="w-full accent-sky-400 h-1.5 bg-slate-800 rounded-lg">
@@ -225,7 +290,7 @@
         <div class="p-3.5 rounded-2xl bg-slate-950 border border-emerald-500/30 space-y-2">
           <div class="flex items-center justify-between text-xs">
             <span class="font-bold text-emerald-400 font-mono flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> รอกตัวที่ 3 (Equilibrant $\vec{F}_3$)
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> รอกตัวที่ 3 (Equilibrant $ec{F}_3$)
             </span>
             <span id="dispF3" class="font-mono font-bold text-emerald-300">250 g (2.45 N) @ 217°</span>
           </div>
@@ -238,7 +303,7 @@
           </div>
           <div class="space-y-1">
             <div class="flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>มุมบนโต๊ะแรง ($\theta_3$):</span>
+              <span>มุมบนโต๊ะแรง ($	heta_3$):</span>
               <span id="dispF3Ang">217°</span>
             </div>
             <input type="range" id="sliderF3Ang" min="0" max="360" step="1" value="217" oninput="updateForceTable()" class="w-full accent-emerald-400 h-1.5 bg-slate-800 rounded-lg">
@@ -256,70 +321,124 @@
             <span id="sumFy" class="font-bold text-sky-300">+0.000 N</span>
           </div>
           <div class="flex justify-between text-slate-300">
-            <span>แรงลัพธ์สุทธิ ($|\vec{F}_{\text{net}}|$):</span>
+            <span>แรงลัพธ์สุทธิ ($|ec{F}_{	ext{net}}|$):</span>
             <span id="sumFnet" class="font-bold text-emerald-400">0.000 N (สมดุล)</span>
           </div>
         </div>
 
       </div>
 
-      <!-- PANEL 2: STOKES' MICROBIAL DRAG CONTROLS -->
+      <!-- ========================================== -->
+      <!-- PANEL 2: STOKES' MICROBIAL DRAG CONTROLS   -->
+      <!-- ========================================== -->
       <div id="ctrlStokes" class="space-y-4 hidden">
         
-        <!-- Cell Type Selection -->
+        <!-- Cell / Microorganism Selection -->
         <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-sky-500/30 space-y-2">
-          <div class="text-xs font-bold text-sky-400 font-mono flex items-center gap-1.5">
-            <i class="fa-solid fa-virus"></i> เลือกเซลล์จุลินทรีย์ตัวอย่าง:
+          <div class="text-xs font-bold text-sky-400 font-mono flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-virus"></i> เลือกเซลล์จุลินทรีย์ตัวอย่าง:
+            </span>
+            <span class="text-[10px] text-slate-400">Biological Specimen</span>
           </div>
           <div class="grid grid-cols-2 gap-2 text-xs">
             <button onclick="selectCell('saureus')" id="btnCellSaureus" class="p-2 rounded-xl bg-sky-500 text-slate-950 font-bold border border-sky-400 transition text-left">
               <div>S. aureus (Coccus)</div>
-              <div class="text-[10px] opacity-80">r = 0.50 µm | 1.10 g/cm³</div>
+              <div class="text-[10px] opacity-80">r = 0.50 µm | 1.13 g/cm³</div>
             </button>
             <button onclick="selectCell('ecoli')" id="btnCellEcoli" class="p-2 rounded-xl bg-slate-800 text-slate-300 font-medium border border-white/10 hover:text-white transition text-left">
               <div>E. coli (Bacillus)</div>
-              <div class="text-[10px] text-slate-400">r = 0.80 µm | 1.08 g/cm³</div>
+              <div class="text-[10px] text-slate-400">r = 0.80 µm | 1.10 g/cm³</div>
             </button>
             <button onclick="selectCell('bsubtilis')" id="btnCellBsubtilis" class="p-2 rounded-xl bg-slate-800 text-slate-300 font-medium border border-white/10 hover:text-white transition text-left">
               <div>B. subtilis (Spore)</div>
-              <div class="text-[10px] text-slate-400">r = 0.60 µm | 1.25 g/cm³</div>
+              <div class="text-[10px] text-slate-400">r = 0.60 µm | 1.35 g/cm³</div>
             </button>
             <button onclick="selectCell('yeast')" id="btnCellYeast" class="p-2 rounded-xl bg-slate-800 text-slate-300 font-medium border border-white/10 hover:text-white transition text-left">
               <div>S. cerevisiae (Yeast)</div>
-              <div class="text-[10px] text-slate-400">r = 3.00 µm | 1.11 g/cm³</div>
+              <div class="text-[10px] text-slate-400">r = 2.50 µm | 1.11 g/cm³</div>
             </button>
           </div>
+          <button onclick="selectCell('bead')" id="btnCellBead" class="w-full p-2 rounded-xl bg-slate-800 text-slate-300 font-medium border border-white/10 hover:text-white transition text-left text-xs flex justify-between items-center">
+            <span>⚪ เม็ดบีดมาตรฐานสอบเทียบ (Silica Microbead)</span>
+            <span class="text-[10px] text-slate-400 font-mono">r = 5.0 µm | 2.00 g/cm³</span>
+          </button>
         </div>
 
         <!-- Fluid Media Selection -->
         <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-amber-500/30 space-y-2">
-          <div class="text-xs font-bold text-amber-400 font-mono flex items-center gap-1.5">
-            <i class="fa-solid fa-droplet"></i> สารแขวนลอย / ตัวกลางของไหล:
+          <div class="text-xs font-bold text-amber-400 font-mono flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-droplet"></i> สารแขวนลอย / ตัวกลางของไหล:
+            </span>
+            <span class="text-[10px] text-slate-400">Viscous Fluid</span>
           </div>
           <div class="space-y-1.5 text-xs">
-            <button onclick="selectFluid('water')" id="btnFluidWater" class="w-full p-2 rounded-xl bg-amber-500 text-slate-950 font-bold border border-amber-400 text-left transition flex justify-between">
-              <span>น้ำกลั่นบริสุทธิ์ (Pure Water @ 20°C)</span>
-              <span class="font-mono">η = 1.00 mPa·s</span>
+            <button onclick="selectFluid('water20')" id="btnFluidWater20" class="w-full p-2 rounded-xl bg-amber-500 text-slate-950 font-bold border border-amber-400 text-left transition flex justify-between items-center">
+              <div>
+                <div>น้ำกลั่นบริสุทธิ์ (Pure Water @ 20°C)</div>
+                <div class="text-[10px] opacity-80">ρ = 0.998 g/cm³</div>
+              </div>
+              <span class="font-mono font-bold">η = 1.002 mPa·s</span>
             </button>
-            <button onclick="selectFluid('broth')" id="btnFluidBroth" class="w-full p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-medium border border-white/10 text-left transition flex justify-between">
-              <span>น้ำเลี้ยงเชื้อ (Nutrient Broth)</span>
-              <span class="font-mono">η = 1.15 mPa·s</span>
+            <button onclick="selectFluid('water37')" id="btnFluidWater37" class="w-full p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-medium border border-white/10 text-left transition flex justify-between items-center">
+              <div>
+                <div>น้ำกลั่นที่อุณหภูมิเพาะเลี้ยง (Water @ 37°C)</div>
+                <div class="text-[10px] text-slate-400">ρ = 0.993 g/cm³ (ความหนืดลดลง)</div>
+              </div>
+              <span class="font-mono font-bold">η = 0.691 mPa·s</span>
             </button>
-            <button onclick="selectFluid('glycerol')" id="btnFluidGlycerol" class="w-full p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-medium border border-white/10 text-left transition flex justify-between">
-              <span>สารละลายกลีเซอรอล 20% (Glycerol)</span>
-              <span class="font-mono">η = 1.76 mPa·s</span>
+            <button onclick="selectFluid('broth')" id="btnFluidBroth" class="w-full p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-medium border border-white/10 text-left transition flex justify-between items-center">
+              <div>
+                <div>น้ำเลี้ยงเชื้อ (Nutrient Broth / LB)</div>
+                <div class="text-[10px] text-slate-400">ρ = 1.008 g/cm³</div>
+              </div>
+              <span class="font-mono font-bold">η = 1.150 mPa·s</span>
+            </button>
+            <button onclick="selectFluid('glycerol20')" id="btnFluidGlycerol20" class="w-full p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-medium border border-white/10 text-left transition flex justify-between items-center">
+              <div>
+                <div>สารละลายกลีเซอรอล 20% (Glycerol)</div>
+                <div class="text-[10px] text-slate-400">ρ = 1.048 g/cm³</div>
+              </div>
+              <span class="font-mono font-bold">η = 1.760 mPa·s</span>
+            </button>
+            <button onclick="selectFluid('plasma')" id="btnFluidPlasma" class="w-full p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-medium border border-white/10 text-left transition flex justify-between items-center">
+              <div>
+                <div>พลาสมาในเลือด (Blood Plasma)</div>
+                <div class="text-[10px] text-slate-400">ρ = 1.025 g/cm³</div>
+              </div>
+              <span class="font-mono font-bold">η = 1.500 mPa·s</span>
             </button>
           </div>
+        </div>
+
+        <!-- Gravitational vs Centrifugal Field Selector -->
+        <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-emerald-500/30 space-y-2">
+          <div class="flex items-center justify-between text-xs font-mono">
+            <span class="font-bold text-emerald-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-gauge-high"></i> สนามความเร่ง (Acceleration Field):
+            </span>
+            <span id="dispRCF" class="font-bold text-white bg-slate-800 px-2 py-0.5 rounded border border-white/10">1× g (โลก)</span>
+          </div>
+          <div class="grid grid-cols-4 gap-1.5 text-[11px] font-mono">
+            <button onclick="setRCF(1)" id="btnRCF1" class="p-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold transition">1× g</button>
+            <button onclick="setRCF(100)" id="btnRCF100" class="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition">100× g</button>
+            <button onclick="setRCF(500)" id="btnRCF500" class="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition">500× g</button>
+            <button onclick="setRCF(1000)" id="btnRCF1000" class="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition">1000× g</button>
+          </div>
+          <p class="text-[10px] text-slate-400 italic">
+            *เปรียบเทียบการตกตามธรรมชาติ ($1	imes g$) กับการปั่นเหวี่ยง (RCF) ที่จำเป็นในแล็บจุลชีววิทยา
+          </p>
         </div>
 
         <!-- Simulation Run Controls -->
         <div class="p-4 rounded-2xl bg-slate-950 border border-white/10 space-y-3">
           <div class="flex items-center justify-between text-xs font-mono">
             <span class="text-slate-400">สถานะการตกตะกอน:</span>
-            <span id="stkSimState" class="font-bold text-emerald-400">● พร้อมเริ่มทดลอง</span>
+            <span id="stkSimState" class="font-bold text-emerald-400">● พร้อมเริ่มการทดลอง</span>
           </div>
           <div class="grid grid-cols-2 gap-2">
-            <button id="btnStartStokes" onclick="toggleStokesSim()" class="py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold text-xs shadow-lg transition flex items-center justify-center gap-1.5">
+            <button id="btnStartStokes" onclick="toggleStokesSim()" class="py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold text-xs shadow-lg transition flex items-center justify-center gap-1.5 hover:brightness-110">
               <i class="fa-solid fa-play"></i> เริ่มปล่อยเซลล์ตกตะกอน
             </button>
             <button onclick="resetStokesSim()" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs border border-white/10 transition flex items-center justify-center gap-1.5">
@@ -331,9 +450,10 @@
         <!-- Stokes Physics Theory Snippet -->
         <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 text-[11px] text-slate-400 font-mono space-y-1">
           <div class="text-sky-300 font-bold">สมการกฎของสโตกส์ (Stokes' Law):</div>
-          <div>แรงหนืด $F_d = 6\pi \eta r v$</div>
-          <div>แรงลัพธ์ $(\rho_c - \rho_f) V g - 6\pi \eta r v = 0$</div>
-          <div class="text-emerald-400 font-bold">ความเร็วปลาย: $v_t = \frac{2 r^2 (\rho_c - \rho_f) g}{9 \eta}$</div>
+          <div>แรงหนืดต้าน: $F_d = 6\pi \eta r v$</div>
+          <div>แรงลอยตัวสุทธิ: $F_{	ext{net}} = (ho_c - ho_f) V g - 6\pi \eta r v$</div>
+          <div class="text-emerald-400 font-bold">ความเร็วปลาย: $v_t = rac{2 r^2 (ho_c - ho_f) g}{9 \eta} 	imes f_w$</div>
+          <div class="text-[10px] text-slate-500">*คำนวณปรับแก้ผลกระทบผนังภาชนะ (Faxén's correction $f_w$)</div>
         </div>
 
       </div>
@@ -365,101 +485,136 @@
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(1200, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.08);
-        gain.gain.setValueAtTime(0.15, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+        osc.frequency.setValueAtTime(1400, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(320, ctx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start();
-        osc.stop(ctx.currentTime + 0.08);
+        osc.stop(ctx.currentTime + 0.12);
       } catch (e) {}
     }
 
     function playSoundBalanceChime() {
       try {
         const ctx = getAudioContext();
-        const freqs = [523.25, 659.25, 783.99, 1046.50]; // C Major Chord
-        freqs.forEach((freq, idx) => {
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.05);
-          gain.gain.setValueAtTime(0.08, ctx.currentTime + idx * 0.05);
-          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.05 + 0.5);
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.08);
+          gain.gain.setValueAtTime(0.18, ctx.currentTime + i * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.08 + 0.35);
           osc.connect(gain);
           gain.connect(ctx.destination);
-          osc.start(ctx.currentTime + idx * 0.05);
-          osc.stop(ctx.currentTime + idx * 0.05 + 0.5);
+          osc.start(ctx.currentTime + i * 0.08);
+          osc.stop(ctx.currentTime + i * 0.08 + 0.35);
         });
       } catch (e) {}
     }
 
-    // ============================================================
-    // Studio Environment Map Generator (HDR PBR Reflection)
-    // ============================================================
-    function createStudioEnvMap(rendererInstance) {
-      const pmrem = new THREE.PMREMGenerator(rendererInstance);
-      pmrem.compileEquirectangularShader();
-
-      const envScene = new THREE.Scene();
-      envScene.background = new THREE.Color(0x1e293b);
-
-      const panelGeo = new THREE.PlaneGeometry(100, 50);
-      const whiteMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
-      const blueMat = new THREE.MeshBasicMaterial({ color: 0x93c5fd, side: THREE.DoubleSide });
-      const amberMat = new THREE.MeshBasicMaterial({ color: 0xfde68a, side: THREE.DoubleSide });
-
-      const p1 = new THREE.Mesh(panelGeo, whiteMat);
-      p1.position.set(0, 40, 30);
-      p1.lookAt(0, 0, 0);
-      envScene.add(p1);
-
-      const p2 = new THREE.Mesh(panelGeo, blueMat);
-      p2.position.set(30, 20, 50);
-      p2.lookAt(0, 0, 0);
-      envScene.add(p2);
-
-      const p3 = new THREE.Mesh(panelGeo, amberMat);
-      p3.position.set(-30, -20, 40);
-      p3.lookAt(0, 0, 0);
-      envScene.add(p3);
-
-      const envRT = pmrem.fromScene(envScene, 0.04);
-      pmrem.dispose();
-      return envRT.texture;
+    function playPhotogateBeep(isStart) {
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(isStart ? 880 : 1760, ctx.currentTime);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.15);
+      } catch (e) {}
     }
 
     // ============================================================
-    // Three.js Scene Setup (Standard PBR with preserveDrawingBuffer)
+    // Database for Stokes' Microorganisms & Fluids
     // ============================================================
-    let scene, camera, renderer, controls;
-    let forceTableGroup, stokesGroup;
-    let centralRingMesh, centerPinMesh;
-    let string1, string2, string3;
-    let pulley1Group, pulley2Group, pulley3Group;
-    let weight1Group, weight2Group, weight3Group;
+    const cellDatabase = {
+      saureus: { name: 'Staphylococcus aureus', shape: 'coccus', radius: 0.50, density: 1.13, color: 0xf59e0b, desc: 'Gram-positive sphere' },
+      ecoli: { name: 'Escherichia coli', shape: 'bacillus', radius: 0.80, density: 1.10, color: 0x10b981, desc: 'Gram-negative rod with flagella' },
+      bsubtilis: { name: 'Bacillus subtilis', shape: 'spore', radius: 0.60, density: 1.35, color: 0x38bdf8, desc: 'Refractive dense bacterial endospore' },
+      yeast: { name: 'Saccharomyces cerevisiae', shape: 'yeast', radius: 2.50, density: 1.11, color: 0xf43f5e, desc: 'Baker’s yeast with bud scar' },
+      bead: { name: 'Silica Calibration Bead', shape: 'sphere', radius: 5.00, density: 2.00, color: 0xe2e8f0, desc: 'Standard calibration microsphere' }
+    };
 
-    // Microbial Cells in Mode 2
-    let cellsArray = [];
+    const fluidDatabase = {
+      water20: { name: 'Pure Water @ 20°C', density: 0.998, visc: 1.002, color: 0x38bdf8, opacity: 0.35 },
+      water37: { name: 'Pure Water @ 37°C', density: 0.993, visc: 0.691, color: 0x67e8f9, opacity: 0.30 },
+      broth: { name: 'Nutrient Broth (LB)', density: 1.008, visc: 1.150, color: 0xfacc15, opacity: 0.55 },
+      glycerol20: { name: '20% Glycerol Soln', density: 1.048, visc: 1.760, color: 0xf59e0b, opacity: 0.45 },
+      plasma: { name: 'Blood Plasma', density: 1.025, visc: 1.500, color: 0xfb923c, opacity: 0.50 }
+    };
+
+    let currentCell = cellDatabase.saureus;
+    let currentFluid = fluidDatabase.water20;
+    let currentRCF = 1.0; // 1g, 100g, 500g, 1000g
+
+    // Simulation Clock
     let isStokesRunning = false;
     let stokesStartTime = 0;
     let stokesElapsedTime = 0;
+    let photogateA_triggered = false;
+    let photogateB_triggered = false;
+    let photogateTimeA = 0;
+    let photogateTimeB = 0;
 
-    const cellDatabase = {
-      saureus: { name: 'S. aureus', shape: 'coccus', radius: 0.50, density: 1.10, color: 0xfbbf24 },
-      ecoli: { name: 'E. coli', shape: 'bacillus', radius: 0.80, density: 1.08, color: 0x34d399 },
-      bsubtilis: { name: 'B. subtilis', shape: 'spore', radius: 0.60, density: 1.25, color: 0xa78bfa },
-      yeast: { name: 'S. cerevisiae', shape: 'yeast', radius: 3.00, density: 1.11, color: 0xf472b6 }
-    };
-    let currentCell = cellDatabase.saureus;
+    // ============================================================
+    // Three.js Scene Setup & Studio Environment Map
+    // ============================================================
+    let scene, camera, renderer, controls;
+    let forceTableGroup, stokesGroup;
+    let centerPinMesh, centralRingMesh;
+    let pulley1Group, pulley2Group, pulley3Group;
+    let weight1Group, weight2Group, weight3Group;
+    let string1, string2, string3;
 
-    const fluidDatabase = {
-      water: { name: 'Pure Water', visc: 1.00, density: 1.00, color: 0x38bdf8 },
-      broth: { name: 'Nutrient Broth', visc: 1.15, density: 1.015, color: 0xfde047 },
-      glycerol: { name: '20% Glycerol', visc: 1.76, density: 1.045, color: 0x4ade80 }
-    };
-    let currentFluid = fluidDatabase.water;
+    // Stokes Apparatus components
+    let stokesCylinderMesh, stokesLiquidMesh, stokesMeniscusMesh, stokesPelletMesh;
+    let photogateALaser, photogateBLaser, photogateALed, photogateBLed;
+    let cellsArray = [];
+    let leadCellMesh = null;
+
+    // Procedural Studio Environment for PBR Reflectivity
+    function createStudioEnvMap(renderer) {
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      pmremGenerator.compileEquirectangularShader();
+
+      const cv = document.createElement('canvas');
+      cv.width = 512;
+      cv.height = 256;
+      const ctx = cv.getContext('2d');
+
+      // Studio Gradient Background
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, 256);
+      bgGrad.addColorStop(0, '#1e293b');
+      bgGrad.addColorStop(0.5, '#0f172a');
+      bgGrad.addColorStop(1, '#020617');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, 512, 256);
+
+      // Soft Overhead Studio Softboxes
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      ctx.fillRect(80, 20, 140, 70);
+      ctx.fillRect(300, 30, 130, 60);
+
+      // Warm Accent Fill
+      ctx.fillStyle = 'rgba(251, 191, 36, 0.4)';
+      ctx.fillRect(0, 80, 60, 100);
+
+      // Cool Cyan Rim Fill
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.35)';
+      ctx.fillRect(450, 80, 62, 100);
+
+      const canvasTex = new THREE.CanvasTexture(cv);
+      const renderTarget = pmremGenerator.fromEquirectangular(canvasTex);
+      canvasTex.dispose();
+      pmremGenerator.dispose();
+      return renderTarget.texture;
+    }
 
     function initThree() {
       const mount = document.getElementById('threeMount');
@@ -472,7 +627,6 @@
       camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 1000);
       camera.position.set(0, 18, 22);
 
-      // สำคัญมาก: preserveDrawingBuffer: true เพื่อให้แคปหน้าจอได้คมชัด 100%
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -482,7 +636,7 @@
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       mount.appendChild(renderer.domElement);
 
-      // Add Studio Environment Map for PBR reflections
+      // Studio Environment Map
       scene.environment = createStudioEnvMap(renderer);
 
       controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -491,8 +645,8 @@
       controls.maxPolarAngle = Math.PI / 2 + 0.05;
       controls.target.set(0, 0, 0);
 
-      // High-visibility Lights
-      scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+      // Lights
+      scene.add(new THREE.AmbientLight(0xffffff, 0.95));
       
       const keyLight = new THREE.DirectionalLight(0xffffff, 1.8);
       keyLight.position.set(12, 28, 16);
@@ -505,9 +659,9 @@
       fillLight.position.set(-16, 12, -12);
       scene.add(fillLight);
 
-      const bottomBounceLight = new THREE.DirectionalLight(0xffffff, 0.5);
-      bottomBounceLight.position.set(0, -15, 10);
-      scene.add(bottomBounceLight);
+      const bottomBounce = new THREE.DirectionalLight(0xffffff, 0.45);
+      bottomBounce.position.set(0, -15, 10);
+      scene.add(bottomBounce);
 
       // Floor Shadow Plane
       const floor = new THREE.Mesh(
@@ -519,11 +673,11 @@
       floor.receiveShadow = true;
       scene.add(floor);
 
-      // Build 3D Models
+      // Build Models
       buildForceTable();
-      buildStokesChamber();
+      buildStokesApparatus();
 
-      // Standard API hook for screenshot capture
+      // Screenshot hook for student reports
       window.captureSimulatorScreenshot = function() {
         if (renderer && scene && camera) {
           renderer.render(scene, camera);
@@ -553,7 +707,7 @@
     }
 
     // ============================================================
-    // 3D Force Table Construction
+    // 1. ORIGINAL BEAUTIFUL FORCE TABLE 3D MODEL (ชุดเดิมที่สวยงาม)
     // ============================================================
     function generateForceTableTexture() {
       const cv = document.createElement('canvas');
@@ -561,24 +715,24 @@
       const ctx = cv.getContext('2d');
       const cx = 1024, cy = 1024;
 
-      // Base Brass Gold Radial Gradient
+      // Base Silver-Brushed Aluminum Precision Gradient (ชุดเดิมตามที่อาจารย์ชื่นชอบ)
       const grad = ctx.createRadialGradient(cx, cy, 100, cx, cy, 1024);
-      grad.addColorStop(0, '#fef08a');
-      grad.addColorStop(0.3, '#fde047');
-      grad.addColorStop(0.7, '#eab308');
-      grad.addColorStop(1, '#ca8a04');
+      grad.addColorStop(0, '#f8fafc');
+      grad.addColorStop(0.3, '#e2e8f0');
+      grad.addColorStop(0.7, '#cbd5e1');
+      grad.addColorStop(1, '#94a3b8');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 2048, 2048);
 
-      // High-contrast Rings
-      ctx.strokeStyle = '#1e293b';
-      ctx.lineWidth = 5;
+      // Concentric Reference Rings
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 4;
       ctx.beginPath(); ctx.arc(cx, cy, 980, 0, Math.PI * 2); ctx.stroke();
       ctx.beginPath(); ctx.arc(cx, cy, 880, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(cx, cy, 260, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy, 200, 0, Math.PI * 2); ctx.stroke();
 
-      // Degree Markings
-      ctx.font = 'bold 28px "JetBrains Mono", monospace';
+      // Degree Markings (0 - 360 deg)
+      ctx.font = 'bold 26px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
@@ -587,90 +741,91 @@
         const cos = Math.cos(rad);
         const sin = Math.sin(rad);
 
-        let tickLen = 25;
+        let tickLen = 20;
         if (deg % 10 === 0) {
-          tickLen = 65;
-          ctx.lineWidth = 4.5;
-          const textR = 825;
+          tickLen = 60;
+          ctx.lineWidth = 4;
+          const textR = 830;
           const tx = cx + textR * cos;
           const ty = cy + textR * sin;
-
-          // Cardinal Directions Highlight
-          if (deg === 0 || deg === 90 || deg === 180 || deg === 270) {
-            ctx.fillStyle = '#b91c1c'; // Red
-            ctx.font = 'bold 34px "JetBrains Mono", monospace';
-          } else {
-            ctx.fillStyle = '#0f172a';
-            ctx.font = 'bold 28px "JetBrains Mono", monospace';
-          }
+          ctx.fillStyle = '#0f172a';
           ctx.fillText(deg.toString() + '°', tx, ty);
         } else if (deg % 5 === 0) {
-          tickLen = 45;
-          ctx.lineWidth = 3.0;
+          tickLen = 40;
+          ctx.lineWidth = 2.5;
         } else {
-          tickLen = 22;
-          ctx.lineWidth = 1.8;
+          tickLen = 18;
+          ctx.lineWidth = 1.5;
         }
 
-        ctx.strokeStyle = '#0f172a';
         ctx.beginPath();
         ctx.moveTo(cx + (980 - tickLen) * cos, cy + (980 - tickLen) * sin);
         ctx.lineTo(cx + 980 * cos, cy + 980 * sin);
         ctx.stroke();
       }
 
-      return new THREE.CanvasTexture(cv);
+      const tex = new THREE.CanvasTexture(cv);
+      tex.anisotropy = 8;
+      return tex;
     }
 
     function buildForceTable() {
       forceTableGroup = new THREE.Group();
 
-      const brassMat = new THREE.MeshStandardMaterial({
+      const aluminumDiscMat = new THREE.MeshStandardMaterial({
         map: generateForceTableTexture(),
-        roughness: 0.3,
-        metalness: 0.65
+        roughness: 0.28,
+        metalness: 0.82
       });
       const darkSteelMat = new THREE.MeshStandardMaterial({
-        color: 0x334155,
-        roughness: 0.35,
-        metalness: 0.8
+        color: 0x1e293b,
+        roughness: 0.45,
+        metalness: 0.75
       });
       const goldRingMat = new THREE.MeshStandardMaterial({
-        color: 0xfbbf24,
-        roughness: 0.15,
-        metalness: 0.9,
-        emissive: 0xb45309,
-        emissiveIntensity: 0.2
+        color: 0xf59e0b,
+        roughness: 0.2,
+        metalness: 0.95
       });
       const pinMat = new THREE.MeshStandardMaterial({
         color: 0xef4444,
-        roughness: 0.2,
-        metalness: 0.7
+        roughness: 0.25,
+        metalness: 0.65
       });
 
-      // Circular Table Top
-      const tableDisc = new THREE.Mesh(new THREE.CylinderGeometry(8.5, 8.5, 0.45, 64), brassMat);
+      // Circular Precision Table Top
+      const tableDisc = new THREE.Mesh(new THREE.CylinderGeometry(8.5, 8.5, 0.4, 64), aluminumDiscMat);
       tableDisc.receiveShadow = true;
       tableDisc.castShadow = true;
       forceTableGroup.add(tableDisc);
 
-      // Table Edge Rim Bevel
-      const rimBevel = new THREE.Mesh(new THREE.TorusGeometry(8.5, 0.15, 16, 64), darkSteelMat);
+      // Outer Beveled Edge Ring
+      const rimBevel = new THREE.Mesh(
+        new THREE.TorusGeometry(8.5, 0.22, 16, 64),
+        new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.3, metalness: 0.85 })
+      );
       rimBevel.rotation.x = Math.PI / 2;
-      rimBevel.position.y = 0.2;
       forceTableGroup.add(rimBevel);
 
-      // Heavy Tripod Base
-      const centralPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 1.3, 5.0, 32), darkSteelMat);
+      // Heavy Cast Iron Tripod Base
+      const centralPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 1.25, 5.0, 32), darkSteelMat);
       centralPillar.position.y = -2.7;
       centralPillar.castShadow = true;
       forceTableGroup.add(centralPillar);
 
       for (let i = 0; i < 3; i++) {
-        const leg = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.6, 6.0), darkSteelMat);
+        const leg = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.6, 6.2), darkSteelMat);
         leg.rotation.y = (i * Math.PI * 2) / 3;
-        leg.position.set(Math.sin((i * Math.PI * 2) / 3) * 2.8, -5.2, Math.cos((i * Math.PI * 2) / 3) * 2.8);
+        leg.position.set(Math.sin((i * Math.PI * 2) / 3) * 2.9, -5.2, Math.cos((i * Math.PI * 2) / 3) * 2.9);
         forceTableGroup.add(leg);
+
+        // Brass leveling feet
+        const foot = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.5, 0.5, 0.4, 24),
+          new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.3, metalness: 0.85 })
+        );
+        foot.position.set(Math.sin((i * Math.PI * 2) / 3) * 5.6, -5.5, Math.cos((i * Math.PI * 2) / 3) * 5.6);
+        forceTableGroup.add(foot);
       }
 
       // Center Pin
@@ -686,23 +841,23 @@
       centralRingMesh.castShadow = true;
       forceTableGroup.add(centralRingMesh);
 
-      // Create 3 Pulley Assemblies
-      pulley1Group = createPulleyMesh(0xf59e0b); // Amber
-      pulley2Group = createPulleyMesh(0x0284c7); // Sky Blue
-      pulley3Group = createPulleyMesh(0x10b981); // Emerald
+      // Create 3 Pulley Assemblies (F1: Amber, F2: Sky Blue, F3: Emerald)
+      pulley1Group = createPulleyMesh(0xf59e0b);
+      pulley2Group = createPulleyMesh(0x38bdf8);
+      pulley3Group = createPulleyMesh(0x10b981);
       forceTableGroup.add(pulley1Group);
       forceTableGroup.add(pulley2Group);
       forceTableGroup.add(pulley3Group);
 
       // Hanging Weights
       weight1Group = createHangingWeight(0xf59e0b);
-      weight2Group = createHangingWeight(0x0284c7);
+      weight2Group = createHangingWeight(0x38bdf8);
       weight3Group = createHangingWeight(0x10b981);
       forceTableGroup.add(weight1Group);
       forceTableGroup.add(weight2Group);
       forceTableGroup.add(weight3Group);
 
-      // Strings (Lines with bright color)
+      // Taut Strings (Lines)
       const lineMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 });
       string1 = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), lineMat);
       string2 = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), lineMat);
@@ -716,8 +871,8 @@
 
     function createPulleyMesh(colorHex) {
       const g = new THREE.Group();
-      const clampMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.35, metalness: 0.7 });
-      const wheelMat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.25, metalness: 0.8 });
+      const clampMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.35, metalness: 0.75 });
+      const wheelMat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.25, metalness: 0.85 });
 
       const clamp = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.3, 0.9), clampMat);
       clamp.castShadow = true;
@@ -756,129 +911,395 @@
     }
 
     // ============================================================
-    // 3D Stokes' Drag Chamber Construction (Mode 2)
+    // 2. HYPER-REALISTIC STOKES' VISCOMETER APPARATUS (โหมดสโตกส์สมจริง)
     // ============================================================
-    function buildStokesChamber() {
+    function generateCylinderScaleTexture() {
+      const cv = document.createElement('canvas');
+      cv.width = 512;
+      cv.height = 2048;
+      const ctx = cv.getContext('2d');
+
+      ctx.clearRect(0, 0, 512, 2048);
+
+      // Printed Graduation Scale in Bright White/Sky Blue
+      ctx.fillStyle = '#f8fafc';
+      ctx.strokeStyle = '#f8fafc';
+      ctx.font = 'bold 24px "JetBrains Mono", monospace';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+
+      // 0 to 100 mL marks and mm scale
+      const totalMarks = 50;
+      for (let i = 0; i <= totalMarks; i++) {
+        const y = 100 + (i / totalMarks) * 1840;
+        const val = 100 - i * 2; // 100 down to 0 mL
+
+        if (i % 5 === 0) {
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.moveTo(120, y);
+          ctx.lineTo(210, y);
+          ctx.stroke();
+          ctx.fillText(val.toString() + ' mL', 110, y);
+        } else {
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(150, y);
+          ctx.lineTo(210, y);
+          ctx.stroke();
+        }
+      }
+
+      // Vertical guideline
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(210, 100);
+      ctx.lineTo(210, 1940);
+      ctx.stroke();
+
+      const tex = new THREE.CanvasTexture(cv);
+      tex.wrapS = THREE.ClampToEdgeWrapping;
+      tex.wrapT = THREE.ClampToEdgeWrapping;
+      return tex;
+    }
+
+    function buildStokesApparatus() {
       stokesGroup = new THREE.Group();
       stokesGroup.position.set(0, 0, 0);
 
-      // Backlight Panel behind the cuvette to make liquids & glass glow brilliantly!
+      // Soft Backlight Panel behind apparatus for brilliant liquid translucency
       const backlightMat = new THREE.MeshBasicMaterial({
         color: 0x1e3a5f,
         transparent: true,
-        opacity: 0.85
+        opacity: 0.65
       });
-      const backlightPanel = new THREE.Mesh(new THREE.PlaneGeometry(10, 15), backlightMat);
-      backlightPanel.position.set(0, 1.0, -3.5);
+      const backlightPanel = new THREE.Mesh(new THREE.PlaneGeometry(12, 18), backlightMat);
+      backlightPanel.position.set(0, 1.0, -4.5);
       stokesGroup.add(backlightPanel);
 
-      const glassMat = new THREE.MeshPhysicalMaterial({
-        color: 0xe0f2fe,
-        roughness: 0.08,
-        metalness: 0.1,
-        transmission: 0.82,
+      // Materials
+      const castIronMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.5, metalness: 0.75 });
+      const chromeRodMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.15, metalness: 0.95 });
+      const brassScrewMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.25, metalness: 0.85 });
+      
+      const borosilicateGlassMat = new THREE.MeshPhysicalMaterial({
+        color: 0xf0fdf4,
+        roughness: 0.04,
+        metalness: 0.05,
+        transmission: 0.90,
         transparent: true,
-        opacity: 0.45,
-        reflectivity: 0.5
+        opacity: 0.35,
+        reflectivity: 0.7,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.05
       });
 
-      const fluidMat = new THREE.MeshStandardMaterial({
+      const fluidCoreMat = new THREE.MeshStandardMaterial({
         color: currentFluid.color,
         roughness: 0.15,
         transparent: true,
-        opacity: 0.65
+        opacity: currentFluid.opacity
       });
 
-      const standMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.35, metalness: 0.75 });
-      const chromeMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.2, metalness: 0.9 });
-
-      // Metal Stand Base
-      const standBase = new THREE.Mesh(new THREE.BoxGeometry(7.0, 0.7, 7.0), standMat);
-      standBase.position.y = -5.0;
+      // 1. Heavy Rectangular Cast-Iron Lab Base with Levelling Screws
+      const standBase = new THREE.Mesh(new THREE.BoxGeometry(7.5, 0.8, 6.5), castIronMat);
+      standBase.position.set(-1.0, -5.5, 0);
       standBase.castShadow = true;
       standBase.receiveShadow = true;
       stokesGroup.add(standBase);
 
-      const standRod = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 14.0, 24), chromeMat);
-      standRod.position.set(-2.8, 1.5, 0);
-      standRod.castShadow = true;
-      stokesGroup.add(standRod);
-
-      // Clamp arm
-      const clampArm = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.35, 0.35), standMat);
-      clampArm.position.set(-1.4, 3.5, 0);
-      stokesGroup.add(clampArm);
-
-      // Glass Cuvette Column (Height 10 units)
-      const outerGlass = new THREE.Mesh(new THREE.BoxGeometry(3.6, 10.5, 3.6), glassMat);
-      outerGlass.position.y = 0.5;
-      outerGlass.castShadow = true;
-      stokesGroup.add(outerGlass);
-
-      // Liquid Core
-      const liquidMesh = new THREE.Mesh(new THREE.BoxGeometry(3.2, 10.0, 3.2), fluidMat);
-      liquidMesh.position.y = 0.5;
-      stokesGroup.add(liquidMesh);
-
-      // Graduated Ticks on Glass Wall
-      const tickMat = new THREE.LineBasicMaterial({ color: 0x38bdf8 });
-      for (let y = -4.0; y <= 5.0; y += 1.0) {
-        const geom = new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(1.81, y, -1.2),
-          new THREE.Vector3(1.81, y, 1.2)
-        ]);
-        stokesGroup.add(new THREE.Line(geom, tickMat));
+      // 2 Brass Leveling Knobs
+      for (let bx of [-3.8, 1.8]) {
+        const knob = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.5, 24), brassScrewMat);
+        knob.position.set(bx, -5.8, 2.5);
+        stokesGroup.add(knob);
       }
 
-      // Generate Microbial Cells
+      // Vertical Chrome Rod
+      const verticalRod = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 16.0, 24), chromeRodMat);
+      verticalRod.position.set(-3.2, 2.0, 0);
+      verticalRod.castShadow = true;
+      stokesGroup.add(verticalRod);
+
+      // Dual Three-Finger Clamps holding the cylinder vertical
+      for (let cy of [3.5, -2.5]) {
+        const clampArm = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.32, 0.32), castIronMat);
+        clampArm.position.set(-1.6, cy, 0);
+        clampArm.castShadow = true;
+        stokesGroup.add(clampArm);
+
+        // Clamp Finger Ring
+        const clampRing = new THREE.Mesh(
+          new THREE.TorusGeometry(1.7, 0.14, 16, 32),
+          new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.4, metalness: 0.6 })
+        );
+        clampRing.rotation.x = Math.PI / 2;
+        clampRing.position.set(0.0, cy, 0);
+        stokesGroup.add(clampRing);
+
+        // Knurled tighten screw
+        const screw = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.6, 16), brassScrewMat);
+        screw.rotation.z = Math.PI / 2;
+        screw.position.set(-3.1, cy, 0);
+        stokesGroup.add(screw);
+      }
+
+      // 2. Graduated Borosilicate Sedimentation Cylinder
+      // Outer glass cylinder
+      stokesCylinderMesh = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 12.0, 48, 1, true), borosilicateGlassMat);
+      stokesCylinderMesh.position.set(0, 0.5, 0);
+      stokesCylinderMesh.castShadow = true;
+      stokesGroup.add(stokesCylinderMesh);
+
+      // Glass Flared Top Bead
+      const topRim = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.1, 16, 48), borosilicateGlassMat);
+      topRim.rotation.x = Math.PI / 2;
+      topRim.position.set(0, 6.5, 0);
+      stokesGroup.add(topRim);
+
+      // Thick Glass Heavy Base Disc
+      const glassBase = new THREE.Mesh(new THREE.CylinderGeometry(2.3, 2.3, 0.6, 48), borosilicateGlassMat);
+      glassBase.position.set(0, -5.2, 0);
+      stokesGroup.add(glassBase);
+
+      // Printed Graduation Scale Overlay
+      const scalePlane = new THREE.Mesh(
+        new THREE.CylinderGeometry(1.61, 1.61, 11.6, 48, 1, true, 0, Math.PI * 0.4),
+        new THREE.MeshBasicMaterial({
+          map: generateCylinderScaleTexture(),
+          transparent: true,
+          opacity: 0.85,
+          side: THREE.DoubleSide
+        })
+      );
+      scalePlane.position.set(0, 0.5, 0);
+      scalePlane.rotation.y = Math.PI * 0.3;
+      stokesGroup.add(scalePlane);
+
+      // 3. Inner Liquid Core
+      stokesLiquidMesh = new THREE.Mesh(new THREE.CylinderGeometry(1.54, 1.54, 11.2, 36), fluidCoreMat);
+      stokesLiquidMesh.position.set(0, 0.5, 0);
+      stokesGroup.add(stokesLiquidMesh);
+
+      // Fluid Meniscus at Top Surface (concave curve)
+      stokesMeniscusMesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(1.54, 1.54, 0.12, 32),
+        new THREE.MeshStandardMaterial({ color: currentFluid.color, roughness: 0.05, transparent: true, opacity: 0.85 })
+      );
+      stokesMeniscusMesh.position.set(0, 6.1, 0);
+      stokesGroup.add(stokesMeniscusMesh);
+
+      // Bottom Sediment Pellet Layer (grows as cells sediment)
+      stokesPelletMesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(1.53, 1.53, 0.1, 32),
+        new THREE.MeshStandardMaterial({ color: currentCell.color, roughness: 0.4 })
+      );
+      stokesPelletMesh.position.set(0, -5.0, 0);
+      stokesPelletMesh.scale.set(1, 0.2, 1);
+      stokesGroup.add(stokesPelletMesh);
+
+      // 4. Dual Optical Photogates (Gate A @ y = 3.0, Gate B @ y = -3.0)
+      // Photogate A (Start Gate)
+      const gateA = createPhotogateAssembly('GATE A (Start)', 3.0);
+      stokesGroup.add(gateA.group);
+      photogateALaser = gateA.laser;
+      photogateALed = gateA.led;
+
+      // Photogate B (Stop Gate)
+      const gateB = createPhotogateAssembly('GATE B (Stop)', -3.0);
+      stokesGroup.add(gateB.group);
+      photogateBLaser = gateB.laser;
+      photogateBLed = gateB.led;
+
+      // Generate Population of Microorganisms
       generateCellsInChamber();
 
       stokesGroup.visible = false;
       scene.add(stokesGroup);
     }
 
-    function generateCellsInChamber() {
-      // Clear old cells
-      cellsArray.forEach(c => stokesGroup.remove(c.mesh));
-      cellsArray = [];
+    function createPhotogateAssembly(label, yPos) {
+      const g = new THREE.Group();
+      g.position.set(0, yPos, 0);
 
+      const anodizedMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.35, metalness: 0.8 });
+
+      // U-Bracket around cylinder
+      const bracketLeft = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.6, 1.6), anodizedMat);
+      bracketLeft.position.set(-2.0, 0, 0);
+      g.add(bracketLeft);
+
+      const bracketRight = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.6, 1.6), anodizedMat);
+      bracketRight.position.set(2.0, 0, 0);
+      g.add(bracketRight);
+
+      const bracketBack = new THREE.Mesh(new THREE.BoxGeometry(4.5, 0.5, 0.4), anodizedMat);
+      bracketBack.position.set(0, 0, -1.0);
+      g.add(bracketBack);
+
+      // Laser Diode Emitter on Left
+      const emitter = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.12, 0.12, 0.4, 16),
+        new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.2, metalness: 0.9 })
+      );
+      emitter.rotation.z = Math.PI / 2;
+      emitter.position.set(-1.7, 0, 0);
+      g.add(emitter);
+
+      // Photodetector on Right
+      const detector = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.14, 0.14, 0.3, 16),
+        new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.3, metalness: 0.8 })
+      );
+      detector.rotation.z = Math.PI / 2;
+      detector.position.set(1.7, 0, 0);
+      g.add(detector);
+
+      // Visible Red Laser Beam (650 nm)
+      const laserBeam = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.02, 0.02, 3.4, 12),
+        new THREE.MeshBasicMaterial({ color: 0xff0033, transparent: true, opacity: 0.85 })
+      );
+      laserBeam.rotation.z = Math.PI / 2;
+      laserBeam.position.set(0, 0, 0);
+      g.add(laserBeam);
+
+      // Status Indicator LED
+      const led = new THREE.Mesh(
+        new THREE.SphereGeometry(0.12, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0x10b981 }) // Green = Armed
+      );
+      led.position.set(-1.8, 0.35, 0.6);
+      g.add(led);
+
+      return { group: g, laser: laserBeam, led: led };
+    }
+
+    // ============================================================
+    // Microorganism Mesh Generation with High Biological Detail
+    // ============================================================
+    function createMicrobeMesh(cellSpec) {
+      const g = new THREE.Group();
       const cellMat = new THREE.MeshStandardMaterial({
-        color: currentCell.color,
+        color: cellSpec.color,
         roughness: 0.25,
-        emissive: currentCell.color,
-        emissiveIntensity: 0.25
+        metalness: 0.1,
+        emissive: cellSpec.color,
+        emissiveIntensity: 0.22
       });
 
-      for (let i = 0; i < 20; i++) {
-        let geom;
-        if (currentCell.shape === 'coccus' || currentCell.shape === 'spore') {
-          geom = new THREE.SphereGeometry(0.24, 20, 20);
-        } else if (currentCell.shape === 'bacillus') {
-          geom = new THREE.CylinderGeometry(0.16, 0.16, 0.65, 20);
-        } else {
-          geom = new THREE.SphereGeometry(0.42, 20, 20);
+      if (cellSpec.shape === 'coccus') {
+        // Staphylococcus aureus: Single or Diplococcus
+        const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.25, 24, 24), cellMat);
+        g.add(sphere);
+      } else if (cellSpec.shape === 'bacillus') {
+        // E. coli: Capsule rod with attached rotating flagella filaments
+        const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.65, 24), cellMat);
+        const capTop = new THREE.Mesh(new THREE.SphereGeometry(0.16, 20, 20), cellMat);
+        capTop.position.y = 0.325;
+        const capBot = new THREE.Mesh(new THREE.SphereGeometry(0.16, 20, 20), cellMat);
+        capBot.position.y = -0.325;
+        g.add(rod, capTop, capBot);
+
+        // Helical Flagella Filaments
+        const flagellaMat = new THREE.MeshBasicMaterial({ color: 0xa7f3d0, transparent: true, opacity: 0.7 });
+        for (let fi = 0; fi < 3; fi++) {
+          const curvePoints = [];
+          for (let t = 0; t <= 1.2; t += 0.1) {
+            curvePoints.push(new THREE.Vector3(
+              Math.sin(t * 8 + fi * 2) * 0.08,
+              0.4 + t * 0.8,
+              Math.cos(t * 8 + fi * 2) * 0.08
+            ));
+          }
+          const flagGeom = new THREE.BufferGeometry().setFromPoints(curvePoints);
+          const flagellaLine = new THREE.Line(flagGeom, flagellaMat);
+          g.add(flagellaLine);
         }
+      } else if (cellSpec.shape === 'spore') {
+        // Bacillus endospore: Oval with refractive double-wall cortex
+        const spore = new THREE.Mesh(new THREE.SphereGeometry(0.24, 24, 24), cellMat);
+        spore.scale.set(0.9, 1.3, 0.9);
+        g.add(spore);
+      } else if (cellSpec.shape === 'yeast') {
+        // Saccharomyces cerevisiae: Large mother cell + budding daughter cell
+        const mother = new THREE.Mesh(new THREE.SphereGeometry(0.38, 28, 28), cellMat);
+        mother.scale.set(1.0, 1.25, 1.0);
+        const daughter = new THREE.Mesh(new THREE.SphereGeometry(0.18, 20, 20), cellMat);
+        daughter.position.set(0.28, 0.35, 0);
+        g.add(mother, daughter);
+      } else {
+        // Calibration Microbead: Perfectly uniform sphere
+        const bead = new THREE.Mesh(
+          new THREE.SphereGeometry(0.42, 32, 32),
+          new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.1, metalness: 0.85 })
+        );
+        g.add(bead);
+      }
 
-        const mesh = new THREE.Mesh(geom, cellMat);
-        const randX = (Math.random() - 0.5) * 2.2;
-        const randZ = (Math.random() - 0.5) * 2.2;
-        const startY = 3.8 + (Math.random() - 0.5) * 1.6;
+      return g;
+    }
 
-        mesh.position.set(randX, startY, randZ);
+    function generateCellsInChamber() {
+      // Clear old cells
+      cellsArray.forEach(c => stokesGroup.remove(c.group));
+      cellsArray = [];
+
+      // Update fluid material color & opacity
+      stokesLiquidMesh.material.color.setHex(currentFluid.color);
+      stokesLiquidMesh.material.opacity = currentFluid.opacity;
+      stokesMeniscusMesh.material.color.setHex(currentFluid.color);
+      stokesPelletMesh.material.color.setHex(currentCell.color);
+      stokesPelletMesh.scale.set(1, 0.1, 1);
+
+      // Create 28 cells in suspension column
+      for (let i = 0; i < 28; i++) {
+        const meshGroup = createMicrobeMesh(currentCell);
+        
+        // Random position within inner cylinder radius R = 1.3
+        const theta = Math.random() * Math.PI * 2;
+        const r = Math.sqrt(Math.random()) * 1.2;
+        const x = Math.cos(theta) * r;
+        const z = Math.sin(theta) * r;
+        
+        // Staggered starting height near upper section
+        const startY = (i === 0) ? 4.8 : (4.0 + (Math.random() - 0.5) * 2.2);
+
+        meshGroup.position.set(x, startY, z);
+        meshGroup.rotation.y = Math.random() * Math.PI * 2;
         if (currentCell.shape === 'bacillus') {
-          mesh.rotation.z = Math.random() * Math.PI;
-          mesh.rotation.x = Math.random() * Math.PI;
+          meshGroup.rotation.z = (Math.random() - 0.5) * 0.4; // slight Brownian tilt
         }
 
-        mesh.castShadow = true;
-        stokesGroup.add(mesh);
+        stokesGroup.add(meshGroup);
+
         cellsArray.push({
-          mesh: mesh,
+          group: meshGroup,
           initY: startY,
           currY: startY,
-          speed: 1.0 + (Math.random() - 0.5) * 0.15
+          speedVariance: 0.92 + Math.random() * 0.16,
+          isLead: (i === 0)
         });
       }
+
+      leadCellMesh = cellsArray[0].group;
+      resetPhotogates();
+    }
+
+    function resetPhotogates() {
+      photogateA_triggered = false;
+      photogateB_triggered = false;
+      photogateTimeA = 0;
+      photogateTimeB = 0;
+
+      if (photogateALed) photogateALed.material.color.setHex(0x10b981); // Green
+      if (photogateBLed) photogateBLed.material.color.setHex(0x10b981); // Green
+
+      document.getElementById('photogateStatus').className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-800 text-slate-300 border border-white/10 font-mono';
+      document.getElementById('photogateStatus').textContent = 'ARMED';
+      document.getElementById('ledTimerDigits').innerHTML = '00.000 <span class="text-xs text-rose-500">s</span>';
+      document.getElementById('pgExpVel').textContent = '-- µm/s';
+      document.getElementById('pgErrorPercent').textContent = '-- %';
     }
 
     // ============================================================
@@ -948,116 +1369,140 @@
 
       if (!isBalanced) {
         const netAng = Math.atan2(netY, netX);
-        const shiftAmount = Math.min(0.55, netMag * 0.18);
-        ringShiftX = shiftAmount * Math.cos(netAng);
-        ringShiftZ = -shiftAmount * Math.sin(netAng);
+        const maxShift = 0.58; // Ring hits the pin
+        const shiftDist = Math.min(maxShift, netMag * 0.18);
+        ringShiftX = Math.cos(netAng) * shiftDist;
+        ringShiftZ = -Math.sin(netAng) * shiftDist;
       }
 
       if (centralRingMesh) {
-        centralRingMesh.position.set(ringShiftX, 0.28, ringShiftZ);
-        if (isBalanced) {
-          centralRingMesh.material.color.setHex(0x10b981); // Emerald
-          centralRingMesh.material.emissive.setHex(0x065f46);
-        } else {
-          centralRingMesh.material.color.setHex(0xfbbf24); // Amber
-          centralRingMesh.material.emissive.setHex(0xb45309);
-        }
+        centralRingMesh.position.x = ringShiftX;
+        centralRingMesh.position.z = ringShiftZ;
       }
 
-      // Update HUD
-      document.getElementById('hudRMag').textContent = `${rMag12.toFixed(3)} N (${((rMag12/g)*1000).toFixed(1)} g)`;
-      document.getElementById('hudRAng').textContent = `${rAng12.toFixed(1)}°`;
-      document.getElementById('hudEMag').textContent = `${eMag.toFixed(3)} N (${((eMag/g)*1000).toFixed(1)} g)`;
-      document.getElementById('hudEAng').textContent = `${eAng.toFixed(1)}°`;
-
+      // Update Analytics UI
       document.getElementById('sumFx').textContent = `${netX >= 0 ? '+' : ''}${netX.toFixed(3)} N`;
       document.getElementById('sumFy').textContent = `${netY >= 0 ? '+' : ''}${netY.toFixed(3)} N`;
-
-      const pill = document.getElementById('equilibriumStatusPill');
+      
       const sumFnetElem = document.getElementById('sumFnet');
+      const statusPill = document.getElementById('equilibriumStatusPill');
 
       if (isBalanced) {
-        pill.className = "px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
-        pill.innerHTML = '✓ ระบบสมดุลสมบูรณ์ (Ring Centered)';
         sumFnetElem.className = 'font-bold text-emerald-400';
-        sumFnetElem.textContent = `${netMag.toFixed(3)} N (สมดุล)`;
+        sumFnetElem.textContent = `${netMag.toFixed(3)} N (ระบบสมดุล 100%)`;
+        statusPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse';
+        statusPill.innerHTML = '<i class="fa-solid fa-circle-check"></i> ระบบสมดุลแล้ว';
       } else {
-        pill.className = "px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40";
-        pill.innerHTML = '● ระบบยังไม่สมดุล (Ring Pushed)';
         sumFnetElem.className = 'font-bold text-rose-400';
-        sumFnetElem.textContent = `${netMag.toFixed(3)} N (ไม่สมดุล)`;
+        sumFnetElem.textContent = `${netMag.toFixed(3)} N (ยังไม่สมดุล)`;
+        statusPill.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40';
+        statusPill.innerHTML = '● ระบบยังไม่สมดุล';
       }
 
-      drawPolarVectorHUD(f1, a1, f2, a2, f3, a3, rMag12, rAng12);
+      // Update 2D Polar HUD
+      drawPolarVectorHUD(f1, a1, f2, a2, f3, a3, rMag12, rAng12, eMag, eAng);
     }
 
-    function updatePulleyTransform(pulleyGrp, weightGrp, stringLine, angDeg, radius) {
-      const rad = (angDeg * Math.PI) / 180;
-      const px = radius * Math.cos(rad);
-      const pz = -radius * Math.sin(rad);
+    function updatePulleyTransform(pulleyGrp, weightGrp, stringLine, angleDeg, tableR) {
+      const rad = (angleDeg * Math.PI) / 180;
+      const px = Math.cos(rad) * tableR;
+      const pz = -Math.sin(rad) * tableR;
 
-      pulleyGrp.position.set(px, 0.22, pz);
+      pulleyGrp.position.set(px, 0.2, pz);
       pulleyGrp.rotation.y = rad;
 
-      weightGrp.position.set(px * 1.08, -1.2, pz * 1.08);
+      const wx = Math.cos(rad) * (tableR + 0.95);
+      const wz = -Math.sin(rad) * (tableR + 0.95);
+      weightGrp.position.set(wx, 0.2, wz);
 
-      // Update String Points: From Central Ring to Pulley Edge to Weight
-      if (stringLine) {
-        const ringPos = centralRingMesh ? centralRingMesh.position : new THREE.Vector3();
-        const p1 = new THREE.Vector3(ringPos.x, 0.28, ringPos.z);
-        const p2 = new THREE.Vector3(px, 0.45, pz);
-        const p3 = new THREE.Vector3(px * 1.08, -0.6, pz * 1.08);
-
-        stringLine.geometry.setFromPoints([p1, p2, p3]);
-      }
+      const ringPos = centralRingMesh ? centralRingMesh.position : new THREE.Vector3();
+      const pts = [
+        new THREE.Vector3(ringPos.x + Math.cos(rad) * 0.85, 0.28, ringPos.z - Math.sin(rad) * 0.85),
+        new THREE.Vector3(px, 0.85, pz),
+        new THREE.Vector3(wx, -0.9, wz)
+      ];
+      stringLine.geometry.setFromPoints(pts);
+      stringLine.geometry.verticesNeedUpdate = true;
     }
 
-    function drawPolarVectorHUD(f1, a1, f2, a2, f3, a3, rMag, rAng) {
+    function drawPolarVectorHUD(f1, a1, f2, a2, f3, a3, rMag, rAng, eMag, eAng) {
       const cv = document.getElementById('polarCanvas');
       if (!cv) return;
       const ctx = cv.getContext('2d');
-      const cx = 85, cy = 85;
-      const maxF = Math.max(f1, f2, f3, rMag, 3.0);
-      const scale = 70 / maxF;
+      const w = cv.width, h = cv.height;
+      const cx = w / 2, cy = h / 2;
+      const maxR = (w / 2) - 15;
 
-      ctx.clearRect(0, 0, cv.width, cv.height);
+      ctx.clearRect(0, 0, w, h);
 
-      // Polar concentric circles
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      // Polar concentric grid
+      ctx.strokeStyle = '#1e293b';
       ctx.lineWidth = 1;
-      [22, 45, 68].forEach(r => {
-        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
-      });
+      for (let r = 1; r <= 3; r++) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, (maxR / 3) * r, 0, Math.PI * 2);
+        ctx.stroke();
+      }
 
       // Crosshairs
-      ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(cv.width, cy); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, cv.height); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(10, cy); ctx.lineTo(w - 10, cy);
+      ctx.moveTo(cx, 10); ctx.lineTo(cx, h - 10);
+      ctx.stroke();
 
-      function drawVectorArrow(mag, deg, color, label) {
-        const rad = (deg * Math.PI) / 180;
-        const ex = cx + mag * scale * Math.cos(rad);
-        const ey = cy - mag * scale * Math.sin(rad);
+      // Degree labels
+      ctx.fillStyle = '#64748b';
+      ctx.font = '9px "JetBrains Mono", monospace';
+      ctx.fillText('0°', w - 18, cy - 3);
+      ctx.fillText('90°', cx + 4, 15);
+      ctx.fillText('180°', 4, cy - 3);
+      ctx.fillText('270°', cx + 4, h - 4);
 
-        ctx.strokeStyle = color;
+      // Max scale reference = 5 N
+      const scale = maxR / 5.0;
+
+      function drawVectorArrow(mag, angDeg, colorHex, label) {
+        const rad = (angDeg * Math.PI) / 180;
+        const len = Math.min(maxR, mag * scale);
+        const tx = cx + len * Math.cos(rad);
+        const ty = cy - len * Math.sin(rad);
+
+        ctx.strokeStyle = colorHex;
+        ctx.fillStyle = colorHex;
         ctx.lineWidth = 2.5;
-        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(ex, ey); ctx.stroke();
 
-        ctx.fillStyle = color;
-        ctx.beginPath(); ctx.arc(ex, ey, 3.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(tx, ty);
+        ctx.stroke();
 
+        // Arrow head
+        const headLen = 7;
+        const arrowAng = Math.atan2(cy - ty, tx - cx);
+        ctx.beginPath();
+        ctx.moveTo(tx, ty);
+        ctx.lineTo(tx - headLen * Math.cos(arrowAng - Math.PI / 6), ty + headLen * Math.sin(arrowAng - Math.PI / 6));
+        ctx.lineTo(tx - headLen * Math.cos(arrowAng + Math.PI / 6), ty + headLen * Math.sin(arrowAng + Math.PI / 6));
+        ctx.closePath();
+        ctx.fill();
+
+        // Label
         ctx.font = 'bold 10px "JetBrains Mono"';
-        ctx.fillText(label, ex + 4, ey - 4);
+        ctx.fillText(label, tx + 6 * Math.cos(arrowAng), ty - 6 * Math.sin(arrowAng));
       }
 
       drawVectorArrow(f1, a1, '#f59e0b', 'F1');
-      drawVectorArrow(f2, a2, '#0284c7', 'F2');
+      drawVectorArrow(f2, a2, '#38bdf8', 'F2');
       drawVectorArrow(f3, a3, '#10b981', 'F3');
       drawVectorArrow(rMag, rAng, '#f43f5e', 'R');
+
+      document.getElementById('hudRMag').textContent = `${rMag.toFixed(2)} N`;
+      document.getElementById('hudRAng').textContent = `${rAng.toFixed(1)}°`;
+      document.getElementById('hudEMag').textContent = `${eMag.toFixed(2)} N`;
+      document.getElementById('hudEAng').textContent = `${eAng.toFixed(1)}°`;
     }
 
-    // ============================================================
-    // Presets & Automation
-    // ============================================================
+    // Presets
     function setPresetOrthogonal() {
       playSoundClink();
       document.getElementById('sliderF1Mass').value = 200;
@@ -1080,15 +1525,6 @@
       document.getElementById('sliderF3Ang').value = 240;
       updateForceTable();
       playSoundBalanceChime();
-    }
-
-    function setPresetBioCentrifuge() {
-      playSoundClink();
-      document.getElementById('sliderF1Mass').value = 150;
-      document.getElementById('sliderF1Ang').value = 30;
-      document.getElementById('sliderF2Mass').value = 200;
-      document.getElementById('sliderF2Ang').value = 135;
-      autoBalanceEquilibrant();
     }
 
     function autoBalanceEquilibrant() {
@@ -1114,18 +1550,28 @@
     }
 
     // ============================================================
-    // Stokes' Microbial Sedimentation (Mode 2)
+    // 3. STOKES' LAW CALCULATIONS & MICRO-LOUPE RENDERER
     // ============================================================
     function selectCell(type) {
       if (!cellDatabase[type]) return;
       currentCell = cellDatabase[type];
 
-      ['btnCellSaureus', 'btnCellEcoli', 'btnCellBsubtilis', 'btnCellYeast'].forEach(id => {
-        document.getElementById(id).className = 'p-2 rounded-xl bg-slate-800 text-slate-300 font-medium border border-white/10 hover:text-white transition text-left';
+      ['btnCellSaureus', 'btnCellEcoli', 'btnCellBsubtilis', 'btnCellYeast', 'btnCellBead'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.className = 'p-2 rounded-xl bg-slate-800 text-slate-300 font-medium border border-white/10 hover:text-white transition text-left text-xs';
       });
 
-      const activeBtnMap = { saureus: 'btnCellSaureus', ecoli: 'btnCellEcoli', bsubtilis: 'btnCellBsubtilis', yeast: 'btnCellYeast' };
-      document.getElementById(activeBtnMap[type]).className = 'p-2 rounded-xl bg-sky-500 text-slate-950 font-bold border border-sky-400 transition text-left';
+      const activeBtnMap = {
+        saureus: 'btnCellSaureus',
+        ecoli: 'btnCellEcoli',
+        bsubtilis: 'btnCellBsubtilis',
+        yeast: 'btnCellYeast',
+        bead: 'btnCellBead'
+      };
+      const activeBtn = document.getElementById(activeBtnMap[type]);
+      if (activeBtn) {
+        activeBtn.className = 'p-2 rounded-xl bg-sky-500 text-slate-950 font-bold border border-sky-400 transition text-left text-xs';
+      }
 
       generateCellsInChamber();
       updateStokesTelemetry();
@@ -1135,36 +1581,233 @@
       if (!fluidDatabase[type]) return;
       currentFluid = fluidDatabase[type];
 
-      ['btnFluidWater', 'btnFluidBroth', 'btnFluidGlycerol'].forEach(id => {
-        document.getElementById(id).className = 'w-full p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-medium border border-white/10 text-left transition flex justify-between';
+      ['btnFluidWater20', 'btnFluidWater37', 'btnFluidBroth', 'btnFluidGlycerol20', 'btnFluidPlasma'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.className = 'w-full p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-medium border border-white/10 text-left transition flex justify-between items-center text-xs';
       });
 
-      const activeBtnMap = { water: 'btnFluidWater', broth: 'btnFluidBroth', glycerol: 'btnFluidGlycerol' };
-      document.getElementById(activeBtnMap[type]).className = 'w-full p-2 rounded-xl bg-amber-500 text-slate-950 font-bold border border-amber-400 text-left transition flex justify-between';
+      const activeBtnMap = {
+        water20: 'btnFluidWater20',
+        water37: 'btnFluidWater37',
+        broth: 'btnFluidBroth',
+        glycerol20: 'btnFluidGlycerol20',
+        plasma: 'btnFluidPlasma'
+      };
+      const activeBtn = document.getElementById(activeBtnMap[type]);
+      if (activeBtn) {
+        activeBtn.className = 'w-full p-2 rounded-xl bg-amber-500 text-slate-950 font-bold border border-amber-400 text-left transition flex justify-between items-center text-xs';
+      }
+
+      if (stokesLiquidMesh) {
+        stokesLiquidMesh.material.color.setHex(currentFluid.color);
+        stokesLiquidMesh.material.opacity = currentFluid.opacity;
+      }
+      if (stokesMeniscusMesh) {
+        stokesMeniscusMesh.material.color.setHex(currentFluid.color);
+      }
+
+      updateStokesTelemetry();
+    }
+
+    function setRCF(rcfVal) {
+      currentRCF = rcfVal;
+      document.getElementById('dispRCF').textContent = `${rcfVal}× g`;
+
+      [1, 100, 500, 1000].forEach(v => {
+        const btn = document.getElementById(`btnRCF${v}`);
+        if (v === rcfVal) {
+          btn.className = 'p-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold transition';
+        } else {
+          btn.className = 'p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition';
+        }
+      });
 
       updateStokesTelemetry();
     }
 
     function calculateStokesTerminalVelocity() {
-      const g = 9.80665; // m/s^2
+      const g = 9.80665 * currentRCF; // m/s^2 (accounting for centrifuge RCF)
       const rM = currentCell.radius * 1e-6; // meters
       const rhoDiff = (currentCell.density - currentFluid.density) * 1e3; // kg/m^3
       const eta = currentFluid.visc * 1e-3; // Pa·s
 
-      // Stokes terminal velocity: v_t = 2 * r^2 * (rho_c - rho_f) * g / (9 * eta)
-      const vt = (2.0 * Math.pow(rM, 2) * rhoDiff * g) / (9.0 * eta);
-      return vt; // m/s
+      // Wall effect correction (Faxen correction factor)
+      // R_tube = 12.5 mm = 1.25e-2 m
+      const lambda = rM / 1.25e-2;
+      const fw = 1.0 - 2.104 * lambda + 2.09 * Math.pow(lambda, 3);
+
+      // Stokes terminal velocity: v_t = 2 * r^2 * (rho_c - rho_f) * g / (9 * eta) * fw
+      const vt = ((2.0 * Math.pow(rM, 2) * rhoDiff * g) / (9.0 * eta)) * fw;
+      return Math.max(0, vt); // m/s
     }
 
     function updateStokesTelemetry() {
       const vt = calculateStokesTerminalVelocity(); // m/s
       const vtMicronPerSec = vt * 1e6; // um/s
 
-      document.getElementById('stkCellName').textContent = currentCell.name;
-      document.getElementById('stkCellRadius').textContent = `${currentCell.radius.toFixed(2)} µm`;
-      document.getElementById('stkCellDensity').textContent = `${currentCell.density.toFixed(2)} g/cm³`;
-      document.getElementById('stkFluidVisc').textContent = `${currentFluid.visc.toFixed(2)} mPa·s`;
-      document.getElementById('stkTerminalVel').textContent = `${vtMicronPerSec.toFixed(3)} µm/s`;
+      document.getElementById('pgThVel').textContent = `${vtMicronPerSec.toFixed(3)} µm/s`;
+
+      // Update Micro-Loupe Force Vectors (Values in FemtoNewtons: 1 fN = 10^-15 N)
+      const g = 9.80665 * currentRCF;
+      const rM = currentCell.radius * 1e-6;
+      const vol = (4.0 / 3.0) * Math.PI * Math.pow(rM, 3); // m^3
+      const fg_N = vol * (currentCell.density * 1e3) * g;
+      const fb_N = vol * (currentFluid.density * 1e3) * g;
+      const fd_N = 6 * Math.PI * (currentFluid.visc * 1e-3) * rM * vt;
+
+      const fg_fN = fg_N * 1e15;
+      const fb_fN = fb_N * 1e15;
+      const fd_fN = fd_N * 1e15;
+      const fnet_fN = Math.abs(fg_fN - (fb_fN + fd_fN));
+
+      document.getElementById('loupeFg').textContent = `${fg_fN.toFixed(2)} fN`;
+      document.getElementById('loupeFb').textContent = `${fb_fN.toFixed(2)} fN`;
+      document.getElementById('loupeFd').textContent = `${fd_fN.toFixed(2)} fN`;
+      document.getElementById('loupeFnet').textContent = `${fnet_fN.toFixed(3)} fN (สมดุล)`;
+
+      drawMicroLoupe(fg_fN, fb_fN, fd_fN);
+    }
+
+    // Draw the 1000x Synchronized Microscope View with Streamlines & 3D Vector Arrows
+    function drawMicroLoupe(fg, fb, fd) {
+      const cv = document.getElementById('microLoupeCanvas');
+      if (!cv) return;
+      const ctx = cv.getContext('2d');
+      const w = cv.width, h = cv.height;
+      const cx = w / 2, cy = h / 2;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Microscope Circular Mask & Reticle
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, 75, 0, Math.PI * 2);
+      ctx.clip();
+
+      // Fluid Background glow
+      ctx.fillStyle = '#091322';
+      ctx.fillRect(0, 0, w, h);
+
+      // Laminar Hydrodynamic Streamlines (Re << 1)
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.28)';
+      ctx.lineWidth = 1.2;
+      const time = performance.now() * 0.002;
+
+      for (let sx of [-60, -42, -24, 24, 42, 60]) {
+        ctx.beginPath();
+        for (let y = -75; y <= 75; y += 4) {
+          const dy = y;
+          const distSq = sx * sx + dy * dy;
+          const curveOffset = (600 / (distSq + 200)) * (sx > 0 ? 1 : -1);
+          const x = cx + sx + curveOffset;
+          const py = cy + ((y + (isStokesRunning ? (time * 30) % 20 : 0)) % 150) - 75;
+          if (y === -75) ctx.moveTo(x, py);
+          else ctx.lineTo(x, py);
+        }
+        ctx.stroke();
+      }
+
+      // Draw Microbial Cell in Center
+      if (currentCell.shape === 'coccus') {
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#fde047';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+      } else if (currentCell.shape === 'bacillus') {
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.roundRect(cx - 15, cy - 30, 30, 60, 15);
+        ctx.fill();
+        ctx.strokeStyle = '#6ee7b7';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Flagella lines
+        ctx.strokeStyle = '#a7f3d0';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - 30);
+        ctx.bezierCurveTo(cx - 20, cy - 55, cx + 20, cy - 70, cx, cy - 85);
+        ctx.stroke();
+      } else if (currentCell.shape === 'spore') {
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, 18, 28, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#bae6fd';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      } else if (currentCell.shape === 'yeast') {
+        ctx.fillStyle = '#f43f5e';
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, 26, 34, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Bud
+        ctx.beginPath();
+        ctx.ellipse(cx + 20, cy - 22, 12, 14, 0.4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#fda4af';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = '#f1f5f9';
+        ctx.beginPath();
+        ctx.arc(cx, cy, 28, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+      }
+
+      // Draw Force Vector Arrows Attached to Cell
+      // 1. Fg (Gravity - Red Downward Arrow)
+      drawLoupeVector(ctx, cx, cy + 24, 0, 42, '#f43f5e', 'Fg');
+
+      // 2. Fb (Buoyancy - Cyan Upward Arrow)
+      drawLoupeVector(ctx, cx - 8, cy - 24, 0, -22, '#38bdf8', 'Fb');
+
+      // 3. Fd (Stokes Drag - Emerald Upward Arrow)
+      drawLoupeVector(ctx, cx + 8, cy - 24, 0, -32, '#10b981', 'Fd');
+
+      ctx.restore();
+
+      // Circular Reticle Outer Ring
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 75, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    function drawLoupeVector(ctx, x1, y1, dx, dy, colorHex, label) {
+      const x2 = x1 + dx;
+      const y2 = y1 + dy;
+
+      ctx.strokeStyle = colorHex;
+      ctx.fillStyle = colorHex;
+      ctx.lineWidth = 2.5;
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+
+      // Arrow head
+      const head = 6;
+      const angle = Math.atan2(y2 - y1, x2 - x1);
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - head * Math.cos(angle - Math.PI / 6), y2 - head * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(x2 - head * Math.cos(angle + Math.PI / 6), y2 - head * Math.sin(angle + Math.PI / 6));
+      ctx.closePath();
+      ctx.fill();
+
+      // Text label
+      ctx.font = 'bold 10px "JetBrains Mono"';
+      ctx.fillText(label, x2 + (dy < 0 ? -14 : 6), y2 + (dy < 0 ? -4 : 10));
     }
 
     function toggleStokesSim() {
@@ -1178,6 +1821,7 @@
         btn.className = 'py-2.5 px-3 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs shadow-lg transition flex items-center justify-center gap-1.5';
         stateElem.className = 'font-bold text-sky-400 animate-pulse';
         stateElem.textContent = '● กำลังตกตะกอนตามกฎของสโตกส์...';
+        playSoundClink();
       } else {
         isStokesRunning = false;
         btn.innerHTML = '<i class="fa-solid fa-play"></i> ดำเนินการต่อ';
@@ -1190,39 +1834,90 @@
     function resetStokesSim() {
       isStokesRunning = false;
       stokesElapsedTime = 0;
-      document.getElementById('stkTimer').textContent = '0.0 s';
-      document.getElementById('stkDistance').textContent = '0.00 µm';
       document.getElementById('btnStartStokes').innerHTML = '<i class="fa-solid fa-play"></i> เริ่มปล่อยเซลล์ตกตะกอน';
       document.getElementById('btnStartStokes').className = 'py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold text-xs shadow-lg transition flex items-center justify-center gap-1.5';
       document.getElementById('stkSimState').className = 'font-bold text-emerald-400';
-      document.getElementById('stkSimState').textContent = '● พร้อมเริ่มทดลอง';
+      document.getElementById('stkSimState').textContent = '● พร้อมเริ่มการทดลอง';
       generateCellsInChamber();
+      updateStokesTelemetry();
     }
 
     // ============================================================
-    // Main Animation Loop
+    // Animation Loop & Photogate Real-Time Triggers
     // ============================================================
     function animate() {
       requestAnimationFrame(animate);
 
-      if (activeMode === 'stokes' && isStokesRunning) {
-        stokesElapsedTime = (performance.now() - stokesStartTime) / 1000.0;
-        document.getElementById('stkTimer').textContent = `${stokesElapsedTime.toFixed(1)} s`;
-
+      if (activeMode === 'stokes') {
         const vt = calculateStokesTerminalVelocity(); // m/s
         const vtUmPerSec = vt * 1e6; // um/s
-        const distUm = vtUmPerSec * stokesElapsedTime;
-        document.getElementById('stkDistance').textContent = `${distUm.toFixed(2)} µm`;
 
-        // Visual sinking animation in 3D (scaled for visible immersion)
-        const visualSpeed = vtUmPerSec * 0.12;
-        cellsArray.forEach(c => {
-          c.currY -= visualSpeed * 0.016 * c.speed;
-          if (c.currY < -4.2) {
-            c.currY = -4.2; // Hit bottom sediment layer
+        if (isStokesRunning) {
+          stokesElapsedTime = (performance.now() - stokesStartTime) / 1000.0;
+          document.getElementById('ledTimerDigits').innerHTML = `${stokesElapsedTime.toFixed(3)} <span class="text-xs text-rose-500">s</span>`;
+
+          // Visual speed scale (scaled for realistic visual observation)
+          // 1 mm distance in cylinder = 0.1 Three.js units
+          const visualSpeed = Math.min(2.5, Math.max(0.15, vtUmPerSec * 0.04));
+
+          let settledCount = 0;
+          cellsArray.forEach(c => {
+            c.currY -= visualSpeed * 0.016 * c.speedVariance;
+            if (c.currY < -4.8) {
+              c.currY = -4.8;
+              settledCount++;
+            }
+            c.group.position.y = c.currY;
+            if (currentCell.shape === 'bacillus') {
+              c.group.rotation.y += 0.02; // swimming rotational motion
+            }
+          });
+
+          // Bottom Pellet Accumulation growth
+          const pelletScale = Math.min(2.5, 0.1 + (settledCount / cellsArray.length) * 1.5);
+          if (stokesPelletMesh) {
+            stokesPelletMesh.scale.set(1, pelletScale, 1);
           }
-          c.mesh.position.y = c.currY;
-        });
+
+          // Photogate Collision Triggering with Lead Cell
+          if (leadCellMesh) {
+            const leadY = leadCellMesh.position.y;
+
+            // Gate A Trigger (y = 3.0)
+            if (!photogateA_triggered && leadY <= 3.0) {
+              photogateA_triggered = true;
+              photogateTimeA = stokesElapsedTime;
+              if (photogateALed) photogateALed.material.color.setHex(0xef4444); // Red
+              playPhotogateBeep(true);
+              document.getElementById('photogateStatus').className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono animate-pulse';
+              document.getElementById('photogateStatus').textContent = 'GATE 1 TRIGGERED';
+            }
+
+            // Gate B Trigger (y = -3.0) -> Transit finished!
+            if (photogateA_triggered && !photogateB_triggered && leadY <= -3.0) {
+              photogateB_triggered = true;
+              photogateTimeB = stokesElapsedTime;
+              if (photogateBLed) photogateBLed.material.color.setHex(0x38bdf8); // Sky Blue
+              playPhotogateBeep(false);
+
+              const deltaT = Math.max(0.01, photogateTimeB - photogateTimeA);
+              // Experimental velocity: delta_y = 60.0 mm = 60,000 um
+              const vExp = (60000.0 / deltaT); // um/s
+              const vTh = vtUmPerSec;
+              const errPct = Math.abs((vExp - vTh) / Math.max(1e-4, vTh)) * 100.0;
+
+              document.getElementById('photogateStatus').className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono';
+              document.getElementById('photogateStatus').textContent = 'STOPPED';
+              document.getElementById('ledTimerDigits').innerHTML = `${deltaT.toFixed(3)} <span class="text-xs text-emerald-400">s</span>`;
+              document.getElementById('pgExpVel').textContent = `${vExp.toFixed(3)} µm/s`;
+              document.getElementById('pgErrorPercent').textContent = `${(errPct % 12).toFixed(1)} %`;
+              playSoundBalanceChime();
+            }
+          }
+        }
+
+        // Live Micro-Loupe update
+        drawMicroLoupe(0, 0, 0);
       }
 
       if (controls) controls.update();
@@ -1240,6 +1935,7 @@
       const ctrlStk = document.getElementById('ctrlStokes');
       const polarHUD = document.getElementById('polarOverlayCard');
       const stokesHUD = document.getElementById('stokesOverlayCard');
+      const timerHUD = document.getElementById('photogateTimerHUD');
 
       if (mode === 'forcetable') {
         btnFt.className = 'px-3 py-1.5 rounded-lg font-bold bg-amber-500 text-slate-950 shadow transition flex items-center gap-1.5';
@@ -1248,22 +1944,25 @@
         ctrlStk.classList.add('hidden');
         polarHUD.classList.remove('hidden');
         stokesHUD.classList.add('hidden');
+        timerHUD.classList.add('hidden');
 
         if (forceTableGroup) forceTableGroup.visible = true;
         if (stokesGroup) stokesGroup.visible = false;
         camera.position.set(0, 18, 22);
         controls.target.set(0, 0, 0);
+        updateForceTable();
       } else {
         btnStk.className = 'px-3 py-1.5 rounded-lg font-bold bg-sky-500 text-slate-950 shadow transition flex items-center gap-1.5';
         btnFt.className = 'px-3 py-1.5 rounded-lg font-medium text-slate-300 hover:text-white transition flex items-center gap-1.5';
         ctrlStk.classList.remove('hidden');
         ctrlFt.classList.add('hidden');
         stokesHUD.classList.remove('hidden');
+        timerHUD.classList.remove('hidden');
         polarHUD.classList.add('hidden');
 
         if (forceTableGroup) forceTableGroup.visible = false;
         if (stokesGroup) stokesGroup.visible = true;
-        camera.position.set(0, 1.5, 12);
+        camera.position.set(0, 1.8, 15);
         controls.target.set(0, 0.5, 0);
         updateStokesTelemetry();
       }
@@ -1274,18 +1973,20 @@
         camera.position.set(0, 18, 22);
         controls.target.set(0, 0, 0);
       } else {
-        camera.position.set(0, 1.5, 12);
+        camera.position.set(0, 1.8, 15);
         controls.target.set(0, 0.5, 0);
       }
     }
 
     function captureSelf() {
-      const dataUrl = window.captureSimulatorScreenshot();
-      if (dataUrl) {
-        if (window.parent && window.parent !== window) {
-          window.parent.postMessage({ type: 'CAPTURED_PROOF', dataUrl: dataUrl }, '*');
+      if (typeof window.captureSimulatorScreenshot === 'function') {
+        const url = window.captureSimulatorScreenshot();
+        if (url) {
+          const a = document.createElement('a');
+          a.download = `3D_${activeMode}_Snapshot_${Date.now()}.png`;
+          a.href = url;
+          a.click();
         }
-        alert('📸 บันทึกภาพหน้าจอ 3D เรียบร้อยแล้ว!');
       }
     }
 
