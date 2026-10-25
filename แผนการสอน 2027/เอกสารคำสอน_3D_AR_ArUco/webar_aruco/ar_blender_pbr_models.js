@@ -1,13 +1,16 @@
 // ============================================================================
-// BLENDER Principled BSDF + Photorealistic PBR 12-Chapter Master Engine (v2027.5)
+// BLENDER Principled BSDF + Photorealistic PBR 12-Chapter Master Engine (v2027.6)
 // Course: 4011111 Physics for Microbiology (ArUco IDs 0 to 11)
 // Every single chapter (ID 0–11) is built to the exact same photorealistic
 // standard as the P1000 Micropipette showcase: hollow borosilicate glass with
 // rolled lips & concave meniscus, procedural knurling & brushed metal bump maps,
 // silk-screened graduations, live dynamic digital/analog instrument dials,
-// and internal X-Ray cutaway mechanisms.
+// draggable 3D apparatus, and internal X-Ray cutaway mechanisms.
 // ============================================================================
 (function () {
+  // --------------------------------------------------------------------------
+  // 1. PROCEDURAL BUMP MAPS & HIGH-RES INSTRUMENT CANVAS TEXTURE GENERATORS
+  // --------------------------------------------------------------------------
   function makeKnurlBump() {
     const c = document.createElement('canvas');
     c.width = 512; c.height = 128;
@@ -140,11 +143,13 @@
     ctx.fillStyle = '#0f172a';
     ctx.font = 'bold 22px JetBrains Mono, monospace';
     ctx.textAlign = 'center';
-    ctx.fillText((psiVal || 15) + ' psi', 128, 84);
+    const pNum = Number(psiVal || 15);
+    ctx.fillText(pNum.toFixed(0) + ' psi', 128, 84);
     ctx.fillStyle = '#059669';
     ctx.font = 'bold 20px JetBrains Mono, monospace';
-    ctx.fillText('121.0°C', 128, 182);
-    const ang = -Math.PI * 1.15 + ((psiVal || 15) / 25) * Math.PI * 1.3;
+    const tempVal = 100 + pNum * 1.4;
+    ctx.fillText(tempVal.toFixed(1) + '°C', 128, 182);
+    const ang = -Math.PI * 1.15 + (pNum / 25) * Math.PI * 1.3;
     ctx.strokeStyle = '#e11d48';
     ctx.lineWidth = 6;
     ctx.beginPath();
@@ -193,14 +198,20 @@
     ctx.lineWidth = 8;
     ctx.strokeRect(8, 8, 496, 240);
     ctx.fillStyle = accent;
-    ctx.font = 'bold 40px JetBrains Mono, monospace';
+    ctx.font = 'bold 38px JetBrains Mono, monospace';
     ctx.textAlign = 'center';
     ctx.fillText(line1, 256, 108);
     ctx.fillStyle = '#34d399';
-    ctx.font = 'bold 32px JetBrains Mono, monospace';
+    ctx.font = 'bold 30px JetBrains Mono, monospace';
     ctx.fillText(line2, 256, 184);
     return new THREE.CanvasTexture(c);
   }
+
+  window.PBR_TEX = {
+    makeP1000HandleTex,
+    makeGaugeFaceTex,
+    makeDigitalOLEDTex
+  };
 
   const knurlBump = makeKnurlBump();
   const brushedBump = makeBrushedMetalBump();
@@ -233,6 +244,9 @@
   ]);
   const objBarrelTex = makeObjectiveBarrelTex();
 
+  // --------------------------------------------------------------------------
+  // 2. BLENDER PRINCIPLED-BSDF EQUIVALENT PHOTOREALISTIC MATERIALS
+  // --------------------------------------------------------------------------
   const M = {
     borosilicate: new THREE.MeshPhysicalMaterial({
       color: 0xf0f9ff, transparent: true, opacity: 0.34,
@@ -257,6 +271,9 @@
     stainless316L: new THREE.MeshPhysicalMaterial({
       color: 0xe2e8f0, metalness: 0.94, roughness: 0.13,
       bumpMap: brushedBump, bumpScale: 0.014, clearcoat: 0.65
+    }),
+    chromeMirror: new THREE.MeshPhysicalMaterial({
+      color: 0xf8fafc, metalness: 0.98, roughness: 0.05, clearcoat: 1.0
     }),
     titaniumBrushed: new THREE.MeshPhysicalMaterial({
       color: 0x64748b, metalness: 0.88, roughness: 0.22,
@@ -349,10 +366,16 @@
       meniscus.position.y = -height * 0.5 + liqHeight;
       g.add(lCyl, lBot, meniscus);
       g.userData.liqMesh = lCyl;
+      g.userData.meniscusMesh = meniscus;
+      g.userData.tubeHeight = height;
+      g.userData.baseLiqHeight = liqHeight;
     }
     return g;
   }
 
+  // --------------------------------------------------------------------------
+  // 3. MASTER PHOTOREALISTIC 12-CHAPTER BUILDER (IDs 0 to 11)
+  // --------------------------------------------------------------------------
   window.buildModelForChapter = function (id) {
     while (modelGroup.children.length > 0) {
       modelGroup.remove(modelGroup.children[0]);
@@ -362,9 +385,17 @@
     }
     modelGroup.add(labelsGroup);
     labelsGroup.visible = showLabels;
-    dynamicObjects = {};
+    dynamicObjects = { draggableItems: [] };
     explodingParts = [];
     modelGroup.add(createArUcoPedestal(id));
+
+    function registerDraggable(obj, title, role) {
+      obj.userData.draggableGroup = true;
+      obj.userData.equipTitle = title;
+      obj.userData.equipRole = role;
+      obj.userData.homePos = obj.position.clone();
+      dynamicObjects.draggableItems.push(obj);
+    }
 
     if (id === 0) {
       const pipGroup = new THREE.Group();
@@ -377,6 +408,9 @@
       const grip = new THREE.Mesh(new THREE.CylinderGeometry(0.185, 0.16, 1.32, 48), matHandle);
       grip.position.y = 0.15;
       pipGroup.add(grip);
+      dynamicObjects.p1000Grip = grip;
+      dynamicObjects.pipGroup = pipGroup;
+      registerDraggable(pipGroup, "ไมโครปิเปต P1000 (หยิบไปจ่อหลอดทดลองได้)", "pipette");
 
       const winLens = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.42, 0.16), M.borosilicate);
       winLens.position.set(0.175, 0.12, 0);
@@ -437,6 +471,7 @@
       tipGroup.add(tipCone, tipScale, liqInTip, tipMeniscus);
       pipGroup.add(tipGroup);
       dynamicObjects.liqInTip = liqInTip;
+      dynamicObjects.tipMeniscus = tipMeniscus;
       registerExplode(tipGroup, 0, -0.55, 0);
       modelGroup.add(pipGroup);
 
@@ -450,6 +485,7 @@
       postR.position.set(1.68, -0.92, -0.28);
       modelGroup.add(rackBase, rackTop, postL, postR);
 
+      dynamicObjects.dilutionTubes = [];
       for (let i = 0; i < 6; i++) {
         const tx = -0.38 + i * 0.37;
         const hue = 0.46 - i * 0.045;
@@ -460,7 +496,10 @@
         });
         const bTube = buildBorosilicateTestTube(0.115, 1.22, 0.76, liqMat, tubeGradTex);
         bTube.position.set(tx, -0.72, 0);
+        bTube.userData.tubeIndex = i;
         modelGroup.add(bTube);
+        dynamicObjects.dilutionTubes.push(bTube);
+        registerDraggable(bTube, `หลอดทดลองเจือจาง 10⁻${i + 1}`, "tube");
 
         const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.128, 0.128, 0.14, 32), i === 4 ? M.magentaGlow : M.knurledDial);
         cap.position.set(tx, -0.04, 0);
@@ -472,7 +511,6 @@
 
     } else if (id === 1) {
       const bacGroup = new THREE.Group();
-
       const outerRod = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 1.32, 48), M.bioCapsuleOuter);
       outerRod.rotation.z = Math.PI / 2;
       const outerCapL = new THREE.Mesh(new THREE.SphereGeometry(0.45, 36, 24), M.bioCapsuleOuter);
@@ -529,6 +567,7 @@
       dynamicObjects.flagGroup = flagGroup;
       dynamicObjects.bacGroup = bacGroup;
       modelGroup.add(bacGroup);
+      registerDraggable(bacGroup, "เซลล์แบคทีเรีย E. coli & มอเตอร์แฟลกเจลลา", "bacterium");
 
       const vArrow = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(1.02, 0, 0), 0.85, 0x00f0ff, 0.22, 0.14);
       bacGroup.add(vArrow);
@@ -550,11 +589,14 @@
       hexBase.position.y = -1.22;
       cylGroup.add(hexBase);
       modelGroup.add(cylGroup);
+      dynamicObjects.cylGroup = cylGroup;
+      registerDraggable(cylGroup, "กระบอกตวงแก้วบอโรซิลิเกต 100 mL", "cylinder");
 
       const cellSphere = new THREE.Mesh(new THREE.SphereGeometry(0.24, 36, 36), M.bioCytoplasm);
       cellSphere.position.set(-0.78, 0.12, 0);
       modelGroup.add(cellSphere);
       dynamicObjects.stokesCell = cellSphere;
+      registerDraggable(cellSphere, "อนุภาคเซลล์ทดลองกฎของสโตกส์", "stokes_cell");
 
       const arrowDown = new THREE.ArrowHelper(new THREE.Vector3(0, -1, 0), new THREE.Vector3(-0.78, -0.14, 0), 0.75, 0xf43f5e, 0.2, 0.14);
       const arrowUp = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(-0.78, 0.36, 0), 0.75, 0x00f0ff, 0.2, 0.14);
@@ -575,6 +617,7 @@
       const glassSash = new THREE.Mesh(new THREE.BoxGeometry(1.36, 1.18, 0.04), M.borosilicate);
       glassSash.position.set(0, 0.12, 0.56);
       registerExplode(glassSash, 0, 0, 0.65);
+      registerDraggable(glassSash, "บานกระจกนิรภัยตู้ปลอดเชื้อ (เลื่อนขึ้น-ลง)", "sash");
 
       const hepaFilter = new THREE.Mesh(new THREE.BoxGeometry(1.28, 0.20, 0.96), M.knurledDial);
       hepaFilter.position.y = 0.66;
@@ -585,6 +628,7 @@
         new THREE.MeshBasicMaterial({ map: makeDigitalOLEDTex('HEPA FLOW: 0.45 m/s', 'BIOSAFETY CLASS II A2') })
       );
       bscOLED.position.set(0, 0.92, 0.60);
+      dynamicObjects.bscOLED = bscOLED;
       bscGroup.add(rearWall, roof, workTray, sideL, sideR, glassSash, hepaFilter, bscOLED);
       modelGroup.add(bscGroup);
 
@@ -611,6 +655,7 @@
         new THREE.MeshBasicMaterial({ map: makeDigitalOLEDTex('10,000 RPM | 9,490 ×g', 'ROTOR BALANCED [6/6]') })
       );
       centOLED.position.set(0, -1.02, 1.65);
+      dynamicObjects.centOLED = centOLED;
       modelGroup.add(bowlOuter, bowlInner, rimRing, centOLED);
 
       const rotorGroup = new THREE.Group();
@@ -644,14 +689,17 @@
         supernatant.position.y = -0.05;
         const pellet = new THREE.Mesh(new THREE.SphereGeometry(0.068, 24, 24), M.goldPeltier);
         pellet.position.y = -0.38;
+        tubeGroup.userData.pelletMesh = pellet;
 
         tubeGroup.add(eppWall, eppScale, snapCap, supernatant, pellet);
         tHolder.add(tubeGroup);
         rotorGroup.add(tHolder);
         dynamicObjects.rotorTubes.push(tubeGroup);
+        registerDraggable(tubeGroup, `หลอด Eppendorf #${i + 1} (ดึงเข้า-ออกโรเตอร์)`, "eppendorf");
       }
       modelGroup.add(rotorGroup);
       dynamicObjects.rotorGroup = rotorGroup;
+      registerDraggable(rotorGroup, "หัวโรเตอร์อะลูมิเนียม 30° Fixed-Angle", "rotor");
       add3DLabel("โรเตอร์อะลูมิเนียมอโนไดซ์ 30° (สมดุล 6 หลอด)", 0, 0.78, 0, "#00f0ff");
       add3DLabel("หลอด Eppendorf 1.5 mL & เม็ดตะกอน Pellet", 1.25, -0.32, 0, "#fbbf24");
 
@@ -675,6 +723,7 @@
         new THREE.MeshBasicMaterial({ map: makeDigitalOLEDTex('PCR: 95°C / 55°C / 72°C', 'PELTIER RAMP: 4.5°C/s', '#fbbf24') })
       );
       pcrOLED.position.set(0, -0.92, 0.81);
+      dynamicObjects.pcrOLED = pcrOLED;
       modelGroup.add(pcrOLED);
 
       dynamicObjects.pcrTubes = [];
@@ -687,6 +736,7 @@
           pTube.add(pDome);
           modelGroup.add(pTube);
           dynamicObjects.pcrTubes.push(pTube);
+          registerDraggable(pTube, `หลอดปฏิกิริยา PCR Tube (${r + 1},${c + 1})`, "pcr_tube");
         }
       }
 
@@ -712,6 +762,7 @@
       modelGroup.add(dnaGroup);
       dynamicObjects.dnaGroup = dnaGroup;
       registerExplode(dnaGroup, 0, 0.48, 0);
+      registerDraggable(dnaGroup, "เกลียวคู่ DNA แม่แบบ (PCR Template)", "dna");
       add3DLabel("เกลียวคู่ DNA เพิ่มจำนวน 2ⁿ เท่า", 0, 1.58, 0, "#f43f5e");
       add3DLabel("บล็อกทองคำ Peltier & ท่อความร้อนทองแดง", 0, -0.52, 0.92, "#fbbf24");
 
@@ -748,9 +799,12 @@
         new THREE.MeshBasicMaterial({ map: makeGaugeFaceTex(params.psi || 15) })
       );
       gaugeFace.position.set(0.65, 0.30, 0.42);
+      dynamicObjects.gaugeFace = gaugeFace;
+      dynamicObjects.lidGroup = lidGroup;
       lidGroup.add(gaugeBezel, gaugeFace);
       modelGroup.add(lidGroup);
       registerExplode(lidGroup, 0, 0.68, 0);
+      registerDraggable(lidGroup, "ฝาหม้อนึ่งความดันไอ & เกจวัดความดัน (ยกเปิด-ปิดได้)", "autoclave_lid");
 
       const flaskGroup = new THREE.Group();
       flaskGroup.position.y = -0.82;
@@ -767,6 +821,8 @@
       agarBroth.position.y = -0.18;
       flaskGroup.add(flaskCone, flaskScale, flaskNeck, foilPlug, agarBroth);
       modelGroup.add(flaskGroup);
+      dynamicObjects.flaskGroup = flaskGroup;
+      registerDraggable(flaskGroup, "ขวดแก้วชมพู่ 500 mL บรรจุอาหารเลี้ยงเชื้อ", "flask");
 
       dynamicObjects.steamParticles = [];
       for (let i = 0; i < 32; i++) {
@@ -797,6 +853,17 @@
         }
       }
 
+      const dropperGroup = new THREE.Group();
+      dropperGroup.position.set(0, 0.92, 0);
+      const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.22, 24, 24), M.magentaGlow);
+      bulb.scale.set(0.85, 1.35, 0.85);
+      bulb.position.y = 0.35;
+      const glassPip = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.03, 0.65, 28, 1, true), M.borosilicate);
+      dropperGroup.add(bulb, glassPip);
+      modelGroup.add(dropperGroup);
+      dynamicObjects.dropperGroup = dropperGroup;
+      registerDraggable(dropperGroup, "หลอดหยดสีย้อม Crystal Violet / Safranin", "dropper");
+
       dynamicObjects.dyeIons = [];
       for (let i = 0; i < 18; i++) {
         const ion = new THREE.Mesh(new THREE.SphereGeometry(0.13, 28, 28), M.cyanGlow);
@@ -816,6 +883,7 @@
       gelSlab.position.y = -0.82;
       modelGroup.add(gelSlab);
       registerExplode(gelSlab, 0, 0.48, 0);
+      registerDraggable(gelSlab, "แผ่นเจลอะกาโรส (Agarose Gel Slab)", "gel_slab");
 
       const cathode = new THREE.Mesh(new THREE.CylinderGeometry(0.068, 0.068, 1.58, 24), M.knurledDial);
       cathode.rotation.x = Math.PI / 2;
@@ -832,6 +900,7 @@
         new THREE.MeshBasicMaterial({ map: makeDigitalOLEDTex('100 V  |  65 mA', 'RUN TO RED (+ ANODE)', '#f43f5e') })
       );
       psuOLED.position.set(0, -0.22, -0.53);
+      dynamicObjects.psuOLED = psuOLED;
       modelGroup.add(psuBox, psuOLED);
 
       dynamicObjects.dnaBands = [];
@@ -858,6 +927,7 @@
         new THREE.MeshBasicMaterial({ map: makeDigitalOLEDTex('REFRACTOMETER: 18.0 °Brix', 'n₂ = 1.3600 | EtOH ~6.2%', '#10b981') })
       );
       brixOLED.position.set(0, -0.82, 0.64);
+      dynamicObjects.brixOLED = brixOLED;
       modelGroup.add(stageBase, prism, wortLayer, brixOLED);
 
       const normalLine = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 2.25, 14), M.stainless316L);
@@ -873,6 +943,7 @@
       modelGroup.add(incidentRay, refractedRay);
       dynamicObjects.incidentRay = incidentRay;
       dynamicObjects.refractedRay = refractedRay;
+      registerDraggable(incidentRay, "ลำแสงเลเซอร์วัดดัชนีหักเห (ปรับมุมตกกระทบ)", "laser_ray");
 
       add3DLabel("ลำแสงเลเซอร์ตกกระทบ (θ₁)", -0.85, 1.08, 0, "#f43f5e");
       add3DLabel("ปริซึมแก้วฟลินต์ & น้ำหมักยีสต์ (°Brix)", 0.75, -0.32, 0, "#10b981");
@@ -891,6 +962,7 @@
       oilDrop.position.y = -0.64;
       modelGroup.add(oilDrop);
       dynamicObjects.oilDrop = oilDrop;
+      registerDraggable(oilDrop, "หยดน้ำมันซีดาร์วูด (Cedarwood Immersion Oil)", "oil_drop");
 
       const objGroup = new THREE.Group();
       objGroup.position.y = 0.25;
@@ -904,7 +976,9 @@
       frontLens.position.y = -0.66;
       objGroup.add(engravedBarrel, knurlGrip, frontLens);
       modelGroup.add(objGroup);
+      dynamicObjects.objGroup = objGroup;
       registerExplode(objGroup, 0, 0.58, 0);
+      registerDraggable(objGroup, "หัวเลนส์ใกล้วัตถุ Plan N 100x / 1.25 Oil (เลื่อนโฟกัสได้)", "objective_lens");
 
       const lightCone = new THREE.Mesh(new THREE.ConeGeometry(0.70, 1.18, 40, 1, true), new THREE.MeshBasicMaterial({
         color: 0x00f0ff, transparent: true, opacity: 0.44, side: THREE.DoubleSide
@@ -917,12 +991,12 @@
       add3DLabel("หยดน้ำมันซีดาร์วูด (n=1.515) & Coverslip", 0.95, -0.55, 0, "#fbbf24");
 
     } else if (id === 10) {
+      const uvHoodGroup = new THREE.Group();
       const hood = new THREE.Mesh(new THREE.CylinderGeometry(0.30, 0.44, 2.42, 36, 1, false, 0, Math.PI), M.stainless316L);
       hood.rotation.z = Math.PI / 2;
       hood.rotation.x = -Math.PI / 2;
       hood.position.y = 0.96;
-      modelGroup.add(hood);
-      registerExplode(hood, 0, 0.48, 0);
+      uvHoodGroup.add(hood);
 
       const uvTube = new THREE.Mesh(new THREE.CylinderGeometry(0.125, 0.125, 2.22, 36), M.violetUV);
       uvTube.rotation.z = Math.PI / 2;
@@ -932,7 +1006,11 @@
       capL.position.set(-1.14, 0.85, 0);
       const capR = capL.clone();
       capR.position.set(1.14, 0.85, 0);
-      modelGroup.add(uvTube, capL, capR);
+      uvHoodGroup.add(uvTube, capL, capR);
+      modelGroup.add(uvHoodGroup);
+      dynamicObjects.uvHoodGroup = uvHoodGroup;
+      registerExplode(uvHoodGroup, 0, 0.48, 0);
+      registerDraggable(uvHoodGroup, "โคมหลอดควอตซ์รังสี UV-C 254 nm (เลื่อนปรับระยะห่าง r)", "uv_lamp");
 
       const uvCone = new THREE.Mesh(new THREE.ConeGeometry(1.50, 2.02, 40, 1, true), new THREE.MeshBasicMaterial({
         color: 0xa855f7, transparent: true, opacity: 0.26, side: THREE.DoubleSide
@@ -948,6 +1026,7 @@
       petriLid.position.y = -0.96;
       modelGroup.add(petriBase, agarDisk, petriLid);
       registerExplode(petriLid, 0, 0.42, 0);
+      registerDraggable(petriLid, "ฝาครอบจานเพาะเชื้อแก้วบอโรซิลิเกต", "petri_lid");
 
       dynamicObjects.colonies = [];
       for (let i = 0; i < 20; i++) {
@@ -979,14 +1058,14 @@
         new THREE.MeshBasicMaterial({ map: tubeGradTex, transparent: true, depthWrite: false })
       );
       cuvGrad.position.z = 0.295;
-      cuvetteGroup.add(cuvWall, cuvGrad);
-      modelGroup.add(cuvetteGroup);
-      registerExplode(cuvetteGroup, 0, 0.58, 0);
-
       const cultureLiq = new THREE.Mesh(new THREE.BoxGeometry(0.49, 1.08, 0.49), M.agarAmber.clone());
-      cultureLiq.position.set(0, -0.52, 0);
-      modelGroup.add(cultureLiq);
+      cultureLiq.position.set(0, -0.10, 0);
+      cuvetteGroup.add(cuvWall, cuvGrad, cultureLiq);
+      modelGroup.add(cuvetteGroup);
+      dynamicObjects.cuvetteGroup = cuvetteGroup;
       dynamicObjects.cultureLiq = cultureLiq;
+      registerExplode(cuvetteGroup, 0, 0.58, 0);
+      registerDraggable(cuvetteGroup, "หลอด Quartz Cuvette 10 mm (ยกเข้า-ออกช่องวัดแสง OD600)", "cuvette");
 
       const beamIn = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.065, 1.15, 24), M.goldPeltier);
       beamIn.rotation.z = Math.PI / 2;
@@ -1006,6 +1085,7 @@
         new THREE.MeshBasicMaterial({ map: makeDigitalOLEDTex('λ = 600.0 nm | OD600 = 0.60', 'BEER-LAMBERT: %T = 25.1%', '#fbbf24') })
       );
       odOLED.position.set(0, -1.18, 0.65);
+      dynamicObjects.odOLED = odOLED;
       modelGroup.add(detector, odOLED);
 
       add3DLabel("หลอด Quartz Cuvette 10 mm & ลำแสง 600 nm", -0.35, 0.58, 0, "#fbbf24");
