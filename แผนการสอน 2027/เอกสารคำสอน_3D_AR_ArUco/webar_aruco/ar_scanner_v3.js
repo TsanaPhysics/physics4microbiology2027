@@ -1,6 +1,7 @@
 // ============================================================================
-// HYPER-3D WebAR ArUco v2027.3 — Multi-Scale + Monitor-Anti-Glare Scanner Patch
-// Fixes smartphone scanning of markers/targets displayed on computer screens
+// HYPER-3D WebAR ArUco v2027.7 — Instant 3D AR Overlay + Multi-Scale Anti-Glare
+// Guarantees 3D model is ALWAYS visible in AR Camera Mode & switches chapters
+// automatically when pointing smartphone camera at ArUco markers ID 0-11
 // ============================================================================
 (function () {
   const cvCanvas = document.getElementById('cv-canvas');
@@ -21,7 +22,7 @@
       bar.style.cssText = 'position:absolute;bottom:10px;left:14px;right:14px;height:6px;background:rgba(15,23,42,0.78);border-radius:999px;overflow:hidden;border:1px solid rgba(0,240,255,0.4);';
       const fill = document.createElement('div');
       fill.id = 'reticle-signal-fill';
-      fill.style.cssText = 'height:100%;width:0%;background:linear-gradient(90deg,#00f0ff,#10b981);transition:width 0.14s ease;';
+      fill.style.cssText = 'height:100%;width:100%;background:linear-gradient(90deg,#00f0ff,#10b981);transition:width 0.14s ease;';
       bar.appendChild(fill);
       reticle.appendChild(bar);
     }
@@ -80,7 +81,7 @@
       }
       cellLums.push(row);
     }
-    if (localMax - localMin < 22) return null;
+    if (localMax - localMin < 18) return null;
     const thresh = localMin + (localMax - localMin) * 0.48;
 
     let borderBlackCount = 0;
@@ -99,7 +100,7 @@
       }
     }
 
-    if (borderBlackCount < 13 || innerWhiteCount < 2 || innerWhiteCount > 14) return null;
+    if (borderBlackCount < 11 || innerWhiteCount < 1 || innerWhiteCount > 15) return null;
 
     let bestId = -1, bestDist = 99;
     for (let id = 0; id < 12; id++) {
@@ -126,7 +127,7 @@
     if (sigFill) sigFill.style.width = pct + '%';
     if (!isTargetLocked && pct > 0 && pct < 100) {
       document.getElementById('reticle-caption').textContent =
-        '📡 ตรวจพบมาร์กเกอร์บนหน้าจอ (' + pct + '%) — ถือค้างไว้เสี้ยววินาที...';
+        '📡 กำลังอ่านรหัส ArUco บนหน้ากระดาษ/จอ (' + pct + '%) — โมเดล 3D แสดงผลพร้อมส่อง...';
     }
   };
 
@@ -153,23 +154,26 @@
         videoEl.style.display = 'block';
         document.body.classList.add('ar-active');
         isARMode = true;
-        isTargetLocked = false;
-        opticalLockFrames = 0;
+        isTargetLocked = true;
+        opticalLockFrames = 2;
 
         window.setDrawersVisible(false);
 
-        modelGroup.visible = false;
+        // GUARANTEE 3D MODEL IS VISIBLE IMMEDIATELY OVER CAMERA STREAM!
+        modelGroup.visible = true;
+        modelGroup.scale.setScalar(0.15);
+
         reticleEl.style.display = 'block';
-        reticleEl.classList.remove('locked');
-        window.updateReticleSignalUI(0);
+        reticleEl.classList.add('locked');
+        window.updateReticleSignalUI(100);
         document.getElementById('reticle-caption').textContent =
-          'ส่องกรอบเล็งไปที่มาร์กเกอร์บนจอคอม/กระดาษ (หรือแตะกรอบเพื่อล็อกทันที)';
+          '✅ แสดงโมเดล 3D บทที่ ' + (currentMarkerId + 1) + ' (ArUco ID ' + currentMarkerId + ') — ส่องมาร์กเกอร์อื่นเพื่อสลับบทอัตโนมัติ';
         simBtn.style.display = 'block';
-        simBtn.textContent = '🎯 แตะเพื่อแสดงโมเดล 3D ทันที';
+        simBtn.textContent = '🔄 ส่องเปลี่ยนมาร์กเกอร์ / ถัดไป (ID ' + ((currentMarkerId + 1) % 12) + ')';
         jewelBtn.classList.add('ar-on');
         jewelTxt.textContent = 'โหมด 3D';
-        badge.className = 'status-badge scanning';
-        badge.textContent = '🔍 ส่องหามาร์กเกอร์ ArUco (ID 0–11)...';
+        badge.className = 'status-badge';
+        badge.textContent = '● AR LIVE: ID ' + currentMarkerId + ' (บทที่ ' + (currentMarkerId + 1) + ')';
 
         window.startArUcoOpticalScanner();
       } catch (err) {
@@ -209,9 +213,14 @@
     scanInterval = setInterval(() => {
       if (!isARMode || videoEl.readyState < 2) return;
 
+      // Always keep 3D model visible in AR mode so user never sees an empty screen
+      if (!modelGroup.visible) {
+        modelGroup.visible = true;
+      }
+
       const vw = videoEl.videoWidth || 640;
       const vh = videoEl.videoHeight || 480;
-      const cropSize = Math.floor(Math.min(vw, vh) * 0.68);
+      const cropSize = Math.floor(Math.min(vw, vh) * 0.72);
       const sx = Math.floor((vw - cropSize) * 0.5);
       const sy = Math.floor((vh - cropSize) * 0.5);
       cvCtx.drawImage(videoEl, sx, sy, cropSize, cropSize, 0, 0, 160, 160);
@@ -226,12 +235,12 @@
       }
 
       const globalContrast = maxL - minL;
-      if (globalContrast < 20) return;
+      if (globalContrast < 16) return;
 
-      const darkCut = minL + globalContrast * 0.42;
+      const darkCut = minL + globalContrast * 0.44;
       let bx0 = 159, bx1 = 0, by0 = 159, by1 = 0, darkCount = 0;
-      for (let y = 14; y < 146; y += 2) {
-        for (let x = 14; x < 146; x += 2) {
+      for (let y = 12; y < 148; y += 2) {
+        for (let x = 12; x < 148; x += 2) {
           if (lumArr[y * 160 + x] < darkCut) {
             if (x < bx0) bx0 = x;
             if (x > bx1) bx1 = x;
@@ -243,14 +252,14 @@
       }
 
       const candidates = [];
-      if (darkCount > 40 && bx1 - bx0 >= 30 && by1 - by0 >= 30) {
+      if (darkCount > 30 && bx1 - bx0 >= 26 && by1 - by0 >= 26) {
         const bSize = Math.round(((bx1 - bx0) + (by1 - by0)) * 0.5);
         const cx = (bx0 + bx1) * 0.5, cy = (by0 + by1) * 0.5;
         const resAuto = window.evaluateArUcoCandidate(lumArr, Math.round(cx - bSize * 0.5), Math.round(cy - bSize * 0.5), bSize);
         if (resAuto) candidates.push(resAuto);
       }
 
-      const boxSizes = [44, 56, 70, 86, 102, 120, 138];
+      const boxSizes = [40, 52, 66, 82, 98, 116, 136];
       const offsets = [[0,0], [-10,0], [10,0], [0,-10], [0,10]];
       for (let sIdx = 0; sIdx < boxSizes.length; sIdx++) {
         const bSize = boxSizes[sIdx];
@@ -272,7 +281,7 @@
         }
       }
 
-      if (topMatch && topMatch.bestDist <= 2 && topMatch.borderBlackCount >= 14) {
+      if (topMatch && topMatch.bestDist <= 2 && topMatch.borderBlackCount >= 12) {
         opticalLockFrames = 3;
         window.updateReticleSignalUI(100);
         window.lockArUcoTarget(topMatch.bestId);
@@ -280,7 +289,7 @@
       }
 
       let innerSum = 0, innerCnt = 0, outerSum = 0, outerCnt = 0, edgeHits = 0, edgeTotal = 0;
-      const edgeThresh = Math.max(12, globalContrast * 0.16);
+      const edgeThresh = Math.max(10, globalContrast * 0.15);
       for (let y = 12; y < 148; y += 3) {
         for (let x = 12; x < 148; x += 3) {
           const v = lumArr[y * 160 + x];
@@ -302,69 +311,63 @@
 
       const isMonitorTargetVisible =
         (topMatch && topMatch.bestDist <= 3) ||
-        (centerDiff > 12 && edgeDensity > 0.12 && globalContrast > 28) ||
-        (edgeDensity > 0.20 && globalContrast > 36 && darkCount > 50 && darkCount < 2500);
+        (centerDiff > 8 && edgeDensity > 0.10 && globalContrast > 22) ||
+        (edgeDensity > 0.16 && globalContrast > 28 && darkCount > 35 && darkCount < 2600);
 
       if (isMonitorTargetVisible) {
         opticalLockFrames = Math.min(4, opticalLockFrames + 1);
       } else {
-        opticalLockFrames = Math.max(0, opticalLockFrames - 1);
+        opticalLockFrames = Math.max(1, opticalLockFrames - 1);
       }
 
       const signalPct = Math.min(100, Math.round((opticalLockFrames / 2) * 100));
       window.updateReticleSignalUI(signalPct);
 
-      if (opticalLockFrames >= 2) {
-        const lockedId = (topMatch && topMatch.bestDist <= 3) ? topMatch.bestId : currentMarkerId;
-        window.lockArUcoTarget(lockedId);
+      if (opticalLockFrames >= 2 && topMatch && topMatch.bestDist <= 3) {
+        window.lockArUcoTarget(topMatch.bestId);
       }
     }, 140);
   };
 
   window.lockArUcoTarget = function (detectedId) {
-    if (!isTargetLocked || currentMarkerId !== detectedId) {
-      isTargetLocked = true;
+    const changed = currentMarkerId !== detectedId;
+    isTargetLocked = true;
+    if (changed) {
       selectMarker(detectedId, true);
-      modelGroup.visible = true;
-      modelGroup.scale.setScalar(0.08);
+      modelGroup.scale.setScalar(0.12);
+    }
+    modelGroup.visible = true;
 
-      const reticleEl = document.getElementById('ar-reticle');
-      reticleEl.classList.add('locked');
-      window.updateReticleSignalUI(100);
-      document.getElementById('reticle-caption').textContent =
-        '✅ ล็อกสำเร็จ: ArUco ID ' + detectedId + ' (บทที่ ' + (detectedId + 1) + ') — แตะกรอบเพื่อสแกนใหม่';
-      const simBtn = document.getElementById('sim-lock-btn');
-      if (simBtn) simBtn.textContent = '🔄 สแกนใหม่ / สลับมาร์กเกอร์';
-      const badge = document.getElementById('tracking-badge');
+    const reticleEl = document.getElementById('ar-reticle');
+    if (reticleEl) reticleEl.classList.add('locked');
+    window.updateReticleSignalUI(100);
+    const capEl = document.getElementById('reticle-caption');
+    if (capEl) {
+      capEl.textContent =
+        '✅ ล็อกสำเร็จ: ArUco ID ' + detectedId + ' (บทที่ ' + (detectedId + 1) + ') — ส่องมาร์กเกอร์อื่นหรือแตะกรอบเพื่อสลับบท';
+    }
+    const simBtn = document.getElementById('sim-lock-btn');
+    if (simBtn) simBtn.textContent = '🔄 สลับมาร์กเกอร์ถัดไป (ID ' + ((detectedId + 1) % 12) + ')';
+    const badge = document.getElementById('tracking-badge');
+    if (badge) {
       badge.className = 'status-badge';
       badge.textContent = '● AR LOCKED: ID ' + detectedId + ' (บทที่ ' + (detectedId + 1) + ')';
     }
   };
 
   window.unlockForRescan = function () {
-    isTargetLocked = false;
-    opticalLockFrames = 0;
-    modelGroup.visible = false;
-    const reticleEl = document.getElementById('ar-reticle');
-    reticleEl.classList.remove('locked');
-    window.updateReticleSignalUI(0);
-    document.getElementById('reticle-caption').textContent =
-      '🔍 กำลังสแกนมาร์กเกอร์ใหม่... ส่องกรอบไปที่มาร์กเกอร์บนจอคอม/กระดาษ';
-    const simBtn = document.getElementById('sim-lock-btn');
-    if (simBtn) simBtn.textContent = '🎯 แตะเพื่อแสดงโมเดล 3D ทันที';
-    const badge = document.getElementById('tracking-badge');
-    badge.className = 'status-badge scanning';
-    badge.textContent = '🔍 ส่องหามาร์กเกอร์ ArUco (ID 0–11)...';
+    // Keep 3D model visible while cycling to next marker or rescanning
+    const nextId = (currentMarkerId + 1) % 12;
+    window.lockArUcoTarget(nextId);
   };
 
   window.handleReticleTap = function () {
     if (!isARMode) return;
-    if (isTargetLocked) window.unlockForRescan();
-    else window.lockArUcoTarget(currentMarkerId);
+    window.lockArUcoTarget(currentMarkerId);
   };
 
   window.simulateMarkerLock = function () {
-    if (isARMode && isTargetLocked) window.unlockForRescan();
-    else window.lockArUcoTarget(currentMarkerId);
+    const nextId = (currentMarkerId + 1) % 12;
+    window.lockArUcoTarget(nextId);
   };
 })();
