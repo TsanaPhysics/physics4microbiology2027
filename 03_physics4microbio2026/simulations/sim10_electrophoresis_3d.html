@@ -55,7 +55,6 @@
     .led-glow-amber { text-shadow: 0 0 10px rgba(245, 158, 11, 0.7), 0 0 20px rgba(245, 158, 11, 0.4); }
     .led-glow-emerald { text-shadow: 0 0 10px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4); }
     .led-glow-purple { text-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 25px rgba(168, 85, 247, 0.5); }
-    .led-glow-uv { text-shadow: 0 0 12px rgba(192, 132, 252, 0.9), 0 0 30px rgba(147, 51, 234, 0.6); }
   </style>
 </head>
 <body class="h-screen w-screen flex flex-col select-none overflow-hidden bg-slate-950">
@@ -64,7 +63,7 @@
   <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden relative">
 
     <!-- 3D Canvas Area (Interactive WebGL Viewport) -->
-    <div id="canvasContainer" class="lg:col-span-8 h-full w-full relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden flex items-center justify-center">
+    <div id="canvasContainer" class="lg:col-span-8 h-full w-full relative bg-slate-950 overflow-hidden flex items-center justify-center">
       <canvas id="threeCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
 
       <!-- Top Overlay: Status Badges -->
@@ -104,14 +103,14 @@
           <!-- Voltage and Electric Field -->
           <div class="grid grid-cols-2 gap-2">
             <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
-              <div class="text-[10px] text-slate-400 font-mono">Voltage ($V$)</div>
+              <div class="text-[10px] text-slate-400 font-mono">Voltage (<em>V</em>)</div>
               <div class="text-base font-digital font-bold text-blue-400 led-glow-blue flex items-baseline justify-between">
                 <span id="hudVoltage">100.0</span>
                 <span class="text-[10px] font-mono text-slate-400 font-normal">V</span>
               </div>
             </div>
             <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
-              <div class="text-[10px] text-slate-400 font-mono">E-Field ($E = V/L$)</div>
+              <div class="text-[10px] text-slate-400 font-mono">E-Field (<em>E = V/L</em>)</div>
               <div class="text-base font-digital font-bold text-emerald-400 led-glow-emerald flex items-baseline justify-between">
                 <span id="hudEField">5.00</span>
                 <span class="text-[10px] font-mono text-slate-400 font-normal">V/cm</span>
@@ -122,14 +121,14 @@
           <!-- Current and Joule Heating Power -->
           <div class="grid grid-cols-2 gap-2">
             <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
-              <div class="text-[10px] text-slate-400 font-mono">Current ($I$)</div>
+              <div class="text-[10px] text-slate-400 font-mono">Current (<em>I</em>)</div>
               <div class="text-sm font-digital font-bold text-amber-400 led-glow-amber flex items-baseline justify-between">
                 <span id="hudCurrent">48.2</span>
                 <span class="text-[10px] font-mono text-slate-400 font-normal">mA</span>
               </div>
             </div>
             <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
-              <div class="text-[10px] text-slate-400 font-mono">Joule Heat ($P$)</div>
+              <div class="text-[10px] text-slate-400 font-mono">Joule Heat (<em>P</em>)</div>
               <div class="text-sm font-digital font-bold text-red-400 flex items-baseline justify-between">
                 <span id="hudPower">4.82</span>
                 <span class="text-[10px] font-mono text-slate-400 font-normal">W</span>
@@ -140,7 +139,7 @@
           <!-- Buffer Temp & Migration Timer -->
           <div class="grid grid-cols-2 gap-2">
             <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
-              <div class="text-[10px] text-slate-400 font-mono">Buffer Temp ($T$)</div>
+              <div class="text-[10px] text-slate-400 font-mono">Buffer Temp (<em>T</em>)</div>
               <div class="text-xs font-mono font-bold text-slate-300 flex items-baseline justify-between">
                 <span id="hudTemp">25.4</span>
                 <span class="text-[10px] text-slate-500 font-normal">°C</span>
@@ -158,7 +157,7 @@
           <!-- Progress Bar of Tracking Dye (Bromophenol Blue) -->
           <div class="space-y-1 pt-1">
             <div class="flex justify-between text-[10px] font-mono text-slate-400">
-              <span>BPB Dye Front ($R_f = 1.0$)</span>
+              <span>BPB Dye Front (<em>R</em><sub>f</sub> = 1.0)</span>
               <span id="hudDyeDistance" class="text-blue-300 font-bold">0.0 mm</span>
             </div>
             <div class="w-full h-1.5 bg-slate-950 rounded-full overflow-hidden border border-white/5">
@@ -210,7 +209,7 @@
 
           <div class="flex justify-between items-center text-[10px] font-mono text-slate-400 px-1">
             <span id="loupeStatusText" class="text-blue-400 font-semibold">1 kb Ladder &bull; Lane 1</span>
-            <span id="loupeRfText" class="text-slate-500">$R_f = 0.42$</span>
+            <span id="loupeRfText" class="text-slate-500"><em>R</em><sub>f</sub> = 0.42</span>
           </div>
         </div>
       </div>
@@ -294,11 +293,11 @@
       <!-- Section: Electrophoresis Controls (Shown in Gel Mode) -->
       <div id="gelControlSection" class="space-y-3.5">
         
-        <!-- DC Voltage Slider (50V - 180V) -->
+        <!-- DC Voltage Slider (30V - 180V) -->
         <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
           <div class="flex justify-between items-center text-xs">
             <span class="text-slate-300 font-medium flex items-center gap-1.5">
-              <i class="fa-solid fa-bolt text-blue-400"></i> แรงดันไฟฟ้ากระแสตรง (DC Voltage: $V$)
+              <i class="fa-solid fa-bolt text-blue-400"></i> แรงดันไฟฟ้ากระแสตรง (DC Voltage: <em>V</em>)
             </span>
             <span class="font-digital text-blue-400 font-bold" id="sliderVoltVal">100 V</span>
           </div>
@@ -314,7 +313,7 @@
         <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
           <div class="flex justify-between items-center text-xs">
             <span class="text-slate-300 font-medium flex items-center gap-1.5">
-              <i class="fa-solid fa-layer-group text-emerald-400"></i> ความเข้มข้นเจลอกาโรส (% Agarose: $\%T$)
+              <i class="fa-solid fa-layer-group text-emerald-400"></i> ความเข้มข้นเจลอกาโรส (% Agarose: %T)
             </span>
             <span class="font-mono text-emerald-400 font-bold" id="sliderAgaroseVal">1.0 %</span>
           </div>
@@ -367,11 +366,11 @@
       <!-- Section: Magnetotactic Controls (Shown in Magneto Mode) -->
       <div id="magnetoControlSection" class="hidden space-y-3.5">
         
-        <!-- Helmholtz Magnetic Field B (0 - 50 mT) -->
+        <!-- Helmholtz Magnetic Field B (0 - 60 mT) -->
         <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
           <div class="flex justify-between items-center text-xs">
             <span class="text-slate-300 font-medium flex items-center gap-1.5">
-              <i class="fa-solid fa-magnet text-amber-400"></i> ความเข้มสนามแม่เหล็ก ($B$: Helmholtz Coils)
+              <i class="fa-solid fa-magnet text-amber-400"></i> ความเข้มสนามแม่เหล็ก (<em>B</em>: Helmholtz Coils)
             </span>
             <span class="font-digital text-amber-400 font-bold" id="sliderBFieldVal">20.0 mT</span>
           </div>
@@ -379,7 +378,7 @@
           <div class="flex justify-between text-[10px] text-slate-500 font-mono">
             <span>0 mT (สุ่มแบบบราวเนียน)</span>
             <span>20 mT (แนวชี้ชัดเจน)</span>
-            <span>60 mT (ล็อกทิศ $\tau_{\max}$)</span>
+            <span>60 mT (ล็อกทิศสูงสุด)</span>
           </div>
         </div>
 
@@ -387,7 +386,7 @@
         <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
           <div class="flex justify-between items-center text-xs">
             <span class="text-slate-300 font-medium flex items-center gap-1.5">
-              <i class="fa-solid fa-compass text-rose-400"></i> ทิศทางเวกเตอร์สนามแม่เหล็ก ($\theta_B$)
+              <i class="fa-solid fa-compass text-rose-400"></i> ทิศทางเวกเตอร์สนามแม่เหล็ก (<em>θ<sub>B</sub></em>)
             </span>
             <span class="font-mono text-rose-400 font-bold" id="sliderBAngleVal">0° (ทิศเหนือ +Z)</span>
           </div>
@@ -400,10 +399,10 @@
             <i class="fa-solid fa-dna"></i> <em>Magnetospirillum gryphiswaldense</em> MSR-1
           </div>
           <div class="grid grid-cols-2 gap-2 text-[11px] font-mono text-slate-400">
-            <div>&bull; Magnetosome: $\text{Fe}_3\text{O}_4$</div>
+            <div>&bull; Magnetosome: Fe₃O₄</div>
             <div>&bull; Chain: 25-40 ผลึก</div>
-            <div>&bull; Dipole $m$: $5.2 \times 10^{-16}\,\text{A}\cdot\text{m}^2$</div>
-            <div>&bull; Speed $v_0$: $\approx 45\,\mu\text{m/s}$</div>
+            <div>&bull; Dipole <em>m</em>: 5.2 &times; 10⁻¹⁶ A&middot;m²</div>
+            <div>&bull; Speed <em>v</em>₀: &asymp; 45 &mu;m/s</div>
           </div>
         </div>
 
@@ -437,9 +436,9 @@
         <div class="font-bold text-slate-300 flex items-center gap-1">
           <i class="fa-solid fa-book-open text-blue-400"></i> สมการชีวฟิสิกส์หลัก (Key Formulas)
         </div>
-        <p>&bull; สภาพเคลื่อนตัว: $\mu = \frac{v}{E} = \frac{q}{6\pi \eta r_{\text{eff}}}$</p>
-        <p>&bull; ขนาดต่อระยะทาง: $\log_{10}(\text{bp}) = a - b \cdot R_f$</p>
-        <p>&bull; ทอร์กสนามแม่เหล็ก: $\vec{\tau} = \vec{m} \times \vec{B} = m B \sin\theta$</p>
+        <p>&bull; สภาพเคลื่อนตัว: &mu; = <em>v</em> / <em>E</em> = <em>q</em> / (6&pi;&eta;<em>r</em><sub>eff</sub>)</p>
+        <p>&bull; ขนาดต่อระยะทาง: log₁₀(bp) = <em>a</em> - <em>b</em>&middot;<em>R</em><sub>f</sub></p>
+        <p>&bull; ทอร์กสนามแม่เหล็ก: <span class="vec">τ</span> = <span class="vec">m</span> &times; <span class="vec">B</span> = <em>m B</em> sin&theta;</p>
       </div>
 
     </div>
@@ -460,10 +459,10 @@
       chamberLength: 20.0, // cm distance between electrodes
       agarosePercent: 1.0, // %T
       bufferType: 'TAE', // 'TAE' or 'TBE'
-      bufferResistance: 2075, // Ohms (TAE ~ 2000 Ohm, TBE ~ 1200 Ohm)
+      bufferResistance: 2075, // Ohms
       ambientTemp: 25.0, // Celsius
       currentTemp: 25.4,
-      jouleHeatPower: 0, // Watts
+      jouleHeatPower: 4.82, // Watts
       
       // UV Transilluminator State
       uvActive: false,
@@ -485,11 +484,11 @@
       { size: 10000, bp: 10000, mass_ng: 40, distance_mm: 0, mobility_rel: 0.18 },
       { size: 8000,  bp: 8000,  mass_ng: 40, distance_mm: 0, mobility_rel: 0.22 },
       { size: 6000,  bp: 6000,  mass_ng: 40, distance_mm: 0, mobility_rel: 0.28 },
-      { size: 5000,  bp: 5000,  mass_ng: 85, distance_mm: 0, mobility_rel: 0.33 }, // Reference bright band
+      { size: 5000,  bp: 5000,  mass_ng: 85, distance_mm: 0, mobility_rel: 0.33 },
       { size: 4000,  bp: 4000,  mass_ng: 40, distance_mm: 0, mobility_rel: 0.39 },
       { size: 3000,  bp: 3000,  mass_ng: 40, distance_mm: 0, mobility_rel: 0.47 },
       { size: 2000,  bp: 2000,  mass_ng: 40, distance_mm: 0, mobility_rel: 0.58 },
-      { size: 1500,  bp: 1500,  mass_ng: 80, distance_mm: 0, mobility_rel: 0.67 }, // Reference bright band
+      { size: 1500,  bp: 1500,  mass_ng: 80, distance_mm: 0, mobility_rel: 0.67 },
       { size: 1000,  bp: 1000,  mass_ng: 45, distance_mm: 0, mobility_rel: 0.78 },
       { size: 500,   bp: 500,   mass_ng: 40, distance_mm: 0, mobility_rel: 0.95 }
     ];
@@ -526,8 +525,8 @@
     ];
 
     // Tracking Dyes
-    const trackingDyeBPB = { distance_mm: 0, mobility_rel: 1.15 }; // Bromophenol Blue
-    const trackingDyeXC  = { distance_mm: 0, mobility_rel: 0.40 }; // Xylene Cyanol
+    const trackingDyeBPB = { distance_mm: 0, mobility_rel: 1.15 };
+    const trackingDyeXC  = { distance_mm: 0, mobility_rel: 0.40 };
 
     // --- Web Audio Synthesizer Setup ---
     let audioCtx = null;
@@ -542,7 +541,6 @@
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         audioCtx = new AudioContext();
 
-        // 60 Hz DC Transformer Hum Oscillator
         humOsc = audioCtx.createOscillator();
         humOsc.type = 'sawtooth';
         humOsc.frequency.setValueAtTime(60, audioCtx.currentTime);
@@ -559,7 +557,6 @@
         humGain.connect(audioCtx.destination);
         humOsc.start();
 
-        // Stochastic Bubble Generator
         const bufferSize = audioCtx.sampleRate * 2;
         const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         const output = noiseBuffer.getChannelData(0);
@@ -585,7 +582,7 @@
         whiteNoise.start();
 
       } catch (e) {
-        console.warn('Web Audio synthesis not supported or blocked:', e);
+        console.warn('Web Audio synthesis not supported:', e);
       }
     }
 
@@ -637,46 +634,41 @@
       const canvas = document.getElementById('threeCanvas');
 
       scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x030712);
-      scene.fog = new THREE.FogExp2(0x030712, 0.015);
+      scene.background = new THREE.Color(0x050b14);
 
       camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-      camera.position.set(0, 18, 22);
+      camera.position.set(0, 16, 20);
 
       renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
       renderer.setSize(container.clientWidth, container.clientHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
       controls = new THREE.OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
-      controls.maxPolarAngle = Math.PI / 2 - 0.02; // Don't go below floor
+      controls.maxPolarAngle = Math.PI / 2 - 0.02;
       controls.target.set(0, 0, 0);
 
-      // Laboratory Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      // Studio Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
       scene.add(ambientLight);
 
-      const mainLight = new THREE.DirectionalLight(0xffffff, 0.9);
+      const mainLight = new THREE.DirectionalLight(0xffffff, 1.1);
       mainLight.position.set(12, 25, 15);
-      mainLight.castShadow = true;
-      mainLight.shadow.mapSize.width = 1024;
-      mainLight.shadow.mapSize.height = 1024;
       scene.add(mainLight);
 
-      const blueRimLight = new THREE.DirectionalLight(0x38bdf8, 0.4);
-      blueRimLight.position.set(-15, 10, -10);
-      scene.add(blueRimLight);
+      const fillLight = new THREE.DirectionalLight(0x60a5fa, 0.5);
+      fillLight.position.set(-15, 15, -10);
+      scene.add(fillLight);
 
       // UV Transilluminator Light (Off by default)
       uvLightSource = new THREE.PointLight(0xa855f7, 0, 25);
-      uvLightSource.position.set(0, -1.2, 0);
+      uvLightSource.position.set(0, -1.0, 0);
       scene.add(uvLightSource);
 
-      // Laboratory Benchtops & Grid Ground
-      const grid = new THREE.GridHelper(60, 60, 0x1e293b, 0x0f172a);
+      // Laboratory Benchtop Ground Grid
+      const grid = new THREE.GridHelper(50, 50, 0x1e293b, 0x0f172a);
       grid.position.y = -2.3;
       scene.add(grid);
 
@@ -689,58 +681,57 @@
       // Window resize event
       window.addEventListener('resize', onWindowResize);
 
-      // Render loop
+      // Start render loop
       animate();
     }
 
     function buildElectrophoresisTank() {
       tankGroup = new THREE.Group();
 
-      // Acrylic Transparent Tank Body (Plexiglas box)
+      // Tank Base Board (Heavy dark base)
+      const baseGeo = new THREE.BoxGeometry(TANK_WIDTH + 1.2, 0.4, TANK_LENGTH + 1.2);
+      const baseMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.5, metalness: 0.2 });
+      const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+      baseMesh.position.y = -TANK_HEIGHT / 2 - 0.2;
+      tankGroup.add(baseMesh);
+
+      // Acrylic Transparent Tank Body
       const tankGeo = new THREE.BoxGeometry(TANK_WIDTH, TANK_HEIGHT, TANK_LENGTH);
-      const tankMat = new THREE.MeshPhysicalMaterial({
-        color: 0x94a3b8,
+      const tankMat = new THREE.MeshStandardMaterial({
+        color: 0x64748b,
         transparent: true,
-        opacity: 0.28,
-        roughness: 0.08,
-        transmission: 0.85,
-        thickness: 0.8,
-        ior: 1.49, // Acrylic IOR
-        reflectivity: 0.6
+        opacity: 0.35,
+        roughness: 0.1,
+        metalness: 0.1
       });
       const tankMesh = new THREE.Mesh(tankGeo, tankMat);
       tankMesh.position.y = 0;
       tankGroup.add(tankMesh);
 
-      // Tank Top Lip (Red and Black safety rim)
+      // Tank Top Safety Rim
       const rimGeo = new THREE.BoxGeometry(TANK_WIDTH + 0.6, 0.3, TANK_LENGTH + 0.6);
       const rimMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3 });
       const rimMesh = new THREE.Mesh(rimGeo, rimMat);
       rimMesh.position.y = TANK_HEIGHT / 2 + 0.15;
       tankGroup.add(rimMesh);
 
-      // Gel Casting Tray (UV Transparent frosted tray)
+      // Gel Casting Tray (Dark gray UV transparent bed)
       const trayWidth = 10;
       const trayLength = 14;
       const trayGeo = new THREE.BoxGeometry(trayWidth, 0.4, trayLength);
-      const trayMat = new THREE.MeshStandardMaterial({
-        color: 0x334155,
-        roughness: 0.4,
-        metalness: 0.1
-      });
+      const trayMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.4, metalness: 0.1 });
       const trayMesh = new THREE.Mesh(trayGeo, trayMat);
       trayMesh.position.set(0, -0.6, 0);
       tankGroup.add(trayMesh);
 
-      // Agarose Gel Slab (Translucent opal/hydrated matrix)
+      // Agarose Gel Slab (Vibrant light cyan matrix)
       const gelGeo = new THREE.BoxGeometry(trayWidth - 0.2, 0.5, trayLength - 0.2);
-      const gelMat = new THREE.MeshPhysicalMaterial({
-        color: 0xdbeafe,
+      const gelMat = new THREE.MeshStandardMaterial({
+        color: 0x93c5fd,
         transparent: true,
-        opacity: 0.65,
-        roughness: 0.15,
-        transmission: 0.5,
-        ior: 1.34
+        opacity: 0.75,
+        roughness: 0.2,
+        metalness: 0.05
       });
       gelMesh = new THREE.Mesh(gelGeo, gelMat);
       gelMesh.position.set(0, -0.25, 0);
@@ -756,7 +747,7 @@
       for (let i = 0; i < 8; i++) {
         const wellX = startX + i * wellSpacing;
         const wellGeo = new THREE.BoxGeometry(wellWidth, wellDepth, wellLength);
-        const wellMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.3 });
+        const wellMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.3, emissive: 0x0369a1, emissiveIntensity: 0.3 });
         const wellMesh = new THREE.Mesh(wellGeo, wellMat);
         wellMesh.position.set(wellX, -0.15, -5.5);
         tankGroup.add(wellMesh);
@@ -766,7 +757,7 @@
         numCanvas.width = 64; numCanvas.height = 64;
         const nctx = numCanvas.getContext('2d');
         nctx.fillStyle = '#38bdf8';
-        nctx.font = 'bold 40px JetBrains Mono';
+        nctx.font = 'bold 38px monospace';
         nctx.textAlign = 'center';
         nctx.textBaseline = 'middle';
         nctx.fillText(`${i + 1}`, 32, 32);
@@ -780,40 +771,36 @@
 
       // Buffer Liquid Surface
       const bufGeo = new THREE.BoxGeometry(TANK_WIDTH - 0.2, 0.1, TANK_LENGTH - 0.2);
-      const bufMat = new THREE.MeshPhysicalMaterial({
+      const bufMat = new THREE.MeshStandardMaterial({
         color: 0x38bdf8,
         transparent: true,
-        opacity: 0.3,
-        roughness: 0.05,
-        transmission: 0.9,
-        ior: 1.333
+        opacity: 0.35,
+        roughness: 0.1
       });
       const bufMesh = new THREE.Mesh(bufGeo, bufMat);
       bufMesh.position.y = 0.2;
       tankGroup.add(bufMesh);
 
       // Platinum Wire Electrodes:
-      // Cathode (-) [Black Post & Wire at -Z well side]
+      // Cathode (-) [Black Post & Silver Wire at -Z well side]
       const cathodeWireGeo = new THREE.CylinderGeometry(0.04, 0.04, TANK_WIDTH - 1.5, 16);
       cathodeWireGeo.rotateZ(Math.PI / 2);
-      const ptMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.95, roughness: 0.1 });
+      const ptMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, metalness: 0.95, roughness: 0.1 });
       const cathodeWire = new THREE.Mesh(cathodeWireGeo, ptMat);
       cathodeWire.position.set(0, -0.8, -TANK_LENGTH / 2 + 1.2);
       tankGroup.add(cathodeWire);
 
-      // Cathode Terminal Post (Black Plastic)
       const cathPostGeo = new THREE.CylinderGeometry(0.3, 0.3, 1.2, 16);
       const cathPostMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4 });
       const cathPost = new THREE.Mesh(cathPostGeo, cathPostMat);
       cathPost.position.set(-TANK_WIDTH / 2 + 1.2, TANK_HEIGHT / 2 + 0.6, -TANK_LENGTH / 2 + 1.2);
       tankGroup.add(cathPost);
 
-      // Anode (+) [Red Post & Wire at +Z migration target side]
+      // Anode (+) [Red Post & Silver Wire at +Z migration target side]
       const anodeWire = new THREE.Mesh(cathodeWireGeo, ptMat);
       anodeWire.position.set(0, -0.8, TANK_LENGTH / 2 - 1.2);
       tankGroup.add(anodeWire);
 
-      // Anode Terminal Post (Red Plastic)
       const anodePostMat = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.4 });
       const anodePost = new THREE.Mesh(cathPostGeo, anodePostMat);
       anodePost.position.set(TANK_WIDTH / 2 - 1.2, TANK_HEIGHT / 2 + 0.6, TANK_LENGTH / 2 - 1.2);
@@ -836,7 +823,7 @@
     }
 
     function buildElectrolysisBubbles() {
-      // Cathode H2 Bubbles (Vigorous: 2H2O + 2e- -> H2 + 2OH-)
+      // Cathode H2 Bubbles
       const bubbleCountCathode = 80;
       const bCathGeo = new THREE.BufferGeometry();
       const posCath = new Float32Array(bubbleCountCathode * 3);
@@ -848,14 +835,14 @@
       bCathGeo.setAttribute('position', new THREE.BufferAttribute(posCath, 3));
       const bCathMat = new THREE.PointsMaterial({
         color: 0xffffff,
-        size: 0.12,
+        size: 0.15,
         transparent: true,
-        opacity: 0.75
+        opacity: 0.8
       });
       bubbleParticlesCathode = new THREE.Points(bCathGeo, bCathMat);
       tankGroup.add(bubbleParticlesCathode);
 
-      // Anode O2 Bubbles (Moderate: 2H2O -> O2 + 4H+ + 4e-)
+      // Anode O2 Bubbles
       const bubbleCountAnode = 45;
       const bAnodeGeo = new THREE.BufferGeometry();
       const posAnode = new Float32Array(bubbleCountAnode * 3);
@@ -867,16 +854,15 @@
       bAnodeGeo.setAttribute('position', new THREE.BufferAttribute(posAnode, 3));
       const bAnodeMat = new THREE.PointsMaterial({
         color: 0xbae6fd,
-        size: 0.10,
+        size: 0.12,
         transparent: true,
-        opacity: 0.65
+        opacity: 0.7
       });
       bubbleParticlesAnode = new THREE.Points(bAnodeGeo, bAnodeMat);
       tankGroup.add(bubbleParticlesAnode);
     }
 
     function build3DDNABands() {
-      // Clear any existing bands
       band3DMeshes.forEach(mesh => tankGroup.remove(mesh));
       band3DMeshes = [];
 
@@ -888,18 +874,15 @@
         const laneX = startX + laneIdx * wellSpacing;
 
         lane.bands.forEach(band => {
-          // Band thin rectangular plane inside gel
-          const bandGeo = new THREE.BoxGeometry(0.75, 0.08, 0.15);
-          
-          // Color based on UV and intensity
-          const initialColor = state.uvActive ? 0xf97316 : 0x0284c7; // EtBr orange under UV, translucent blue in daylight
+          const bandGeo = new THREE.BoxGeometry(0.75, 0.08, 0.16);
+          const initialColor = state.uvActive ? 0xf97316 : 0x0284c7;
           const bandMat = new THREE.MeshStandardMaterial({
             color: initialColor,
             roughness: 0.2,
-            emissive: state.uvActive ? 0xea580c : 0x000000,
-            emissiveIntensity: state.uvActive ? 0.8 : 0,
+            emissive: state.uvActive ? 0xea580c : 0x0369a1,
+            emissiveIntensity: state.uvActive ? 0.9 : 0.25,
             transparent: true,
-            opacity: state.uvActive ? 0.95 : 0.3
+            opacity: 0.95
           });
 
           const bandMesh = new THREE.Mesh(bandGeo, bandMat);
@@ -920,10 +903,9 @@
     function buildHelmholtzCoils() {
       helmholtzGroup = new THREE.Group();
 
-      // Dual Copper Helmholtz Coils
       const coilRadius = 6.0;
       const coilTube = 0.35;
-      const coilSpacing = coilRadius; // Standard Helmholtz condition: d = R
+      const coilSpacing = coilRadius;
 
       const coilGeo = new THREE.TorusGeometry(coilRadius, coilTube, 16, 64);
       const copperMat = new THREE.MeshStandardMaterial({
@@ -932,17 +914,14 @@
         roughness: 0.25
       });
 
-      // Front Coil (+Z)
       const coilFront = new THREE.Mesh(coilGeo, copperMat);
       coilFront.position.set(0, 0, coilSpacing / 2);
       helmholtzGroup.add(coilFront);
 
-      // Back Coil (-Z)
       const coilBack = new THREE.Mesh(coilGeo, copperMat);
       coilBack.position.set(0, 0, -coilSpacing / 2);
       helmholtzGroup.add(coilBack);
 
-      // Magnetic Field Vector Arrows
       const arrowGroup = new THREE.Group();
       for (let y = -2; y <= 2; y += 2) {
         for (let x = -3; x <= 3; x += 3) {
@@ -954,14 +933,14 @@
       }
       helmholtzGroup.add(arrowGroup);
 
-      // Swarm of Magnetotactic Bacteria (*Magnetospirillum*)
+      // Swarm of Magnetotactic Bacteria (Cylinder geometry compatible with Three.js r128)
       magnetotacticSwarmGroup = new THREE.Group();
       const bacteriaCount = 50;
-      const bacGeo = new THREE.CapsuleGeometry(0.08, 0.45, 8, 16);
+      const bacGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.45, 12);
       const bacMat = new THREE.MeshStandardMaterial({
         color: 0x10b981,
         emissive: 0x059669,
-        emissiveIntensity: 0.3,
+        emissiveIntensity: 0.4,
         roughness: 0.3
       });
 
@@ -981,7 +960,7 @@
       }
       helmholtzGroup.add(magnetotacticSwarmGroup);
 
-      helmholtzGroup.visible = false; // Hidden in gel mode
+      helmholtzGroup.visible = false;
       scene.add(helmholtzGroup);
     }
 
@@ -1030,79 +1009,57 @@
         }
       }
 
-      // Render Synchronized 2D Reticle Loupe
       render2DLoupe();
-
       renderer.render(scene, camera);
     }
 
     function updateGelPhysics(dt) {
-      // Electric Field E = V / L (V/cm)
       const eField = state.voltage / state.chamberLength;
-
-      // Current I = V / R (mA)
       const current_mA = (state.voltage / state.bufferResistance) * 1000.0;
-
-      // Joule Heating P = V * I (Watts)
       state.jouleHeatPower = state.voltage * (current_mA / 1000.0);
 
-      // Buffer Temperature dynamic equilibrium
-      // dT/dt = (P - k*(T - T_ambient)) / C
       const heatCoeff = 0.0003;
       const coolingCoeff = 0.001;
       state.currentTemp += (state.jouleHeatPower * heatCoeff - coolingCoeff * (state.currentTemp - state.ambientTemp)) * dt;
       if (state.currentTemp < state.ambientTemp) state.currentTemp = state.ambientTemp;
 
-      // Ferguson Equation pore-sieving factor: log(mu) = log(mu0) - K_R * %T
       const sievingFactor = Math.exp(-0.45 * (state.agarosePercent - 1.0));
-
-      // Update Tracking Dyes migration distance (mm)
-      // Velocity v = mu * E (mm/s in sim scale)
       const vDyeBase = 0.025 * eField * sievingFactor;
       trackingDyeBPB.distance_mm += vDyeBase * trackingDyeBPB.mobility_rel * dt;
       trackingDyeXC.distance_mm  += vDyeBase * trackingDyeXC.mobility_rel * dt;
 
-      // Limit max gel run distance to 105 mm (tray limit)
       if (trackingDyeBPB.distance_mm > 105) trackingDyeBPB.distance_mm = 105;
       if (trackingDyeXC.distance_mm > 105) trackingDyeXC.distance_mm = 105;
 
-      // Update DNA Bands 3D positions in gel
-      const gelLengthScale = 11.0 / 105.0; // 105 mm maps to 11.0 Three.js units in Z
+      const gelLengthScale = 11.0 / 105.0;
 
       band3DMeshes.forEach(mesh => {
         const band = mesh.userData.bandData;
         const vBand = vDyeBase * band.mobility_rel;
         band.distance_mm += vBand * dt;
         if (band.distance_mm > 105) band.distance_mm = 105;
-
-        // Map to Three.js Z coordinate
         mesh.position.z = mesh.userData.initialZ + (band.distance_mm * gelLengthScale);
       });
 
-      // Update Telemetry HUD
       updateTelemetryHUD(current_mA, eField);
     }
 
     function updateMagnetoPhysics(dt) {
-      // Swarm alignment under torque tau = m x B
       if (!magnetotacticSwarmGroup) return;
 
       const targetAngleRad = (state.bAngle_deg * Math.PI) / 180.0;
-      const bStrength = state.bField_mT / 20.0; // 1.0 at 20 mT
+      const bStrength = state.bField_mT / 20.0;
 
       magnetotacticSwarmGroup.children.forEach(bac => {
-        // Rotational relaxation towards B vector
         const currentRotY = bac.rotation.y;
         const angleDiff = targetAngleRad - currentRotY;
         const torque = angleDiff * bStrength * 4.0;
         bac.rotation.y += torque * dt;
 
-        // Forward swimming velocity along aligned orientation
         const speed = bac.userData.speed;
         bac.position.x += Math.sin(bac.rotation.y) * speed;
         bac.position.z += Math.cos(bac.rotation.y) * speed;
 
-        // Wrap around boundary
         if (bac.position.x > 4) bac.position.x = -4;
         if (bac.position.x < -4) bac.position.x = 4;
         if (bac.position.z > 3) bac.position.z = -3;
@@ -1117,13 +1074,11 @@
       document.getElementById('hudPower').textContent = state.jouleHeatPower.toFixed(2);
       document.getElementById('hudTemp').textContent = state.currentTemp.toFixed(1);
 
-      // Elapsed Time format mm:ss
       const totalSec = Math.floor(state.elapsedSec);
       const mins = Math.floor(totalSec / 60);
       const secs = totalSec % 60;
       document.getElementById('hudTimer').textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 
-      // Tracking Dye Progress Bar
       const dyePercent = Math.min(100, (trackingDyeBPB.distance_mm / 100.0) * 100);
       document.getElementById('hudDyeDistance').textContent = `${trackingDyeBPB.distance_mm.toFixed(1)} mm`;
       document.getElementById('hudDyeProgressBar').style.width = `${dyePercent}%`;
@@ -1149,14 +1104,12 @@
     }
 
     function render2DGelView(ctx, w, h) {
-      // Dark UV Transilluminator Indigo Background
       const grad = ctx.createLinearGradient(0, 0, 0, h);
       grad.addColorStop(0, '#090514');
       grad.addColorStop(1, '#020617');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, w, h);
 
-      // Gel Ruler Scale (Left Side: 0 to 100 mm)
       ctx.strokeStyle = '#334155';
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -1165,7 +1118,7 @@
       ctx.stroke();
 
       ctx.fillStyle = '#64748b';
-      ctx.font = '8px JetBrains Mono';
+      ctx.font = '8px monospace';
       for (let mm = 0; mm <= 100; mm += 20) {
         const y = 15 + (mm / 100.0) * (h - 30);
         ctx.beginPath();
@@ -1175,22 +1128,18 @@
         ctx.fillText(`${mm}`, 12, y + 3);
       }
 
-      // Draw 8 Lanes in 2D Reticle
       const laneWidth = 30;
       const startX = 45;
 
       sampleLanes.forEach((lane, idx) => {
         const x = startX + idx * (laneWidth + 4);
 
-        // Well box at top
         ctx.fillStyle = '#1e293b';
         ctx.fillRect(x + 2, 8, laneWidth - 4, 6);
 
-        // Draw Bands
         lane.bands.forEach(band => {
           const y = 15 + (band.distance_mm / 100.0) * (h - 30);
 
-          // Band glow if UV is on
           if (state.uvActive) {
             ctx.shadowColor = '#ea580c';
             ctx.shadowBlur = band.mass_ng > 70 ? 12 : 6;
@@ -1203,17 +1152,15 @@
           ctx.fillRect(x + 3, y, laneWidth - 6, 2.5);
         });
       });
-      ctx.shadowBlur = 0; // reset
+      ctx.shadowBlur = 0;
 
-      // Bromophenol Blue Tracking Dye Front
       const bpbY = 15 + (trackingDyeBPB.distance_mm / 100.0) * (h - 30);
       ctx.fillStyle = '#3b82f6';
       ctx.fillRect(startX, bpbY, (laneWidth + 4) * 8 - 4, 1.5);
 
-      // Ladder Size Annotation on Lane 1
       if (state.uvActive) {
         ctx.fillStyle = '#fdba74';
-        ctx.font = '7px JetBrains Mono';
+        ctx.font = '7px monospace';
         ladderBands.forEach((band, i) => {
           if (i % 2 === 0 || band.bp === 5000 || band.bp === 1500) {
             const y = 15 + (band.distance_mm / 100.0) * (h - 30);
@@ -1224,16 +1171,13 @@
     }
 
     function render2DFergusonPlot(ctx, w, h) {
-      // Dark Background
       ctx.fillStyle = '#020617';
       ctx.fillRect(0, 0, w, h);
 
-      // Ferguson Plot Title: log(mu) vs % Agarose
       ctx.fillStyle = '#38bdf8';
-      ctx.font = 'bold 9px JetBrains Mono';
+      ctx.font = 'bold 9px monospace';
       ctx.fillText('FERGUSON PLOT: log₁₀(μ) vs % Agarose', 12, 16);
 
-      // Axes
       ctx.strokeStyle = '#334155';
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -1242,7 +1186,6 @@
       ctx.lineTo(w - 15, h - 20);
       ctx.stroke();
 
-      // Axis labels
       ctx.fillStyle = '#64748b';
       ctx.font = '8px Prompt';
       ctx.fillText('0.5%', 45, h - 8);
@@ -1251,7 +1194,6 @@
       ctx.fillText('2.0%', 270, h - 8);
       ctx.fillText('log μ', 8, 30);
 
-      // Draw Slopes for different DNA sizes (10kb vs 1kb vs 100bp)
       const curves = [
         { name: '10 kb (KR=0.62)', color: '#ef4444', y0: 60, slope: 35 },
         { name: '1 kb (KR=0.35)',  color: '#f59e0b', y0: 45, slope: 22 },
@@ -1267,11 +1209,10 @@
         ctx.stroke();
 
         ctx.fillStyle = c.color;
-        ctx.font = '7px JetBrains Mono';
+        ctx.font = '7px monospace';
         ctx.fillText(c.name, w - 85, c.y0 + c.slope * 3.5 - 2);
       });
 
-      // Current Agarose Operating Point Marker
       const currentX = 45 + ((state.agarosePercent - 0.5) / 1.5) * 225;
       ctx.strokeStyle = '#38bdf8';
       ctx.setLineDash([3, 3]);
@@ -1286,14 +1227,12 @@
     }
 
     function render2DMagnetoReticle(ctx, w, h) {
-      // Darkfield Microscope Background
       ctx.fillStyle = '#030712';
       ctx.fillRect(0, 0, w, h);
 
       const cx = w / 2;
       const cy = h / 2;
 
-      // Microscope Circular Reticle Rings
       ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
       ctx.lineWidth = 1;
       [25, 50, 70].forEach(r => {
@@ -1302,13 +1241,11 @@
         ctx.stroke();
       });
 
-      // Crosshairs
       ctx.beginPath();
       ctx.moveTo(cx - 75, cy); ctx.lineTo(cx + 75, cy);
       ctx.moveTo(cx, cy - 75); ctx.lineTo(cx, cy + 75);
       ctx.stroke();
 
-      // Magnetic Vector B Arrow Indicator
       const rad = (state.bAngle_deg * Math.PI) / 180.0;
       const arrowLen = 60;
       const ax = cx + Math.sin(rad) * arrowLen;
@@ -1322,10 +1259,9 @@
       ctx.stroke();
 
       ctx.fillStyle = '#f59e0b';
-      ctx.font = 'bold 8px JetBrains Mono';
+      ctx.font = 'bold 8px monospace';
       ctx.fillText(`B=${state.bField_mT}mT`, ax + 4, ay);
 
-      // Microscopic Magnetotactic Bacteria cells
       ctx.fillStyle = '#10b981';
       for (let i = 0; i < 18; i++) {
         const seedAngle = (i * 0.35) + (state.bAngle_deg * Math.PI / 180.0) * 0.85;
@@ -1337,7 +1273,6 @@
         ctx.translate(bx, by);
         ctx.rotate(seedAngle);
         ctx.fillRect(-6, -2, 12, 4);
-        // Magnetosome dot chain inside cell
         ctx.fillStyle = '#0f172a';
         ctx.fillRect(-4, -0.5, 8, 1);
         ctx.restore();
@@ -1357,7 +1292,7 @@
       document.getElementById('sliderAgaroseVal').textContent = `${percent.toFixed(1)} %`;
       ['08', '10', '15', '20'].forEach(id => {
         const btn = document.getElementById(`agarBtn_${id}`);
-        if (id === String(percent * 10).padStart(2, '0')) {
+        if (id === String(Math.round(percent * 10)).padStart(2, '0')) {
           btn.className = 'py-1 px-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-mono font-bold border border-emerald-400 transition';
         } else {
           btn.className = 'py-1 px-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition';
@@ -1391,22 +1326,20 @@
         badge.classList.remove('hidden');
         badge.classList.add('flex');
         uvLightSource.intensity = 2.8;
-        if (gelMesh) gelMesh.material.color.setHex(0x581c87); // Deep dark purple under UV
+        if (gelMesh) gelMesh.material.color.setHex(0x581c87);
       } else {
         btn.innerHTML = '<i class="fa-solid fa-power-off"></i> เปิด UV';
         btn.className = 'px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold shadow-lg shadow-purple-900/50 transition flex items-center gap-1.5';
         badge.classList.add('hidden');
         badge.classList.remove('flex');
         uvLightSource.intensity = 0;
-        if (gelMesh) gelMesh.material.color.setHex(0xdbeafe);
+        if (gelMesh) gelMesh.material.color.setHex(0x93c5fd);
       }
 
-      // Update 3D Band Appearance
       band3DMeshes.forEach(mesh => {
         mesh.material.color.setHex(state.uvActive ? 0xf97316 : 0x0284c7);
-        mesh.material.emissive.setHex(state.uvActive ? 0xea580c : 0x000000);
-        mesh.material.emissiveIntensity = state.uvActive ? 0.85 : 0;
-        mesh.material.opacity = state.uvActive ? 0.95 : 0.3;
+        mesh.material.emissive.setHex(state.uvActive ? 0xea580c : 0x0369a1);
+        mesh.material.emissiveIntensity = state.uvActive ? 0.95 : 0.25;
       });
 
       playBeep(state.uvActive ? 800 : 350, 0.1);
@@ -1527,7 +1460,6 @@
       if (enabled) playBeep(800, 0.08);
     }
 
-    // --- Loupe Tab Switching ---
     function setLoupeTab(tab) {
       state.activeLoupeTab = tab;
       ['gel', 'ferguson', 'magneto'].forEach(t => {
@@ -1547,17 +1479,16 @@
       playBeep(550, 0.05);
     }
 
-    // --- Camera Presets ---
     function setCameraView(view) {
       if (!camera || !controls) return;
       if (view === 'overview') {
-        camera.position.set(0, 18, 22);
+        camera.position.set(0, 16, 20);
         controls.target.set(0, 0, 0);
       } else if (view === 'top') {
-        camera.position.set(0, 24, 0.1);
+        camera.position.set(0, 22, 0.01);
         controls.target.set(0, 0, 0);
       } else if (view === 'wells') {
-        camera.position.set(0, 5, -12);
+        camera.position.set(0, 4.5, -11.5);
         controls.target.set(0, -0.2, -5.5);
       } else if (view === 'helmholtz') {
         camera.position.set(12, 8, 14);
@@ -1595,7 +1526,6 @@
       renderer.setSize(container.clientWidth, container.clientHeight);
     }
 
-    // --- HUD Cards Minimize / Expand / Close Functionality ---
     function toggleCardContent(contentId) {
       const content = document.getElementById(contentId);
       if (!content) return;
@@ -1627,7 +1557,6 @@
       playBeep(350, 0.08);
     }
 
-    // Screenshot Capture API
     window.captureSimulatorScreenshot = function() {
       if (!renderer) return null;
       renderer.render(scene, camera);
