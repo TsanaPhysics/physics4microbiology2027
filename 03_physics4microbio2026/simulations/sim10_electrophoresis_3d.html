@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องปฏิบัติการ 3D ไฟฟ้า สนามแม่เหล็ก และเจลอิเล็กโทรโฟเรซิส (Agarose Gel Electrophoresis & Magnetotactic Bacteria 3D)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js r128 & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- Google Fonts & Font Awesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #030712; color: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .font-digital { font-family: 'Orbitron', monospace; }
+    
+    /* Pure CSS Vector Standard */
+    .vec {
+      display: inline-block;
+      position: relative;
+      font-family: 'Times New Roman', Cambria, serif;
+      font-style: italic;
+      font-weight: bold;
+      line-height: 1;
+      margin-top: 0.25em;
+    }
+    .vec::after {
+      content: '→';
+      position: absolute;
+      top: -0.45em;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0.85);
+      font-size: 0.72em;
+      font-style: normal;
+      font-weight: bold;
+      line-height: 1;
+      color: inherit;
+      pointer-events: none;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.3); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.6); }
+
+    /* Digital LED Glow */
+    .led-glow-blue { text-shadow: 0 0 10px rgba(59, 130, 246, 0.7), 0 0 20px rgba(59, 130, 246, 0.4); }
+    .led-glow-amber { text-shadow: 0 0 10px rgba(245, 158, 11, 0.7), 0 0 20px rgba(245, 158, 11, 0.4); }
+    .led-glow-emerald { text-shadow: 0 0 10px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4); }
+    .led-glow-purple { text-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 25px rgba(168, 85, 247, 0.5); }
+    .led-glow-uv { text-shadow: 0 0 12px rgba(192, 132, 252, 0.9), 0 0 30px rgba(147, 51, 234, 0.6); }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col select-none overflow-hidden bg-slate-950">
+
+  <!-- Main Simulator Layout Grid -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden relative">
+
+    <!-- 3D Canvas Area (Interactive WebGL Viewport) -->
+    <div id="canvasContainer" class="lg:col-span-8 h-full w-full relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden flex items-center justify-center">
+      <canvas id="threeCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+
+      <!-- Top Overlay: Status Badges -->
+      <div class="absolute top-3 left-3 z-10 flex flex-wrap items-center gap-2 pointer-events-none">
+        <div class="px-3 py-1.5 rounded-xl bg-slate-900/90 backdrop-blur-md border border-blue-500/30 text-blue-400 font-mono text-xs flex items-center gap-2 shadow-lg">
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span>
+          <span class="font-bold">ELECTROPHORESIS &amp; MAGNETISM 3D</span>
+        </div>
+        <div id="uvStatusBadge" class="hidden px-2.5 py-1 rounded-xl bg-purple-950/80 backdrop-blur-md border border-purple-500/40 text-purple-300 font-mono text-[11px] items-center gap-1.5 shadow-lg shadow-purple-900/30">
+          <i class="fa-solid fa-sun text-purple-400 animate-spin"></i> UV 312nm ACTIVE
+        </div>
+        <div id="modeStatusBadge" class="px-2.5 py-1 rounded-xl bg-slate-900/80 backdrop-blur-md border border-white/10 text-slate-300 font-mono text-[11px] flex items-center gap-1.5">
+          <i class="fa-solid fa-bolt text-amber-400"></i> Mode: <span id="currentModeLabel" class="text-white font-semibold">Agarose Gel Tank</span>
+        </div>
+      </div>
+
+      <!-- Top Right: Interactive Telemetry HUD Card -->
+      <div id="electrophoresisHUD" class="absolute top-3 right-3 z-10 w-72 bg-slate-900/85 backdrop-blur-md border border-blue-500/20 rounded-2xl p-3 shadow-2xl space-y-2.5 transition-all duration-300">
+        <!-- HUD Header with Minimize/Expand/Close buttons -->
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+          <div class="flex items-center gap-1.5">
+            <i class="fa-solid fa-wave-square text-blue-400 text-xs"></i>
+            <span class="text-xs font-bold text-slate-200 font-mono">POWERPAC TELEMETRY</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <button onclick="toggleCardContent('electrophoresisHUD_content')" class="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded hover:bg-slate-800 transition" title="ย่อ/ขยายเนื้อหา">
+              <i class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('electrophoresisHUD')" class="text-slate-400 hover:text-red-400 text-xs px-1.5 py-0.5 rounded hover:bg-slate-800 transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsible Content -->
+        <div id="electrophoresisHUD_content" class="space-y-2 text-xs">
+          <!-- Voltage and Electric Field -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono">Voltage ($V$)</div>
+              <div class="text-base font-digital font-bold text-blue-400 led-glow-blue flex items-baseline justify-between">
+                <span id="hudVoltage">100.0</span>
+                <span class="text-[10px] font-mono text-slate-400 font-normal">V</span>
+              </div>
+            </div>
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono">E-Field ($E = V/L$)</div>
+              <div class="text-base font-digital font-bold text-emerald-400 led-glow-emerald flex items-baseline justify-between">
+                <span id="hudEField">5.00</span>
+                <span class="text-[10px] font-mono text-slate-400 font-normal">V/cm</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current and Joule Heating Power -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono">Current ($I$)</div>
+              <div class="text-sm font-digital font-bold text-amber-400 led-glow-amber flex items-baseline justify-between">
+                <span id="hudCurrent">48.2</span>
+                <span class="text-[10px] font-mono text-slate-400 font-normal">mA</span>
+              </div>
+            </div>
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono">Joule Heat ($P$)</div>
+              <div class="text-sm font-digital font-bold text-red-400 flex items-baseline justify-between">
+                <span id="hudPower">4.82</span>
+                <span class="text-[10px] font-mono text-slate-400 font-normal">W</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buffer Temp & Migration Timer -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono">Buffer Temp ($T$)</div>
+              <div class="text-xs font-mono font-bold text-slate-300 flex items-baseline justify-between">
+                <span id="hudTemp">25.4</span>
+                <span class="text-[10px] text-slate-500 font-normal">°C</span>
+              </div>
+            </div>
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono">Elapsed Time</div>
+              <div class="text-xs font-digital font-bold text-cyan-400 flex items-baseline justify-between">
+                <span id="hudTimer">00:00</span>
+                <span class="text-[10px] font-mono text-slate-500 font-normal">min</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress Bar of Tracking Dye (Bromophenol Blue) -->
+          <div class="space-y-1 pt-1">
+            <div class="flex justify-between text-[10px] font-mono text-slate-400">
+              <span>BPB Dye Front ($R_f = 1.0$)</span>
+              <span id="hudDyeDistance" class="text-blue-300 font-bold">0.0 mm</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-950 rounded-full overflow-hidden border border-white/5">
+              <div id="hudDyeProgressBar" class="h-full bg-gradient-to-r from-blue-600 to-indigo-500 w-0 transition-all duration-150"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Right: Synchronized 2D Reticle Loupe & Analytics -->
+      <div id="gelLoupeCard" class="absolute bottom-16 right-3 z-10 w-80 bg-slate-900/90 backdrop-blur-md border border-purple-500/20 rounded-2xl p-3 shadow-2xl space-y-2 transition-all duration-300">
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+          <div class="flex items-center gap-1.5">
+            <i class="fa-solid fa-microscope text-purple-400 text-xs"></i>
+            <span class="text-xs font-bold text-slate-200 font-mono">SYNCHRONIZED RETICLE LOUPE</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <button onclick="toggleCardContent('gelLoupeCard_content')" class="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded hover:bg-slate-800 transition" title="ย่อ/ขยายเนื้อหา">
+              <i class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('gelLoupeCard')" class="text-slate-400 hover:text-red-400 text-xs px-1.5 py-0.5 rounded hover:bg-slate-800 transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Loupe View Modes Tab Header -->
+        <div id="gelLoupeCard_content" class="space-y-2">
+          <div class="grid grid-cols-3 gap-1 bg-slate-950/80 p-0.5 rounded-xl border border-white/5 text-[10px] font-mono">
+            <button onclick="setLoupeTab('gel')" id="tabBtn_gel" class="py-1 rounded-lg bg-blue-600 text-white font-bold transition">
+              UV Gel 2D
+            </button>
+            <button onclick="setLoupeTab('ferguson')" id="tabBtn_ferguson" class="py-1 rounded-lg text-slate-400 hover:text-slate-200 transition">
+              Ferguson
+            </button>
+            <button onclick="setLoupeTab('magneto')" id="tabBtn_magneto" class="py-1 rounded-lg text-slate-400 hover:text-slate-200 transition">
+              Magneto
+            </button>
+          </div>
+
+          <!-- 2D Canvas Loupe Viewport -->
+          <div class="relative w-full h-40 bg-slate-950 rounded-xl border border-white/10 overflow-hidden flex items-center justify-center">
+            <canvas id="loupeCanvas" width="320" height="160" class="w-full h-full block"></canvas>
+            <div id="loupeAnnotationOverlay" class="absolute bottom-1 right-2 text-[9px] font-mono text-purple-400/80 pointer-events-none">
+              UV Transilluminator 312nm
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center text-[10px] font-mono text-slate-400 px-1">
+            <span id="loupeStatusText" class="text-blue-400 font-semibold">1 kb Ladder &bull; Lane 1</span>
+            <span id="loupeRfText" class="text-slate-500">$R_f = 0.42$</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Floating Dock Bar: Camera, Minimize/Restore, Fullscreen -->
+      <div id="viewportDockBar" class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-2xl z-20 flex items-center gap-2 text-xs">
+        <!-- Re-open Hidden Cards Dropdown / Buttons -->
+        <div id="dockRestoreButtons" class="flex items-center gap-1.5 empty:hidden"></div>
+
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- Camera Preset Angles -->
+        <button onclick="setCameraView('overview')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="มุมมองภาพรวม 3 มิติ">
+          <i class="fa-solid fa-cube text-[9px]"></i> 3D Tank
+        </button>
+        <button onclick="setCameraView('top')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="มุมมองระนาบเจลด้านบน (Top View)">
+          <i class="fa-solid fa-align-justify text-[9px]"></i> Gel Top
+        </button>
+        <button onclick="setCameraView('wells')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="เจาะจงหลุมหยอดตัวอย่างและขั้วแคโทด">
+          <i class="fa-solid fa-vial text-[9px]"></i> Wells
+        </button>
+        <button onclick="setCameraView('helmholtz')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="มุมมองขดลวดแม่เหล็ก Helmholtz Coils">
+          <i class="fa-solid fa-magnet text-[9px]"></i> Coils
+        </button>
+
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- Fullscreen / Sidebar Toggle -->
+        <button onclick="toggleSidebar()" id="btnToggleSidebar" class="px-2.5 py-1 rounded-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 font-medium text-[10px] flex items-center gap-1 transition" title="ขยายจอภาพ 3D เต็มความกว้าง">
+          <i class="fa-solid fa-expand text-[9px]"></i> <span id="toggleSidebarLabel">ขยายจอเต็ม</span>
+        </button>
+        <button onclick="captureSimulatorScreenshot()" class="px-2.5 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-medium text-[10px] flex items-center gap-1 transition" title="บันทึกภาพหน้าจอหลักฐาน">
+          <i class="fa-solid fa-camera text-[9px]"></i> แคปเจอร์
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Interactive Control Panel Sidebar -->
+    <div id="controlSidebar" class="lg:col-span-4 h-full bg-slate-900/95 border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col overflow-y-auto p-4 space-y-4">
+      
+      <!-- Panel Header -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div>
+          <h2 class="text-sm font-bold text-blue-400 flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-blue-400"></i> แผงควบคุมแหล่งจ่ายไฟและอิเล็กโทรโฟเรซิส
+          </h2>
+          <p class="text-[11px] text-slate-400">DC PowerPac, Agarose Sieving &amp; Magnetic Coils</p>
+        </div>
+        <button onclick="resetParameters()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition flex items-center gap-1">
+          <i class="fa-solid fa-rotate-right"></i> รีเซ็ต
+        </button>
+      </div>
+
+      <!-- Audio Synthesizer Status & Sound Toggle -->
+      <div class="flex items-center justify-between bg-slate-950/60 p-2.5 rounded-xl border border-white/5">
+        <span class="text-xs text-slate-300 flex items-center gap-2">
+          <i class="fa-solid fa-volume-high text-blue-400"></i> ซาวด์ฮัมหม้อแปลง DC 60Hz &amp; ฟองแก๊สอิเล็กโทรลิซิส
+        </span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="soundToggle" class="sr-only peer" checked onchange="toggleSound(this.checked)">
+          <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+        </label>
+      </div>
+
+      <!-- Mode Selector: Electrophoresis Tank vs Magnetotactic Chamber -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-arrows-split-up-and-left text-amber-400"></i> โหมดการทดลองชีวฟิสิกส์ (Experiment Mode)
+        </label>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="switchExperimentMode('gel')" id="modeBtn_gel" class="py-2 px-3 rounded-xl bg-blue-600/30 border border-blue-500 text-blue-300 font-bold text-xs flex items-center justify-center gap-2 transition">
+            <i class="fa-solid fa-dna"></i> Agarose Gel
+          </button>
+          <button onclick="switchExperimentMode('magneto')" id="modeBtn_magneto" class="py-2 px-3 rounded-xl bg-slate-950/60 border border-white/10 text-slate-400 font-medium text-xs flex items-center justify-center gap-2 transition hover:text-white">
+            <i class="fa-solid fa-bacteria"></i> Magnetotaxis
+          </button>
+        </div>
+      </div>
+
+      <!-- Section: Electrophoresis Controls (Shown in Gel Mode) -->
+      <div id="gelControlSection" class="space-y-3.5">
+        
+        <!-- DC Voltage Slider (50V - 180V) -->
+        <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-300 font-medium flex items-center gap-1.5">
+              <i class="fa-solid fa-bolt text-blue-400"></i> แรงดันไฟฟ้ากระแสตรง (DC Voltage: $V$)
+            </span>
+            <span class="font-digital text-blue-400 font-bold" id="sliderVoltVal">100 V</span>
+          </div>
+          <input type="range" id="voltageSlider" min="30" max="180" step="5" value="100" oninput="onVoltageChange(this.value)" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500">
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>30 V (ช้า/คม)</span>
+            <span>100 V (มาตรฐาน)</span>
+            <span>180 V (ร้อนสูง/Smile)</span>
+          </div>
+        </div>
+
+        <!-- Agarose Gel Concentration %T (0.8% - 2.0%) -->
+        <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-300 font-medium flex items-center gap-1.5">
+              <i class="fa-solid fa-layer-group text-emerald-400"></i> ความเข้มข้นเจลอกาโรส (% Agarose: $\%T$)
+            </span>
+            <span class="font-mono text-emerald-400 font-bold" id="sliderAgaroseVal">1.0 %</span>
+          </div>
+          <div class="grid grid-cols-4 gap-1.5 pt-1">
+            <button onclick="setAgaroseConcentration(0.8)" id="agarBtn_08" class="py-1 px-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition">
+              0.8% (1-10kb)
+            </button>
+            <button onclick="setAgaroseConcentration(1.0)" id="agarBtn_10" class="py-1 px-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-mono font-bold border border-emerald-400 transition">
+              1.0% (std)
+            </button>
+            <button onclick="setAgaroseConcentration(1.5)" id="agarBtn_15" class="py-1 px-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition">
+              1.5% (0.2-3kb)
+            </button>
+            <button onclick="setAgaroseConcentration(2.0)" id="agarBtn_20" class="py-1 px-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition">
+              2.0% (small)
+            </button>
+          </div>
+        </div>
+
+        <!-- Buffer Type: 1X TAE vs 1X TBE -->
+        <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
+          <label class="text-xs text-slate-300 font-medium flex items-center gap-1.5">
+            <i class="fa-solid fa-flask-vial text-cyan-400"></i> บัฟเฟอร์อิเล็กโทรโฟเรซิส (Running Buffer)
+          </label>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="setBufferType('TAE')" id="bufBtn_TAE" class="py-1.5 px-3 rounded-xl bg-cyan-600/30 border border-cyan-500 text-cyan-300 font-mono text-xs font-bold transition">
+              1X TAE (Tris-Acetate)
+            </button>
+            <button onclick="setBufferType('TBE')" id="bufBtn_TBE" class="py-1.5 px-3 rounded-xl bg-slate-800 text-slate-400 border border-white/5 font-mono text-xs transition hover:text-white">
+              1X TBE (Tris-Borate)
+            </button>
+          </div>
+        </div>
+
+        <!-- UV Transilluminator Toggle (312 nm) -->
+        <div class="bg-gradient-to-r from-purple-950/60 via-slate-950/60 to-purple-950/60 p-3 rounded-xl border border-purple-500/30 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-purple-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-sun text-purple-400"></i> แท่นกำเนิดรังสี UV Transilluminator
+            </div>
+            <div class="text-[10px] text-slate-400 font-mono">312 nm UV &bull; กระตุ้นฟลูออเรสเซนต์ EtBr / GelGreen</div>
+          </div>
+          <button onclick="toggleUVLight()" id="btnToggleUV" class="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold shadow-lg shadow-purple-900/50 transition flex items-center gap-1.5">
+            <i class="fa-solid fa-power-off"></i> เปิด UV
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Section: Magnetotactic Controls (Shown in Magneto Mode) -->
+      <div id="magnetoControlSection" class="hidden space-y-3.5">
+        
+        <!-- Helmholtz Magnetic Field B (0 - 50 mT) -->
+        <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-300 font-medium flex items-center gap-1.5">
+              <i class="fa-solid fa-magnet text-amber-400"></i> ความเข้มสนามแม่เหล็ก ($B$: Helmholtz Coils)
+            </span>
+            <span class="font-digital text-amber-400 font-bold" id="sliderBFieldVal">20.0 mT</span>
+          </div>
+          <input type="range" id="bFieldSlider" min="0" max="60" step="1" value="20" oninput="onBFieldChange(this.value)" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500">
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>0 mT (สุ่มแบบบราวเนียน)</span>
+            <span>20 mT (แนวชี้ชัดเจน)</span>
+            <span>60 mT (ล็อกทิศ $\tau_{\max}$)</span>
+          </div>
+        </div>
+
+        <!-- Magnetic Field Angle (Rotation in X-Z Plane) -->
+        <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-300 font-medium flex items-center gap-1.5">
+              <i class="fa-solid fa-compass text-rose-400"></i> ทิศทางเวกเตอร์สนามแม่เหล็ก ($\theta_B$)
+            </span>
+            <span class="font-mono text-rose-400 font-bold" id="sliderBAngleVal">0° (ทิศเหนือ +Z)</span>
+          </div>
+          <input type="range" id="bAngleSlider" min="-180" max="180" step="5" value="0" oninput="onBAngleChange(this.value)" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-rose-500">
+        </div>
+
+        <!-- Magnetotactic Bacteria Species Profile -->
+        <div class="bg-slate-950/80 p-3 rounded-xl border border-white/5 space-y-2 text-xs">
+          <div class="font-bold text-amber-400 flex items-center gap-1.5">
+            <i class="fa-solid fa-dna"></i> <em>Magnetospirillum gryphiswaldense</em> MSR-1
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[11px] font-mono text-slate-400">
+            <div>&bull; Magnetosome: $\text{Fe}_3\text{O}_4$</div>
+            <div>&bull; Chain: 25-40 ผลึก</div>
+            <div>&bull; Dipole $m$: $5.2 \times 10^{-16}\,\text{A}\cdot\text{m}^2$</div>
+            <div>&bull; Speed $v_0$: $\approx 45\,\mu\text{m/s}$</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Execution Controls: Run, Pause, Fast-forward speed -->
+      <div class="space-y-2 pt-2 border-t border-white/10">
+        <div class="flex items-center gap-2">
+          <button onclick="toggleElectrophoresisRun()" id="btnRunSim" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-900/40 transition">
+            <i class="fa-solid fa-play"></i> เริ่มการแยกสาร (Run)
+          </button>
+          <button onclick="resetElectrophoresisRun()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs transition" title="รีเซ็ตตำแหน่งแบนด์ดีเอ็นเอ">
+            <i class="fa-solid fa-arrow-rotate-left"></i>
+          </button>
+        </div>
+
+        <!-- Simulation Speed Multiplier -->
+        <div class="flex items-center justify-between text-xs bg-slate-950/60 p-2 rounded-xl border border-white/5">
+          <span class="text-slate-400 font-mono text-[11px]">ความเร็วเวลาจำลอง:</span>
+          <div class="flex items-center gap-1 font-mono text-[11px]">
+            <button onclick="setSimSpeed(1)" id="spdBtn_1" class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition">1x</button>
+            <button onclick="setSimSpeed(5)" id="spdBtn_5" class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition">5x</button>
+            <button onclick="setSimSpeed(20)" id="spdBtn_20" class="px-2 py-0.5 rounded bg-blue-600 text-white font-bold transition">20x</button>
+            <button onclick="setSimSpeed(60)" id="spdBtn_60" class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition">60x</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Theoretical Biophysics Summary -->
+      <div class="mt-auto bg-slate-950/80 p-3 rounded-xl border border-white/5 text-[11px] text-slate-400 space-y-1.5 leading-relaxed">
+        <div class="font-bold text-slate-300 flex items-center gap-1">
+          <i class="fa-solid fa-book-open text-blue-400"></i> สมการชีวฟิสิกส์หลัก (Key Formulas)
+        </div>
+        <p>&bull; สภาพเคลื่อนตัว: $\mu = \frac{v}{E} = \frac{q}{6\pi \eta r_{\text{eff}}}$</p>
+        <p>&bull; ขนาดต่อระยะทาง: $\log_{10}(\text{bp}) = a - b \cdot R_f$</p>
+        <p>&bull; ทอร์กสนามแม่เหล็ก: $\vec{\tau} = \vec{m} \times \vec{B} = m B \sin\theta$</p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- JavaScript Simulator Implementation -->
+  <script>
+    // --- Global Simulator State ---
+    const state = {
+      mode: 'gel', // 'gel' or 'magneto'
+      running: false,
+      simSpeed: 20, // 20x fast-forward default
+      elapsedSec: 0,
+      
+      // PowerPac & Buffer Physics
+      voltage: 100.0, // Volts
+      chamberLength: 20.0, // cm distance between electrodes
+      agarosePercent: 1.0, // %T
+      bufferType: 'TAE', // 'TAE' or 'TBE'
+      bufferResistance: 2075, // Ohms (TAE ~ 2000 Ohm, TBE ~ 1200 Ohm)
+      ambientTemp: 25.0, // Celsius
+      currentTemp: 25.4,
+      jouleHeatPower: 0, // Watts
+      
+      // UV Transilluminator State
+      uvActive: false,
+      
+      // Helmholtz Magnetic Coils State
+      bField_mT: 20.0, // millitesla
+      bAngle_deg: 0.0, // degrees
+      
+      // Audio Synthesizer State
+      soundEnabled: true,
+      
+      // Loupe State
+      activeLoupeTab: 'gel', // 'gel', 'ferguson', 'magneto'
+      selectedLane: 0
+    };
+
+    // DNA Molecular Weight Ladder Bands (Lane 1: 1 kb Plus Ladder)
+    const ladderBands = [
+      { size: 10000, bp: 10000, mass_ng: 40, distance_mm: 0, mobility_rel: 0.18 },
+      { size: 8000,  bp: 8000,  mass_ng: 40, distance_mm: 0, mobility_rel: 0.22 },
+      { size: 6000,  bp: 6000,  mass_ng: 40, distance_mm: 0, mobility_rel: 0.28 },
+      { size: 5000,  bp: 5000,  mass_ng: 85, distance_mm: 0, mobility_rel: 0.33 }, // Reference bright band
+      { size: 4000,  bp: 4000,  mass_ng: 40, distance_mm: 0, mobility_rel: 0.39 },
+      { size: 3000,  bp: 3000,  mass_ng: 40, distance_mm: 0, mobility_rel: 0.47 },
+      { size: 2000,  bp: 2000,  mass_ng: 40, distance_mm: 0, mobility_rel: 0.58 },
+      { size: 1500,  bp: 1500,  mass_ng: 80, distance_mm: 0, mobility_rel: 0.67 }, // Reference bright band
+      { size: 1000,  bp: 1000,  mass_ng: 45, distance_mm: 0, mobility_rel: 0.78 },
+      { size: 500,   bp: 500,   mass_ng: 40, distance_mm: 0, mobility_rel: 0.95 }
+    ];
+
+    // 8 Sample Lanes in Agarose Gel
+    const sampleLanes = [
+      { id: 1, name: '1 kb DNA Ladder', bands: ladderBands },
+      { id: 2, name: 'Bacterial Genomic DNA (uncut)', bands: [
+        { size: 25000, bp: 25000, mass_ng: 150, distance_mm: 0, mobility_rel: 0.08 }
+      ]},
+      { id: 3, name: 'EcoRI Digest Plasmid (Linear 4.3 kb)', bands: [
+        { size: 4361, bp: 4361, mass_ng: 80, distance_mm: 0, mobility_rel: 0.36 }
+      ]},
+      { id: 4, name: 'PCR Amplicon 16S V4 (500 bp)', bands: [
+        { size: 500, bp: 500, mass_ng: 100, distance_mm: 0, mobility_rel: 0.95 }
+      ]},
+      { id: 5, name: 'PCR Amplicon Full 16S (1500 bp)', bands: [
+        { size: 1500, bp: 1500, mass_ng: 90, distance_mm: 0, mobility_rel: 0.67 }
+      ]},
+      { id: 6, name: 'Supercoiled pUC19 Plasmid', bands: [
+        { size: 2686, bp: 2686, note: 'Form I Supercoiled', mass_ng: 60, distance_mm: 0, mobility_rel: 0.72 },
+        { size: 2686, bp: 2686, note: 'Form II Relaxed Nicked', mass_ng: 20, distance_mm: 0, mobility_rel: 0.44 },
+        { size: 2686, bp: 2686, note: 'Form III Linear', mass_ng: 15, distance_mm: 0, mobility_rel: 0.52 }
+      ]},
+      { id: 7, name: 'Total Bacterial RNA', bands: [
+        { size: 2900, bp: 2900, note: '23S rRNA', mass_ng: 80, distance_mm: 0, mobility_rel: 0.48 },
+        { size: 1540, bp: 1540, note: '16S rRNA', mass_ng: 40, distance_mm: 0, mobility_rel: 0.66 },
+        { size: 120,  bp: 120,  note: '5S rRNA/tRNA', mass_ng: 25, distance_mm: 0, mobility_rel: 1.05 }
+      ]},
+      { id: 8, name: 'Magnetotactic Cell Lysate DNA', bands: [
+        { size: 23000, bp: 23000, mass_ng: 70, distance_mm: 0, mobility_rel: 0.09 },
+        { size: 1500,  bp: 1500,  mass_ng: 65, distance_mm: 0, mobility_rel: 0.67 }
+      ]}
+    ];
+
+    // Tracking Dyes
+    const trackingDyeBPB = { distance_mm: 0, mobility_rel: 1.15 }; // Bromophenol Blue
+    const trackingDyeXC  = { distance_mm: 0, mobility_rel: 0.40 }; // Xylene Cyanol
+
+    // --- Web Audio Synthesizer Setup ---
+    let audioCtx = null;
+    let humOsc = null;
+    let humGain = null;
+    let bubbleNoiseNode = null;
+    let bubbleGain = null;
+
+    function initAudio() {
+      if (audioCtx) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+
+        // 60 Hz DC Transformer Hum Oscillator
+        humOsc = audioCtx.createOscillator();
+        humOsc.type = 'sawtooth';
+        humOsc.frequency.setValueAtTime(60, audioCtx.currentTime);
+
+        const humFilter = audioCtx.createBiquadFilter();
+        humFilter.type = 'lowpass';
+        humFilter.frequency.setValueAtTime(180, audioCtx.currentTime);
+
+        humGain = audioCtx.createGain();
+        humGain.gain.setValueAtTime(0, audioCtx.currentTime);
+
+        humOsc.connect(humFilter);
+        humFilter.connect(humGain);
+        humGain.connect(audioCtx.destination);
+        humOsc.start();
+
+        // Stochastic Bubble Generator
+        const bufferSize = audioCtx.sampleRate * 2;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = (Math.random() * 2 - 1) * 0.2;
+        }
+
+        const whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+        whiteNoise.loop = true;
+
+        const bubbleFilter = audioCtx.createBiquadFilter();
+        bubbleFilter.type = 'bandpass';
+        bubbleFilter.frequency.setValueAtTime(950, audioCtx.currentTime);
+        bubbleFilter.Q.setValueAtTime(5.0, audioCtx.currentTime);
+
+        bubbleGain = audioCtx.createGain();
+        bubbleGain.gain.setValueAtTime(0, audioCtx.currentTime);
+
+        whiteNoise.connect(bubbleFilter);
+        bubbleFilter.connect(bubbleGain);
+        bubbleGain.connect(audioCtx.destination);
+        whiteNoise.start();
+
+      } catch (e) {
+        console.warn('Web Audio synthesis not supported or blocked:', e);
+      }
+    }
+
+    function playBeep(freq = 600, duration = 0.08) {
+      if (!state.soundEnabled || !audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        g.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function updateAudioHum() {
+      if (!audioCtx || !state.soundEnabled) {
+        if (humGain) humGain.gain.setTargetAtTime(0, audioCtx ? audioCtx.currentTime : 0, 0.05);
+        if (bubbleGain) bubbleGain.gain.setTargetAtTime(0, audioCtx ? audioCtx.currentTime : 0, 0.05);
+        return;
+      }
+      if (state.running && state.mode === 'gel') {
+        const vRatio = state.voltage / 100.0;
+        humGain.gain.setTargetAtTime(0.025 * vRatio, audioCtx.currentTime, 0.1);
+        bubbleGain.gain.setTargetAtTime(0.03 * (state.voltage / 120.0), audioCtx.currentTime, 0.1);
+        humOsc.frequency.setTargetAtTime(60 * (0.95 + 0.1 * vRatio), audioCtx.currentTime, 0.1);
+      } else {
+        humGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+        bubbleGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+      }
+    }
+
+    // --- Three.js 3D Electrophoresis Scene Setup ---
+    let scene, camera, renderer, controls;
+    let tankGroup, gelMesh, uvLightMesh, uvLightSource;
+    let bubbleParticlesCathode, bubbleParticlesAnode;
+    let helmholtzGroup, magnetotacticSwarmGroup;
+    let band3DMeshes = [];
+
+    const TANK_WIDTH = 14;   // X axis (8 lanes across)
+    const TANK_LENGTH = 20;  // Z axis (migration direction: wells at -Z, migrating to +Z)
+    const TANK_HEIGHT = 4.5; // Y axis
+
+    function init3D() {
+      const container = document.getElementById('canvasContainer');
+      const canvas = document.getElementById('threeCanvas');
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+      scene.fog = new THREE.FogExp2(0x030712, 0.015);
+
+      camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+      camera.position.set(0, 18, 22);
+
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 - 0.02; // Don't go below floor
+      controls.target.set(0, 0, 0);
+
+      // Laboratory Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+
+      const mainLight = new THREE.DirectionalLight(0xffffff, 0.9);
+      mainLight.position.set(12, 25, 15);
+      mainLight.castShadow = true;
+      mainLight.shadow.mapSize.width = 1024;
+      mainLight.shadow.mapSize.height = 1024;
+      scene.add(mainLight);
+
+      const blueRimLight = new THREE.DirectionalLight(0x38bdf8, 0.4);
+      blueRimLight.position.set(-15, 10, -10);
+      scene.add(blueRimLight);
+
+      // UV Transilluminator Light (Off by default)
+      uvLightSource = new THREE.PointLight(0xa855f7, 0, 25);
+      uvLightSource.position.set(0, -1.2, 0);
+      scene.add(uvLightSource);
+
+      // Laboratory Benchtops & Grid Ground
+      const grid = new THREE.GridHelper(60, 60, 0x1e293b, 0x0f172a);
+      grid.position.y = -2.3;
+      scene.add(grid);
+
+      // Build 3D Horizontal Electrophoresis Tank
+      buildElectrophoresisTank();
+
+      // Build Helmholtz Coils & Magnetotactic Bacteria
+      buildHelmholtzCoils();
+
+      // Window resize event
+      window.addEventListener('resize', onWindowResize);
+
+      // Render loop
+      animate();
+    }
+
+    function buildElectrophoresisTank() {
+      tankGroup = new THREE.Group();
+
+      // Acrylic Transparent Tank Body (Plexiglas box)
+      const tankGeo = new THREE.BoxGeometry(TANK_WIDTH, TANK_HEIGHT, TANK_LENGTH);
+      const tankMat = new THREE.MeshPhysicalMaterial({
+        color: 0x94a3b8,
+        transparent: true,
+        opacity: 0.28,
+        roughness: 0.08,
+        transmission: 0.85,
+        thickness: 0.8,
+        ior: 1.49, // Acrylic IOR
+        reflectivity: 0.6
+      });
+      const tankMesh = new THREE.Mesh(tankGeo, tankMat);
+      tankMesh.position.y = 0;
+      tankGroup.add(tankMesh);
+
+      // Tank Top Lip (Red and Black safety rim)
+      const rimGeo = new THREE.BoxGeometry(TANK_WIDTH + 0.6, 0.3, TANK_LENGTH + 0.6);
+      const rimMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3 });
+      const rimMesh = new THREE.Mesh(rimGeo, rimMat);
+      rimMesh.position.y = TANK_HEIGHT / 2 + 0.15;
+      tankGroup.add(rimMesh);
+
+      // Gel Casting Tray (UV Transparent frosted tray)
+      const trayWidth = 10;
+      const trayLength = 14;
+      const trayGeo = new THREE.BoxGeometry(trayWidth, 0.4, trayLength);
+      const trayMat = new THREE.MeshStandardMaterial({
+        color: 0x334155,
+        roughness: 0.4,
+        metalness: 0.1
+      });
+      const trayMesh = new THREE.Mesh(trayGeo, trayMat);
+      trayMesh.position.set(0, -0.6, 0);
+      tankGroup.add(trayMesh);
+
+      // Agarose Gel Slab (Translucent opal/hydrated matrix)
+      const gelGeo = new THREE.BoxGeometry(trayWidth - 0.2, 0.5, trayLength - 0.2);
+      const gelMat = new THREE.MeshPhysicalMaterial({
+        color: 0xdbeafe,
+        transparent: true,
+        opacity: 0.65,
+        roughness: 0.15,
+        transmission: 0.5,
+        ior: 1.34
+      });
+      gelMesh = new THREE.Mesh(gelGeo, gelMat);
+      gelMesh.position.set(0, -0.25, 0);
+      tankGroup.add(gelMesh);
+
+      // 8 Wells Indentations (Near Cathode: -Z direction, z = -5.5)
+      const wellWidth = 0.8;
+      const wellLength = 0.4;
+      const wellDepth = 0.3;
+      const wellSpacing = 1.05;
+      const startX = -((8 - 1) * wellSpacing) / 2;
+
+      for (let i = 0; i < 8; i++) {
+        const wellX = startX + i * wellSpacing;
+        const wellGeo = new THREE.BoxGeometry(wellWidth, wellDepth, wellLength);
+        const wellMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.3 });
+        const wellMesh = new THREE.Mesh(wellGeo, wellMat);
+        wellMesh.position.set(wellX, -0.15, -5.5);
+        tankGroup.add(wellMesh);
+
+        // Well Number Label
+        const numCanvas = document.createElement('canvas');
+        numCanvas.width = 64; numCanvas.height = 64;
+        const nctx = numCanvas.getContext('2d');
+        nctx.fillStyle = '#38bdf8';
+        nctx.font = 'bold 40px JetBrains Mono';
+        nctx.textAlign = 'center';
+        nctx.textBaseline = 'middle';
+        nctx.fillText(`${i + 1}`, 32, 32);
+        const numTex = new THREE.CanvasTexture(numCanvas);
+        const numSpriteMat = new THREE.SpriteMaterial({ map: numTex, transparent: true });
+        const numSprite = new THREE.Sprite(numSpriteMat);
+        numSprite.scale.set(0.6, 0.6, 1);
+        numSprite.position.set(wellX, 0.3, -6.1);
+        tankGroup.add(numSprite);
+      }
+
+      // Buffer Liquid Surface
+      const bufGeo = new THREE.BoxGeometry(TANK_WIDTH - 0.2, 0.1, TANK_LENGTH - 0.2);
+      const bufMat = new THREE.MeshPhysicalMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.3,
+        roughness: 0.05,
+        transmission: 0.9,
+        ior: 1.333
+      });
+      const bufMesh = new THREE.Mesh(bufGeo, bufMat);
+      bufMesh.position.y = 0.2;
+      tankGroup.add(bufMesh);
+
+      // Platinum Wire Electrodes:
+      // Cathode (-) [Black Post & Wire at -Z well side]
+      const cathodeWireGeo = new THREE.CylinderGeometry(0.04, 0.04, TANK_WIDTH - 1.5, 16);
+      cathodeWireGeo.rotateZ(Math.PI / 2);
+      const ptMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.95, roughness: 0.1 });
+      const cathodeWire = new THREE.Mesh(cathodeWireGeo, ptMat);
+      cathodeWire.position.set(0, -0.8, -TANK_LENGTH / 2 + 1.2);
+      tankGroup.add(cathodeWire);
+
+      // Cathode Terminal Post (Black Plastic)
+      const cathPostGeo = new THREE.CylinderGeometry(0.3, 0.3, 1.2, 16);
+      const cathPostMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4 });
+      const cathPost = new THREE.Mesh(cathPostGeo, cathPostMat);
+      cathPost.position.set(-TANK_WIDTH / 2 + 1.2, TANK_HEIGHT / 2 + 0.6, -TANK_LENGTH / 2 + 1.2);
+      tankGroup.add(cathPost);
+
+      // Anode (+) [Red Post & Wire at +Z migration target side]
+      const anodeWire = new THREE.Mesh(cathodeWireGeo, ptMat);
+      anodeWire.position.set(0, -0.8, TANK_LENGTH / 2 - 1.2);
+      tankGroup.add(anodeWire);
+
+      // Anode Terminal Post (Red Plastic)
+      const anodePostMat = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.4 });
+      const anodePost = new THREE.Mesh(cathPostGeo, anodePostMat);
+      anodePost.position.set(TANK_WIDTH / 2 - 1.2, TANK_HEIGHT / 2 + 0.6, TANK_LENGTH / 2 - 1.2);
+      tankGroup.add(anodePost);
+
+      // Build Animated Electrolysis Bubbles Particle System
+      buildElectrolysisBubbles();
+
+      // UV Transilluminator Glass Bed Underneath
+      const uvBedGeo = new THREE.BoxGeometry(trayWidth + 1.5, 0.3, trayLength + 1.5);
+      const uvBedMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.6 });
+      uvLightMesh = new THREE.Mesh(uvBedGeo, uvBedMat);
+      uvLightMesh.position.set(0, -1.0, 0);
+      tankGroup.add(uvLightMesh);
+
+      // Initialize 3D DNA Bands inside gel
+      build3DDNABands();
+
+      scene.add(tankGroup);
+    }
+
+    function buildElectrolysisBubbles() {
+      // Cathode H2 Bubbles (Vigorous: 2H2O + 2e- -> H2 + 2OH-)
+      const bubbleCountCathode = 80;
+      const bCathGeo = new THREE.BufferGeometry();
+      const posCath = new Float32Array(bubbleCountCathode * 3);
+      for (let i = 0; i < bubbleCountCathode; i++) {
+        posCath[i * 3 + 0] = (Math.random() - 0.5) * (TANK_WIDTH - 2.5);
+        posCath[i * 3 + 1] = -0.8 + Math.random() * 1.0;
+        posCath[i * 3 + 2] = -TANK_LENGTH / 2 + 1.2 + (Math.random() - 0.5) * 0.3;
+      }
+      bCathGeo.setAttribute('position', new THREE.BufferAttribute(posCath, 3));
+      const bCathMat = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 0.12,
+        transparent: true,
+        opacity: 0.75
+      });
+      bubbleParticlesCathode = new THREE.Points(bCathGeo, bCathMat);
+      tankGroup.add(bubbleParticlesCathode);
+
+      // Anode O2 Bubbles (Moderate: 2H2O -> O2 + 4H+ + 4e-)
+      const bubbleCountAnode = 45;
+      const bAnodeGeo = new THREE.BufferGeometry();
+      const posAnode = new Float32Array(bubbleCountAnode * 3);
+      for (let i = 0; i < bubbleCountAnode; i++) {
+        posAnode[i * 3 + 0] = (Math.random() - 0.5) * (TANK_WIDTH - 2.5);
+        posAnode[i * 3 + 1] = -0.8 + Math.random() * 1.0;
+        posAnode[i * 3 + 2] = TANK_LENGTH / 2 - 1.2 + (Math.random() - 0.5) * 0.3;
+      }
+      bAnodeGeo.setAttribute('position', new THREE.BufferAttribute(posAnode, 3));
+      const bAnodeMat = new THREE.PointsMaterial({
+        color: 0xbae6fd,
+        size: 0.10,
+        transparent: true,
+        opacity: 0.65
+      });
+      bubbleParticlesAnode = new THREE.Points(bAnodeGeo, bAnodeMat);
+      tankGroup.add(bubbleParticlesAnode);
+    }
+
+    function build3DDNABands() {
+      // Clear any existing bands
+      band3DMeshes.forEach(mesh => tankGroup.remove(mesh));
+      band3DMeshes = [];
+
+      const wellSpacing = 1.05;
+      const startX = -((8 - 1) * wellSpacing) / 2;
+      const wellZ = -5.5;
+
+      sampleLanes.forEach((lane, laneIdx) => {
+        const laneX = startX + laneIdx * wellSpacing;
+
+        lane.bands.forEach(band => {
+          // Band thin rectangular plane inside gel
+          const bandGeo = new THREE.BoxGeometry(0.75, 0.08, 0.15);
+          
+          // Color based on UV and intensity
+          const initialColor = state.uvActive ? 0xf97316 : 0x0284c7; // EtBr orange under UV, translucent blue in daylight
+          const bandMat = new THREE.MeshStandardMaterial({
+            color: initialColor,
+            roughness: 0.2,
+            emissive: state.uvActive ? 0xea580c : 0x000000,
+            emissiveIntensity: state.uvActive ? 0.8 : 0,
+            transparent: true,
+            opacity: state.uvActive ? 0.95 : 0.3
+          });
+
+          const bandMesh = new THREE.Mesh(bandGeo, bandMat);
+          bandMesh.position.set(laneX, -0.15, wellZ);
+          bandMesh.userData = {
+            laneIdx: laneIdx,
+            bandData: band,
+            initialZ: wellZ,
+            currentZ: wellZ
+          };
+
+          tankGroup.add(bandMesh);
+          band3DMeshes.push(bandMesh);
+        });
+      });
+    }
+
+    function buildHelmholtzCoils() {
+      helmholtzGroup = new THREE.Group();
+
+      // Dual Copper Helmholtz Coils
+      const coilRadius = 6.0;
+      const coilTube = 0.35;
+      const coilSpacing = coilRadius; // Standard Helmholtz condition: d = R
+
+      const coilGeo = new THREE.TorusGeometry(coilRadius, coilTube, 16, 64);
+      const copperMat = new THREE.MeshStandardMaterial({
+        color: 0xb45309,
+        metalness: 0.85,
+        roughness: 0.25
+      });
+
+      // Front Coil (+Z)
+      const coilFront = new THREE.Mesh(coilGeo, copperMat);
+      coilFront.position.set(0, 0, coilSpacing / 2);
+      helmholtzGroup.add(coilFront);
+
+      // Back Coil (-Z)
+      const coilBack = new THREE.Mesh(coilGeo, copperMat);
+      coilBack.position.set(0, 0, -coilSpacing / 2);
+      helmholtzGroup.add(coilBack);
+
+      // Magnetic Field Vector Arrows
+      const arrowGroup = new THREE.Group();
+      for (let y = -2; y <= 2; y += 2) {
+        for (let x = -3; x <= 3; x += 3) {
+          const arrowDir = new THREE.Vector3(0, 0, 1);
+          const arrowPos = new THREE.Vector3(x, y, -coilSpacing / 2);
+          const arrow = new THREE.ArrowHelper(arrowDir, arrowPos, coilSpacing, 0xf59e0b, 0.8, 0.4);
+          arrowGroup.add(arrow);
+        }
+      }
+      helmholtzGroup.add(arrowGroup);
+
+      // Swarm of Magnetotactic Bacteria (*Magnetospirillum*)
+      magnetotacticSwarmGroup = new THREE.Group();
+      const bacteriaCount = 50;
+      const bacGeo = new THREE.CapsuleGeometry(0.08, 0.45, 8, 16);
+      const bacMat = new THREE.MeshStandardMaterial({
+        color: 0x10b981,
+        emissive: 0x059669,
+        emissiveIntensity: 0.3,
+        roughness: 0.3
+      });
+
+      for (let i = 0; i < bacteriaCount; i++) {
+        const bac = new THREE.Mesh(bacGeo, bacMat);
+        bac.position.set(
+          (Math.random() - 0.5) * 6,
+          (Math.random() - 0.5) * 3,
+          (Math.random() - 0.5) * 5
+        );
+        bac.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+        bac.userData = {
+          speed: 0.04 + Math.random() * 0.03,
+          thetaDev: (Math.random() - 0.5) * 0.4
+        };
+        magnetotacticSwarmGroup.add(bac);
+      }
+      helmholtzGroup.add(magnetotacticSwarmGroup);
+
+      helmholtzGroup.visible = false; // Hidden in gel mode
+      scene.add(helmholtzGroup);
+    }
+
+    // --- Simulation Physics & Update Loop ---
+    let lastTime = performance.now();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const now = performance.now();
+      const dt = (now - lastTime) / 1000.0;
+      lastTime = now;
+
+      controls.update();
+
+      if (state.running) {
+        const effectiveDt = dt * state.simSpeed;
+        state.elapsedSec += effectiveDt;
+
+        if (state.mode === 'gel') {
+          updateGelPhysics(effectiveDt);
+        } else {
+          updateMagnetoPhysics(effectiveDt);
+        }
+      }
+
+      // Animate Electrolysis Micro-bubbles
+      if (bubbleParticlesCathode && bubbleParticlesAnode) {
+        const isBubbling = state.running && state.mode === 'gel';
+        bubbleParticlesCathode.visible = isBubbling;
+        bubbleParticlesAnode.visible = isBubbling;
+
+        if (isBubbling) {
+          const posCath = bubbleParticlesCathode.geometry.attributes.position.array;
+          for (let i = 1; i < posCath.length; i += 3) {
+            posCath[i] += dt * 1.5 * (state.voltage / 100.0);
+            if (posCath[i] > 0.2) posCath[i] = -0.8;
+          }
+          bubbleParticlesCathode.geometry.attributes.position.needsUpdate = true;
+
+          const posAnode = bubbleParticlesAnode.geometry.attributes.position.array;
+          for (let i = 1; i < posAnode.length; i += 3) {
+            posAnode[i] += dt * 1.2 * (state.voltage / 100.0);
+            if (posAnode[i] > 0.2) posAnode[i] = -0.8;
+          }
+          bubbleParticlesAnode.geometry.attributes.position.needsUpdate = true;
+        }
+      }
+
+      // Render Synchronized 2D Reticle Loupe
+      render2DLoupe();
+
+      renderer.render(scene, camera);
+    }
+
+    function updateGelPhysics(dt) {
+      // Electric Field E = V / L (V/cm)
+      const eField = state.voltage / state.chamberLength;
+
+      // Current I = V / R (mA)
+      const current_mA = (state.voltage / state.bufferResistance) * 1000.0;
+
+      // Joule Heating P = V * I (Watts)
+      state.jouleHeatPower = state.voltage * (current_mA / 1000.0);
+
+      // Buffer Temperature dynamic equilibrium
+      // dT/dt = (P - k*(T - T_ambient)) / C
+      const heatCoeff = 0.0003;
+      const coolingCoeff = 0.001;
+      state.currentTemp += (state.jouleHeatPower * heatCoeff - coolingCoeff * (state.currentTemp - state.ambientTemp)) * dt;
+      if (state.currentTemp < state.ambientTemp) state.currentTemp = state.ambientTemp;
+
+      // Ferguson Equation pore-sieving factor: log(mu) = log(mu0) - K_R * %T
+      const sievingFactor = Math.exp(-0.45 * (state.agarosePercent - 1.0));
+
+      // Update Tracking Dyes migration distance (mm)
+      // Velocity v = mu * E (mm/s in sim scale)
+      const vDyeBase = 0.025 * eField * sievingFactor;
+      trackingDyeBPB.distance_mm += vDyeBase * trackingDyeBPB.mobility_rel * dt;
+      trackingDyeXC.distance_mm  += vDyeBase * trackingDyeXC.mobility_rel * dt;
+
+      // Limit max gel run distance to 105 mm (tray limit)
+      if (trackingDyeBPB.distance_mm > 105) trackingDyeBPB.distance_mm = 105;
+      if (trackingDyeXC.distance_mm > 105) trackingDyeXC.distance_mm = 105;
+
+      // Update DNA Bands 3D positions in gel
+      const gelLengthScale = 11.0 / 105.0; // 105 mm maps to 11.0 Three.js units in Z
+
+      band3DMeshes.forEach(mesh => {
+        const band = mesh.userData.bandData;
+        const vBand = vDyeBase * band.mobility_rel;
+        band.distance_mm += vBand * dt;
+        if (band.distance_mm > 105) band.distance_mm = 105;
+
+        // Map to Three.js Z coordinate
+        mesh.position.z = mesh.userData.initialZ + (band.distance_mm * gelLengthScale);
+      });
+
+      // Update Telemetry HUD
+      updateTelemetryHUD(current_mA, eField);
+    }
+
+    function updateMagnetoPhysics(dt) {
+      // Swarm alignment under torque tau = m x B
+      if (!magnetotacticSwarmGroup) return;
+
+      const targetAngleRad = (state.bAngle_deg * Math.PI) / 180.0;
+      const bStrength = state.bField_mT / 20.0; // 1.0 at 20 mT
+
+      magnetotacticSwarmGroup.children.forEach(bac => {
+        // Rotational relaxation towards B vector
+        const currentRotY = bac.rotation.y;
+        const angleDiff = targetAngleRad - currentRotY;
+        const torque = angleDiff * bStrength * 4.0;
+        bac.rotation.y += torque * dt;
+
+        // Forward swimming velocity along aligned orientation
+        const speed = bac.userData.speed;
+        bac.position.x += Math.sin(bac.rotation.y) * speed;
+        bac.position.z += Math.cos(bac.rotation.y) * speed;
+
+        // Wrap around boundary
+        if (bac.position.x > 4) bac.position.x = -4;
+        if (bac.position.x < -4) bac.position.x = 4;
+        if (bac.position.z > 3) bac.position.z = -3;
+        if (bac.position.z < -3) bac.position.z = 3;
+      });
+    }
+
+    function updateTelemetryHUD(current_mA, eField) {
+      document.getElementById('hudVoltage').textContent = state.voltage.toFixed(1);
+      document.getElementById('hudEField').textContent = eField.toFixed(2);
+      document.getElementById('hudCurrent').textContent = current_mA.toFixed(1);
+      document.getElementById('hudPower').textContent = state.jouleHeatPower.toFixed(2);
+      document.getElementById('hudTemp').textContent = state.currentTemp.toFixed(1);
+
+      // Elapsed Time format mm:ss
+      const totalSec = Math.floor(state.elapsedSec);
+      const mins = Math.floor(totalSec / 60);
+      const secs = totalSec % 60;
+      document.getElementById('hudTimer').textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+      // Tracking Dye Progress Bar
+      const dyePercent = Math.min(100, (trackingDyeBPB.distance_mm / 100.0) * 100);
+      document.getElementById('hudDyeDistance').textContent = `${trackingDyeBPB.distance_mm.toFixed(1)} mm`;
+      document.getElementById('hudDyeProgressBar').style.width = `${dyePercent}%`;
+    }
+
+    // --- Synchronized 2D Reticle Loupe Rendering ---
+    function render2DLoupe() {
+      const canvas = document.getElementById('loupeCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      if (state.activeLoupeTab === 'gel') {
+        render2DGelView(ctx, w, h);
+      } else if (state.activeLoupeTab === 'ferguson') {
+        render2DFergusonPlot(ctx, w, h);
+      } else {
+        render2DMagnetoReticle(ctx, w, h);
+      }
+    }
+
+    function render2DGelView(ctx, w, h) {
+      // Dark UV Transilluminator Indigo Background
+      const grad = ctx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, '#090514');
+      grad.addColorStop(1, '#020617');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+
+      // Gel Ruler Scale (Left Side: 0 to 100 mm)
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(32, 10);
+      ctx.lineTo(32, h - 10);
+      ctx.stroke();
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = '8px JetBrains Mono';
+      for (let mm = 0; mm <= 100; mm += 20) {
+        const y = 15 + (mm / 100.0) * (h - 30);
+        ctx.beginPath();
+        ctx.moveTo(28, y);
+        ctx.lineTo(32, y);
+        ctx.stroke();
+        ctx.fillText(`${mm}`, 12, y + 3);
+      }
+
+      // Draw 8 Lanes in 2D Reticle
+      const laneWidth = 30;
+      const startX = 45;
+
+      sampleLanes.forEach((lane, idx) => {
+        const x = startX + idx * (laneWidth + 4);
+
+        // Well box at top
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(x + 2, 8, laneWidth - 4, 6);
+
+        // Draw Bands
+        lane.bands.forEach(band => {
+          const y = 15 + (band.distance_mm / 100.0) * (h - 30);
+
+          // Band glow if UV is on
+          if (state.uvActive) {
+            ctx.shadowColor = '#ea580c';
+            ctx.shadowBlur = band.mass_ng > 70 ? 12 : 6;
+            ctx.fillStyle = '#f97316';
+          } else {
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#38bdf8';
+          }
+
+          ctx.fillRect(x + 3, y, laneWidth - 6, 2.5);
+        });
+      });
+      ctx.shadowBlur = 0; // reset
+
+      // Bromophenol Blue Tracking Dye Front
+      const bpbY = 15 + (trackingDyeBPB.distance_mm / 100.0) * (h - 30);
+      ctx.fillStyle = '#3b82f6';
+      ctx.fillRect(startX, bpbY, (laneWidth + 4) * 8 - 4, 1.5);
+
+      // Ladder Size Annotation on Lane 1
+      if (state.uvActive) {
+        ctx.fillStyle = '#fdba74';
+        ctx.font = '7px JetBrains Mono';
+        ladderBands.forEach((band, i) => {
+          if (i % 2 === 0 || band.bp === 5000 || band.bp === 1500) {
+            const y = 15 + (band.distance_mm / 100.0) * (h - 30);
+            ctx.fillText(`${band.bp >= 1000 ? (band.bp / 1000) + 'k' : band.bp}`, startX + laneWidth + 2, y + 3);
+          }
+        });
+      }
+    }
+
+    function render2DFergusonPlot(ctx, w, h) {
+      // Dark Background
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, w, h);
+
+      // Ferguson Plot Title: log(mu) vs % Agarose
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'bold 9px JetBrains Mono';
+      ctx.fillText('FERGUSON PLOT: log₁₀(μ) vs % Agarose', 12, 16);
+
+      // Axes
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(35, 25);
+      ctx.lineTo(35, h - 20);
+      ctx.lineTo(w - 15, h - 20);
+      ctx.stroke();
+
+      // Axis labels
+      ctx.fillStyle = '#64748b';
+      ctx.font = '8px Prompt';
+      ctx.fillText('0.5%', 45, h - 8);
+      ctx.fillText('1.0%', 120, h - 8);
+      ctx.fillText('1.5%', 195, h - 8);
+      ctx.fillText('2.0%', 270, h - 8);
+      ctx.fillText('log μ', 8, 30);
+
+      // Draw Slopes for different DNA sizes (10kb vs 1kb vs 100bp)
+      const curves = [
+        { name: '10 kb (KR=0.62)', color: '#ef4444', y0: 60, slope: 35 },
+        { name: '1 kb (KR=0.35)',  color: '#f59e0b', y0: 45, slope: 22 },
+        { name: '100 bp (KR=0.12)', color: '#10b981', y0: 35, slope: 10 }
+      ];
+
+      curves.forEach(c => {
+        ctx.strokeStyle = c.color;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(40, c.y0);
+        ctx.lineTo(w - 25, c.y0 + c.slope * 3.5);
+        ctx.stroke();
+
+        ctx.fillStyle = c.color;
+        ctx.font = '7px JetBrains Mono';
+        ctx.fillText(c.name, w - 85, c.y0 + c.slope * 3.5 - 2);
+      });
+
+      // Current Agarose Operating Point Marker
+      const currentX = 45 + ((state.agarosePercent - 0.5) / 1.5) * 225;
+      ctx.strokeStyle = '#38bdf8';
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(currentX, 25);
+      ctx.lineTo(currentX, h - 20);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText(`%T=${state.agarosePercent}%`, currentX - 15, 24);
+    }
+
+    function render2DMagnetoReticle(ctx, w, h) {
+      // Darkfield Microscope Background
+      ctx.fillStyle = '#030712';
+      ctx.fillRect(0, 0, w, h);
+
+      const cx = w / 2;
+      const cy = h / 2;
+
+      // Microscope Circular Reticle Rings
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+      ctx.lineWidth = 1;
+      [25, 50, 70].forEach(r => {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      // Crosshairs
+      ctx.beginPath();
+      ctx.moveTo(cx - 75, cy); ctx.lineTo(cx + 75, cy);
+      ctx.moveTo(cx, cy - 75); ctx.lineTo(cx, cy + 75);
+      ctx.stroke();
+
+      // Magnetic Vector B Arrow Indicator
+      const rad = (state.bAngle_deg * Math.PI) / 180.0;
+      const arrowLen = 60;
+      const ax = cx + Math.sin(rad) * arrowLen;
+      const ay = cy - Math.cos(rad) * arrowLen;
+
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(ax, ay);
+      ctx.stroke();
+
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = 'bold 8px JetBrains Mono';
+      ctx.fillText(`B=${state.bField_mT}mT`, ax + 4, ay);
+
+      // Microscopic Magnetotactic Bacteria cells
+      ctx.fillStyle = '#10b981';
+      for (let i = 0; i < 18; i++) {
+        const seedAngle = (i * 0.35) + (state.bAngle_deg * Math.PI / 180.0) * 0.85;
+        const dist = 15 + (i * 3.2);
+        const bx = cx + Math.cos(seedAngle) * dist;
+        const by = cy + Math.sin(seedAngle) * dist;
+
+        ctx.save();
+        ctx.translate(bx, by);
+        ctx.rotate(seedAngle);
+        ctx.fillRect(-6, -2, 12, 4);
+        // Magnetosome dot chain inside cell
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(-4, -0.5, 8, 1);
+        ctx.restore();
+      }
+    }
+
+    // --- Simulator Interactive Controls ---
+    function onVoltageChange(val) {
+      state.voltage = parseFloat(val);
+      document.getElementById('sliderVoltVal').textContent = `${state.voltage.toFixed(0)} V`;
+      updateAudioHum();
+      playBeep(450, 0.04);
+    }
+
+    function setAgaroseConcentration(percent) {
+      state.agarosePercent = percent;
+      document.getElementById('sliderAgaroseVal').textContent = `${percent.toFixed(1)} %`;
+      ['08', '10', '15', '20'].forEach(id => {
+        const btn = document.getElementById(`agarBtn_${id}`);
+        if (id === String(percent * 10).padStart(2, '0')) {
+          btn.className = 'py-1 px-1.5 rounded-lg bg-emerald-600 text-white text-[11px] font-mono font-bold border border-emerald-400 transition';
+        } else {
+          btn.className = 'py-1 px-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition';
+        }
+      });
+      playBeep(520, 0.04);
+    }
+
+    function setBufferType(type) {
+      state.bufferType = type;
+      if (type === 'TAE') {
+        state.bufferResistance = 2075;
+        document.getElementById('bufBtn_TAE').className = 'py-1.5 px-3 rounded-xl bg-cyan-600/30 border border-cyan-500 text-cyan-300 font-mono text-xs font-bold transition';
+        document.getElementById('bufBtn_TBE').className = 'py-1.5 px-3 rounded-xl bg-slate-800 text-slate-400 border border-white/5 font-mono text-xs transition hover:text-white';
+      } else {
+        state.bufferResistance = 1250;
+        document.getElementById('bufBtn_TBE').className = 'py-1.5 px-3 rounded-xl bg-cyan-600/30 border border-cyan-500 text-cyan-300 font-mono text-xs font-bold transition';
+        document.getElementById('bufBtn_TAE').className = 'py-1.5 px-3 rounded-xl bg-slate-800 text-slate-400 border border-white/5 font-mono text-xs transition hover:text-white';
+      }
+      playBeep(600, 0.05);
+    }
+
+    function toggleUVLight() {
+      state.uvActive = !state.uvActive;
+      const btn = document.getElementById('btnToggleUV');
+      const badge = document.getElementById('uvStatusBadge');
+
+      if (state.uvActive) {
+        btn.innerHTML = '<i class="fa-solid fa-power-off"></i> ปิด UV';
+        btn.className = 'px-3 py-1.5 rounded-xl bg-purple-500 text-white font-mono text-xs font-bold shadow-lg shadow-purple-600/60 transition flex items-center gap-1.5';
+        badge.classList.remove('hidden');
+        badge.classList.add('flex');
+        uvLightSource.intensity = 2.8;
+        if (gelMesh) gelMesh.material.color.setHex(0x581c87); // Deep dark purple under UV
+      } else {
+        btn.innerHTML = '<i class="fa-solid fa-power-off"></i> เปิด UV';
+        btn.className = 'px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold shadow-lg shadow-purple-900/50 transition flex items-center gap-1.5';
+        badge.classList.add('hidden');
+        badge.classList.remove('flex');
+        uvLightSource.intensity = 0;
+        if (gelMesh) gelMesh.material.color.setHex(0xdbeafe);
+      }
+
+      // Update 3D Band Appearance
+      band3DMeshes.forEach(mesh => {
+        mesh.material.color.setHex(state.uvActive ? 0xf97316 : 0x0284c7);
+        mesh.material.emissive.setHex(state.uvActive ? 0xea580c : 0x000000);
+        mesh.material.emissiveIntensity = state.uvActive ? 0.85 : 0;
+        mesh.material.opacity = state.uvActive ? 0.95 : 0.3;
+      });
+
+      playBeep(state.uvActive ? 800 : 350, 0.1);
+    }
+
+    function switchExperimentMode(mode) {
+      state.mode = mode;
+      const gelSec = document.getElementById('gelControlSection');
+      const magnetoSec = document.getElementById('magnetoControlSection');
+      const label = document.getElementById('currentModeLabel');
+
+      if (mode === 'gel') {
+        gelSec.classList.remove('hidden');
+        magnetoSec.classList.add('hidden');
+        document.getElementById('modeBtn_gel').className = 'py-2 px-3 rounded-xl bg-blue-600/30 border border-blue-500 text-blue-300 font-bold text-xs flex items-center justify-center gap-2 transition';
+        document.getElementById('modeBtn_magneto').className = 'py-2 px-3 rounded-xl bg-slate-950/60 border border-white/10 text-slate-400 font-medium text-xs flex items-center justify-center gap-2 transition hover:text-white';
+        label.textContent = 'Agarose Gel Tank';
+        tankGroup.visible = true;
+        helmholtzGroup.visible = false;
+        setCameraView('overview');
+      } else {
+        gelSec.classList.add('hidden');
+        magnetoSec.classList.remove('hidden');
+        document.getElementById('modeBtn_magneto').className = 'py-2 px-3 rounded-xl bg-amber-600/30 border border-amber-500 text-amber-300 font-bold text-xs flex items-center justify-center gap-2 transition';
+        document.getElementById('modeBtn_gel').className = 'py-2 px-3 rounded-xl bg-slate-950/60 border border-white/10 text-slate-400 font-medium text-xs flex items-center justify-center gap-2 transition hover:text-white';
+        label.textContent = 'Magnetotactic Coils';
+        tankGroup.visible = false;
+        helmholtzGroup.visible = true;
+        setCameraView('helmholtz');
+      }
+
+      updateAudioHum();
+      playBeep(650, 0.08);
+    }
+
+    function onBFieldChange(val) {
+      state.bField_mT = parseFloat(val);
+      document.getElementById('sliderBFieldVal').textContent = `${state.bField_mT.toFixed(1)} mT`;
+      playBeep(480, 0.04);
+    }
+
+    function onBAngleChange(val) {
+      state.bAngle_deg = parseFloat(val);
+      document.getElementById('sliderBAngleVal').textContent = `${state.bAngle_deg.toFixed(0)}°`;
+      playBeep(420, 0.04);
+    }
+
+    function toggleElectrophoresisRun() {
+      initAudio();
+      state.running = !state.running;
+      const btn = document.getElementById('btnRunSim');
+      if (state.running) {
+        btn.innerHTML = '<i class="fa-solid fa-pause"></i> หยุดชั่วคราว (Pause)';
+        btn.className = 'flex-1 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-900/40 transition';
+        playBeep(700, 0.1);
+      } else {
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> เริ่มการแยกสาร (Run)';
+        btn.className = 'flex-1 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-900/40 transition';
+        playBeep(400, 0.1);
+      }
+      updateAudioHum();
+    }
+
+    function resetElectrophoresisRun() {
+      state.running = false;
+      state.elapsedSec = 0;
+      trackingDyeBPB.distance_mm = 0;
+      trackingDyeXC.distance_mm = 0;
+      state.currentTemp = state.ambientTemp;
+
+      const btn = document.getElementById('btnRunSim');
+      btn.innerHTML = '<i class="fa-solid fa-play"></i> เริ่มการแยกสาร (Run)';
+      btn.className = 'flex-1 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-900/40 transition';
+
+      sampleLanes.forEach(lane => {
+        lane.bands.forEach(band => {
+          band.distance_mm = 0;
+        });
+      });
+
+      band3DMeshes.forEach(mesh => {
+        mesh.userData.bandData.distance_mm = 0;
+        mesh.position.z = mesh.userData.initialZ;
+      });
+
+      updateAudioHum();
+      playBeep(300, 0.15);
+    }
+
+    function setSimSpeed(speed) {
+      state.simSpeed = speed;
+      [1, 5, 20, 60].forEach(s => {
+        const btn = document.getElementById(`spdBtn_${s}`);
+        if (s === speed) {
+          btn.className = 'px-2 py-0.5 rounded bg-blue-600 text-white font-bold transition';
+        } else {
+          btn.className = 'px-2 py-0.5 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition';
+        }
+      });
+      playBeep(600, 0.05);
+    }
+
+    function resetParameters() {
+      onVoltageChange(100);
+      document.getElementById('voltageSlider').value = 100;
+      setAgaroseConcentration(1.0);
+      setBufferType('TAE');
+      onBFieldChange(20);
+      document.getElementById('bFieldSlider').value = 20;
+      onBAngleChange(0);
+      document.getElementById('bAngleSlider').value = 0;
+      resetElectrophoresisRun();
+    }
+
+    function toggleSound(enabled) {
+      state.soundEnabled = enabled;
+      updateAudioHum();
+      if (enabled) playBeep(800, 0.08);
+    }
+
+    // --- Loupe Tab Switching ---
+    function setLoupeTab(tab) {
+      state.activeLoupeTab = tab;
+      ['gel', 'ferguson', 'magneto'].forEach(t => {
+        const btn = document.getElementById(`tabBtn_${t}`);
+        if (t === tab) {
+          btn.className = 'py-1 rounded-lg bg-blue-600 text-white font-bold transition';
+        } else {
+          btn.className = 'py-1 rounded-lg text-slate-400 hover:text-slate-200 transition';
+        }
+      });
+
+      const overlay = document.getElementById('loupeAnnotationOverlay');
+      if (tab === 'gel') overlay.textContent = 'UV Transilluminator 312nm';
+      else if (tab === 'ferguson') overlay.textContent = 'Ferguson Retardation Matrix';
+      else overlay.textContent = 'Darkfield Magnetosome Loupe';
+
+      playBeep(550, 0.05);
+    }
+
+    // --- Camera Presets ---
+    function setCameraView(view) {
+      if (!camera || !controls) return;
+      if (view === 'overview') {
+        camera.position.set(0, 18, 22);
+        controls.target.set(0, 0, 0);
+      } else if (view === 'top') {
+        camera.position.set(0, 24, 0.1);
+        controls.target.set(0, 0, 0);
+      } else if (view === 'wells') {
+        camera.position.set(0, 5, -12);
+        controls.target.set(0, -0.2, -5.5);
+      } else if (view === 'helmholtz') {
+        camera.position.set(12, 8, 14);
+        controls.target.set(0, 0, 0);
+      }
+      controls.update();
+      playBeep(750, 0.06);
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('controlSidebar');
+      const container = document.getElementById('canvasContainer');
+      const label = document.getElementById('toggleSidebarLabel');
+
+      if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden');
+        container.classList.remove('lg:col-span-12');
+        container.classList.add('lg:col-span-8');
+        label.textContent = 'ขยายจอเต็ม';
+      } else {
+        sidebar.classList.add('hidden');
+        container.classList.remove('lg:col-span-8');
+        container.classList.add('lg:col-span-12');
+        label.textContent = 'ย่อแถบข้าง';
+      }
+      setTimeout(onWindowResize, 100);
+      playBeep(650, 0.06);
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('canvasContainer');
+      if (!renderer || !camera) return;
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    // --- HUD Cards Minimize / Expand / Close Functionality ---
+    function toggleCardContent(contentId) {
+      const content = document.getElementById(contentId);
+      if (!content) return;
+      content.classList.toggle('hidden');
+      playBeep(420, 0.05);
+    }
+
+    function hideCard(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      card.classList.add('hidden');
+
+      const dock = document.getElementById('dockRestoreButtons');
+      const cardNames = {
+        'electrophoresisHUD': 'โทรมาตร PowerPac',
+        'gelLoupeCard': 'เลนส์ซูม Reticle'
+      };
+
+      const btn = document.createElement('button');
+      btn.id = `restoreBtn_${cardId}`;
+      btn.className = 'px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-blue-400 font-mono text-[10px] flex items-center gap-1 transition';
+      btn.innerHTML = `<i class="fa-solid fa-window-restore text-[9px]"></i> ${cardNames[cardId] || cardId}`;
+      btn.onclick = function() {
+        card.classList.remove('hidden');
+        btn.remove();
+        playBeep(550, 0.08);
+      };
+      dock.appendChild(btn);
+      playBeep(350, 0.08);
+    }
+
+    // Screenshot Capture API
+    window.captureSimulatorScreenshot = function() {
+      if (!renderer) return null;
+      renderer.render(scene, camera);
+      const dataUrl = renderer.domElement.toDataURL('image/png');
+      
+      const link = document.createElement('a');
+      link.download = `gel_electrophoresis_sim10_${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+
+      playBeep(950, 0.15);
+      return dataUrl;
+    };
+
+    window.onload = init3D;
+  </script>
+</body>
+</html>
