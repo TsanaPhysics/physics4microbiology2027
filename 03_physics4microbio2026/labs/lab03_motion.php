@@ -1,8 +1,13 @@
 <?php
-$pageTitle = 'ปฏิบัติการที่ 3: กฎของนิวตันและการวัดความหนืดของของเหลวชีวภาพ | Lab 3: Newton\'s Laws & Falling-Sphere Viscometer';
+$pageTitle = "ปฏิบัติการที่ 3: กฎของนิวตันและการวัดความหนืดของของเหลวชีวภาพ | Lab 3: Newton's Laws & Falling-Sphere Viscometer";
 $basePath = '../';
 include '../includes/header.php';
 ?>
+
+<!-- Tailwind CSS CDN & Fonts -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <div class="min-h-screen bg-slate-950 text-slate-100 font-sans pb-16">
 
@@ -20,7 +25,7 @@ include '../includes/header.php';
                     ฟิสิกส์สำหรับจุลชีววิทยา (Physics for Microbiology)
                 </span>
                 <span class="px-3 py-1 rounded-full text-xs font-mono bg-amber-500/10 text-amber-300 border border-amber-500/20">
-                    Stokes\' Viscosity &amp; Terminal Velocity
+                    Stokes' Viscosity &amp; Terminal Velocity
                 </span>
             </div>
 
@@ -29,7 +34,7 @@ include '../includes/header.php';
             </h1>
 
             <p class="text-sm sm:text-base text-slate-300 max-w-4xl leading-relaxed">
-                ศึกษาการเคลื่อนที่ภายใต้แรงโน้มถ่วง แรงพยุง และแรงหนืดตามกฎของสโตกส์ (Stokes\' Law) เมื่อวัตถุเคลื่อนที่ด้วยอัตราเร็วสุดท้ายคงที่ (Terminal Velocity, $v_t$) ด้วยเครื่องวัดความหนืดลูกกลมตก (Falling-Sphere Viscometer) ควบคู่กับระบบเซนเซอร์โฟโตเกตเลเซอร์คู่ พร้อมเชื่อมโยงสู่การตกตะกอนของเซลล์จุลินทรีย์และการออกแบบบ่อตกตะกอนในงานสิ่งแวดล้อม
+                ศึกษาการเคลื่อนที่ภายใต้แรงโน้มถ่วง แรงพยุง และแรงหนืดตามกฎของสโตกส์ (Stokes' Law) เมื่อวัตถุเคลื่อนที่ด้วยอัตราเร็วสุดท้ายคงที่ (Terminal Velocity, $v_t$) ด้วยเครื่องวัดความหนืดลูกกลมตก (Falling-Sphere Viscometer) ควบคู่กับระบบเซนเซอร์โฟโตเกตเลเซอร์คู่ พร้อมเชื่อมโยงสู่การตกตะกอนของเซลล์จุลินทรีย์และการออกแบบบ่อตกตะกอนในงานสิ่งแวดล้อม
             </p>
 
             <!-- Learning Objectives Pill Matrix -->
@@ -186,7 +191,7 @@ include '../includes/header.php';
                         
                         <div class="relative">
                             <input type="file" id="manualImageFileInput" accept="image/*" onchange="handleImageFileUpload(event)" class="hidden">
-                            <button type="button" onclick="document.getElementById(\'manualImageFileInput\').click()" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium border border-white/10 transition flex items-center justify-center gap-2">
+                            <button type="button" onclick="document.getElementById('manualImageFileInput').click()" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium border border-white/10 transition flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-upload"></i> อัปโหลดไฟล์ภาพถ่าย / แคปหน้าจอด้วยตนเอง
                             </button>
                         </div>
@@ -532,7 +537,7 @@ include '../includes/header.php';
 <!-- JavaScript Logic -->
 <script>
 function openSimulatorFullscreen() {
-    const frame = document.getElementById(\'simViewerFrame\');
+    const frame = document.getElementById('simViewerFrame');
     if (frame.requestFullscreen) {
         frame.requestFullscreen();
     } else if (frame.webkitRequestFullscreen) {
@@ -542,28 +547,28 @@ function openSimulatorFullscreen() {
 
 function capture3dSimulator() {
     try {
-        const frame = document.getElementById(\'simViewerFrame\');
+        const frame = document.getElementById('simViewerFrame');
         let dataUrl = null;
 
         if (frame && frame.contentWindow) {
-            if (typeof frame.contentWindow.captureSimulatorScreenshot === \'function\') {
+            if (typeof frame.contentWindow.captureSimulatorScreenshot === 'function') {
                 dataUrl = frame.contentWindow.captureSimulatorScreenshot();
             }
             if (!dataUrl) {
-                const canvas = frame.contentWindow.document.querySelector(\'canvas\');
-                if (canvas) dataUrl = canvas.toDataURL(\'image/png\');
+                const canvas = frame.contentWindow.document.querySelector('canvas');
+                if (canvas) dataUrl = canvas.toDataURL('image/png');
             }
         }
 
         if (dataUrl && dataUrl.length > 500) {
             setProofImage(dataUrl);
             alert("📸 แคปภาพหน้าจอ 3D Simulator สำเร็จ!\nภาพได้ถูกบันทึกและแนบลงในช่องหลักฐานการทดลองเรียบร้อยแล้ว");
-            const proofSection = document.getElementById(\'proofBadgeStatus\');
+            const proofSection = document.getElementById('proofBadgeStatus');
             if (proofSection) {
-                proofSection.scrollIntoView({ behavior: \'smooth\', block: \'center\' });
+                proofSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         } else {
-            alert("⚠️ ไม่สามารถดึงภาพจาก 3D Simulator ได้โดยตรง กรุณาใช้ปุ่ม \'อัปโหลดไฟล์ภาพ / แคปหน้าจอ\' ในส่วนหลักฐานการทดลองด้านล่างครับ");
+            alert("⚠️ ไม่สามารถดึงภาพจาก 3D Simulator ได้โดยตรง กรุณาใช้ปุ่ม 'อัปโหลดไฟล์ภาพ / แคปหน้าจอ' ในส่วนหลักฐานการทดลองด้านล่างครับ");
         }
     } catch (err) {
         console.error("3D capture failed:", err);
@@ -588,27 +593,27 @@ function handleImageFileUpload(e) {
 }
 
 function setProofImage(dataUrl) {
-    document.getElementById(\'image_proof_base64\').value = dataUrl;
-    const preview = document.getElementById(\'proofPreviewImg\');
-    const placeholder = document.getElementById(\'proofPlaceholder\');
-    const badge = document.getElementById(\'proofBadgeStatus\');
+    document.getElementById('image_proof_base64').value = dataUrl;
+    const preview = document.getElementById('proofPreviewImg');
+    const placeholder = document.getElementById('proofPlaceholder');
+    const badge = document.getElementById('proofBadgeStatus');
 
     preview.src = dataUrl;
-    preview.classList.remove(\'hidden\');
-    placeholder.classList.add(\'hidden\');
+    preview.classList.remove('hidden');
+    placeholder.classList.add('hidden');
 
-    badge.className = \'px-2.5 py-1 rounded-full text-xs font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold\';
-    badge.innerHTML = \'<i class="fa-solid fa-check"></i> แนบภาพหลักฐานเรียบร้อยแล้ว\';
+    badge.className = 'px-2.5 py-1 rounded-full text-xs font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold';
+    badge.innerHTML = '<i class="fa-solid fa-check"></i> แนบภาพหลักฐานเรียบร้อยแล้ว';
 }
 
 function handleFormReset() {
     if (confirm("ต้องการล้างข้อมูลในแบบบันทึกผลการทดลองทั้งหมดใช่หรือไม่?")) {
-        document.getElementById(\'image_proof_base64\').value = \'\';
-        document.getElementById(\'proofPreviewImg\').classList.add(\'hidden\');
-        document.getElementById(\'proofPlaceholder\').classList.remove(\'hidden\');
-        const badge = document.getElementById(\'proofBadgeStatus\');
-        badge.className = \'px-2.5 py-1 rounded-full text-xs font-mono bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold\';
-        badge.innerHTML = \'⚠️ ยังไม่ได้แนบภาพหลักฐาน\';
+        document.getElementById('image_proof_base64').value = '';
+        document.getElementById('proofPreviewImg').classList.add('hidden');
+        document.getElementById('proofPlaceholder').classList.remove('hidden');
+        const badge = document.getElementById('proofBadgeStatus');
+        badge.className = 'px-2.5 py-1 rounded-full text-xs font-mono bg-rose-500/20 text-rose-300 border border-rose-500/30 font-bold';
+        badge.innerHTML = '⚠️ ยังไม่ได้แนบภาพหลักฐาน';
     }
 }
 
@@ -617,103 +622,103 @@ async function handleReportSubmit(e) {
     e.preventDefault();
 
     // 1. Check Student Identification
-    const fullname = document.getElementById(\'student_fullname\').value.trim();
-    const studentId = document.getElementById(\'student_id\').value.trim();
-    const program = document.getElementById(\'student_program\').value.trim();
-    const section = document.getElementById(\'student_section\').value.trim();
+    const fullname = document.getElementById('student_fullname').value.trim();
+    const studentId = document.getElementById('student_id').value.trim();
+    const program = document.getElementById('student_program').value.trim();
+    const section = document.getElementById('student_section').value.trim();
 
     if (!fullname || !studentId || !program || !section) {
         alert("⚠️ กรุณากรอกข้อมูลระบุตัวตนของนักศึกษาให้ครบถ้วนทุกช่องครับ");
-        document.getElementById(\'student_fullname\').focus();
+        document.getElementById('student_fullname').focus();
         return;
     }
 
     // 2. Check Mandatory Image Proof
-    const proofBase64 = document.getElementById(\'image_proof_base64\').value;
+    const proofBase64 = document.getElementById('image_proof_base64').value;
     if (!proofBase64 || proofBase64.length < 500) {
         alert("⚠️ ระบบไม่อนุญาตให้ส่งรายงาน!\nกรุณาแคปภาพหน้าจอขณะทำการทดลอง 3D Simulator หรืออัปโหลดภาพหลักฐานก่อนกดส่งครับ");
-        const proofSection = document.getElementById(\'proofBadgeStatus\');
-        if (proofSection) proofSection.scrollIntoView({ behavior: \'smooth\', block: \'center\' });
+        const proofSection = document.getElementById('proofBadgeStatus');
+        if (proofSection) proofSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
     }
 
     // 3. Check All Table 3.1 Inputs
-    const t1Inputs = document.querySelectorAll(\'#labReportForm [id^="t1_"]\');
+    const t1Inputs = document.querySelectorAll('#labReportForm [id^="t1_"]');
     for (let inp of t1Inputs) {
-        if (!inp.value || inp.value.trim() === \'\') {
-            alert("⚠️ กรุณากรอกข้อมูลใน \'ตารางที่ 3.1: มิติและสมบัติทางกายภาพของลูกกลมโลหะ\' ให้ครบถ้วนทุกช่องครับ");
+        if (!inp.value || inp.value.trim() === '') {
+            alert("⚠️ กรุณากรอกข้อมูลใน 'ตารางที่ 3.1: มิติและสมบัติทางกายภาพของลูกกลมโลหะ' ให้ครบถ้วนทุกช่องครับ");
             inp.focus();
-            inp.scrollIntoView({ behavior: \'smooth\', block: \'center\' });
+            inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
     }
 
     // 4. Check All Table 3.2 Inputs
-    const t2Inputs = document.querySelectorAll(\'#labReportForm [id^="t2_"]\');
+    const t2Inputs = document.querySelectorAll('#labReportForm [id^="t2_"]');
     for (let inp of t2Inputs) {
-        if (!inp.value || inp.value.trim() === \'\') {
-            alert("⚠️ กรุณากรอกข้อมูลใน \'ตารางที่ 3.2: การจับเวลาการตกและอัตราเร็วสุดท้าย\' ให้ครบถ้วนทุกช่องครับ");
+        if (!inp.value || inp.value.trim() === '') {
+            alert("⚠️ กรุณากรอกข้อมูลใน 'ตารางที่ 3.2: การจับเวลาการตกและอัตราเร็วสุดท้าย' ให้ครบถ้วนทุกช่องครับ");
             inp.focus();
-            inp.scrollIntoView({ behavior: \'smooth\', block: \'center\' });
+            inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
     }
 
     // 5. Check All Table 3.3 Inputs
-    const t3Inputs = document.querySelectorAll(\'#labReportForm [id^="t3_"]\');
+    const t3Inputs = document.querySelectorAll('#labReportForm [id^="t3_"]');
     for (let inp of t3Inputs) {
-        if (!inp.value || inp.value.trim() === \'\') {
-            alert("⚠️ กรุณากรอกข้อมูลใน \'ตารางที่ 3.3: การคำนวณสัมประสิทธิ์ความหนืดของของเหลวชีวภาพ\' ให้ครบถ้วนทุกช่องครับ");
+        if (!inp.value || inp.value.trim() === '') {
+            alert("⚠️ กรุณากรอกข้อมูลใน 'ตารางที่ 3.3: การคำนวณสัมประสิทธิ์ความหนืดของของเหลวชีวภาพ' ให้ครบถ้วนทุกช่องครับ");
             inp.focus();
-            inp.scrollIntoView({ behavior: \'smooth\', block: \'center\' });
+            inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
     }
 
     // 6. Check Textareas (Calculations, Discussion, Conclusion)
-    const calculations = document.getElementById(\'lab_calculations\').value.trim();
-    const discussion = document.getElementById(\'lab_discussion\').value.trim();
-    const conclusion = document.getElementById(\'lab_conclusion\').value.trim();
+    const calculations = document.getElementById('lab_calculations').value.trim();
+    const discussion = document.getElementById('lab_discussion').value.trim();
+    const conclusion = document.getElementById('lab_conclusion').value.trim();
 
     if (!calculations || calculations.length < 25) {
-        alert("⚠️ กรุณากรอก \'การแสดงวิธีคำนวณอย่างละเอียด\' ให้สมบูรณ์ก่อนส่งครับ");
-        document.getElementById(\'lab_calculations\').focus();
+        alert("⚠️ กรุณากรอก 'การแสดงวิธีคำนวณอย่างละเอียด' ให้สมบูรณ์ก่อนส่งครับ");
+        document.getElementById('lab_calculations').focus();
         return;
     }
 
     if (!discussion || discussion.length < 30) {
-        alert("⚠️ กรุณากรอก \'การวิเคราะห์และอภิปรายผล\' ให้สมบูรณ์ก่อนส่งครับ");
-        document.getElementById(\'lab_discussion\').focus();
+        alert("⚠️ กรุณากรอก 'การวิเคราะห์และอภิปรายผล' ให้สมบูรณ์ก่อนส่งครับ");
+        document.getElementById('lab_discussion').focus();
         return;
     }
 
     if (!conclusion || conclusion.length < 25) {
-        alert("⚠️ กรุณากรอก \'การสรุปผลการทดลอง\' ให้สมบูรณ์ก่อนส่งครับ");
-        document.getElementById(\'lab_conclusion\').focus();
+        alert("⚠️ กรุณากรอก 'การสรุปผลการทดลอง' ให้สมบูรณ์ก่อนส่งครับ");
+        document.getElementById('lab_conclusion').focus();
         return;
     }
 
     // 7. Check Post-Lab Quiz Answers
-    const q1 = document.getElementById(\'quiz_ans_1\').value.trim();
-    const q2 = document.getElementById(\'quiz_ans_2\').value.trim();
-    const q3 = document.getElementById(\'quiz_ans_3\').value.trim();
+    const q1 = document.getElementById('quiz_ans_1').value.trim();
+    const q2 = document.getElementById('quiz_ans_2').value.trim();
+    const q3 = document.getElementById('quiz_ans_3').value.trim();
 
     if (!q1 || !q2 || !q3) {
         alert("⚠️ กรุณาตอบคำถามท้ายการทดลองให้ครบทั้ง 3 ข้อก่อนส่งรายงานครับ");
-        document.getElementById(\'quiz_ans_1\').focus();
+        document.getElementById('quiz_ans_1').focus();
         return;
     }
 
     // Construct Payload for Virtual Lab Backend
-    const submitBtn = document.getElementById(\'btnSubmitReport\');
+    const submitBtn = document.getElementById('btnSubmitReport');
     submitBtn.disabled = true;
-    submitBtn.innerHTML = \'<i class="fa-solid fa-spinner animate-spin"></i> กำลังบันทึกลงฐานข้อมูล SQLite & ซิงก์ Google Sheets...\';
+    submitBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> กำลังบันทึกลงฐานข้อมูล SQLite & ซิงก์ Google Sheets...';
 
     // Collect table 3.1 data
     const table1Data = [];
     for (let r = 1; r <= 3; r++) {
         table1Data.push({
-            sphere_size: r === 1 ? \'small\' : (r === 2 ? \'medium\' : \'large\'),
+            sphere_size: r === 1 ? 'small' : (r === 2 ? 'medium' : 'large'),
             d_mm: document.getElementById(`t1_r${r}_d`).value,
             r_mm: document.getElementById(`t1_r${r}_r`).value,
             rsq_mm2: document.getElementById(`t1_r${r}_rsq`).value,
@@ -727,7 +732,7 @@ async function handleReportSubmit(e) {
     const table2Data = [];
     for (let r = 1; r <= 3; r++) {
         table2Data.push({
-            sphere_size: r === 1 ? \'small\' : (r === 2 ? \'medium\' : \'large\'),
+            sphere_size: r === 1 ? 'small' : (r === 2 ? 'medium' : 'large'),
             dist_m: 0.20,
             t1_s: document.getElementById(`t2_r${r}_t1`).value,
             t2_s: document.getElementById(`t2_r${r}_t2`).value,
@@ -751,8 +756,8 @@ async function handleReportSubmit(e) {
     }
 
     const payload = {
-        action: \'submit_report\',
-        lab_id: \'lab03\',
+        action: 'submit_report',
+        lab_id: 'lab03',
         student_id: studentId,
         fullname: fullname,
         program: program,
@@ -770,38 +775,38 @@ async function handleReportSubmit(e) {
     };
 
     try {
-        const res = await fetch(\'../../virtual_lab/api/api.php?action=submit_report\', {
-            method: \'POST',
-            headers: { \'Content-Type\': \'application/json\' },
+        const res = await fetch('../../virtual_lab/api/api.php?action=submit_report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
         const data = await res.json();
 
-        if (data.status === \'success\' || data.success) {
-            document.getElementById(\'modalSubmitDetails\').innerHTML = `
+        if (data.status === 'success' || data.success) {
+            document.getElementById('modalSubmitDetails').innerHTML = `
                 รหัสนักศึกษา: <strong>${studentId}</strong> (${fullname})<br>
-                ปฏิบัติการ: <strong>Lab 03 (Newton\'s Laws &amp; Falling-Sphere Viscometer)</strong><br>
-                หมายเลขบันทึกรายงาน ID: <strong>#${data.report_id || data.id || \'SAVED\'}</strong><br>
+                ปฏิบัติการ: <strong>Lab 03 (Newton's Laws &amp; Falling-Sphere Viscometer)</strong><br>
+                หมายเลขบันทึกรายงาน ID: <strong>#${data.report_id || data.id || 'SAVED'}</strong><br>
                 สถานะจัดเก็บภาพถ่าย: <span class="text-emerald-400">✓ บันทึกไฟล์ PNG สำเร็จ</span><br>
-                สถานะซิงก์ Google Sheets: <span class="${data.google_sheets_synced ? \'text-emerald-400 font-bold\' : \'text-amber-400\'}">${data.google_sheets_synced ? \'✓ ซิงก์เรียบร้อยแล้ว\' : \'คิวซิงก์พร้อมส่ง\'}</span>
+                สถานะซิงก์ Google Sheets: <span class="${data.google_sheets_synced ? 'text-emerald-400 font-bold' : 'text-amber-400'}">${data.google_sheets_synced ? '✓ ซิงก์เรียบร้อยแล้ว' : 'คิวซิงก์พร้อมส่ง'}</span>
             `;
-            document.getElementById(\'submitModal\').classList.remove(\'hidden\');
+            document.getElementById('submitModal').classList.remove('hidden');
         } else {
-            alert(\'⚠️ เกิดข้อผิดพลาดในการบันทึกข้อมูล: \' + (data.message || \'ไม่สามารถเชื่อมต่อฐานข้อมูลได้\'));
+            alert('⚠️ เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + (data.message || 'ไม่สามารถเชื่อมต่อฐานข้อมูลได้'));
         }
     } catch (err) {
-        console.error(\'Submit error:\', err);
-        alert(\'⚠️ ไม่สามารถส่งข้อมูลไปยัง Server ได้ กรุณาตรวจสอบการเชื่อมต่อ XAMPP Apache/PHP\');
+        console.error('Submit error:', err);
+        alert('⚠️ ไม่สามารถส่งข้อมูลไปยัง Server ได้ กรุณาตรวจสอบการเชื่อมต่อ XAMPP Apache/PHP');
     } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = \'<i class="fa-solid fa-paper-plane"></i> ยืนยันการส่งรายงานปฏิบัติการที่ 3\';
+        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> ยืนยันการส่งรายงานปฏิบัติการที่ 3';
     }
 }
 
 function closeSubmitModal() {
-    document.getElementById(\'submitModal\').classList.add(\'hidden\');
+    document.getElementById('submitModal').classList.add('hidden');
 }
 </script>
 
-<?php include \'../includes/footer.php\'; ?>
+<?php include '../includes/footer.php'; ?>
