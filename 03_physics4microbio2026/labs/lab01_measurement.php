@@ -493,11 +493,154 @@ include '../includes/header.php';
 
 <script>
 // ============================================================
-// 3D Virtual Bench Engine (Three.js PBR Studio)
+// Blender-Grade 3D CAD Vernier Caliper Engine (Three.js PBR Studio)
+// Engineered according to MCP blender-3d parametric blueprint
 // ============================================================
 let instRenderer, instScene, instCamera, instControls;
-let caliperGroup, slideJawMesh, petriGroup;
+let caliperRoot, fixedBodyGroup, slidingAssemblyGroup;
+let depthGaugeRod, petriSpecimen, cuvetteSpecimen, colonySpecimen;
 let benchArStream = null;
+let currentSpecimenType = 'petri';
+
+// --- Procedural Laser-Etched Ruler Texture (2048 x 256) ---
+function generateRulerTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 2048;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+
+    // Brushed Stainless Steel Metallic Base
+    const grad = ctx.createLinearGradient(0, 0, 0, 256);
+    grad.addColorStop(0, '#e2e8f0');
+    grad.addColorStop(0.3, '#f8fafc');
+    grad.addColorStop(0.7, '#cbd5e1');
+    grad.addColorStop(1, '#94a3b8');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 2048, 256);
+
+    // Fine brushed horizontal streaks
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+    for (let i = 0; i < 40; i++) {
+        const y = Math.random() * 256;
+        ctx.fillRect(0, y, 2048, 1);
+    }
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    for (let i = 0; i < 40; i++) {
+        const y = Math.random() * 256;
+        ctx.fillRect(0, y, 2048, 1);
+    }
+
+    // Baseline for metric ticks
+    ctx.strokeStyle = '#0f172a';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(100, 180);
+    ctx.lineTo(1980, 180);
+    ctx.stroke();
+
+    // Laser-etched millimeter graduations (0 - 150 mm)
+    const startX = 140;
+    const pxPerMm = 12.0; // 12 px per mm
+
+    ctx.fillStyle = '#0f172a';
+    ctx.font = 'bold 22px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center';
+
+    for (let mm = 0; mm <= 150; mm++) {
+        const x = startX + mm * pxPerMm;
+        let tickH = 22; // 1 mm
+
+        if (mm % 10 === 0) {
+            tickH = 65; // 10 mm
+            ctx.lineWidth = 3.5;
+            ctx.fillText(mm.toString(), x, 90);
+        } else if (mm % 5 === 0) {
+            tickH = 40; // 5 mm
+            ctx.lineWidth = 2.5;
+        } else {
+            ctx.lineWidth = 1.8;
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(x, 180);
+        ctx.lineTo(x, 180 - tickH);
+        ctx.stroke();
+    }
+
+    // Engineering Laser Branding
+    ctx.font = 'bold 18px "Prompt", sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#334155';
+    ctx.fillText('STAINLESS HARDENED • 0.05 mm • RBRU SciExHub 2026/2027', startX + 240, 230);
+
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = THREE.ClampToEdgeWrapping;
+    tex.wrapT = THREE.ClampToEdgeWrapping;
+    tex.anisotropy = 16;
+    return tex;
+}
+
+// --- Procedural Vernier Scale Plate Texture (512 x 256) ---
+function generateVernierTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+
+    // Beveled Satin Chrome Base
+    const grad = ctx.createLinearGradient(0, 0, 0, 256);
+    grad.addColorStop(0, '#38bdf8');
+    grad.addColorStop(0.2, '#e0f2fe');
+    grad.addColorStop(0.8, '#bae6fd');
+    grad.addColorStop(1, '#0284c7');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 512, 256);
+
+    ctx.strokeStyle = '#0284c7';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(4, 4, 504, 248);
+
+    // Baseline
+    ctx.strokeStyle = '#0f172a';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(30, 70);
+    ctx.lineTo(482, 70);
+    ctx.stroke();
+
+    // 0.05 mm Vernier Division marks (20 divisions = 39 mm / 2)
+    const vStartX = 40;
+    const vStep = 21.0;
+    ctx.fillStyle = '#0f172a';
+    ctx.font = 'bold 22px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center';
+
+    for (let i = 0; i <= 20; i++) {
+        const x = vStartX + i * vStep;
+        let tickH = 24;
+        if (i % 2 === 0) {
+            tickH = 48;
+            ctx.lineWidth = 3;
+            ctx.fillText((i / 2).toString(), x, 150);
+        } else {
+            tickH = 32;
+            ctx.lineWidth = 2;
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(x, 70);
+        ctx.lineTo(x, 70 + tickH);
+        ctx.stroke();
+    }
+
+    ctx.font = 'bold 15px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#0369a1';
+    ctx.fillText('0.05 mm VERNIER', 256, 210);
+
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.anisotropy = 16;
+    return tex;
+}
 
 function initInstrument3D() {
     const container = document.getElementById('instrument-3d-canvas');
@@ -507,14 +650,14 @@ function initInstrument3D() {
     const h = container.clientHeight || 360;
 
     instScene = new THREE.Scene();
-    instCamera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
-    instCamera.position.set(0, 4, 11);
+    instCamera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
+    instCamera.position.set(0, 3.5, 11);
 
     instRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     instRenderer.setSize(w, h);
     instRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     instRenderer.toneMapping = THREE.ACESFilmicToneMapping;
-    instRenderer.toneMappingExposure = 1.25;
+    instRenderer.toneMappingExposure = 1.3;
     container.innerHTML = '';
     container.appendChild(instRenderer.domElement);
 
@@ -522,114 +665,208 @@ function initInstrument3D() {
         instControls = new THREE.OrbitControls(instCamera, instRenderer.domElement);
         instControls.enableDamping = true;
         instControls.dampingFactor = 0.05;
-        instControls.maxDistance = 25;
-        instControls.minDistance = 2;
+        instControls.maxDistance = 22;
+        instControls.minDistance = 3;
     }
 
-    // 3-Point Studio Lights
-    const ambLight = new THREE.AmbientLight(0xffffff, 0.85);
+    // 3-Point Studio Lighting (Blender Cycles Emulation)
+    const ambLight = new THREE.AmbientLight(0xffffff, 0.95);
     instScene.add(ambLight);
 
-    const keyLight = new THREE.DirectionalLight(0x38bdf8, 2.0);
-    keyLight.position.set(10, 15, 10);
+    const keyLight = new THREE.DirectionalLight(0xf8fafc, 2.2);
+    keyLight.position.set(12, 16, 12);
     instScene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x10b981, 1.4);
-    rimLight.position.set(-10, -5, -8);
-    instScene.add(rimLight);
+    const cyanRim = new THREE.DirectionalLight(0x38bdf8, 1.8);
+    cyanRim.position.set(-14, -6, -10);
+    instScene.add(cyanRim);
 
-    // Bench Grid
-    const grid = new THREE.GridHelper(16, 24, 0x10b981, 0x1e293b);
-    grid.position.y = -1.2;
+    const amberFill = new THREE.DirectionalLight(0xf59e0b, 0.8);
+    amberFill.position.set(10, -8, 8);
+    instScene.add(amberFill);
+
+    // Bench Grid Surface
+    const grid = new THREE.GridHelper(20, 32, 0x10b981, 0x1e293b);
+    grid.position.y = -2.2;
     instScene.add(grid);
 
-    // Assembly Group
-    caliperGroup = new THREE.Group();
+    // Root Group for complete assembly
+    caliperRoot = new THREE.Group();
 
-    // High Polish Stainless Steel Material
-    const steelMat = new THREE.MeshStandardMaterial({
+    // -------------------------------------------------------------
+    // 1. FIXED CALIPER BODY (Main Ruler Beam + Fixed Jaws)
+    // -------------------------------------------------------------
+    fixedBodyGroup = new THREE.Group();
+
+    const steelPBR = new THREE.MeshStandardMaterial({
         color: 0xe2e8f0,
-        metalness: 0.88,
-        roughness: 0.22
+        metalness: 0.90,
+        roughness: 0.20
     });
 
-    // Main Beam with Millimeter Marks
-    const beamGeom = new THREE.BoxGeometry(9, 0.65, 0.14);
-    const mainBeam = new THREE.Mesh(beamGeom, steelMat);
-    caliperGroup.add(mainBeam);
-
-    // Fixed Outer & Inner Jaws
-    const fixedJawGeom = new THREE.BoxGeometry(0.85, 2.4, 0.16);
-    const fixedJaw = new THREE.Mesh(fixedJawGeom, steelMat);
-    fixedJaw.position.set(-4.0, -0.85, 0);
-    caliperGroup.add(fixedJaw);
-
-    const fixedTopJawGeom = new THREE.BoxGeometry(0.6, 1.0, 0.16);
-    const fixedTopJaw = new THREE.Mesh(fixedTopJawGeom, steelMat);
-    fixedTopJaw.position.set(-4.0, 0.75, 0);
-    caliperGroup.add(fixedTopJaw);
-
-    // Sliding Vernier Frame
-    const slideFrameMat = new THREE.MeshStandardMaterial({
-        color: 0x38bdf8,
-        metalness: 0.75,
-        roughness: 0.28
+    const rulerMat = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        metalness: 0.85,
+        roughness: 0.22,
+        map: generateRulerTexture()
     });
-    const slideJawGeom = new THREE.BoxGeometry(0.9, 2.4, 0.18);
-    slideJawMesh = new THREE.Mesh(slideJawGeom, slideFrameMat);
-    slideJawMesh.position.set(-1.4, -0.85, 0.02);
-    caliperGroup.add(slideJawMesh);
 
-    // Borosilicate Glass Petri Dish with Agar & Colonies
-    petriGroup = new THREE.Group();
-    const glassMat = new THREE.MeshPhysicalMaterial({
+    // Main Beam Bar (length ~11.5 units)
+    const beamGeom = new THREE.BoxGeometry(11.5, 0.82, 0.18);
+    const mainBeam = new THREE.Mesh(beamGeom, rulerMat);
+    mainBeam.position.set(1.5, 0, 0);
+    fixedBodyGroup.add(mainBeam);
+
+    // Ergonomic Fixed Lower Jaw (Curved profile via ExtrudeGeometry)
+    const lowerJawShape = new THREE.Shape();
+    lowerJawShape.moveTo(-4.2, 0.41);
+    lowerJawShape.lineTo(-4.2, -3.2); // Precision ground flat measuring face
+    lowerJawShape.lineTo(-4.9, -3.2); // Jaw tip width
+    lowerJawShape.quadraticCurveTo(-5.4, -2.0, -5.2, -0.6); // Ergonomic outer arc
+    lowerJawShape.lineTo(-5.2, 0.41);
+    lowerJawShape.closePath();
+
+    const extrudeSettings = { depth: 0.18, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.02, bevelThickness: 0.02 };
+    const fixedLowerJaw = new THREE.Mesh(new THREE.ExtrudeGeometry(lowerJawShape, extrudeSettings), steelPBR);
+    fixedLowerJaw.position.z = -0.09;
+    fixedBodyGroup.add(fixedLowerJaw);
+
+    // Pointed Fixed Upper Horn (Internal measurement horn)
+    const upperHornShape = new THREE.Shape();
+    upperHornShape.moveTo(-4.2, 0.41);
+    upperHornShape.lineTo(-4.2, 1.8);
+    upperHornShape.lineTo(-4.7, 0.41);
+    upperHornShape.closePath();
+    const fixedUpperHorn = new THREE.Mesh(new THREE.ExtrudeGeometry(upperHornShape, extrudeSettings), steelPBR);
+    fixedUpperHorn.position.z = -0.09;
+    fixedBodyGroup.add(fixedUpperHorn);
+
+    caliperRoot.add(fixedBodyGroup);
+
+    // -------------------------------------------------------------
+    // 2. SLIDING VERNIER ASSEMBLY (Sliding Jaws, Collar, Thumb Wheel)
+    // -------------------------------------------------------------
+    slidingAssemblyGroup = new THREE.Group();
+
+    const vernierPlateMat = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        metalness: 0.85,
+        roughness: 0.25,
+        map: generateVernierTexture()
+    });
+
+    // Sliding Collar Frame
+    const collarGeom = new THREE.BoxGeometry(2.2, 1.15, 0.28);
+    const sliderCollar = new THREE.Mesh(collarGeom, steelPBR);
+    slidingAssemblyGroup.add(sliderCollar);
+
+    // Vernier scale faceplate
+    const plateGeom = new THREE.PlaneGeometry(1.9, 0.75);
+    const vernierPlate = new THREE.Mesh(plateGeom, vernierPlateMat);
+    vernierPlate.position.set(0, 0, 0.145);
+    slidingAssemblyGroup.add(vernierPlate);
+
+    // Sliding Lower Jaw (Opposing curved profile)
+    const slideLowerShape = new THREE.Shape();
+    slideLowerShape.moveTo(0, 0.41);
+    slideLowerShape.lineTo(0, -3.2); // Opposite clamping face
+    slideLowerShape.lineTo(0.7, -3.2);
+    slideLowerShape.quadraticCurveTo(1.2, -2.0, 1.0, -0.6);
+    slideLowerShape.lineTo(1.0, 0.41);
+    slideLowerShape.closePath();
+    const slideLowerJaw = new THREE.Mesh(new THREE.ExtrudeGeometry(slideLowerShape, extrudeSettings), steelPBR);
+    slideLowerJaw.position.z = -0.09;
+    slidingAssemblyGroup.add(slideLowerJaw);
+
+    // Sliding Upper Horn
+    const slideUpperShape = new THREE.Shape();
+    slideUpperShape.moveTo(0, 0.41);
+    slideUpperShape.lineTo(0, 1.8);
+    slideUpperShape.lineTo(0.5, 0.41);
+    slideUpperShape.closePath();
+    const slideUpperHorn = new THREE.Mesh(new THREE.ExtrudeGeometry(slideUpperShape, extrudeSettings), steelPBR);
+    slideUpperHorn.position.z = -0.09;
+    slidingAssemblyGroup.add(slideUpperHorn);
+
+    // Knurled Thumbscrew Lock Knob (Top)
+    const lockScrewGeom = new THREE.CylinderGeometry(0.18, 0.18, 0.45, 16);
+    const brassMat = new THREE.MeshStandardMaterial({ color: 0xd97706, metalness: 0.85, roughness: 0.25 });
+    const lockScrew = new THREE.Mesh(lockScrewGeom, brassMat);
+    lockScrew.position.set(0.4, 0.75, 0);
+    slidingAssemblyGroup.add(lockScrew);
+
+    // Thumb Grip Shelf
+    const thumbGripGeom = new THREE.BoxGeometry(0.6, 0.12, 0.32);
+    const thumbGrip = new THREE.Mesh(thumbGripGeom, steelPBR);
+    thumbGrip.position.set(0.6, -0.65, 0);
+    slidingAssemblyGroup.add(thumbGrip);
+
+    // Depth Gauge Rod (extends through beam rear slot)
+    const rodGeom = new THREE.BoxGeometry(11.5, 0.1, 0.06);
+    depthGaugeRod = new THREE.Mesh(rodGeom, steelPBR);
+    depthGaugeRod.position.set(5.75, -0.05, -0.12);
+    slidingAssemblyGroup.add(depthGaugeRod);
+
+    caliperRoot.add(slidingAssemblyGroup);
+
+    // -------------------------------------------------------------
+    // 3. SPECIMENS (Petri Dish, Spectrophotometer Cuvette, Colony)
+    // -------------------------------------------------------------
+    // Specimen 1: Borosilicate Glass Petri Dish
+    petriSpecimen = new THREE.Group();
+    const glassPBR = new THREE.MeshPhysicalMaterial({
         color: 0xffffff,
         metalness: 0.05,
-        roughness: 0.04,
-        transmission: 0.94,
+        roughness: 0.03,
+        transmission: 0.95,
         transparent: true,
         opacity: 0.88,
         ior: 1.52
     });
-    const dishGeom = new THREE.CylinderGeometry(1.3, 1.3, 0.35, 36);
-    const petriDish = new THREE.Mesh(dishGeom, glassMat);
-    petriDish.rotation.x = Math.PI / 2;
-    petriGroup.add(petriDish);
+    const dishMesh = new THREE.Mesh(new THREE.CylinderGeometry(1.35, 1.35, 0.4, 36), glassPBR);
+    dishMesh.rotation.x = Math.PI / 2;
+    petriSpecimen.add(dishMesh);
 
-    // Nutrient Agar
-    const agarMat = new THREE.MeshStandardMaterial({
-        color: 0xf59e0b,
-        roughness: 0.45,
-        transparent: true,
-        opacity: 0.65
+    const agarMesh = new THREE.Mesh(new THREE.CylinderGeometry(1.28, 1.28, 0.15, 32), new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.4, transparent: true, opacity: 0.65 }));
+    agarMesh.rotation.x = Math.PI / 2;
+    petriSpecimen.add(agarMesh);
+
+    // Bacterial Colonies
+    const colMat = new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x34d399, emissiveIntensity: 0.5 });
+    [[0.3, 0.4], [-0.5, 0.2], [0.2, -0.5], [-0.3, -0.4], [0.6, -0.2]].forEach(([cx, cy]) => {
+        const dot = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), colMat);
+        dot.position.set(cx, cy, 0.1);
+        petriSpecimen.add(dot);
     });
-    const agarGeom = new THREE.CylinderGeometry(1.24, 1.24, 0.12, 32);
-    const agar = new THREE.Mesh(agarGeom, agarMat);
-    agar.rotation.x = Math.PI / 2;
-    petriGroup.add(agar);
+    caliperRoot.add(petriSpecimen);
 
-    // Glowing Bacterial Colony Dots
-    const colonyMat = new THREE.MeshStandardMaterial({
-        color: 0x10b981,
-        emissive: 0x34d399,
-        emissiveIntensity: 0.6
-    });
-    const colCoords = [[0.3, 0.4], [-0.5, 0.2], [0.2, -0.5], [-0.3, -0.4], [0.6, -0.2]];
-    colCoords.forEach(([cx, cy]) => {
-        const dot = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), colonyMat);
-        dot.position.set(cx, cy, 0.08);
-        petriGroup.add(dot);
-    });
+    // Specimen 2: Spectrophotometer Optical Cuvette (12.5 mm standard pathlength)
+    cuvetteSpecimen = new THREE.Group();
+    const cuvetteGlass = new THREE.Mesh(new THREE.BoxGeometry(0.5, 1.8, 0.5), glassPBR);
+    const cuvetteLiquid = new THREE.Mesh(new THREE.BoxGeometry(0.42, 1.4, 0.42), new THREE.MeshPhysicalMaterial({ color: 0x06b6d4, roughness: 0.05, transmission: 0.9, transparent: true, opacity: 0.8 }));
+    cuvetteLiquid.position.y = -0.15;
+    cuvetteSpecimen.add(cuvetteGlass, cuvetteLiquid);
+    cuvetteSpecimen.visible = false;
+    caliperRoot.add(cuvetteSpecimen);
 
-    petriGroup.position.set(-2.7, -0.85, 0);
-    caliperGroup.add(petriGroup);
+    // Specimen 3: Single Bacterial Colony Agar Plaque (2.45 mm)
+    colonySpecimen = new THREE.Group();
+    const plaqueMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.25, 24), glassPBR);
+    plaqueMesh.rotation.x = Math.PI / 2;
+    const singleColony = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 16), colMat);
+    colonySpecimen.add(plaqueMesh, singleColony);
+    colonySpecimen.visible = false;
+    caliperRoot.add(colonySpecimen);
 
-    instScene.add(caliperGroup);
+    instScene.add(caliperRoot);
+
+    // Initial position: 88.60 mm
+    updateCaliperSlide(88.60);
 
     // Animation Loop
     function animate() {
         requestAnimationFrame(animate);
-        caliperGroup.rotation.y += 0.002;
+        caliperRoot.rotation.y += 0.0015;
         if (instControls) instControls.update();
         instRenderer.render(instScene, instCamera);
     }
@@ -645,7 +882,7 @@ function initInstrument3D() {
 
 function resetBenchCamera() {
     if (instCamera && instControls) {
-        instCamera.position.set(0, 4, 11);
+        instCamera.position.set(0, 3.5, 11);
         instControls.target.set(0, 0, 0);
         instControls.update();
     }
@@ -709,7 +946,7 @@ function stopBenchAr() {
     if (video) video.classList.add('hidden');
 }
 
-// Precision Caliper Mechanics
+// Precision Caliper Mechanics & Real-Time Rigging
 function updateCaliperSlide(val) {
     const mm = parseFloat(val);
     const mainScale = Math.floor(mm);
@@ -719,14 +956,44 @@ function updateCaliperSlide(val) {
     document.getElementById('liveReadingDisplay').textContent = `${mm.toFixed(2)} mm`;
     document.getElementById('sliderFormula').innerHTML = `สเกลหลัก <span class="text-white font-bold">${mainScale} mm</span> + สเกลเวอร์เนียร์ ขีดที่ ${vernierLine} (<span class="text-sky-300 font-bold">${fraction.toFixed(2)} mm</span>) = <span class="text-emerald-400 font-bold">${mm.toFixed(2)} mm</span>`;
 
-    if (slideJawMesh) {
-        const xOffset = -4.0 + (mm / 150) * 4.5;
-        slideJawMesh.position.x = xOffset;
+    // Rigging: map millimeter position (0 - 150 mm) to Three.js world units
+    // Zero jaw offset: x = -4.2. Max jaw offset: x = 2.8
+    if (slidingAssemblyGroup) {
+        const slideX = -4.2 + (mm / 150.0) * 7.0;
+        slidingAssemblyGroup.position.x = slideX;
+
+        // Position active specimen between jaws
+        const midX = (-4.2 + slideX) / 2.0;
+        if (petriSpecimen && currentSpecimenType === 'petri') {
+            petriSpecimen.position.set(midX, -1.6, 0);
+            const dishScale = Math.max(0.2, (mm / 90.0));
+            petriSpecimen.scale.set(dishScale, dishScale, 1);
+        } else if (cuvetteSpecimen && currentSpecimenType === 'cuvette') {
+            cuvetteSpecimen.position.set(midX, -1.6, 0);
+        } else if (colonySpecimen && currentSpecimenType === 'colony') {
+            colonySpecimen.position.set(midX, -1.6, 0);
+        }
     }
 }
 
 function setSpecimen(sizeMm, name) {
     document.getElementById('caliperSlider').value = sizeMm;
+    if (name.includes('Petri')) {
+        currentSpecimenType = 'petri';
+        if (petriSpecimen) petriSpecimen.visible = true;
+        if (cuvetteSpecimen) cuvetteSpecimen.visible = false;
+        if (colonySpecimen) colonySpecimen.visible = false;
+    } else if (name.includes('คิวเวตต์')) {
+        currentSpecimenType = 'cuvette';
+        if (petriSpecimen) petriSpecimen.visible = false;
+        if (cuvetteSpecimen) cuvetteSpecimen.visible = true;
+        if (colonySpecimen) colonySpecimen.visible = false;
+    } else {
+        currentSpecimenType = 'colony';
+        if (petriSpecimen) petriSpecimen.visible = false;
+        if (cuvetteSpecimen) cuvetteSpecimen.visible = false;
+        if (colonySpecimen) colonySpecimen.visible = true;
+    }
     updateCaliperSlide(sizeMm);
 }
 
