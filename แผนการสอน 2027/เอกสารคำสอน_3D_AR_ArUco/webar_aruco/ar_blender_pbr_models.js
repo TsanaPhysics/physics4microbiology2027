@@ -1,11 +1,11 @@
 // ============================================================================
-// BLENDER Principled BSDF + Photorealistic PBR 12-Chapter Master Engine (v2027.6)
+// BLENDER Principled BSDF + Photorealistic PBR 12-Chapter Master Engine (v2027.5)
 // Course: 4011111 Physics for Microbiology (ArUco IDs 0 to 11)
 // Every single chapter (ID 0–11) is built to the exact same photorealistic
 // standard as the P1000 Micropipette showcase: hollow borosilicate glass with
 // rolled lips & concave meniscus, procedural knurling & brushed metal bump maps,
 // silk-screened graduations, live dynamic digital/analog instrument dials,
-// draggable 3D apparatus, and internal X-Ray cutaway mechanisms.
+// and internal X-Ray cutaway mechanisms.
 // ============================================================================
 (function () {
   // --------------------------------------------------------------------------
@@ -337,6 +337,7 @@
     })
   };
 
+  // Helper: Photorealistic Borosilicate Test Tube with Rounded Bottom, Rolled Lip, Enamel Graduations & Meniscus
   function buildBorosilicateTestTube(radius, height, liqHeight, liqMat, gradTex) {
     const g = new THREE.Group();
     const wall = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, height, 40, 1, true), M.borosilicate);
@@ -355,7 +356,7 @@
       g.add(grad);
     }
 
-    if (liqHeight > 0 && liqMat) {
+      if (liqHeight > 0 && liqMat) {
       const rIn = radius * 0.89;
       const lCyl = new THREE.Mesh(new THREE.CylinderGeometry(rIn, rIn, liqHeight, 32), liqMat);
       lCyl.position.y = -height * 0.5 + liqHeight * 0.5;
@@ -398,6 +399,10 @@
     }
 
     if (id === 0) {
+      // ======================================================================
+      // CH 1 (ID 0): Photorealistic Gilson P1000 Micropipette + 6 Borosilicate
+      // Serial Dilution Test Tubes (10^-1 to 10^-6) with Meniscus & Rack
+      // ======================================================================
       const pipGroup = new THREE.Group();
       pipGroup.position.set(-0.98, 0.25, 0);
 
@@ -412,15 +417,18 @@
       dynamicObjects.pipGroup = pipGroup;
       registerDraggable(pipGroup, "ไมโครปิเปต P1000 (หยิบไปจ่อหลอดทดลองได้)", "pipette");
 
+      // Glass window cover over 4-digit counter
       const winLens = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.42, 0.16), M.borosilicate);
       winLens.position.set(0.175, 0.12, 0);
       pipGroup.add(winLens);
 
+      // Ergonomic contoured finger rest hook
       const hook = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.075, 0.16), M.darkPVDF);
       hook.position.set(0.22, 0.68, 0);
       hook.rotation.z = -0.2;
       pipGroup.add(hook);
 
+      // Internal stainless piston & 14-coil brass compression spring (visible in X-Ray)
       const innerSpring = new THREE.Group();
       for (let s = 0; s < 14; s++) {
         const coil = new THREE.Mesh(new THREE.TorusGeometry(0.095, 0.014, 10, 24), M.goldPeltier);
@@ -431,10 +439,12 @@
       pipGroup.add(innerSpring);
       registerExplode(innerSpring, -0.55, 0, 0);
 
+      // Knurled micrometer volume dial
       const dial = new THREE.Mesh(new THREE.CylinderGeometry(0.165, 0.165, 0.22, 48), M.knurledDial);
       dial.position.y = 0.92;
       pipGroup.add(dial);
 
+      // Stainless 316L plunger rod & amber two-stop thumb cap
       const plunger = new THREE.Group();
       plunger.position.y = 1.25;
       const pRod = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.065, 0.58, 32), M.stainless316L);
@@ -445,6 +455,7 @@
       dynamicObjects.plunger = plunger;
       registerExplode(plunger, 0, 0.55, 0);
 
+      // Lower PVDF nose cone & 316L stainless tip-ejector arm + collar
       const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.145, 0.075, 0.62, 40), M.darkPVDF);
       shaft.position.y = -0.78;
       pipGroup.add(shaft);
@@ -456,6 +467,7 @@
       pipGroup.add(ejArm, ejCollar);
       registerExplode(ejArm, -0.35, 0, 0);
 
+      // Disposable clear polypropylene P1000 tip with graduation scale & meniscus reagent
       const tipGroup = new THREE.Group();
       tipGroup.position.y = -1.42;
       const tipCone = new THREE.Mesh(new THREE.CylinderGeometry(0.098, 0.022, 0.92, 40, 1, true), M.polypropylene);
@@ -475,6 +487,7 @@
       registerExplode(tipGroup, 0, -0.55, 0);
       modelGroup.add(pipGroup);
 
+      // 2-Tier Anodized Aluminum Test Tube Rack + 6 Borosilicate Glass Dilution Tubes
       const rackBase = new THREE.Mesh(new THREE.BoxGeometry(2.42, 0.10, 0.76), M.titaniumBrushed);
       rackBase.position.set(0.55, -1.38, 0);
       const rackTop = new THREE.Mesh(new THREE.BoxGeometry(2.42, 0.07, 0.76), M.blueAnodized);
@@ -501,6 +514,7 @@
         dynamicObjects.dilutionTubes.push(bTube);
         registerDraggable(bTube, `หลอดทดลองเจือจาง 10⁻${i + 1}`, "tube");
 
+        // Knurled Screw Cap on each tube
         const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.128, 0.128, 0.14, 32), i === 4 ? M.magentaGlow : M.knurledDial);
         cap.position.set(tx, -0.04, 0);
         modelGroup.add(cap);
@@ -510,7 +524,13 @@
       add3DLabel("หลอดแก้วบอโรซิลิเกต 10⁻¹ ถึง 10⁻⁶", 0.58, 0.42, 0, "#10b981");
 
     } else if (id === 1) {
+      // ======================================================================
+      // CH 2 (ID 1): Photorealistic E. coli Cell with Translucent Bio-Capsule,
+      // Internal Nucleoid DNA, Gram-Negative 4-Ring Rotary Motor & Flagella
+      // ======================================================================
       const bacGroup = new THREE.Group();
+
+      // Outer translucent polysaccharide capsule with cellular bump texture
       const outerRod = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 1.32, 48), M.bioCapsuleOuter);
       outerRod.rotation.z = Math.PI / 2;
       const outerCapL = new THREE.Mesh(new THREE.SphereGeometry(0.45, 36, 24), M.bioCapsuleOuter);
@@ -520,6 +540,7 @@
       bacGroup.add(outerRod, outerCapL, outerCapR);
       registerExplode(outerRod, 0, 0.68, 0);
 
+      // Inner cytoplasmic membrane
       const innerRod = new THREE.Mesh(new THREE.CylinderGeometry(0.37, 0.37, 1.22, 48), M.bioCytoplasm);
       innerRod.rotation.z = Math.PI / 2;
       const capL = new THREE.Mesh(new THREE.SphereGeometry(0.37, 32, 24), M.bioCytoplasm);
@@ -528,11 +549,13 @@
       capR.position.x = 0.61;
       bacGroup.add(innerRod, capL, capR);
 
+      // Internal tangled Nucleoid DNA & Golden 70S Ribosomes inside cell
       const nucleoid = new THREE.Mesh(new THREE.TorusKnotGeometry(0.20, 0.042, 80, 16, 2, 3), M.cyanGlow);
       nucleoid.scale.set(2.1, 0.85, 0.85);
       bacGroup.add(nucleoid);
       registerExplode(nucleoid, 0, -0.55, 0);
 
+      // Detailed 4-Ring Flagellar Basal Body Motor (L, P, MS, C Rings + MotA/B Stators)
       const motorPositions = [-0.98, -0.90, -0.82, -0.74];
       motorPositions.forEach((mx, mIdx) => {
         const ring = new THREE.Mesh(
@@ -548,6 +571,7 @@
       driveShaft.position.x = -0.88;
       bacGroup.add(driveShaft);
 
+      // 3 Intertwined Helical Flagella Filaments
       const flagGroup = new THREE.Group();
       for (let f = 0; f < 3; f++) {
         const phase = (f * Math.PI * 2) / 3;
@@ -583,8 +607,13 @@
       add3DLabel("แคปซูลชีวภาพ & Nucleoid DNA ภายใน", 0.55, 0.85, 0, "#00f0ff");
 
     } else if (id === 2) {
+      // ======================================================================
+      // CH 3 (ID 2): 100 mL Borosilicate Graduated Cylinder (Stokes' Law)
+      // + Brushed 316L Stainless Steel Class II Biosafety Cabinet (HEPA)
+      // ======================================================================
       const cylGroup = buildBorosilicateTestTube(0.58, 2.32, 1.95, M.reagentBlue, cylGradTex);
       cylGroup.position.set(-0.78, -0.22, 0);
+      // Hexagonal glass base for graduated cylinder
       const hexBase = new THREE.Mesh(new THREE.CylinderGeometry(0.76, 0.82, 0.14, 6), M.borosilicate);
       hexBase.position.y = -1.22;
       cylGroup.add(hexBase);
@@ -602,6 +631,7 @@
       const arrowUp = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(-0.78, 0.36, 0), 0.75, 0x00f0ff, 0.2, 0.14);
       modelGroup.add(arrowDown, arrowUp);
 
+      // Class II Biosafety Cabinet (Brushed 316L Stainless + Tempered Glass Sash + HEPA Pleats + OLED)
       const bscGroup = new THREE.Group();
       bscGroup.position.set(0.88, -0.35, 0);
       const rearWall = new THREE.Mesh(new THREE.BoxGeometry(1.48, 2.12, 0.14), M.stainless316L);
@@ -643,6 +673,10 @@
       add3DLabel("ตู้ปลอดเชื้อสแตนเลส 316L & แผ่นกรอง HEPA", 0.88, 1.15, 0, "#00f0ff");
 
     } else if (id === 3) {
+      // ======================================================================
+      // CH 4 (ID 3): High-Speed Refrigerated Microcentrifuge + Blue Anodized
+      // 30° Fixed-Angle Rotor + 6 Graduated 1.5 mL Eppendorf Tubes & Pellets
+      // ======================================================================
       const bowlOuter = new THREE.Mesh(new THREE.CylinderGeometry(1.58, 1.66, 0.96, 48), M.darkPVDF);
       bowlOuter.position.y = -1.02;
       const bowlInner = new THREE.Mesh(new THREE.CylinderGeometry(1.44, 1.44, 0.98, 48, 1, true), M.stainless316L);
@@ -676,7 +710,7 @@
 
         const tubeGroup = new THREE.Group();
         tubeGroup.position.set(0.84, 0.10, 0);
-        tubeGroup.rotation.z = -0.52;
+        tubeGroup.rotation.z = -0.52; // 30-deg fixed angle
 
         const eppWall = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.052, 0.86, 36, 1, true), M.polypropylene);
         const eppScale = new THREE.Mesh(
@@ -704,10 +738,15 @@
       add3DLabel("หลอด Eppendorf 1.5 mL & เม็ดตะกอน Pellet", 1.25, -0.32, 0, "#fbbf24");
 
     } else if (id === 4) {
+      // ======================================================================
+      // CH 5 (ID 4): Gold-Anodized 96-Well Peltier PCR Block + Copper Heat
+      // Pipes + Titanium Heatsink Fins + High-Res 3D Double-Helix DNA
+      // ======================================================================
       const peltierBlock = new THREE.Mesh(new THREE.BoxGeometry(2.32, 0.56, 1.58), M.goldPeltier);
       peltierBlock.position.y = -0.92;
       modelGroup.add(peltierBlock);
 
+      // Copper heat pipes & brushed titanium heatsink fins
       for (let f = -0.95; f <= 0.95; f += 0.24) {
         const fin = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.42, 1.66), M.titaniumBrushed);
         fin.position.set(f, -1.26, 0);
@@ -740,6 +779,7 @@
         }
       }
 
+      // 3D Double-Helix DNA with Phosphate Backbones & H-Bonded Base Pairs
       const dnaGroup = new THREE.Group();
       dnaGroup.position.y = 0.68;
       for (let i = 0; i < 24; i++) {
@@ -767,6 +807,11 @@
       add3DLabel("บล็อกทองคำ Peltier & ท่อความร้อนทองแดง", 0, -0.52, 0.92, "#fbbf24");
 
     } else if (id === 5) {
+      // ======================================================================
+      // CH 6 (ID 5): 316L Stainless & Copper Autoclave Pressure Vessel +
+      // 6-Spoke Radial Locking Wheel + Analog Bourbon Pressure Gauge (15 psi)
+      // + Graduated 500 mL Borosilicate Erlenmeyer Flask Inside
+      // ======================================================================
       const chamber = new THREE.Mesh(new THREE.CylinderGeometry(1.02, 1.02, 2.12, 48, 1, true), M.borosilicate);
       chamber.position.y = -0.35;
       const flangeRing = new THREE.Mesh(new THREE.TorusGeometry(1.04, 0.075, 18, 48), M.stainless316L);
@@ -776,6 +821,7 @@
       copperJacket.position.y = -1.16;
       modelGroup.add(chamber, flangeRing, copperJacket);
 
+      // Domed Stainless Pressure Lid + 6-Spoke Radial Locking Handwheel + Analog Pressure Gauge
       const lidGroup = new THREE.Group();
       lidGroup.position.y = 0.78;
       const lidDome = new THREE.Mesh(new THREE.CylinderGeometry(0.96, 1.06, 0.24, 48), M.stainless316L);
@@ -806,6 +852,7 @@
       registerExplode(lidGroup, 0, 0.68, 0);
       registerDraggable(lidGroup, "ฝาหม้อนึ่งความดันไอ & เกจวัดความดัน (ยกเปิด-ปิดได้)", "autoclave_lid");
 
+      // Graduated 500 mL Borosilicate Erlenmeyer Conical Flask inside chamber
       const flaskGroup = new THREE.Group();
       flaskGroup.position.y = -0.82;
       const flaskCone = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.54, 0.86, 44, 1, true), M.borosilicate);
@@ -835,10 +882,15 @@
       add3DLabel("ขวดแก้วชมพู่ 500 mL ในไอน้ำอิ่มตัว", 0, -0.15, 1.05, "#00f0ff");
 
     } else if (id === 6) {
+      // ======================================================================
+      // CH 7 (ID 6): Bacterial Phospholipid Bilayer + Cross-Linked
+      // Peptidoglycan Lattice + Negative Phosphate Zeta Potential & CV+ Ions
+      // ======================================================================
       const wallBase = new THREE.Mesh(new THREE.BoxGeometry(2.75, 0.42, 1.65), M.bioVioletWall);
       wallBase.position.y = -0.92;
       modelGroup.add(wallBase);
 
+      // Cross-linked Peptidoglycan Glycan Strands (NAG-NAM) & Negative Phosphate Spheres
       for (let z = -0.55; z <= 0.55; z += 0.55) {
         const strand = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 2.55, 24), M.goldPeltier);
         strand.rotation.z = Math.PI / 2;
@@ -853,6 +905,7 @@
         }
       }
 
+      // Draggable Reagent Dropper Pipette above cell wall
       const dropperGroup = new THREE.Group();
       dropperGroup.position.set(0, 0.92, 0);
       const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.22, 24, 24), M.magentaGlow);
@@ -875,6 +928,10 @@
       add3DLabel("โครงข่าย Peptidoglycan & หมู่ฟอสเฟต (-PO₄³⁻)", 0, -0.42, 0.88, "#f43f5e");
 
     } else if (id === 7) {
+      // ======================================================================
+      // CH 8 (ID 7): Horizontal Acrylic Gel Electrophoresis Tank + Molded
+      // Agarose Gel Slab with Loading Wells + Digital Power Supply (Run to Red)
+      // ======================================================================
       const tank = new THREE.Mesh(new THREE.BoxGeometry(2.95, 0.54, 1.78), M.borosilicate);
       tank.position.y = -1.0;
       modelGroup.add(tank);
@@ -885,6 +942,7 @@
       registerExplode(gelSlab, 0, 0.48, 0);
       registerDraggable(gelSlab, "แผ่นเจลอะกาโรส (Agarose Gel Slab)", "gel_slab");
 
+      // Black Cathode (-) & Red Anode (+) Banana Plug Posts & Platinum Electrodes
       const cathode = new THREE.Mesh(new THREE.CylinderGeometry(0.068, 0.068, 1.58, 24), M.knurledDial);
       cathode.rotation.x = Math.PI / 2;
       cathode.position.set(-1.28, -0.74, 0);
@@ -893,6 +951,7 @@
       anode.position.set(1.28, -0.74, 0);
       modelGroup.add(cathode, anode);
 
+      // Digital Power Supply Console behind tank
       const psuBox = new THREE.Mesh(new THREE.BoxGeometry(1.28, 0.62, 0.68), M.darkPVDF);
       psuBox.position.set(0, -0.22, -0.88);
       const psuOLED = new THREE.Mesh(
@@ -916,6 +975,10 @@
       add3DLabel("ขั้วบวก Anode (+) Run to Red & แหล่งจ่ายไฟ", 1.18, -0.12, 0, "#f43f5e");
 
     } else if (id === 8) {
+      // ======================================================================
+      // CH 9 (ID 8): Optical Flint-Glass Brix Refractometer Prism + Graduated
+      // Yeast Fermentation Vessel + Snell's Law Laser Refraction
+      // ======================================================================
       const stageBase = new THREE.Mesh(new THREE.BoxGeometry(2.65, 0.18, 1.42), M.stainless316L);
       stageBase.position.y = -1.42;
       const prism = new THREE.Mesh(new THREE.BoxGeometry(2.45, 1.12, 1.25), M.flintGlass);
@@ -949,6 +1012,10 @@
       add3DLabel("ปริซึมแก้วฟลินต์ & น้ำหมักยีสต์ (°Brix)", 0.75, -0.32, 0, "#10b981");
 
     } else if (id === 9) {
+      // ======================================================================
+      // CH 10 (ID 9): Engraved Chrome Plan N 100x / 1.25 Oil Objective Barrel
+      // + Internal Achromatic Doublet Lenses + Slide, Coverslip & Oil Bridge
+      // ======================================================================
       const slide = new THREE.Mesh(new THREE.BoxGeometry(2.45, 0.11, 1.08), M.borosilicate);
       slide.position.y = -0.94;
       const frostedLabel = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.115, 1.06), M.frostedQuartz);
@@ -991,6 +1058,10 @@
       add3DLabel("หยดน้ำมันซีดาร์วูด (n=1.515) & Coverslip", 0.95, -0.55, 0, "#fbbf24");
 
     } else if (id === 10) {
+      // ======================================================================
+      // CH 11 (ID 10): Parabolic Brushed-Stainless UV-C 254 nm Lamp + Quartz
+      // Tube with Tungsten Electrodes + Borosilicate Petri Dish & Agar Colonies
+      // ======================================================================
       const uvHoodGroup = new THREE.Group();
       const hood = new THREE.Mesh(new THREE.CylinderGeometry(0.30, 0.44, 2.42, 36, 1, false, 0, Math.PI), M.stainless316L);
       hood.rotation.z = Math.PI / 2;
@@ -1018,6 +1089,7 @@
       uvCone.position.y = -0.15;
       modelGroup.add(uvCone);
 
+      // Borosilicate Glass Petri Dish Base + Amber Nutrient Agar + Glass Lid
       const petriBase = new THREE.Mesh(new THREE.CylinderGeometry(0.90, 0.90, 0.18, 48, 1, true), M.borosilicate);
       petriBase.position.y = -1.10;
       const agarDisk = new THREE.Mesh(new THREE.CylinderGeometry(0.87, 0.87, 0.09, 48), M.agarAmber);
@@ -1042,6 +1114,10 @@
       add3DLabel("จานเพาะเชื้อแก้วบอโรซิลิเกต & วุ้น Nutrient Agar", 0, -0.72, 0.98, "#10b981");
 
     } else if (id === 11) {
+      // ======================================================================
+      // CH 12 (ID 11): Spectrophotometer Optical Bench + 10 mm Optical Quartz
+      // Cuvette with Meniscus Suspension + Digital Beer-Lambert OD600 Console
+      // ======================================================================
       const sourceBox = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.76, 0.76), M.darkPVDF);
       sourceBox.position.set(-1.42, -0.45, 0);
       const lampLens = new THREE.Mesh(new THREE.SphereGeometry(0.20, 28, 28), M.flintGlass);
@@ -1050,6 +1126,7 @@
       prismMono.position.set(-0.78, -0.45, 0);
       modelGroup.add(sourceBox, lampLens, prismMono);
 
+      // 10 mm Optical Quartz Cuvette with Graduations & Meniscus Culture Broth
       const cuvetteGroup = new THREE.Group();
       cuvetteGroup.position.set(0, -0.42, 0);
       const cuvWall = new THREE.Mesh(new THREE.BoxGeometry(0.58, 1.42, 0.58), M.quartzGlass);
@@ -1093,6 +1170,7 @@
     }
   };
 
+  // Re-render current active chapter immediately with the Master Blender-PBR Engine
   if (typeof selectMarker === 'function') {
     selectMarker(typeof currentMarkerId === 'number' ? currentMarkerId : 0, false);
   }

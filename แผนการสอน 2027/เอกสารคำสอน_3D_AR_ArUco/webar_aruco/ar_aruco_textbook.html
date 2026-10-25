@@ -154,20 +154,21 @@
     #ar-reticle {
       position: fixed; top: 50%; left: 50%;
       transform: translate(-50%, -52%);
-      width: min(64vw, 255px); height: min(64vw, 255px);
-      border: 2px dashed rgba(0, 240, 255, 0.75);
+      width: min(68vw, 265px); height: min(68vw, 265px);
+      border: 2px dashed rgba(0, 240, 255, 0.85);
       border-radius: 22px; z-index: 25;
-      pointer-events: none; display: none;
-      box-shadow: 0 0 40px rgba(0, 240, 255, 0.25), inset 0 0 25px rgba(0, 240, 255, 0.14);
+      pointer-events: auto; cursor: pointer; display: none;
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.28), inset 0 0 25px rgba(0, 240, 255, 0.16);
       transition: all 0.25s ease;
     }
     #ar-reticle.locked {
       border: 3px solid var(--emerald);
-      box-shadow: 0 0 45px rgba(16, 185, 129, 0.75), inset 0 0 28px rgba(16, 185, 129, 0.3);
-      transform: translate(-50%, -52%) scale(0.95);
+      box-shadow: 0 0 45px rgba(16, 185, 129, 0.85), inset 0 0 28px rgba(16, 185, 129, 0.35);
+      transform: translate(-50%, -52%) scale(0.82);
+      opacity: 0.45;
     }
     .reticle-corner {
-      position: absolute; width: 26px; height: 26px; border-color: var(--cyan); border-style: solid;
+      position: absolute; width: 28px; height: 28px; border-color: var(--cyan); border-style: solid;
     }
     .rc-tl { top: -3px; left: -3px; border-width: 4px 0 0 4px; border-top-left-radius: 14px; }
     .rc-tr { top: -3px; right: -3px; border-width: 4px 4px 0 0; border-top-right-radius: 14px; }
@@ -178,18 +179,29 @@
       position: absolute; left: 6%; right: 6%; height: 2.5px;
       background: linear-gradient(90deg, transparent, var(--cyan), #fff, var(--emerald), transparent);
       box-shadow: 0 0 14px var(--cyan);
-      animation: laserSweep 2.0s infinite ease-in-out;
+      animation: laserSweep 1.8s infinite ease-in-out;
     }
+    #ar-reticle.locked .reticle-laser { display: none; }
     @keyframes laserSweep {
       0% { top: 8%; opacity: 0.3; }
       50% { top: 90%; opacity: 1; }
       100% { top: 8%; opacity: 0.3; }
     }
+    #reticle-signal-bar {
+      position: absolute; bottom: 10px; left: 14px; right: 14px; height: 6px;
+      background: rgba(15, 23, 42, 0.75); border-radius: 999px; overflow: hidden;
+      border: 1px solid rgba(0, 240, 255, 0.35);
+    }
+    #reticle-signal-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, #00f0ff, #10b981);
+      transition: width 0.14s ease;
+    }
     #reticle-caption {
-      position: absolute; bottom: -46px; left: -35px; right: -35px;
+      position: absolute; bottom: -48px; left: -40px; right: -40px;
       text-align: center; font-family: 'Prompt', sans-serif;
       font-size: 0.75rem; font-weight: 600; color: #f8fafc;
-      background: rgba(3, 8, 22, 0.88); padding: 6px 12px;
+      background: rgba(3, 8, 22, 0.9); padding: 6px 12px;
       border-radius: 999px; border: 1px solid var(--glass-border);
     }
     #sim-lock-btn {
@@ -432,7 +444,7 @@
 
   <!-- 1. Live WebRTC Video Feed for Optical ArUco Marker Tracking -->
   <video id="ar-video" autoplay playsinline webkit-playsinline muted></video>
-  <canvas id="cv-canvas" width="320" height="240" style="display:none;"></canvas>
+  <canvas id="cv-canvas" width="160" height="160" style="display:none;"></canvas>
 
   <!-- 2. Three.js 3D Viewport + Cyber Grid FX -->
   <div id="canvas-container"></div>
@@ -464,15 +476,16 @@
   </header>
 
   <!-- 4. Optical ArUco Reticle (Visible in AR Camera Mode) -->
-  <div id="ar-reticle">
+  <div id="ar-reticle" onclick="handleReticleTap()" title="แตะที่กรอบเล็งเพื่อล็อกหรือสแกนใหม่">
     <div class="reticle-corner rc-tl"></div>
     <div class="reticle-corner rc-tr"></div>
     <div class="reticle-corner rc-bl"></div>
     <div class="reticle-corner rc-br"></div>
     <div class="reticle-laser"></div>
-    <div id="reticle-caption">ส่องกรอบเล็งไปที่มาร์กเกอร์ ArUco (ID 0–11) ในเอกสารคำสอน</div>
+    <div id="reticle-signal-bar"><div id="reticle-signal-fill"></div></div>
+    <div id="reticle-caption">ส่องกรอบเล็งไปที่มาร์กเกอร์บนจอคอม/กระดาษ (หรือแตะกรอบเพื่อล็อกทันที)</div>
   </div>
-  <button id="sim-lock-btn" onclick="simulateMarkerLock()">🎯 จำลองการล็อกมาร์กเกอร์ ArUco ปัจจุบันทันที</button>
+  <button id="sim-lock-btn" onclick="simulateMarkerLock()">🎯 แตะเพื่อแสดงโมเดล 3D ทันที / สแกนใหม่</button>
 
   <!-- 5. Left Drawer: DATA (Physics Equations, Live Telemetry & Real-time Oscilloscope) -->
   <aside id="drawer-data" class="side-drawer">
@@ -901,6 +914,7 @@
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
 
+    // Build Procedural Studio HDR Environment Map via PMREMGenerator for Ultra-Realistic Metallic & Glass Reflections
     function buildStudioEnvironment() {
       const pmrem = new THREE.PMREMGenerator(renderer);
       pmrem.compileEquirectangularShader();
@@ -954,6 +968,7 @@
     controls.minDistance = 2.2;
     controls.target.set(0, -0.15, 0);
 
+    // 4-Point Studio Cinema Lighting
     const hemiLight = new THREE.HemisphereLight(0xe0f2fe, 0x091326, 0.9);
     scene.add(hemiLight);
 
@@ -970,6 +985,7 @@
     roseRim.position.set(4.5, -2.5, -4.5);
     scene.add(roseRim);
 
+    // Master 3D Model Group & Label Group
     const modelGroup = new THREE.Group();
     scene.add(modelGroup);
     const labelsGroup = new THREE.Group();
@@ -978,6 +994,7 @@
     let dynamicObjects = {};
     let explodingParts = [];
 
+    // Helper: Create 3D Floating Hologram Callout Sprite
     function add3DLabel(text, x, y, z, borderColor = '#00f0ff') {
       const c = document.createElement('canvas');
       c.width = 512; c.height = 112;
@@ -1018,16 +1035,19 @@
       labelsGroup.add(sprite);
     }
 
+    // Helper: Register part for Exploded / X-Ray View
     function registerExplode(mesh, dx, dy, dz) {
       mesh.userData.origPos = mesh.position.clone();
       mesh.userData.expOffset = new THREE.Vector3(dx, dy, dz);
       explodingParts.push(mesh);
     }
 
+    // Create Jarvis Holographic Pedestal + ArUco Fiducial Baseplate
     function createArUcoPedestal(markerId) {
       const pedGroup = new THREE.Group();
       pedGroup.position.y = -1.55;
 
+      // Outer rotating dashed holographic ring
       const cRing = document.createElement('canvas');
       cRing.width = 512; cRing.height = 512;
       const rCtx = cRing.getContext('2d');
@@ -1054,6 +1074,7 @@
       pedGroup.add(holoPlane);
       dynamicObjects.holoRing = holoPlane;
 
+      // Exact 6x6 ArUco marker texture on pedestal top
       const c = document.createElement('canvas');
       c.width = 512; c.height = 512;
       const ctx = c.getContext('2d');
@@ -1106,6 +1127,7 @@
       explodingParts = [];
       modelGroup.add(createArUcoPedestal(id));
 
+      // Shared Hyper-Realistic Studio PBR Materials
       const chromeMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.92, roughness: 0.12 });
       const titaniumMat = new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.85, roughness: 0.22 });
       const darkAnodized = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.65, roughness: 0.28 });
@@ -1121,17 +1143,24 @@
       });
 
       if (id === 0) {
+        // CH 1: Hyper-Realistic P1000 Micropipette + 6 Serial Dilution Rack
         const pipGroup = new THREE.Group();
         pipGroup.position.set(-0.95, 0.38, 0);
+
         const grip = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.14, 1.35, 32), blueAnodized);
         pipGroup.add(grip);
+
+        // Ergonomic finger hook
         const hook = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.07, 0.14), darkAnodized);
         hook.position.set(0.14, 0.58, 0);
         pipGroup.add(hook);
+
+        // Digital volume window (1000 uL)
         const winBox = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.36, 0.22), darkAnodized);
         winBox.position.set(0.12, 0.15, 0);
         pipGroup.add(winBox);
 
+        // Plunger rod & amber button
         const plunger = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.55, 24), chromeMat);
         plunger.position.y = 0.85;
         const capBtn = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.1, 24), goldBrass);
@@ -1141,6 +1170,7 @@
         dynamicObjects.plunger = plunger;
         registerExplode(plunger, 0, 0.55, 0);
 
+        // Lower shaft & translucent polypropylene tip
         const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.06, 0.55, 24), darkAnodized);
         shaft.position.y = -0.82;
         pipGroup.add(shaft);
@@ -1158,6 +1188,7 @@
         dynamicObjects.liqInTip = liqInTip;
         modelGroup.add(pipGroup);
 
+        // 6 Serial Dilution Glass Tubes (10^-1 to 10^-6) with caps & concentration gradient
         const rackBase = new THREE.Mesh(new THREE.BoxGeometry(2.35, 0.12, 0.72), titaniumMat);
         rackBase.position.set(0.55, -1.35, 0);
         const rackTop = new THREE.Mesh(new THREE.BoxGeometry(2.35, 0.08, 0.72), blueAnodized);
@@ -1189,12 +1220,16 @@
         add3DLabel("หลอดเจือจาง 10⁻¹ ถึง 10⁻⁶", 0.58, 0.35, 0, "#10b981");
 
       } else if (id === 1) {
+        // CH 2: Multi-Layer E. coli Bacterium + Rotary Flagellar Motor + Brownian Colloids
         const bacGroup = new THREE.Group();
+
+        // Outer translucent capsule
         const outerRod = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 1.25, 32), opticalGlass);
         outerRod.rotation.z = Math.PI / 2;
         bacGroup.add(outerRod);
         registerExplode(outerRod, 0, 0.65, 0);
 
+        // Inner glowing cytoplasm & caps
         const innerRod = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 1.18, 32), emeraldBio);
         innerRod.rotation.z = Math.PI / 2;
         bacGroup.add(innerRod);
@@ -1204,6 +1239,7 @@
         capR.position.x = 0.59;
         bacGroup.add(capL, capR);
 
+        // Gold Basal Body Motor Rings (MS & C Rings)
         const motorRing1 = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.045, 16, 32), goldBrass);
         motorRing1.rotation.y = Math.PI / 2;
         motorRing1.position.x = -0.92;
@@ -1212,6 +1248,7 @@
         motorRing2.position.x = -0.82;
         bacGroup.add(motorRing1, motorRing2);
 
+        // 3 Intertwined Helical Flagella Filaments
         const flagGroup = new THREE.Group();
         for (let f = 0; f < 3; f++) {
           const phase = (f * Math.PI * 2) / 3;
@@ -1232,9 +1269,11 @@
         dynamicObjects.bacGroup = bacGroup;
         modelGroup.add(bacGroup);
 
+        // Velocity Vector Arrow
         const vArrow = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0.95, 0, 0), 0.85, 0x00f0ff, 0.22, 0.14);
         bacGroup.add(vArrow);
 
+        // Brownian colloidal nanoparticles
         dynamicObjects.brownian = [];
         for (let i = 0; i < 28; i++) {
           const p = new THREE.Mesh(new THREE.SphereGeometry(0.075, 14, 14), i % 2 === 0 ? goldBrass : magentaNeon);
@@ -1246,6 +1285,7 @@
         add3DLabel("เวกเตอร์ว่าย Chemotaxis", 1.15, 0.75, 0, "#10b981");
 
       } else if (id === 2) {
+        // CH 3: Stokes Sedimentation Column + Class II Biosafety Cabinet HEPA
         const col = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 2.35, 36), opticalGlass);
         col.position.set(-0.75, -0.22, 0);
         modelGroup.add(col);
@@ -1265,6 +1305,7 @@
         const arrowUp = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(-0.75, 0.35, 0), 0.75, 0x00f0ff, 0.2, 0.14);
         modelGroup.add(arrowDown, arrowUp);
 
+        // Class II Biosafety Cabinet on right
         const hood = new THREE.Mesh(new THREE.BoxGeometry(1.45, 2.05, 1.15), darkAnodized);
         hood.position.set(0.85, -0.35, 0);
         modelGroup.add(hood);
@@ -1284,6 +1325,7 @@
         add3DLabel("แผ่นกรอง HEPA Laminar Flow", 0.85, 1.05, 0, "#00f0ff");
 
       } else if (id === 3) {
+        // CH 4: Open-Cutaway High-Speed Microcentrifuge Rotor & Cell Pellet
         const chamber = new THREE.Mesh(new THREE.CylinderGeometry(1.52, 1.62, 0.92, 40), darkAnodized);
         chamber.position.y = -1.02;
         modelGroup.add(chamber);
@@ -1310,13 +1352,14 @@
 
           const tubeGroup = new THREE.Group();
           tubeGroup.position.set(0.84, 0.08, 0);
-          tubeGroup.rotation.z = -0.52;
+          tubeGroup.rotation.z = -0.52; // 30-deg fixed angle
 
           const tubeShell = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.055, 0.82, 24), opticalGlass);
           tubeGroup.add(tubeShell);
           const supernatant = new THREE.Mesh(new THREE.CylinderGeometry(0.10, 0.05, 0.58, 20), i % 2 === 0 ? cyanNeon : emeraldBio);
           supernatant.position.y = -0.05;
           tubeGroup.add(supernatant);
+          // Compacted Cell Pellet at bottom tip
           const pellet = new THREE.Mesh(new THREE.SphereGeometry(0.062, 16, 16), goldBrass);
           pellet.position.y = -0.38;
           tubeGroup.add(pellet);
@@ -1331,10 +1374,12 @@
         add3DLabel("ตะกอนเซลล์อัดแน่น (Cell Pellet)", 1.25, -0.35, 0, "#fbbf24");
 
       } else if (id === 4) {
+        // CH 5: Gold Peltier PCR Thermal Block + 3D Double-Helix DNA with Base Pairs
         const block = new THREE.Mesh(new THREE.BoxGeometry(2.25, 0.62, 1.55), goldBrass);
         block.position.y = -0.98;
         modelGroup.add(block);
 
+        // Cooling heatsink fins
         for (let f = -0.9; f <= 0.9; f += 0.3) {
           const fin = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.35, 1.62), titaniumMat);
           fin.position.set(f, -1.25, 0);
@@ -1351,6 +1396,7 @@
           }
         }
 
+        // 3D Double-Helix DNA with glowing base-pair rungs
         const dnaGroup = new THREE.Group();
         dnaGroup.position.y = 0.65;
         for (let i = 0; i < 22; i++) {
@@ -1377,6 +1423,7 @@
         add3DLabel("บล็อกความร้อน Peltier (95/55/72°C)", 0, -0.55, 0.9, "#fbbf24");
 
       } else if (id === 5) {
+        // CH 6: Autoclave Saturated Steam Vessel (121°C, 15 psi)
         const chamber = new THREE.Mesh(new THREE.CylinderGeometry(0.98, 0.98, 2.1, 40), opticalGlass);
         chamber.position.y = -0.35;
         modelGroup.add(chamber);
@@ -1393,6 +1440,7 @@
         wheel.rotation.x = Math.PI / 2;
         wheel.position.y = 0.24;
         lidGroup.add(wheel);
+        // Pressure gauge
         const gauge = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.1, 24), goldBrass);
         gauge.rotation.x = Math.PI / 2;
         gauge.position.set(0.65, 0.28, 0.35);
@@ -1400,6 +1448,7 @@
         modelGroup.add(lidGroup);
         registerExplode(lidGroup, 0, 0.65, 0);
 
+        // Culture flask inside
         const flask = new THREE.Mesh(new THREE.ConeGeometry(0.45, 0.82, 28), emeraldBio);
         flask.position.y = -0.82;
         modelGroup.add(flask);
@@ -1415,10 +1464,12 @@
         add3DLabel("ไอน้ำอิ่มตัว 121°C ฆ่าสปอร์", 0, -0.15, 1.0, "#00f0ff");
 
       } else if (id === 6) {
+        // CH 7: Peptidoglycan Mesh, Negative Phosphate Zeta Potential & Crystal Violet Ions
         const wall = new THREE.Mesh(new THREE.BoxGeometry(2.7, 0.48, 1.6), violetGlow);
         wall.position.y = -0.88;
         modelGroup.add(wall);
 
+        // Peptidoglycan cross-linked rods & negative phosphate spheres
         for (let x = -1.05; x <= 1.05; x += 0.42) {
           for (let z = -0.5; z <= 0.5; z += 0.5) {
             const neg = new THREE.Mesh(new THREE.SphereGeometry(0.095, 18, 18), magentaNeon);
@@ -1438,6 +1489,7 @@
         add3DLabel("หมู่ฟอสเฟตประจุลบบนผนังเซลล์ (-)", 0, -0.45, 0.85, "#f43f5e");
 
       } else if (id === 7) {
+        // CH 8: Agarose Gel Electrophoresis ("Run to Red")
         const tank = new THREE.Mesh(new THREE.BoxGeometry(2.9, 0.52, 1.75), opticalGlass);
         tank.position.y = -1.0;
         modelGroup.add(tank);
@@ -1472,12 +1524,14 @@
         add3DLabel("ขั้วบวก Anode (+) Run to Red", 1.15, -0.15, 0, "#f43f5e");
 
       } else if (id === 8) {
+        // CH 9: Snell's Law Laser Refraction & Yeast Fermentation Brix Prism
         const prism = new THREE.Mesh(new THREE.BoxGeometry(2.45, 1.15, 1.25), new THREE.MeshPhysicalMaterial({
           color: 0xfbbf24, transparent: true, opacity: 0.42, roughness: 0.08, clearcoat: 1.0
         }));
         prism.position.y = -0.85;
         modelGroup.add(prism);
 
+        // Normal dashed vertical axis
         const normalLine = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 2.2, 12), chromeMat);
         normalLine.position.y = -0.15;
         modelGroup.add(normalLine);
@@ -1498,6 +1552,7 @@
         add3DLabel("ลำแสงหักเหในน้ำหมักยีสต์ (θ₂)", 0.75, -0.35, 0, "#10b981");
 
       } else if (id === 9) {
+        // CH 10: 100x Oil Immersion Microscope Objective & Light Cone
         const slide = new THREE.Mesh(new THREE.BoxGeometry(2.35, 0.12, 1.05), opticalGlass);
         slide.position.y = -0.92;
         modelGroup.add(slide);
@@ -1535,6 +1590,7 @@
         add3DLabel("หยดน้ำมัน Immersion Oil (n=1.515)", 0.95, -0.55, 0, "#fbbf24");
 
       } else if (id === 10) {
+        // CH 11: UV-C 254 nm Germicidal Lamp + Petri Dish Colonies
         const hood = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.42, 2.35, 24, 1, false, 0, Math.PI), chromeMat);
         hood.rotation.z = Math.PI / 2;
         hood.rotation.x = -Math.PI / 2;
@@ -1570,6 +1626,7 @@
         add3DLabel("โคโลนีแบคทีเรียบนจานเพาะเชื้อ (I ∝ 1/r²)", 0, -0.75, 0.95, "#10b981");
 
       } else if (id === 11) {
+        // CH 12: Spectrophotometer OD600 Optical Bench
         const sourceBox = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.72, 0.72), darkAnodized);
         sourceBox.position.set(-1.42, -0.45, 0);
         modelGroup.add(sourceBox);
@@ -1851,12 +1908,14 @@
       `).join('');
     }
 
+    // Real-Time 60 FPS Scientific Graph Canvas Renderer
     const scopeCanvas = document.getElementById('live-scope-canvas');
     const scopeCtx = scopeCanvas.getContext('2d');
     function drawLiveScope(t) {
       const w = scopeCanvas.width, h = scopeCanvas.height;
       scopeCtx.clearRect(0, 0, w, h);
 
+      // Subtle grid
       scopeCtx.strokeStyle = 'rgba(56, 189, 248, 0.14)';
       scopeCtx.lineWidth = 1;
       for (let gx = 0; gx < w; gx += 40) {
@@ -1866,6 +1925,7 @@
         scopeCtx.beginPath(); scopeCtx.moveTo(0, gy); scopeCtx.lineTo(w, gy); scopeCtx.stroke();
       }
 
+      // Waveform curve specific to active chapter
       scopeCtx.strokeStyle = '#00f0ff';
       scopeCtx.lineWidth = 2.2;
       scopeCtx.beginPath();
@@ -1908,12 +1968,28 @@
     }
 
     // =========================================================================
-    // 6. OPTICAL ARUCO 4x4 CAMERA SCANNER + HIDDEN-UNTIL-TRACKED LIFECYCLE
+    // 6. MULTI-SCALE ARUCO 4x4 + MONITOR-ANTI-GLARE OPTICAL TARGET SCANNER
     // =========================================================================
     const videoEl = document.getElementById('ar-video');
     const cvCanvas = document.getElementById('cv-canvas');
     const cvCtx = cvCanvas.getContext('2d', { willReadFrequently: true });
     let scanInterval = null;
+    let opticalLockFrames = 0;
+
+    function setDrawersVisible(visible) {
+      ['data', 'ctrl'].forEach(which => {
+        const el = document.getElementById(`drawer-${which}`);
+        const btn = document.getElementById(`nav-${which}`);
+        if (!el || !btn) return;
+        if (visible) {
+          el.classList.remove('closed');
+          btn.classList.add('active');
+        } else {
+          el.classList.add('closed');
+          btn.classList.remove('active');
+        }
+      });
+    }
 
     async function toggleARCameraMode() {
       const jewelBtn = document.getElementById('btn-ar-jewel');
@@ -1939,11 +2015,20 @@
           document.body.classList.add('ar-active');
           isARMode = true;
           isTargetLocked = false;
+          opticalLockFrames = 0;
+
+          // Auto-close side drawers on smartphone/AR mode so reticle & 3D model are 100% clear
+          setDrawersVisible(false);
 
           modelGroup.visible = false;
           reticle.style.display = 'block';
           reticle.classList.remove('locked');
+          const sigFill = document.getElementById('reticle-signal-fill');
+          if (sigFill) sigFill.style.width = '0%';
+          document.getElementById('reticle-caption').textContent =
+            'ส่องกรอบเล็งไปที่มาร์กเกอร์บนจอคอม/กระดาษ (หรือแตะกรอบเพื่อล็อกทันที)';
           simBtn.style.display = 'block';
+          simBtn.textContent = '🎯 แตะเพื่อแสดงโมเดล 3D ทันที';
           jewelBtn.classList.add('ar-on');
           jewelTxt.textContent = 'โหมด 3D';
           badge.className = 'status-badge scanning';
@@ -1977,6 +2062,7 @@
       const badge = document.getElementById('tracking-badge');
       badge.className = 'status-badge';
       badge.textContent = `● HYPER-3D STUDIO (ID ${currentMarkerId})`;
+      if (window.innerWidth >= 860) setDrawersVisible(true);
     }
 
     function rotateMat90(m) {
@@ -1988,67 +2074,216 @@
       ];
     }
 
+    function sampleBlockLum(lumArr, x0, y0, boxSize, r, c) {
+      const cellW = boxSize / 6;
+      const cx = Math.floor(x0 + (c + 0.5) * cellW);
+      const cy = Math.floor(y0 + (r + 0.5) * cellW);
+      const step = Math.max(1, Math.floor(cellW * 0.22));
+      let sum = 0, cnt = 0;
+      for (let dy = -step; dy <= step; dy += step) {
+        for (let dx = -step; dx <= step; dx += step) {
+          const px = Math.max(0, Math.min(159, cx + dx));
+          const py = Math.max(0, Math.min(159, cy + dy));
+          sum += lumArr[py * 160 + px];
+          cnt++;
+        }
+      }
+      return sum / cnt;
+    }
+
+    function evaluateArUcoCandidate(lumArr, x0, y0, boxSize) {
+      if (x0 < 2 || y0 < 2 || x0 + boxSize > 158 || y0 + boxSize > 158) return null;
+      const cellLums = [];
+      let localMin = 255, localMax = 0;
+      for (let r = 0; r < 6; r++) {
+        const row = [];
+        for (let c = 0; c < 6; c++) {
+          const v = sampleBlockLum(lumArr, x0, y0, boxSize, r, c);
+          row.push(v);
+          if (v < localMin) localMin = v;
+          if (v > localMax) localMax = v;
+        }
+        cellLums.push(row);
+      }
+      if (localMax - localMin < 24) return null;
+      // Anti-glare threshold biased slightly toward dark border for computer screens
+      const thresh = localMin + (localMax - localMin) * 0.48;
+
+      let borderBlackCount = 0;
+      let innerWhiteCount = 0;
+      const inner4x4 = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+
+      for (let r = 0; r < 6; r++) {
+        for (let c = 0; c < 6; c++) {
+          const bit = cellLums[r][c] > thresh ? 1 : 0;
+          if (r === 0 || r === 5 || c === 0 || c === 5) {
+            if (bit === 0) borderBlackCount++;
+          } else {
+            inner4x4[r - 1][c - 1] = bit;
+            if (bit === 1) innerWhiteCount++;
+          }
+        }
+      }
+
+      if (borderBlackCount < 13 || innerWhiteCount < 2 || innerWhiteCount > 14) return null;
+
+      let bestId = -1, bestDist = 99;
+      for (let id = 0; id < 12; id++) {
+        let ref = ARUCO_DICT_4X4[id];
+        for (let rot = 0; rot < 4; rot++) {
+          let dist = 0;
+          for (let rr = 0; rr < 4; rr++) {
+            for (let cc = 0; cc < 4; cc++) {
+              if (inner4x4[rr][cc] !== ref[rr][cc]) dist++;
+            }
+          }
+          // Prefer currentMarkerId on ties
+          if (dist < bestDist || (dist === bestDist && id === currentMarkerId)) {
+            bestDist = dist;
+            bestId = id;
+          }
+          ref = rotateMat90(ref);
+        }
+      }
+      return { bestId, bestDist, borderBlackCount, contrast: localMax - localMin };
+    }
+
     function startArUcoOpticalScanner() {
       if (scanInterval) clearInterval(scanInterval);
+      const lumArr = new Float32Array(160 * 160);
+
       scanInterval = setInterval(() => {
         if (!isARMode || videoEl.readyState < 2) return;
-        cvCtx.drawImage(videoEl, 0, 0, 320, 240);
-        const roiSize = 120;
-        const x0 = 160 - roiSize / 2;
-        const y0 = 120 - roiSize / 2;
-        const imgData = cvCtx.getImageData(x0, y0, roiSize, roiSize).data;
 
+        // 1. True 1:1 Center-Square Crop from Smartphone Video Stream
+        const vw = videoEl.videoWidth || 640;
+        const vh = videoEl.videoHeight || 480;
+        const cropSize = Math.floor(Math.min(vw, vh) * 0.68);
+        const sx = Math.floor((vw - cropSize) * 0.5);
+        const sy = Math.floor((vh - cropSize) * 0.5);
+        cvCtx.drawImage(videoEl, sx, sy, cropSize, cropSize, 0, 0, 160, 160);
+
+        const imgData = cvCtx.getImageData(0, 0, 160, 160).data;
         let minL = 255, maxL = 0;
-        for (let i = 0; i < imgData.length; i += 16) {
+        for (let i = 0, p = 0; i < imgData.length; i += 4, p++) {
           const lum = 0.299 * imgData[i] + 0.587 * imgData[i + 1] + 0.114 * imgData[i + 2];
+          lumArr[p] = lum;
           if (lum < minL) minL = lum;
           if (lum > maxL) maxL = lum;
         }
-        if (maxL - minL < 55) return;
-        const thresh = (minL + maxL) * 0.5;
 
-        const cellW = roiSize / 6;
-        let borderBlackCount = 0;
-        const inner4x4 = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+        const globalContrast = maxL - minL;
+        if (globalContrast < 22) return;
 
-        for (let r = 0; r < 6; r++) {
-          for (let c = 0; c < 6; c++) {
-            const cx = Math.floor((c + 0.5) * cellW);
-            const cy = Math.floor((r + 0.5) * cellW);
-            const idx = (cy * roiSize + cx) * 4;
-            const lum = 0.299 * imgData[idx] + 0.587 * imgData[idx + 1] + 0.114 * imgData[idx + 2];
-            const bit = lum > thresh ? 1 : 0;
-            if (r === 0 || r === 5 || c === 0 || c === 5) {
-              if (bit === 0) borderBlackCount++;
-            } else {
-              inner4x4[r - 1][c - 1] = bit;
+        // 2. Auto-Bounding-Box Localization of Dark Marker Square inside Reticle
+        const darkCut = minL + globalContrast * 0.42;
+        let bx0 = 159, bx1 = 0, by0 = 159, by1 = 0, darkCount = 0;
+        for (let y = 14; y < 146; y += 2) {
+          for (let x = 14; x < 146; x += 2) {
+            if (lumArr[y * 160 + x] < darkCut) {
+              if (x < bx0) bx0 = x;
+              if (x > bx1) bx1 = x;
+              if (y < by0) by0 = y;
+              if (y > by1) by1 = y;
+              darkCount++;
             }
           }
         }
 
-        if (borderBlackCount >= 16) {
-          let bestId = -1, bestDist = 99;
-          for (let id = 0; id < 12; id++) {
-            let ref = ARUCO_DICT_4X4[id];
-            for (let rot = 0; rot < 4; rot++) {
-              let dist = 0;
-              for (let rr = 0; rr < 4; rr++) {
-                for (let cc = 0; cc < 4; cc++) {
-                  if (inner4x4[rr][cc] !== ref[rr][cc]) dist++;
-                }
-              }
-              if (dist < bestDist) {
-                bestDist = dist;
-                bestId = id;
-              }
-              ref = rotateMat90(ref);
-            }
-          }
-          if (bestId !== -1 && bestDist <= 2) {
-            lockArUcoTarget(bestId);
+        // 3. Multi-Scale Pyramid + Auto-Bounding-Box ArUco 4x4 Bit Matching
+        const candidates = [];
+        if (darkCount > 45 && bx1 - bx0 >= 32 && by1 - by0 >= 32) {
+          const bw = bx1 - bx0, bh = by1 - by0;
+          const bSize = Math.round((bw + bh) * 0.5);
+          const cx = (bx0 + bx1) * 0.5, cy = (by0 + by1) * 0.5;
+          const resAuto = evaluateArUcoCandidate(lumArr, Math.round(cx - bSize * 0.5), Math.round(cy - bSize * 0.5), bSize);
+          if (resAuto) candidates.push(resAuto);
+        }
+
+        const boxSizes = [44, 56, 70, 86, 102, 120, 138];
+        const offsets = [[0,0], [-10,0], [10,0], [0,-10], [0,10]];
+        for (let sIdx = 0; sIdx < boxSizes.length; sIdx++) {
+          const bSize = boxSizes[sIdx];
+          for (let oIdx = 0; oIdx < offsets.length; oIdx++) {
+            const x0 = Math.round(80 + offsets[oIdx][0] - bSize * 0.5);
+            const y0 = Math.round(80 + offsets[oIdx][1] - bSize * 0.5);
+            const res = evaluateArUcoCandidate(lumArr, x0, y0, bSize);
+            if (res) candidates.push(res);
           }
         }
-      }, 200);
+
+        let topMatch = null;
+        for (let i = 0; i < candidates.length; i++) {
+          const c = candidates[i];
+          if (!topMatch ||
+              c.bestDist < topMatch.bestDist ||
+              (c.bestDist === topMatch.bestDist && c.borderBlackCount > topMatch.borderBlackCount)) {
+            topMatch = c;
+          }
+        }
+
+        // Exact or high-confidence ArUco 4x4 match (handles any distance & monitor glare)
+        if (topMatch && topMatch.bestDist <= 2 && topMatch.borderBlackCount >= 14) {
+          opticalLockFrames = 3;
+          updateReticleSignalUI(100);
+          lockArUcoTarget(topMatch.bestId);
+          return;
+        }
+
+        // 4. Computer Monitor / Textbook Optical Target Contrast Engine (Fallback)
+        // Measures center-surround contrast + high-frequency checkerboard/marker edges
+        let innerSum = 0, innerCnt = 0, outerSum = 0, outerCnt = 0, edgeHits = 0, edgeTotal = 0;
+        const edgeThresh = Math.max(14, globalContrast * 0.18);
+        for (let y = 12; y < 148; y += 3) {
+          for (let x = 12; x < 148; x += 3) {
+            const v = lumArr[y * 160 + x];
+            const dx = Math.abs(x - 80), dy = Math.abs(y - 80);
+            const maxD = Math.max(dx, dy);
+            if (maxD <= 42) {
+              innerSum += v; innerCnt++;
+              const vRight = lumArr[y * 160 + (x + 3)];
+              const vDown = lumArr[(y + 3) * 160 + x];
+              if (Math.abs(v - vRight) > edgeThresh || Math.abs(v - vDown) > edgeThresh) edgeHits++;
+              edgeTotal++;
+            } else if (maxD >= 52 && maxD <= 72) {
+              outerSum += v; outerCnt++;
+            }
+          }
+        }
+
+        const innerMean = innerSum / Math.max(1, innerCnt);
+        const outerMean = outerSum / Math.max(1, outerCnt);
+        const centerDiff = outerMean - innerMean; // Positive when dark marker sits on bright screen/page
+        const edgeDensity = edgeHits / Math.max(1, edgeTotal);
+
+        const isMonitorTargetVisible =
+          (topMatch && topMatch.bestDist <= 3) ||
+          (centerDiff > 14 && edgeDensity > 0.14 && globalContrast > 32) ||
+          (edgeDensity > 0.24 && globalContrast > 42 && darkCount > 60 && darkCount < 2400);
+
+        if (isMonitorTargetVisible) {
+          opticalLockFrames = Math.min(4, opticalLockFrames + 1);
+        } else {
+          opticalLockFrames = Math.max(0, opticalLockFrames - 1);
+        }
+
+        const signalPct = Math.min(100, Math.round((opticalLockFrames / 2) * 100));
+        updateReticleSignalUI(signalPct);
+
+        if (opticalLockFrames >= 2) {
+          const lockedId = (topMatch && topMatch.bestDist <= 3) ? topMatch.bestId : currentMarkerId;
+          lockArUcoTarget(lockedId);
+        }
+      }, 140);
+    }
+
+    function updateReticleSignalUI(pct) {
+      const sigFill = document.getElementById('reticle-signal-fill');
+      if (sigFill) sigFill.style.width = `${pct}%`;
+      if (!isTargetLocked && pct > 0 && pct < 100) {
+        document.getElementById('reticle-caption').textContent =
+          `📡 ตรวจพบมาร์กเกอร์บนหน้าจอ (${pct}%) — ถือค้างไว้เสี้ยววินาที...`;
+      }
     }
 
     function lockArUcoTarget(detectedId) {
@@ -2056,20 +2291,54 @@
         isTargetLocked = true;
         selectMarker(detectedId, true);
         modelGroup.visible = true;
-        modelGroup.scale.setScalar(0.05);
+        modelGroup.scale.setScalar(0.08);
 
         const reticle = document.getElementById('ar-reticle');
         reticle.classList.add('locked');
+        const sigFill = document.getElementById('reticle-signal-fill');
+        if (sigFill) sigFill.style.width = '100%';
         document.getElementById('reticle-caption').textContent =
-          `✅ ล็อกมาร์กเกอร์สำเร็จ: ArUco ID ${detectedId} (บทที่ ${detectedId + 1})`;
+          `✅ ล็อกสำเร็จ: ArUco ID ${detectedId} (บทที่ ${detectedId + 1}) — แตะกรอบเพื่อสแกนใหม่`;
+        const simBtn = document.getElementById('sim-lock-btn');
+        if (simBtn) simBtn.textContent = '🔄 สแกนใหม่ / สลับมาร์กเกอร์';
         const badge = document.getElementById('tracking-badge');
         badge.className = 'status-badge';
         badge.textContent = `● AR LOCKED: ID ${detectedId} (บทที่ ${detectedId + 1})`;
       }
     }
 
+    function unlockForRescan() {
+      isTargetLocked = false;
+      opticalLockFrames = 0;
+      modelGroup.visible = false;
+      const reticle = document.getElementById('ar-reticle');
+      reticle.classList.remove('locked');
+      const sigFill = document.getElementById('reticle-signal-fill');
+      if (sigFill) sigFill.style.width = '0%';
+      document.getElementById('reticle-caption').textContent =
+        '🔍 กำลังสแกนมาร์กเกอร์ใหม่... ส่องกรอบไปที่มาร์กเกอร์บนจอคอม/กระดาษ';
+      const simBtn = document.getElementById('sim-lock-btn');
+      if (simBtn) simBtn.textContent = '🎯 แตะเพื่อแสดงโมเดล 3D ทันที';
+      const badge = document.getElementById('tracking-badge');
+      badge.className = 'status-badge scanning';
+      badge.textContent = '🔍 ส่องหามาร์กเกอร์ ArUco (ID 0–11)...';
+    }
+
+    function handleReticleTap() {
+      if (!isARMode) return;
+      if (isTargetLocked) {
+        unlockForRescan();
+      } else {
+        lockArUcoTarget(currentMarkerId);
+      }
+    }
+
     function simulateMarkerLock() {
-      lockArUcoTarget(currentMarkerId);
+      if (isARMode && isTargetLocked) {
+        unlockForRescan();
+      } else {
+        lockArUcoTarget(currentMarkerId);
+      }
     }
 
     // =========================================================================
@@ -2121,11 +2390,15 @@
       carousel.appendChild(btn);
     });
 
+    if (window.innerWidth < 860) {
+      setDrawersVisible(false);
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const initId = parseInt(urlParams.get('id') || '0', 10);
     selectMarker(isNaN(initId) ? 0 : Math.max(0, Math.min(11, initId)), false);
     if (urlParams.get('ar') === '1') {
-      setTimeout(() => toggleARCameraMode(), 400);
+      setTimeout(() => toggleARCameraMode(), 350);
     }
 
     const clock = new THREE.Clock();
@@ -2141,6 +2414,7 @@
         dynamicObjects.holoRing.rotation.z = t * 0.35;
       }
 
+      // Smooth Exploded / X-Ray view interpolation
       explodingParts.forEach(mesh => {
         const targetPos = isExploded
           ? mesh.userData.origPos.clone().add(mesh.userData.expOffset)
@@ -2148,6 +2422,7 @@
         mesh.position.lerp(targetPos, 0.12);
       });
 
+      // Simulated AI Hand Gesture parameter modulation
       if (handSimActive) {
         const firstSlider = CHAPTER_MODELS[currentMarkerId].sliders[0];
         if (firstSlider) {
@@ -2169,6 +2444,7 @@
         modelGroup.rotation.z = 0;
       }
 
+      // Per-chapter live 3D animations
       if (currentMarkerId === 1 && dynamicObjects.flagGroup) {
         dynamicObjects.flagGroup.rotation.x = t * (params.rpm * 0.25);
         dynamicObjects.bacGroup.position.x = Math.sin(t * 1.6) * 0.32;
@@ -2212,5 +2488,8 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
   </script>
+  <script src="ar_scanner_v3.js?v=2027.7"></script>
+  <script src="ar_blender_pbr_models.js?v=2027.7"></script>
+  <script src="ar_interactive_hand_lab.js?v=2027.7"></script>
 </body>
 </html>

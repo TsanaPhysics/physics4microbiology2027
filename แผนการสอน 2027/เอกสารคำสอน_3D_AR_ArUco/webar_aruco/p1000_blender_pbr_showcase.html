@@ -129,8 +129,27 @@
     <div class="action-grid">
       <button class="btn" id="btn-xray" onclick="toggleXRay()">🔍 ผ่าดูสปริงภายใน (X-Ray)</button>
       <button class="btn" id="btn-eject" onclick="toggleTipEject()">⏏️ ดีดทิปทิ้ง (Eject Tip)</button>
+      <button class="btn" id="btn-mp2h" onclick="toggleP1000MediaPipe()">🖐️ เปิดกล้อง AR มือคู่ (2 Hands)</button>
+      <button class="btn" id="btn-autodemo" onclick="toggleP1000AutoDemo()">🤖 สาธิต 2 มือทดลองจริง</button>
+    </div>
+    <div id="p1000-exp-status" style="margin-top:8px;font-size:0.74rem;color:#34d399;text-align:center;">
+      💡 ลากตัวไมโครปิเปต P1000 ไปจ่อเหนือปากหลอดทดลองแก้วเพื่อดูด-ปล่อยของเหลวจริง!
     </div>
   </aside>
+  <div id="p1000-mp-pip" style="display:none;position:fixed;top:76px;right:18px;width:230px;background:rgba(4,10,24,0.92);border:2px solid #00f0ff;border-radius:14px;overflow:hidden;z-index:50;box-shadow:0 12px 32px rgba(0,0,0,0.8);">
+    <div style="padding:5px 10px;font-size:0.7rem;font-weight:700;color:#00f0ff;display:flex;justify-content:space-between;background:#020617;">
+      <span>🖐️ AR MEDIAPIPE (2 HANDS)</span>
+      <span id="p1000-mp-badge" style="color:#34d399;">LIVE</span>
+    </div>
+    <div style="position:relative;width:100%;height:142px;background:#000;">
+      <video id="p1000-video" playsinline muted style="width:100%;height:100%;object-fit:cover;transform:scaleX(-1);"></video>
+      <canvas id="p1000-canvas" width="280" height="180" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"></canvas>
+    </div>
+    <div style="padding:5px 8px;font-size:0.65rem;color:#e2e8f0;background:#020617;">
+      🤚 <b>มือขวาจีบนิ้ว:</b> หยิบย้ายปิเปตไปจุ่มหลอดแก้ว<br>
+      🖐️ <b>มือซ้ายจีบนิ้วขึ้น-ลง:</b> หมุนตั้งปริมาตร 100–1000 μL
+    </div>
+  </div>
 
   <script>
     const container = document.getElementById('viewport');
@@ -147,6 +166,7 @@
     renderer.shadowMap.enabled = true;
     container.appendChild(renderer.domElement);
 
+    // Studio HDR Softbox Environment Map for realistic glass & chrome reflections
     const pmrem = new THREE.PMREMGenerator(renderer);
     const envScene = new THREE.Scene();
     envScene.background = new THREE.Color(0x060d1f);
@@ -167,6 +187,7 @@
     controls.enableDamping = true;
     controls.target.set(0.35, 0.2, 0);
 
+    // Studio Lights
     scene.add(new THREE.HemisphereLight(0xe0f2fe, 0x091326, 0.85));
     const keyLight = new THREE.DirectionalLight(0xffffff, 1.8);
     keyLight.position.set(6, 9, 7);
@@ -175,6 +196,7 @@
     rimLight.position.set(-7, 4, -5);
     scene.add(rimLight);
 
+    // Procedural Bump Texture for Knurled Micrometer Dial
     function createKnurlBumpTexture() {
       const c = document.createElement('canvas');
       c.width = 512; c.height = 128;
@@ -192,6 +214,7 @@
       return tex;
     }
 
+    // Dynamic 4-Digit Volume Window & Silk-Screen Brand Texture on Handle
     const volCanvas = document.createElement('canvas');
     volCanvas.width = 512; volCanvas.height = 1024;
     const volCtx = volCanvas.getContext('2d');
@@ -201,11 +224,13 @@
       volCtx.fillStyle = '#034991';
       volCtx.fillRect(0, 0, 512, 1024);
 
+      // Subtle micro-grain noise on polypropylene grip
       volCtx.fillStyle = 'rgba(255,255,255,0.025)';
       for (let i = 0; i < 1800; i++) {
         volCtx.fillRect(Math.random() * 512, Math.random() * 1024, 2, 2);
       }
 
+      // Brand Silk-Screen Label
       volCtx.fillStyle = '#e0f2fe';
       volCtx.font = 'bold 28px Chakra Petch, sans-serif';
       volCtx.textAlign = 'center';
@@ -214,12 +239,14 @@
       volCtx.fillStyle = '#38bdf8';
       volCtx.fillText('100 – 1000 μL', 256, 255);
 
+      // Recessed Black Bezel for 4-Digit Counter
       volCtx.fillStyle = '#090d16';
       volCtx.strokeStyle = '#38bdf8';
       volCtx.lineWidth = 4;
       volCtx.fillRect(186, 310, 140, 340);
       volCtx.strokeRect(186, 310, 140, 340);
 
+      // 4 Digits (Vertical Mechanical Drum Counter: 1 - 0 - 0 - 0)
       const str = String(Math.round(volNum)).padStart(4, '0');
       for (let d = 0; d < 4; d++) {
         volCtx.fillStyle = d === 0 ? '#1e293b' : '#111827';
@@ -232,6 +259,7 @@
     }
     drawHandleTexture(1000);
 
+    // Graduation Scale Texture for Transparent Tip & Test Tube
     function createGraduationTexture(labels, colorStr = 'rgba(255,255,255,0.85)') {
       const c = document.createElement('canvas');
       c.width = 512; c.height = 512;
@@ -252,6 +280,7 @@
       return new THREE.CanvasTexture(c);
     }
 
+    // Photorealistic PBR Materials
     const matBlueBody = new THREE.MeshPhysicalMaterial({
       map: volTex, roughness: 0.28, metalness: 0.04, clearcoat: 0.45, clearcoatRoughness: 0.2
     });
@@ -288,28 +317,36 @@
       transparent: true, opacity: 0.82, roughness: 0.08, clearcoat: 1.0
     });
 
+    // =========================================================================
+    // BUILD P1000 MICROPIPETTE ASSEMBLY
+    // =========================================================================
     const pipGroup = new THREE.Group();
     pipGroup.position.set(-0.95, 0.15, 0);
     scene.add(pipGroup);
 
+    // 1. Ergonomic Contoured Handle Body
     const handleMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.37, 2.25, 48), matBlueBody);
     handleMesh.position.y = 0.95;
     pipGroup.add(handleMesh);
 
+    // Display Window Glass Lens Cover
     const lensCover = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.72, 0.30), matBorosilicate);
     lensCover.position.set(0.39, 0.88, 0);
     pipGroup.add(lensCover);
 
+    // Ergonomic Curved Finger Hook
     const fingerHook = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.13, 0.28), matDarkPVDF);
     fingerHook.position.set(0.46, 1.88, 0);
     fingerHook.rotation.z = -0.22;
     pipGroup.add(fingerHook);
 
+    // 2. Internal Piston & Dual Compression Springs (Visible in X-Ray Cutaway Mode)
     const internalGroup = new THREE.Group();
     const innerPiston = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.08, 2.6, 32), matStainless);
     innerPiston.position.y = 0.65;
     internalGroup.add(innerPiston);
 
+    // Spiral Spring Coils
     const springGroup = new THREE.Group();
     for (let i = 0; i < 18; i++) {
       const coil = new THREE.Mesh(new THREE.TorusGeometry(0.19, 0.024, 12, 28), matBrassSpring);
@@ -320,6 +357,7 @@
     internalGroup.add(springGroup);
     pipGroup.add(internalGroup);
 
+    // 3. Knurled Micrometer Dial & Plunger Rod + Amber P1000 Thumb Button
     const dialMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.42, 48), matKnurlDial);
     dialMesh.position.y = 2.28;
     pipGroup.add(dialMesh);
@@ -336,6 +374,7 @@
     plungerGroup.add(thumbCollar, thumbDome);
     pipGroup.add(plungerGroup);
 
+    // 4. Lower PVDF Nose Cone & Stainless Tip-Ejector Mechanism
     const noseCone = new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.16, 1.35, 48), matDarkPVDF);
     noseCone.position.y = -0.78;
     pipGroup.add(noseCone);
@@ -352,6 +391,7 @@
     ejectorGroup.add(ejectorBar, ejectorBtn, ejectorCollar, ejectorArm);
     pipGroup.add(ejectorGroup);
 
+    // 5. Disposable Clear Polypropylene P1000 Tip + Graduations + Meniscus Liquid
     const tipGroup = new THREE.Group();
     tipGroup.position.y = -2.15;
 
@@ -360,6 +400,7 @@
     tipCollar.position.y = 0.95;
     tipGroup.add(tipOuter, tipCollar);
 
+    // Tip Graduation Marks Overlay
     const tipGradTex = createGraduationTexture([
       { y: 140, text: '1000 μL' },
       { y: 270, text: '500 μL' },
@@ -371,15 +412,20 @@
     );
     tipGroup.add(tipGradMesh);
 
+    // Liquid inside Tip with Concave Meniscus
     const tipLiqMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.155, 0.038, 1.35, 36), matReagentLiq);
     tipLiqMesh.position.y = -0.15;
     tipGroup.add(tipLiqMesh);
     pipGroup.add(tipGroup);
 
+    // =========================================================================
+    // BUILD BOROSILICATE GLASS TEST TUBE WITH SCREW THREADS & MENISCUS BROTH
+    // =========================================================================
     const tubeGroup = new THREE.Group();
     tubeGroup.position.set(1.35, -0.65, 0);
     scene.add(tubeGroup);
 
+    // Glass Cylinder Wall + Rounded Bottom Hemisphere
     const glassWall = new THREE.Mesh(new THREE.CylinderGeometry(0.52, 0.52, 3.6, 56, 1, true), matBorosilicate);
     glassWall.position.y = 0.5;
     const glassBottom = new THREE.Mesh(new THREE.SphereGeometry(0.52, 48, 24, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), matBorosilicate);
@@ -389,6 +435,7 @@
     glassLip.position.y = 2.3;
     tubeGroup.add(glassWall, glassBottom, glassLip);
 
+    // White Enamel Graduation Lines on Glass Test Tube
     const tubeGradTex = createGraduationTexture([
       { y: 110, text: '15 mL' },
       { y: 230, text: '10 mL' },
@@ -401,6 +448,7 @@
     tubeGradMesh.position.y = 0.5;
     tubeGroup.add(tubeGradMesh);
 
+    // Bacterial Culture Broth + Concave Meniscus Ring at Top Surface
     const brothCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.475, 0.475, 2.2, 48), matCultureBroth);
     brothCyl.position.y = -0.2;
     const brothBottom = new THREE.Mesh(new THREE.SphereGeometry(0.475, 40, 20, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), matCultureBroth);
@@ -410,11 +458,15 @@
     meniscusRing.position.y = 0.91;
     tubeGroup.add(brothCyl, brothBottom, meniscusRing);
 
+    // Compacted Golden Cell Pellet at bottom of test tube
     const pellet = new THREE.Mesh(new THREE.SphereGeometry(0.22, 32, 16), matBrassSpring);
     pellet.scale.set(1.3, 0.45, 1.3);
     pellet.position.y = -1.68;
     tubeGroup.add(pellet);
 
+    // =========================================================================
+    // INTERACTIVE CONTROLS & ANIMATION LOOP
+    // =========================================================================
     let targetPlungerY = 2.95;
     let targetSpringScaleY = 1.0;
     let targetTipY = -2.15;
@@ -463,6 +515,222 @@
       document.getElementById('btn-eject').classList.toggle('active', isTipEjected);
       targetEjectorY = isTipEjected ? -0.28 : 0;
       targetTipY = isTipEjected ? -3.15 : -2.15;
+    };
+
+    // =========================================================================
+    // INDEPENDENT 3D EQUIPMENT DRAGGING & DUAL-HAND AR MEDIAPIPE (v2027.6)
+    // =========================================================================
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    const dragPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+    const hitPt = new THREE.Vector3();
+    const dragOffset = new THREE.Vector3();
+    let activeDragGroup = null;
+
+    function updateBrothFromPipetteProximity() {
+      const dx = Math.abs(pipetteGroup.position.x - tubeGroup.position.x);
+      const dy = pipetteGroup.position.y - tubeGroup.position.y;
+      const stEl = document.getElementById('p1000-exp-status');
+      if (dx < 0.75 && dy > 0.2 && dy < 3.4) {
+        const dipFactor = Math.max(0, Math.min(1, (2.6 - dy) / 1.5));
+        const transferred = (currentVol / 1000) * 0.55 * dipFactor;
+        const newH = 2.2 - transferred;
+        brothCyl.scale.y = newH / 2.2;
+        brothCyl.position.y = -1.3 + newH * 0.5;
+        meniscusRing.position.y = -1.3 + newH;
+        setPlungerStop(dipFactor > 0.45 ? 1 : 0);
+        if (stEl) {
+          stEl.innerHTML = `💧 <b>จุ่มทิปลงในหลอดแก้วบอโรซิลิเกตสำเร็จ!</b> กำลังดูดสารละลาย ${currentVol} μL (ระดับ Meniscus เปลี่ยนจริง)`;
+        }
+      } else {
+        brothCyl.scale.y = 1.0;
+        brothCyl.position.y = -0.2;
+        meniscusRing.position.y = 0.91;
+        if (stEl) {
+          stEl.innerHTML = `🖐️ <b>ตำแหน่งไมโครปิเปต:</b> (${pipetteGroup.position.x.toFixed(2)}, ${pipetteGroup.position.y.toFixed(2)}) — เลื่อนไปจ่อปากหลอดทดลองได้`;
+        }
+      }
+    }
+
+    renderer.domElement.addEventListener('pointerdown', (e) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const hits = raycaster.intersectObjects([pipetteGroup, tubeGroup], true);
+      if (hits.length > 0) {
+        let obj = hits[0].object;
+        while (obj && obj !== pipetteGroup && obj !== tubeGroup) obj = obj.parent;
+        if (obj) {
+          activeDragGroup = obj;
+          controls.enabled = false;
+          dragPlane.setFromNormalAndCoplanarPoint(new THREE.Vector3(0, 0, 1), obj.position);
+          if (raycaster.ray.intersectPlane(dragPlane, hitPt)) {
+            dragOffset.copy(hitPt).sub(obj.position);
+          }
+        }
+      }
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!activeDragGroup) return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      if (raycaster.ray.intersectPlane(dragPlane, hitPt)) {
+        const p = hitPt.sub(dragOffset);
+        activeDragGroup.position.x = Math.max(-2.8, Math.min(2.8, p.x));
+        activeDragGroup.position.y = Math.max(-1.6, Math.min(2.8, p.y));
+        updateBrothFromPipetteProximity();
+      }
+    });
+
+    window.addEventListener('pointerup', () => {
+      if (activeDragGroup) {
+        activeDragGroup = null;
+        controls.enabled = true;
+      }
+    });
+
+    // Dual-Hand MediaPipe & Auto-Demo for P1000 Showcase
+    let p1000MpActive = false;
+    let p1000DemoActive = false;
+    let p1000Hands = null;
+    let p1000Stream = null;
+    let p1000DemoReq = null;
+    const pVideo = document.getElementById('p1000-video');
+    const pCanvas = document.getElementById('p1000-canvas');
+    const pCtx = pCanvas.getContext('2d');
+
+    function drawP1000Hand(lm, color) {
+      const w = pCanvas.width, h = pCanvas.height;
+      pCtx.strokeStyle = color;
+      pCtx.lineWidth = 2;
+      [[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12]].forEach(([a,b]) => {
+        pCtx.beginPath();
+        pCtx.moveTo((1 - lm[a].x) * w, lm[a].y * h);
+        pCtx.lineTo((1 - lm[b].x) * w, lm[b].y * h);
+        pCtx.stroke();
+      });
+      lm.forEach((p, idx) => {
+        pCtx.fillStyle = (idx === 4 || idx === 8) ? '#facc15' : color;
+        pCtx.beginPath();
+        pCtx.arc((1 - p.x) * w, p.y * h, idx === 4 || idx === 8 ? 4 : 2.2, 0, Math.PI * 2);
+        pCtx.fill();
+      });
+    }
+
+    function handleP1000DualHands(multiLM) {
+      pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+      if (!multiLM || multiLM.length === 0) return;
+      multiLM.forEach((lm) => {
+        const sx = 1 - lm[0].x;
+        const pinch = Math.hypot(lm[4].x - lm[8].x, lm[4].y - lm[8].y) < 0.065;
+        if (sx >= 0.48) {
+          // Right Hand moves P1000 Micropipette
+          drawP1000Hand(lm, '#34d399');
+          if (pinch) {
+            const tx = ((1 - lm[8].x) - 0.5) * 4.5;
+            const ty = (0.5 - lm[8].y) * 4.0 + 0.6;
+            pipetteGroup.position.x = THREE.MathUtils.lerp(pipetteGroup.position.x, tx, 0.25);
+            pipetteGroup.position.y = THREE.MathUtils.lerp(pipetteGroup.position.y, ty, 0.25);
+            updateBrothFromPipetteProximity();
+          }
+        } else {
+          // Left Hand adjusts Volume Dial (100 - 1000 uL)
+          drawP1000Hand(lm, '#00f0ff');
+          if (pinch) {
+            const normY = Math.max(0, Math.min(1, 1 - lm[8].y));
+            const v = Math.round((100 + normY * 900) / 10) * 10;
+            document.getElementById('rng-vol').value = v;
+            window.setVolume(v);
+          }
+        }
+      });
+    }
+
+    window.toggleP1000MediaPipe = async function () {
+      const pipBox = document.getElementById('p1000-mp-pip');
+      const btn = document.getElementById('btn-mp2h');
+      if (p1000DemoActive) window.toggleP1000AutoDemo();
+      if (p1000MpActive) {
+        p1000MpActive = false;
+        if (p1000Stream) p1000Stream.getTracks().forEach(t => t.stop());
+        pipBox.style.display = 'none';
+        btn.classList.remove('active');
+        return;
+      }
+      pipBox.style.display = 'block';
+      btn.classList.add('active');
+      try {
+        if (!window.Hands) {
+          await new Promise((res, rej) => {
+            const s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js';
+            s.crossOrigin = 'anonymous';
+            s.onload = res; s.onerror = rej;
+            document.head.appendChild(s);
+          });
+        }
+        if (!p1000Hands) {
+          p1000Hands = new window.Hands({
+            locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`
+          });
+          p1000Hands.setOptions({ maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.6, minTrackingConfidence: 0.6 });
+          p1000Hands.onResults(r => { if (p1000MpActive) handleP1000DualHands(r.multiHandLandmarks || []); });
+        }
+        p1000Stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 640, height: 480 } });
+        pVideo.srcObject = p1000Stream;
+        await pVideo.play();
+        p1000MpActive = true;
+        const loop = async () => {
+          if (!p1000MpActive) return;
+          if (pVideo.readyState >= 2) await p1000Hands.send({ image: pVideo });
+          requestAnimationFrame(loop);
+        };
+        loop();
+      } catch (e) {
+        p1000MpActive = false;
+        btn.classList.remove('active');
+        window.toggleP1000AutoDemo();
+      }
+    };
+
+    window.toggleP1000AutoDemo = function () {
+      const pipBox = document.getElementById('p1000-mp-pip');
+      const btn = document.getElementById('btn-autodemo');
+      if (p1000DemoActive) {
+        p1000DemoActive = false;
+        if (p1000DemoReq) cancelAnimationFrame(p1000DemoReq);
+        pipBox.style.display = 'none';
+        btn.classList.remove('active');
+        pipetteGroup.position.set(-1.05, 0.35, 0);
+        updateBrothFromPipetteProximity();
+        return;
+      }
+      p1000DemoActive = true;
+      pipBox.style.display = 'block';
+      btn.classList.add('active');
+      document.getElementById('p1000-mp-badge').textContent = 'AI 2-HAND SIM';
+      const t0 = performance.now();
+      function step(now) {
+        if (!p1000DemoActive) return;
+        const t = (now - t0) * 0.001;
+        const makeLM = (cx, cy) => {
+          const arr = [];
+          for (let i = 0; i < 21; i++) arr.push({ x: cx, y: cy, z: 0 });
+          arr[0] = { x: cx, y: cy + 0.16, z: 0 };
+          arr[4] = { x: cx - 0.01, y: cy, z: 0 };
+          arr[8] = { x: cx + 0.01, y: cy, z: 0 };
+          return arr;
+        };
+        const leftLM = makeLM(0.74, 0.5 + Math.sin(t * 1.2) * 0.28);
+        const rightLM = makeLM(0.32 - Math.sin(t * 0.9) * 0.14, 0.42 + Math.cos(t * 1.8) * 0.12);
+        handleP1000DualHands([leftLM, rightLM]);
+        p1000DemoReq = requestAnimationFrame(step);
+      }
+      p1000DemoReq = requestAnimationFrame(step);
     };
 
     function animate() {

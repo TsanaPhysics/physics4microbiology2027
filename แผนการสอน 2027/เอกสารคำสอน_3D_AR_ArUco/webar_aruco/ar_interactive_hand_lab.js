@@ -259,12 +259,14 @@
   // --------------------------------------------------------------------------
   let lastDialSoundVal = null;
   let cuvetteRemoved = false;
+  let activeDilutionTubeIdx = 0;
 
   function sync3DModelDisplays() {
     if (!window.PBR_TEX || typeof currentMarkerId !== "number" || !window.dynamicObjects) return;
     const id = currentMarkerId;
     const T = window.PBR_TEX;
 
+    // Play subtle micrometer click when primary parameter changes
     const firstSlider = CHAPTER_MODELS[id] && CHAPTER_MODELS[id].sliders[0];
     if (firstSlider) {
       const curVal = params[firstSlider.key];
@@ -432,6 +434,7 @@
     }
   }
 
+  // Wrap updateTelemetryAndScene so every parameter change updates 3D displays
   const origUpdateTelemetry = window.updateTelemetryAndScene;
   if (typeof origUpdateTelemetry === "function") {
     window.updateTelemetryAndScene = function () {
@@ -440,6 +443,7 @@
     };
   }
 
+  // Wrap selectMarker so cuvetteRemoved resets and 3D displays sync on chapter switch
   const origSelectMarker = window.selectMarker;
   if (typeof origSelectMarker === "function") {
     window.selectMarker = function (id, fromScanner) {
@@ -464,6 +468,7 @@
   let draggedEquip = null;
   let isDragging3DEquip = false;
 
+  // Selection highlight ring inside modelGroup
   const highlightRing = new THREE.Mesh(
     new THREE.TorusGeometry(0.42, 0.022, 16, 48),
     new THREE.MeshBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.85 })
@@ -472,6 +477,7 @@
   highlightRing.visible = false;
   scene.add(highlightRing);
 
+  // 3D Virtual Hand Cursors for Left & Right MediaPipe Hands
   const rightHandCursor = new THREE.Group();
   const rhSphere = new THREE.Mesh(
     new THREE.SphereGeometry(0.11, 24, 24),
@@ -514,6 +520,7 @@
     const statusTxt = document.getElementById("equip-status-text");
 
     if (role === "pipette" && currentMarkerId === 0) {
+      // Check proximity to the 6 serial dilution tubes (x = -0.38 + i * 0.37)
       let nearestIdx = -1;
       let minDist = 999;
       for (let i = 0; i < 6; i++) {
@@ -633,6 +640,7 @@
     }
   }
 
+  // Pointer Events on 3D Canvas for Mouse / Touch Independent Equipment Dragging
   const domCanvas = renderer.domElement;
 
   domCanvas.addEventListener("pointerdown", (e) => {
@@ -648,7 +656,7 @@
       if (root) {
         draggedEquip = root;
         isDragging3DEquip = true;
-        controls.enabled = false;
+        controls.enabled = false; // Keep camera steady while moving lab apparatus!
 
         const worldPos = new THREE.Vector3();
         root.getWorldPosition(worldPos);
@@ -789,6 +797,8 @@
     for (let i = 0; i < multiLandmarks.length; i++) {
       const lm = multiLandmarks[i];
       const rawLabel = multiHandedness && multiHandedness[i] ? multiHandedness[i].label : (i === 0 ? "Right" : "Left");
+      // Note: In mirrored front camera, MediaPipe "Left" label corresponds to user's Right hand visually,
+      // or we can classify by horizontal screen position if two hands are present so Left side = Left Hand, Right side = Right Hand.
       const screenX = 1 - lm[0].x;
       if (multiLandmarks.length === 2) {
         const otherScreenX = 1 - multiLandmarks[1 - i][0].x;
@@ -806,6 +816,7 @@
     let rightPinching = false;
     let leftPinching = false;
 
+    // 1. RIGHT HAND: Grab & Move 3D Laboratory Equipment
     if (rightLM) {
       const thumb = rightLM[4];
       const index = rightLM[8];
@@ -821,6 +832,7 @@
 
       if (rightPinching) {
         if (!draggedEquip && dynamicObjects.draggableItems && dynamicObjects.draggableItems.length > 0) {
+          // Pick nearest draggable equipment to Right Hand 3D cursor
           let bestEq = dynamicObjects.draggableItems[0];
           let bestD = 999;
           dynamicObjects.draggableItems.forEach((eq) => {
@@ -861,6 +873,7 @@
       if (rStateEl) rStateEl.textContent = "ไม่พบมือขวา";
     }
 
+    // 2. LEFT HAND: Adjust Experimental Parameter / Digital Counter / Plunger
     if (leftLM) {
       const thumb = leftLM[4];
       const index = leftLM[8];
@@ -891,6 +904,7 @@
       if (lStateEl) lStateEl.textContent = "ไม่พบมือซ้าย";
     }
 
+    // 3. BIMANUAL 2-HAND INTERACTION (Both Left & Right Hands Present)
     if (leftLM && rightLM && leftPinching && rightPinching) {
       const dist2H = Math.hypot(leftLM[8].x - rightLM[8].x, leftLM[8].y - rightLM[8].y);
       if (bimanualStartDist === null) {
@@ -976,22 +990,29 @@
     }
   }
 
+  // --------------------------------------------------------------------------
+  // 6. AUTOMATED DUAL-HAND AI EXPERIMENT SIMULATOR (Works without Webcam)
+  // --------------------------------------------------------------------------
   let demoAnimId = null;
 
   function makeSyntheticHandLandmarks(centerX, centerY, pinchAmount) {
+    // Generates 21 realistic MediaPipe hand landmarks around (centerX, centerY)
     const lm = [];
     for (let i = 0; i < 21; i++) {
       lm.push({ x: centerX, y: centerY, z: 0 });
     }
-    lm[0] = { x: centerX, y: centerY + 0.18, z: 0 };
+    lm[0] = { x: centerX, y: centerY + 0.18, z: 0 }; // Wrist
+    // Thumb (1..4)
     lm[1] = { x: centerX - 0.05, y: centerY + 0.12, z: 0 };
     lm[2] = { x: centerX - 0.08, y: centerY + 0.06, z: 0 };
     lm[3] = { x: centerX - 0.06, y: centerY + 0.02, z: 0 };
     lm[4] = { x: centerX - 0.03 * (1 - pinchAmount), y: centerY + 0.01 * (1 - pinchAmount), z: 0 };
+    // Index (5..8)
     lm[5] = { x: centerX - 0.03, y: centerY + 0.05, z: 0 };
     lm[6] = { x: centerX - 0.03, y: centerY - 0.02, z: 0 };
     lm[7] = { x: centerX - 0.02, y: centerY - 0.06, z: 0 };
     lm[8] = { x: centerX + 0.01 * (1 - pinchAmount), y: centerY - 0.01 * (1 - pinchAmount), z: 0 };
+    // Middle, Ring, Pinky
     [9, 13, 17].forEach((base, idx) => {
       const ox = (idx - 0.5) * 0.045;
       lm[base]     = { x: centerX + ox, y: centerY + 0.06, z: 0 };
@@ -1014,10 +1035,13 @@
     function stepDemo(now) {
       if (!mpAutoDemoActive) return;
       const elapsed = (now - t0) * 0.001;
+
+      // Left hand (screen left -> 1 - x = 0.25) pinches & moves vertically to sweep digital numbers
       const leftCenterX = 0.74 + Math.sin(elapsed * 0.8) * 0.05;
       const leftCenterY = 0.50 + Math.sin(elapsed * 1.3) * 0.28;
       const leftHandLM = makeSyntheticHandLandmarks(leftCenterX, leftCenterY, 0.92);
 
+      // Right hand (screen right -> 1 - x = 0.72) pinches & moves equipment across the workbench
       const rightCenterX = 0.32 + Math.cos(elapsed * 1.1) * 0.18;
       const rightCenterY = 0.48 + Math.sin(elapsed * 1.6) * 0.16;
       const rightHandLM = makeSyntheticHandLandmarks(rightCenterX, rightCenterY, 0.92);
@@ -1054,5 +1078,6 @@
     }
   });
 
+  // Initial sync of 3D displays
   setTimeout(sync3DModelDisplays, 250);
 })();
