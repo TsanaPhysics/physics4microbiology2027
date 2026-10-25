@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photorealistic 3D P1000 Micropipette & Borosilicate Test Tube — Blender PBR Showcase</title>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Prompt:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <style>
+    :root {
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --bg: #030712;
+      --panel: rgba(8, 15, 32, 0.78);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 100vw; height: 100vh; overflow: hidden;
+      background: radial-gradient(circle at 45% 35%, #0f2942 0%, #050b18 55%, #02040a 100%);
+      color: #f8fafc; font-family: 'Prompt', sans-serif;
+    }
+    #viewport { position: fixed; inset: 0; z-index: 1; }
+    header {
+      position: fixed; top: 14px; left: 16px; right: 16px; z-index: 10;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+      background: var(--panel); backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 16px;
+      padding: 10px 18px; box-shadow: 0 12px 32px rgba(0,0,0,0.55);
+    }
+    .title-box h1 {
+      font-family: 'Chakra Petch', sans-serif; font-size: 1.05rem; color: #fff;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .badge {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+      background: linear-gradient(135deg, #00f0ff, #10b981); color: #020617;
+      padding: 2px 8px; border-radius: 6px; font-weight: 700;
+    }
+    .title-box p { font-size: 0.76rem; color: #94a3b8; }
+    .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      font-family: 'Prompt', sans-serif; font-size: 0.75rem; font-weight: 600;
+      padding: 6px 13px; border-radius: 999px; cursor: pointer; text-decoration: none;
+      background: rgba(56, 189, 248, 0.15); color: #bae6fd;
+      border: 1px solid rgba(56, 189, 248, 0.4); transition: all 0.2s;
+    }
+    .btn:hover, .btn.active {
+      background: linear-gradient(135deg, rgba(0,240,255,0.32), rgba(16,185,129,0.32));
+      color: #fff; border-color: var(--cyan);
+    }
+    aside {
+      position: fixed; bottom: 18px; right: 18px; width: 340px; max-width: calc(100vw - 36px);
+      z-index: 10; background: var(--panel); backdrop-filter: blur(18px);
+      border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 18px;
+      padding: 16px; box-shadow: 0 16px 40px rgba(0,0,0,0.65);
+    }
+    aside h2 {
+      font-family: 'Chakra Petch', sans-serif; font-size: 0.92rem; color: var(--cyan);
+      margin-bottom: 10px; border-bottom: 1px solid rgba(148,163,184,0.2); padding-bottom: 6px;
+    }
+    .ctrl-row { margin-bottom: 11px; }
+    .ctrl-label {
+      display: flex; justify-content: space-between; font-size: 0.76rem; margin-bottom: 4px;
+    }
+    .ctrl-val { font-family: 'JetBrains Mono', monospace; color: #34d399; font-weight: 700; }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); cursor: pointer; }
+    .stop-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .mat-specs {
+      position: fixed; bottom: 18px; left: 18px; width: 310px; z-index: 10;
+      background: var(--panel); backdrop-filter: blur(18px);
+      border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 18px;
+      padding: 14px 16px; font-size: 0.74rem; color: #cbd5e1;
+    }
+    .mat-specs h3 { color: #34d399; font-size: 0.84rem; margin-bottom: 6px; }
+    .spec-item { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dashed rgba(148,163,184,0.15); }
+    .spec-key { color: #94a3b8; }
+    .spec-v { font-family: 'JetBrains Mono', monospace; color: #fde047; }
+    @media (max-width: 760px) { .mat-specs { display: none; } }
+  </style>
+</head>
+<body>
+  <div id="viewport"></div>
+
+  <header>
+    <div class="title-box">
+      <h1>
+        <span>🔬 P1000 Micropipette & Borosilicate Test Tube</span>
+        <span class="badge">BLENDER Principled BSDF + PBR</span>
+      </h1>
+      <p>จำลองพื้นผิววัสดุจริง: แก้วบอโรซิลิเกต (IOR 1.52) • โพลีโพรพีลีนผิวด้าน • เหล็กกล้าไร้สนิม 316L • หน้าปัดดิจิทัล 4 หลัก • สปริงลูกสูบ 2 จังหวะ</p>
+    </div>
+    <div class="nav-links">
+      <a href="ar_aruco_textbook.html" class="btn">🔙 กลับหน้า 3D WebAR 12 บท</a>
+      <a href="cad_models/create_p1000_micropipette_blender.py" target="_blank" class="btn">🐍 สคริปต์ Blender (.py)</a>
+      <a href="cad_models/p1000_micropipette_cad.scad" target="_blank" class="btn">📐 โค้ด OpenSCAD (.scad)</a>
+    </div>
+  </header>
+
+  <div class="mat-specs">
+    <h3>✨ คุณสมบัติพื้นผิว PBR (Shader Specs)</h3>
+    <div class="spec-item"><span class="spec-key">หลอดแก้ว Borosilicate</span><span class="spec-v">IOR 1.52 / Trans 0.94</span></div>
+    <div class="spec-item"><span class="spec-key">ทิปใส Polypropylene</span><span class="spec-v">IOR 1.49 / Clearcoat 1.0</span></div>
+    <div class="spec-item"><span class="spec-key">แกนลูกสูบ Stainless 316L</span><span class="spec-v">Metal 0.95 / Rough 0.12</span></div>
+    <div class="spec-item"><span class="spec-key">ด้ามจับ Gilson Blue PP</span><span class="spec-v">Micro-Bump + Clearcoat</span></div>
+    <div class="spec-item"><span class="spec-key">ผิวโค้งของเหลว (Meniscus)</span><span class="spec-v">Concave Surface Tension</span></div>
+  </div>
+
+  <aside>
+    <h2>🎛️ ทดสอบกลไกไมโครปิเปต P1000 เสมือนจริง</h2>
+
+    <div class="ctrl-row">
+      <div class="ctrl-label">
+        <span>ปริมาตรที่ตั้งบนหน้าปัด (Volume Dial)</span>
+        <span class="ctrl-val" id="lbl-vol">1000 μL</span>
+      </div>
+      <input type="range" id="rng-vol" min="100" max="1000" step="10" value="1000" oninput="setVolume(this.value)" />
+    </div>
+
+    <div class="ctrl-label" style="margin-bottom:5px;"><span>จังหวะการกดปุ่มลูกสูบ (2-Stop Plunger)</span></div>
+    <div class="stop-grid">
+      <button class="btn active" id="stop-0" onclick="setPlungerStop(0)">0️⃣ ปล่อยสุด</button>
+      <button class="btn" id="stop-1" onclick="setPlungerStop(1)">1️⃣ Stop 1 (ดูด)</button>
+      <button class="btn" id="stop-2" onclick="setPlungerStop(2)">2️⃣ Stop 2 (ไล่หยด)</button>
+    </div>
+
+    <div class="action-grid">
+      <button class="btn" id="btn-xray" onclick="toggleXRay()">🔍 ผ่าดูสปริงภายใน (X-Ray)</button>
+      <button class="btn" id="btn-eject" onclick="toggleTipEject()">⏏️ ดีดทิปทิ้ง (Eject Tip)</button>
+    </div>
+  </aside>
+
+  <script>
+    const container = document.getElementById('viewport');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0.3, 1.2, 8.8);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.32;
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.shadowMap.enabled = true;
+    container.appendChild(renderer.domElement);
+
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const envScene = new THREE.Scene();
+    envScene.background = new THREE.Color(0x060d1f);
+    const addLightPanel = (w, h, col, x, y, z) => {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: col, side: THREE.DoubleSide }));
+      m.position.set(x, y, z);
+      m.lookAt(0, 0, 0);
+      envScene.add(m);
+    };
+    addLightPanel(18, 18, 0xffffff, 0, 10, 2);
+    addLightPanel(16, 4, 0x00f0ff, -9, 3, 6);
+    addLightPanel(16, 4, 0x38bdf8, 9, 2, 5);
+    addLightPanel(14, 3, 0xfbbf24, 0, -7, 6);
+    scene.environment = pmrem.fromScene(envScene, 0.035).texture;
+    pmrem.dispose();
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.target.set(0.35, 0.2, 0);
+
+    scene.add(new THREE.HemisphereLight(0xe0f2fe, 0x091326, 0.85));
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.8);
+    keyLight.position.set(6, 9, 7);
+    scene.add(keyLight);
+    const rimLight = new THREE.DirectionalLight(0x00f0ff, 1.1);
+    rimLight.position.set(-7, 4, -5);
+    scene.add(rimLight);
+
+    function createKnurlBumpTexture() {
+      const c = document.createElement('canvas');
+      c.width = 512; c.height = 128;
+      const ctx = c.getContext('2d');
+      for (let x = 0; x < 512; x += 8) {
+        const g = ctx.createLinearGradient(x, 0, x + 8, 0);
+        g.addColorStop(0, '#111');
+        g.addColorStop(0.5, '#eee');
+        g.addColorStop(1, '#111');
+        ctx.fillStyle = g;
+        ctx.fillRect(x, 0, 8, 128);
+      }
+      const tex = new THREE.CanvasTexture(c);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+      return tex;
+    }
+
+    const volCanvas = document.createElement('canvas');
+    volCanvas.width = 512; volCanvas.height = 1024;
+    const volCtx = volCanvas.getContext('2d');
+    const volTex = new THREE.CanvasTexture(volCanvas);
+
+    function drawHandleTexture(volNum) {
+      volCtx.fillStyle = '#034991';
+      volCtx.fillRect(0, 0, 512, 1024);
+
+      volCtx.fillStyle = 'rgba(255,255,255,0.025)';
+      for (let i = 0; i < 1800; i++) {
+        volCtx.fillRect(Math.random() * 512, Math.random() * 1024, 2, 2);
+      }
+
+      volCtx.fillStyle = '#e0f2fe';
+      volCtx.font = 'bold 28px Chakra Petch, sans-serif';
+      volCtx.textAlign = 'center';
+      volCtx.fillText('PIPETMAN P1000', 256, 220);
+      volCtx.font = '600 20px JetBrains Mono, monospace';
+      volCtx.fillStyle = '#38bdf8';
+      volCtx.fillText('100 – 1000 μL', 256, 255);
+
+      volCtx.fillStyle = '#090d16';
+      volCtx.strokeStyle = '#38bdf8';
+      volCtx.lineWidth = 4;
+      volCtx.fillRect(186, 310, 140, 340);
+      volCtx.strokeRect(186, 310, 140, 340);
+
+      const str = String(Math.round(volNum)).padStart(4, '0');
+      for (let d = 0; d < 4; d++) {
+        volCtx.fillStyle = d === 0 ? '#1e293b' : '#111827';
+        volCtx.fillRect(198, 326 + d * 78, 116, 68);
+        volCtx.font = 'bold 54px JetBrains Mono, monospace';
+        volCtx.fillStyle = d === 0 ? '#f43f5e' : '#f8fafc';
+        volCtx.fillText(str[d], 256, 378 + d * 78);
+      }
+      volTex.needsUpdate = true;
+    }
+    drawHandleTexture(1000);
+
+    function createGraduationTexture(labels, colorStr = 'rgba(255,255,255,0.85)') {
+      const c = document.createElement('canvas');
+      c.width = 512; c.height = 512;
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, 512, 512);
+      ctx.strokeStyle = colorStr;
+      ctx.fillStyle = colorStr;
+      ctx.lineWidth = 3;
+      ctx.font = 'bold 20px JetBrains Mono, monospace';
+      labels.forEach((item) => {
+        const y = item.y;
+        ctx.beginPath();
+        ctx.moveTo(210, y);
+        ctx.lineTo(265, y);
+        ctx.stroke();
+        ctx.fillText(item.text, 275, y + 6);
+      });
+      return new THREE.CanvasTexture(c);
+    }
+
+    const matBlueBody = new THREE.MeshPhysicalMaterial({
+      map: volTex, roughness: 0.28, metalness: 0.04, clearcoat: 0.45, clearcoatRoughness: 0.2
+    });
+    const matDarkPVDF = new THREE.MeshStandardMaterial({
+      color: 0x161f2e, roughness: 0.32, metalness: 0.18
+    });
+    const matKnurlDial = new THREE.MeshStandardMaterial({
+      color: 0x1e293b, roughness: 0.35, metalness: 0.25,
+      bumpMap: createKnurlBumpTexture(), bumpScale: 0.045
+    });
+    const matStainless = new THREE.MeshPhysicalMaterial({
+      color: 0xe2e8f0, metalness: 0.94, roughness: 0.12, clearcoat: 0.6
+    });
+    const matBrassSpring = new THREE.MeshStandardMaterial({
+      color: 0xfbbf24, metalness: 0.88, roughness: 0.18
+    });
+    const matAmberCap = new THREE.MeshPhysicalMaterial({
+      color: 0xf59e0b, roughness: 0.18, metalness: 0.15, clearcoat: 0.9
+    });
+    const matClearTip = new THREE.MeshPhysicalMaterial({
+      color: 0xdbeafe, transparent: true, opacity: 0.42,
+      roughness: 0.06, metalness: 0.0, clearcoat: 1.0, clearcoatRoughness: 0.04, reflectivity: 0.9
+    });
+    const matBorosilicate = new THREE.MeshPhysicalMaterial({
+      color: 0xf0f9ff, transparent: true, opacity: 0.34,
+      roughness: 0.03, metalness: 0.02, clearcoat: 1.0, clearcoatRoughness: 0.02, reflectivity: 0.98
+    });
+    const matReagentLiq = new THREE.MeshPhysicalMaterial({
+      color: 0x00b4d8, emissive: 0x0284c7, emissiveIntensity: 0.22,
+      transparent: true, opacity: 0.86, roughness: 0.05, clearcoat: 1.0
+    });
+    const matCultureBroth = new THREE.MeshPhysicalMaterial({
+      color: 0x10b981, emissive: 0x059669, emissiveIntensity: 0.18,
+      transparent: true, opacity: 0.82, roughness: 0.08, clearcoat: 1.0
+    });
+
+    const pipGroup = new THREE.Group();
+    pipGroup.position.set(-0.95, 0.15, 0);
+    scene.add(pipGroup);
+
+    const handleMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.37, 2.25, 48), matBlueBody);
+    handleMesh.position.y = 0.95;
+    pipGroup.add(handleMesh);
+
+    const lensCover = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.72, 0.30), matBorosilicate);
+    lensCover.position.set(0.39, 0.88, 0);
+    pipGroup.add(lensCover);
+
+    const fingerHook = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.13, 0.28), matDarkPVDF);
+    fingerHook.position.set(0.46, 1.88, 0);
+    fingerHook.rotation.z = -0.22;
+    pipGroup.add(fingerHook);
+
+    const internalGroup = new THREE.Group();
+    const innerPiston = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.08, 2.6, 32), matStainless);
+    innerPiston.position.y = 0.65;
+    internalGroup.add(innerPiston);
+
+    const springGroup = new THREE.Group();
+    for (let i = 0; i < 18; i++) {
+      const coil = new THREE.Mesh(new THREE.TorusGeometry(0.19, 0.024, 12, 28), matBrassSpring);
+      coil.rotation.x = Math.PI / 2 + 0.12;
+      coil.position.y = 0.15 + i * 0.085;
+      springGroup.add(coil);
+    }
+    internalGroup.add(springGroup);
+    pipGroup.add(internalGroup);
+
+    const dialMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.42, 48), matKnurlDial);
+    dialMesh.position.y = 2.28;
+    pipGroup.add(dialMesh);
+
+    const plungerGroup = new THREE.Group();
+    plungerGroup.position.y = 2.95;
+    const plungerRod = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 1.05, 36), matStainless);
+    plungerGroup.add(plungerRod);
+
+    const thumbCollar = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.32, 0.16, 48), matAmberCap);
+    thumbCollar.position.y = 0.52;
+    const thumbDome = new THREE.Mesh(new THREE.CylinderGeometry(0.31, 0.36, 0.08, 48), matAmberCap);
+    thumbDome.position.y = 0.64;
+    plungerGroup.add(thumbCollar, thumbDome);
+    pipGroup.add(plungerGroup);
+
+    const noseCone = new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.16, 1.35, 48), matDarkPVDF);
+    noseCone.position.y = -0.78;
+    pipGroup.add(noseCone);
+
+    const ejectorGroup = new THREE.Group();
+    const ejectorBar = new THREE.Mesh(new THREE.BoxGeometry(0.11, 2.35, 0.20), matStainless);
+    ejectorBar.position.set(-0.44, 0.48, 0);
+    const ejectorBtn = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.22, 0.32), matBlueBody);
+    ejectorBtn.position.set(-0.48, 1.72, 0);
+    const ejectorCollar = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.22, 0.32, 36), matStainless);
+    ejectorCollar.position.set(0, -0.72, 0);
+    const ejectorArm = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.10, 0.18), matStainless);
+    ejectorArm.position.set(-0.22, -0.58, 0);
+    ejectorGroup.add(ejectorBar, ejectorBtn, ejectorCollar, ejectorArm);
+    pipGroup.add(ejectorGroup);
+
+    const tipGroup = new THREE.Group();
+    tipGroup.position.y = -2.15;
+
+    const tipOuter = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.042, 1.85, 48, 1, true), matClearTip);
+    const tipCollar = new THREE.Mesh(new THREE.CylinderGeometry(0.215, 0.19, 0.35, 48), matClearTip);
+    tipCollar.position.y = 0.95;
+    tipGroup.add(tipOuter, tipCollar);
+
+    const tipGradTex = createGraduationTexture([
+      { y: 140, text: '1000 μL' },
+      { y: 270, text: '500 μL' },
+      { y: 390, text: '100 μL' }
+    ]);
+    const tipGradMesh = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.192, 0.044, 1.85, 36, 1, true),
+      new THREE.MeshBasicMaterial({ map: tipGradTex, transparent: true, depthWrite: false })
+    );
+    tipGroup.add(tipGradMesh);
+
+    const tipLiqMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.155, 0.038, 1.35, 36), matReagentLiq);
+    tipLiqMesh.position.y = -0.15;
+    tipGroup.add(tipLiqMesh);
+    pipGroup.add(tipGroup);
+
+    const tubeGroup = new THREE.Group();
+    tubeGroup.position.set(1.35, -0.65, 0);
+    scene.add(tubeGroup);
+
+    const glassWall = new THREE.Mesh(new THREE.CylinderGeometry(0.52, 0.52, 3.6, 56, 1, true), matBorosilicate);
+    glassWall.position.y = 0.5;
+    const glassBottom = new THREE.Mesh(new THREE.SphereGeometry(0.52, 48, 24, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), matBorosilicate);
+    glassBottom.position.y = -1.3;
+    const glassLip = new THREE.Mesh(new THREE.TorusGeometry(0.52, 0.045, 16, 48), matBorosilicate);
+    glassLip.rotation.x = Math.PI / 2;
+    glassLip.position.y = 2.3;
+    tubeGroup.add(glassWall, glassBottom, glassLip);
+
+    const tubeGradTex = createGraduationTexture([
+      { y: 110, text: '15 mL' },
+      { y: 230, text: '10 mL' },
+      { y: 350, text: '5 mL' }
+    ], 'rgba(240, 249, 255, 0.92)');
+    const tubeGradMesh = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.524, 0.524, 3.4, 48, 1, true),
+      new THREE.MeshBasicMaterial({ map: tubeGradTex, transparent: true, depthWrite: false })
+    );
+    tubeGradMesh.position.y = 0.5;
+    tubeGroup.add(tubeGradMesh);
+
+    const brothCyl = new THREE.Mesh(new THREE.CylinderGeometry(0.475, 0.475, 2.2, 48), matCultureBroth);
+    brothCyl.position.y = -0.2;
+    const brothBottom = new THREE.Mesh(new THREE.SphereGeometry(0.475, 40, 20, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), matCultureBroth);
+    brothBottom.position.y = -1.3;
+    const meniscusRing = new THREE.Mesh(new THREE.TorusGeometry(0.45, 0.032, 16, 48), matCultureBroth);
+    meniscusRing.rotation.x = Math.PI / 2;
+    meniscusRing.position.y = 0.91;
+    tubeGroup.add(brothCyl, brothBottom, meniscusRing);
+
+    const pellet = new THREE.Mesh(new THREE.SphereGeometry(0.22, 32, 16), matBrassSpring);
+    pellet.scale.set(1.3, 0.45, 1.3);
+    pellet.position.y = -1.68;
+    tubeGroup.add(pellet);
+
+    let targetPlungerY = 2.95;
+    let targetSpringScaleY = 1.0;
+    let targetTipY = -2.15;
+    let targetEjectorY = 0;
+    let isTipEjected = false;
+    let isXRay = false;
+    let currentVol = 1000;
+
+    window.setVolume = function (val) {
+      currentVol = parseFloat(val);
+      document.getElementById('lbl-vol').textContent = `${currentVol} μL`;
+      drawHandleTexture(currentVol);
+      dialMesh.rotation.y = (currentVol / 1000) * Math.PI * 4;
+      const fillRatio = currentVol / 1000;
+      tipLiqMesh.scale.set(0.65 + 0.35 * fillRatio, fillRatio, 0.65 + 0.35 * fillRatio);
+      tipLiqMesh.position.y = -0.82 + fillRatio * 0.67;
+    };
+
+    window.setPlungerStop = function (stopIdx) {
+      [0, 1, 2].forEach(i => document.getElementById(`stop-${i}`).classList.toggle('active', i === stopIdx));
+      if (stopIdx === 0) {
+        targetPlungerY = 2.95;
+        targetSpringScaleY = 1.0;
+        tipLiqMesh.visible = true;
+      } else if (stopIdx === 1) {
+        targetPlungerY = 2.58;
+        targetSpringScaleY = 0.72;
+        tipLiqMesh.visible = true;
+      } else {
+        targetPlungerY = 2.34;
+        targetSpringScaleY = 0.52;
+        tipLiqMesh.visible = false;
+      }
+    };
+
+    window.toggleXRay = function () {
+      isXRay = !isXRay;
+      document.getElementById('btn-xray').classList.toggle('active', isXRay);
+      matBlueBody.transparent = isXRay;
+      matBlueBody.opacity = isXRay ? 0.28 : 1.0;
+      matBlueBody.needsUpdate = true;
+    };
+
+    window.toggleTipEject = function () {
+      isTipEjected = !isTipEjected;
+      document.getElementById('btn-eject').classList.toggle('active', isTipEjected);
+      targetEjectorY = isTipEjected ? -0.28 : 0;
+      targetTipY = isTipEjected ? -3.15 : -2.15;
+    };
+
+    function animate() {
+      requestAnimationFrame(animate);
+      plungerGroup.position.y = THREE.MathUtils.lerp(plungerGroup.position.y, targetPlungerY, 0.14);
+      innerPiston.position.y = plungerGroup.position.y - 2.3;
+      springGroup.scale.y = THREE.MathUtils.lerp(springGroup.scale.y, targetSpringScaleY, 0.14);
+      ejectorGroup.position.y = THREE.MathUtils.lerp(ejectorGroup.position.y, targetEjectorY, 0.15);
+      tipGroup.position.y = THREE.MathUtils.lerp(tipGroup.position.y, targetTipY, 0.12);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
