@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องปฏิบัติการ 3D อุณหพลศาสตร์และเทอร์โมไซเคิลเลอร์ PCR (PCR Thermal Cycler & Peltier Heat Transfer 3D)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js r128 & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- Google Fonts & Font Awesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #030712; color: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .font-digital { font-family: 'Orbitron', monospace; }
+    
+    /* Pure CSS Vector Standard */
+    .vec {
+      display: inline-block;
+      position: relative;
+      font-family: 'Times New Roman', Cambria, serif;
+      font-style: italic;
+      font-weight: bold;
+      line-height: 1;
+      margin-top: 0.25em;
+    }
+    .vec::after {
+      content: '→';
+      position: absolute;
+      top: -0.45em;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0.85);
+      font-size: 0.72em;
+      font-style: normal;
+      font-weight: bold;
+      line-height: 1;
+      color: inherit;
+      pointer-events: none;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(239, 68, 68, 0.3); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(239, 68, 68, 0.6); }
+
+    /* Digital LED Glow */
+    .led-glow-red {
+      text-shadow: 0 0 10px rgba(239, 68, 68, 0.7), 0 0 20px rgba(239, 68, 68, 0.4);
+    }
+    .led-glow-cyan {
+      text-shadow: 0 0 10px rgba(6, 182, 212, 0.7), 0 0 20px rgba(6, 182, 212, 0.4);
+    }
+    .led-glow-emerald {
+      text-shadow: 0 0 10px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+    .led-glow-amber {
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.7), 0 0 20px rgba(245, 158, 11, 0.4);
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col select-none overflow-hidden bg-slate-950">
+
+  <!-- Main Simulator Layout Grid -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 h-full overflow-hidden relative">
+
+    <!-- 3D Viewport Column -->
+    <div id="viewportContainer" class="lg:col-span-8 w-full h-[360px] sm:h-[440px] lg:h-full relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden transition-all duration-300">
+      
+      <!-- Three.js Canvas Mount Container -->
+      <div id="threeMount" class="w-full h-full block cursor-grab active:cursor-grabbing"></div>
+
+      <!-- Top-Left HUD: Real-time Thermal Cycler Telemetry -->
+      <div id="thermalHUD" class="absolute top-3 left-3 bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-red-500/30 shadow-2xl text-xs z-10 space-y-2 pointer-events-auto w-64 sm:w-72 shadow-red-950/20">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5 gap-2">
+          <span class="font-bold text-red-400 font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-temperature-arrow-up text-red-300"></i> THERMAL TELEMETRY
+          </span>
+          <div class="flex items-center gap-1.5">
+            <span id="pcrPhaseBadge" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-800 text-slate-300 border border-white/10 font-mono">
+              STANDBY
+            </span>
+            <button onclick="toggleCardBody('thermalHUD')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="thermalHUD_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('thermalHUD')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="thermalHUD_body" class="space-y-2.5 transition-all">
+          <!-- Digital Temperature Readout Box -->
+          <div class="bg-black/90 p-2.5 rounded-xl border border-red-500/30 text-center space-y-1 shadow-inner">
+            <div class="text-[10px] font-mono text-slate-400 flex justify-between px-1">
+              <span>BLOCK TEMPERATURE (T)</span>
+              <span id="hudLidStatus" class="text-amber-400 font-mono">Lid: 105.0 °C</span>
+            </div>
+            <div id="hudTempDisplay" class="text-3xl font-digital font-bold text-red-400 led-glow-red tracking-wider">
+              25.0 <span class="text-xs text-red-500 font-sans">°C</span>
+            </div>
+            <div class="grid grid-cols-2 gap-1 text-[10px] font-mono text-slate-300 pt-1 border-t border-white/10">
+              <div class="text-left px-1">
+                <span class="text-slate-400">Ramp Rate:</span>
+                <span id="hudRampRate" class="text-amber-400 font-bold block">+0.0 °C/s</span>
+              </div>
+              <div class="text-right px-1">
+                <span class="text-slate-400">Heat Flux (q):</span>
+                <span id="hudHeatFlux" class="text-cyan-400 font-bold block">0.0 W/cm²</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PCR Kinetics & Amplification Telemetry -->
+          <div class="space-y-1 font-mono text-[10px] text-slate-300 bg-slate-950/80 p-2.5 rounded-xl border border-white/5">
+            <div class="flex justify-between">
+              <span>รอบการทำซ้ำ (Cycle):</span>
+              <span id="hudCycleDisplay" class="text-emerald-300 font-bold">0 / 30</span>
+            </div>
+            <div class="flex justify-between">
+              <span>จำนวนสำเนา DNA (Copy N):</span>
+              <span id="hudDnaCopies" class="text-amber-300 font-bold">1.00 × 10⁰</span>
+            </div>
+            <div class="flex justify-between">
+              <span>สถานะสาย DNA (State):</span>
+              <span id="hudDnaState" class="text-cyan-300 font-bold">Double-Stranded (dsDNA)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top-Right: 2D Synchronized DNA Amplification & Melting Curve Loupe -->
+      <div id="pcrCurveCard" class="absolute top-3 right-3 bg-slate-900/95 backdrop-blur-md p-3 rounded-2xl border border-amber-500/30 shadow-2xl z-10 w-48 sm:w-56 pointer-events-auto shadow-amber-950/20">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5 mb-2 gap-2">
+          <span class="font-bold text-amber-400 text-xs font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-dna text-amber-300"></i> DNA KINETICS LOUPE
+          </span>
+          <div class="flex items-center gap-1.5">
+            <button onclick="toggleCardBody('pcrCurveCard')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="pcrCurveCard_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('pcrCurveCard')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="pcrCurveCard_body" class="space-y-2 transition-all">
+          <div class="relative w-full aspect-square bg-slate-950 rounded-xl overflow-hidden border border-amber-500/20 shadow-inner flex items-center justify-center">
+            <canvas id="loupeCanvas" width="180" height="180" class="w-full h-full block"></canvas>
+            <!-- Loupe Optical Grid Overlay -->
+            <div class="absolute inset-0 pointer-events-none border border-amber-500/10 rounded-xl"></div>
+            <div class="absolute top-1 left-2 text-[9px] font-mono text-amber-400/80">Kinetics: N = N₀·2ⁿ</div>
+            <div class="absolute bottom-1 right-2 text-[9px] font-mono text-slate-500">Live Thermal Profile</div>
+          </div>
+          <div class="text-[10px] text-center font-mono text-slate-400 flex justify-between px-1">
+            <span id="loupePhaseText" class="text-slate-400 font-bold">Base dsDNA</span>
+            <span id="loupeTimeText" class="text-slate-500">t = 0.0 s</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Floating Dock Bar: Camera, Minimize/Restore, Fullscreen -->
+      <div id="viewportDockBar" class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-2xl z-20 flex items-center gap-2 text-xs">
+        <!-- Re-open Hidden Cards Dropdown / Buttons -->
+        <div id="dockRestoreButtons" class="flex items-center gap-1.5 empty:hidden"></div>
+
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- Camera Preset Angles -->
+        <button onclick="setCameraView('overview')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="มุมมองภาพรวม 3 มิติ">
+          <i class="fa-solid fa-cube text-[9px]"></i> 3D
+        </button>
+        <button onclick="setCameraView('block')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="เจาะจงบล็อกความร้อนและหลอด PCR">
+          <i class="fa-solid fa-table-cells text-[9px]"></i> 96-Well
+        </button>
+        <button onclick="setCameraView('peltier')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="เจาะจงแผ่นเพลเทียร์และฮีตซิงก์">
+          <i class="fa-solid fa-microchip text-[9px]"></i> Peltier
+        </button>
+
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- Fullscreen / Sidebar Toggle -->
+        <button onclick="toggleSidebar()" id="btnToggleSidebar" class="px-2.5 py-1 rounded-full bg-red-500/20 hover:bg-red-500/30 text-red-300 font-medium text-[10px] flex items-center gap-1 transition" title="ขยายจอภาพ 3D เต็มความกว้าง">
+          <i class="fa-solid fa-expand text-[9px]"></i> <span id="toggleSidebarLabel">ขยายจอเต็ม</span>
+        </button>
+        <button onclick="captureSimulatorScreenshot()" class="px-2.5 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-medium text-[10px] flex items-center gap-1 transition" title="บันทึกภาพหน้าจอหลักฐาน">
+          <i class="fa-solid fa-camera text-[9px]"></i> แคปเจอร์
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Interactive Control Panel Sidebar -->
+    <div id="controlSidebar" class="lg:col-span-4 h-full bg-slate-900/95 border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col overflow-y-auto p-4 space-y-4">
+      
+      <!-- Panel Header -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div>
+          <h2 class="text-sm font-bold text-red-400 flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-red-400"></i> แผงควบคุมโปรแกรมเทอร์โมไซเคิลเลอร์
+          </h2>
+          <p class="text-[11px] text-slate-400">Peltier Thermoelectric &amp; PCR Protocol Setup</p>
+        </div>
+        <button onclick="resetParameters()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition flex items-center gap-1">
+          <i class="fa-solid fa-rotate-right"></i> รีเซ็ต
+        </button>
+      </div>
+
+      <!-- Audio Synthesizer Status & Sound Toggle -->
+      <div class="flex items-center justify-between bg-slate-950/60 p-2.5 rounded-xl border border-white/5">
+        <span class="text-xs text-slate-300 flex items-center gap-2">
+          <i class="fa-solid fa-volume-high text-red-400"></i> ซาวด์สังเคราะห์พัดลมระบายความร้อนและเสียงบี๊บ
+        </span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="soundToggle" class="sr-only peer" checked onchange="toggleSound(this.checked)">
+          <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-500"></div>
+        </label>
+      </div>
+
+      <!-- Heated Lid Status & Toggle -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-shield text-amber-400"></i> ฝาอบความร้อน (Heated Lid 105 °C)
+          </span>
+          <button id="btnToggleLid" onclick="toggleHeatedLid()" class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-mono transition">
+            <i class="fa-solid fa-lock text-[10px]"></i> ฝาปิดสนิท (Closed)
+          </button>
+        </div>
+        <p class="text-[10px] text-slate-400 leading-relaxed">
+          อุณหภูมิฝา 105 °C สูงกว่าของเหลวภายในหลอด ป้องกันไอน้ำระเหยไปควบแน่นที่ฝาหลอด รักษาความเข้มข้นสารทำปฏิกิริยาคงที่
+        </p>
+      </div>
+
+      <!-- Thermal Block Material Selection -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <label class="text-xs font-semibold text-slate-300 flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-cubes text-sky-400"></i> วัสดุบล็อกความร้อน (Thermal Block)
+          </span>
+          <span id="blockConductivityLabel" class="text-sky-400 font-mono text-[11px]">k = 205 W/(m·K)</span>
+        </label>
+        <select id="blockMaterialSelect" onchange="onBlockMaterialChange()" class="w-full bg-slate-900 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-red-500 font-mono">
+          <option value="aluminum" selected>อลูมิเนียมอัลลอยด์ (Aluminum, k = 205 W/(m·K), มาตรฐาน)</option>
+          <option value="silver">เงินเคลือบทอง (Gold-plated Silver, k = 429 W/(m·K), ไวสูงสุด)</option>
+          <option value="copper">ทองแดงบริสุทธิ์ (Copper, k = 385 W/(m·K), ถ่ายเทความร้อนดีเยี่ยม)</option>
+          <option value="steel">สแตนเลส (Stainless Steel, k = 16 W/(m·K), ตอบสนองช้า)</option>
+        </select>
+      </div>
+
+      <!-- Denaturation Temperature Slider (Step 1) -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-red-500"></span> 1. Denaturation Temp (หลอมคลายเกลียว)
+          </label>
+          <span id="denTDisplay" class="text-red-400 font-digital font-bold text-sm">95.0 °C</span>
+        </div>
+        <input type="range" id="denTSlider" min="90" max="98" step="0.5" value="95" oninput="onDenTChange(this.value)" class="w-full accent-red-500 cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>90.0 °C</span>
+          <span>95.0 °C (มาตรฐาน)</span>
+          <span>98.0 °C (GC-Rich)</span>
+        </div>
+      </div>
+
+      <!-- Annealing Temperature Slider (Step 2) -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-cyan-500"></span> 2. Annealing Temp (ไพรเมอร์เข้าจับ)
+          </label>
+          <span id="annTDisplay" class="text-cyan-400 font-digital font-bold text-sm">55.0 °C</span>
+        </div>
+        <input type="range" id="annTSlider" min="45" max="65" step="0.5" value="55" oninput="onAnnTChange(this.value)" class="w-full accent-cyan-500 cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>45.0 °C (Non-specific)</span>
+          <span>55.0 °C (Tm - 5°C)</span>
+          <span>65.0 °C (Strict)</span>
+        </div>
+      </div>
+
+      <!-- Extension Temperature Slider (Step 3) -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> 3. Extension Temp (Taq สังเคราะห์สาย)
+          </label>
+          <span id="extTDisplay" class="text-emerald-400 font-digital font-bold text-sm">72.0 °C</span>
+        </div>
+        <input type="range" id="extTSlider" min="68" max="75" step="0.5" value="72" oninput="onExtTChange(this.value)" class="w-full accent-emerald-500 cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>68.0 °C</span>
+          <span>72.0 °C (Taq Optimum)</span>
+          <span>75.0 °C</span>
+        </div>
+      </div>
+
+      <!-- Total Cycles Slider -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-arrows-rotate text-purple-400"></i> จำนวนรอบการทำซ้ำ (Total Cycles)
+          </label>
+          <span id="cyclesDisplay" class="text-purple-400 font-mono font-bold text-xs">30 รอบ (2³⁰ ≈ 1.07×10⁹ copies)</span>
+        </div>
+        <input type="range" id="cyclesSlider" min="10" max="40" step="1" value="30" oninput="onCyclesChange(this.value)" class="w-full accent-purple-500 cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>10 รอบ</span>
+          <span>30 รอบ (มาตรฐาน)</span>
+          <span>40 รอบ (Plateau)</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="space-y-2 pt-2">
+        <div class="grid grid-cols-2 gap-2">
+          <button id="btnRunPCR" onclick="toggleRunPCR()" class="py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs shadow-lg shadow-red-950/40 flex items-center justify-center gap-2 transition active:scale-95">
+            <i id="btnRunIcon" class="fa-solid fa-play"></i> <span id="btnRunLabel">เริ่มเดินรอบ PCR</span>
+          </button>
+          <button onclick="fastForwardCycle()" class="py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-bold text-xs shadow-lg shadow-amber-950/40 flex items-center justify-center gap-2 transition active:scale-95">
+            <i class="fa-solid fa-forward-step"></i> ข้ามไป +5 รอบ
+          </button>
+        </div>
+      </div>
+
+      <!-- Thermodynamics & PCR Application Tip -->
+      <div class="bg-red-950/30 border border-red-500/20 rounded-xl p-3 text-[11px] text-slate-300 space-y-1.5 mt-auto">
+        <div class="font-bold text-red-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-info"></i> ปรากฏการณ์เพลเทียร์ (Peltier Thermoelectric Effect):
+        </div>
+        <p class="leading-relaxed text-slate-300">
+          เมื่อกระแสไฟฟ้าไหลผ่านรอยต่อสารกึ่งตัวนำ Bismuth Telluride ($Bi_2Te_3$) จะเกิดการดูดหรือคายความร้อนตามทิศทางกระแส: $Q = \Pi_{\text{pelt}} I$ ทำให้เทอร์โมไซเคิลเลอร์สามารถเพิ่มและลดอุณหภูมิได้อย่างรวดเร็วถึง $4-6\ ^\circ\text{C/s}$ (Ramp Rate) ช่วยประหยัดเวลาและลดการเกิดผลพลอยได้ไม่พึงประสงค์
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Audio Synthesizer Engine -->
+  <script>
+    let audioCtx = null;
+    let fanNoiseSource = null;
+    let fanGainNode = null;
+    let isSoundMuted = false;
+
+    function initAudio() {
+      if (audioCtx) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+
+        // 1. Cooling fan white noise buffer
+        const bufferSize = audioCtx.sampleRate * 2;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+
+        const whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+        whiteNoise.loop = true;
+
+        const fanFilter = audioCtx.createBiquadFilter();
+        fanFilter.type = 'lowpass';
+        fanFilter.frequency.setValueAtTime(450, audioCtx.currentTime);
+
+        fanGainNode = audioCtx.createGain();
+        fanGainNode.gain.setValueAtTime(0.015, audioCtx.currentTime);
+
+        whiteNoise.connect(fanFilter);
+        fanFilter.connect(fanGainNode);
+        fanGainNode.connect(audioCtx.destination);
+        whiteNoise.start();
+        fanNoiseSource = whiteNoise;
+      } catch (e) {
+        console.warn('AudioContext not supported:', e);
+      }
+    }
+
+    function toggleSound(enabled) {
+      isSoundMuted = !enabled;
+      if (fanGainNode && audioCtx) {
+        fanGainNode.gain.setValueAtTime(isSoundMuted ? 0 : 0.015, audioCtx.currentTime);
+      }
+    }
+
+    function playBeep(freq = 880, duration = 0.12) {
+      if (isSoundMuted) return;
+      initAudio();
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+  </script>
+
+  <!-- Three.js Simulation & PCR Thermal Kinetics Logic -->
+  <script>
+    // State Variables
+    let isRunning = false;
+    let isLidClosed = true;
+    let currentTemp = 25.0; // °C
+    let targetTemp = 95.0; // °C
+    let currentPhase = 'standby'; // 'denat', 'anneal', 'extend', 'standby'
+    let currentCycle = 0;
+    let totalCycles = 30;
+    let blockMaterial = 'aluminum';
+    let blockK = 205; // W/(m·K)
+
+    // User Protocol Temps
+    let denatTemp = 95.0;
+    let annealTemp = 55.0;
+    let extendTemp = 72.0;
+
+    // Simulation Timing
+    let phaseTimer = 0; // seconds within current phase
+    const phaseDurations = { denat: 20, anneal: 25, extend: 30 }; // seconds scaled for visualization
+    let dnaCopyCount = 1;
+
+    // Temperature History for 2D Loupe
+    let tempHistory = [];
+
+    // Three.js Core
+    let scene, camera, renderer, controls;
+    let threeMount = document.getElementById('threeMount');
+
+    // 3D Objects
+    let cyclerChassis, heatedLidGroup, thermalBlockGroup;
+    let peltierCouplesGroup, fanMesh1, fanMesh2;
+    let pcrTubesList = [];
+
+    // 2D Loupe
+    let loupeCanvas = document.getElementById('loupeCanvas');
+    let loupeCtx = loupeCanvas.getContext('2d');
+
+    // UI References
+    const hudTempDisplay = document.getElementById('hudTempDisplay');
+    const hudRampRate = document.getElementById('hudRampRate');
+    const hudHeatFlux = document.getElementById('hudHeatFlux');
+    const hudCycleDisplay = document.getElementById('hudCycleDisplay');
+    const hudDnaCopies = document.getElementById('hudDnaCopies');
+    const hudDnaState = document.getElementById('hudDnaState');
+    const pcrPhaseBadge = document.getElementById('pcrPhaseBadge');
+    const hudLidStatus = document.getElementById('hudLidStatus');
+    const btnToggleLid = document.getElementById('btnToggleLid');
+    const blockConductivityLabel = document.getElementById('blockConductivityLabel');
+    const denTDisplay = document.getElementById('denTDisplay');
+    const annTDisplay = document.getElementById('annTDisplay');
+    const extTDisplay = document.getElementById('extTDisplay');
+    const cyclesDisplay = document.getElementById('cyclesDisplay');
+    const btnRunIcon = document.getElementById('btnRunIcon');
+    const btnRunLabel = document.getElementById('btnRunLabel');
+
+    function init() {
+      // 1. Scene
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+      scene.fog = new THREE.FogExp2(0x030712, 0.02);
+
+      // 2. Camera
+      camera = new THREE.PerspectiveCamera(45, threeMount.clientWidth / threeMount.clientHeight, 0.1, 100);
+      camera.position.set(0, 3.8, 8.5);
+
+      // 3. Renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+      renderer.setSize(threeMount.clientWidth, threeMount.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      threeMount.appendChild(renderer.domElement);
+
+      // 4. OrbitControls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 + 0.05;
+      controls.minDistance = 2.0;
+      controls.maxDistance = 22.0;
+      controls.target.set(0, 0.8, 0);
+
+      // 5. Lighting
+      setupLighting();
+
+      // 6. Build PCR Thermal Cycler 3D Model
+      buildThermalCycler();
+
+      // 7. Event Listeners
+      window.addEventListener('resize', onWindowResize);
+
+      // Start Loop
+      animate();
+    }
+
+    function setupLighting() {
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+      scene.add(ambientLight);
+
+      const mainLight = new THREE.DirectionalLight(0xffedd5, 1.3);
+      mainLight.position.set(5, 10, 6);
+      mainLight.castShadow = true;
+      scene.add(mainLight);
+
+      const displayLight = new THREE.PointLight(0x38bdf8, 1.2, 12);
+      displayLight.position.set(0, 1.2, 2.5);
+      scene.add(displayLight);
+    }
+
+    function buildThermalCycler() {
+      cyclerChassis = new THREE.Group();
+
+      // 1. Main Instrument Housing
+      const bodyGeo = new THREE.BoxGeometry(4.2, 2.0, 4.8);
+      const bodyMat = new THREE.MeshStandardMaterial({
+        color: 0x0f172a,
+        roughness: 0.35,
+        metalness: 0.85
+      });
+      const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
+      bodyMesh.position.set(0, 0.8, 0);
+      bodyMesh.castShadow = true;
+      cyclerChassis.add(bodyMesh);
+
+      // 2. Front Angled Touchscreen Display
+      const screenHousingGeo = new THREE.BoxGeometry(2.6, 1.2, 0.1);
+      const screenHousingMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.2 });
+      const screenHousing = new THREE.Mesh(screenHousingGeo, screenHousingMat);
+      screenHousing.position.set(0, 0.9, 2.45);
+      screenHousing.rotation.x = -Math.PI / 8;
+      cyclerChassis.add(screenHousing);
+
+      const screenGeo = new THREE.PlaneGeometry(2.3, 0.95);
+      const screenMat = new THREE.MeshBasicMaterial({ color: 0x0369a1 });
+      const screen = new THREE.Mesh(screenGeo, screenMat);
+      screen.position.set(0, 0.92, 2.52);
+      screen.rotation.x = -Math.PI / 8;
+      cyclerChassis.add(screen);
+
+      // 3. 96-Well Aluminum Thermal Block
+      thermalBlockGroup = new THREE.Group();
+      thermalBlockGroup.position.set(0, 1.82, -0.4);
+
+      const blockBaseGeo = new THREE.BoxGeometry(2.4, 0.35, 1.8);
+      const blockMat = new THREE.MeshStandardMaterial({
+        color: 0x94a3b8,
+        metalness: 0.9,
+        roughness: 0.2
+      });
+      const blockBase = new THREE.Mesh(blockBaseGeo, blockMat);
+      thermalBlockGroup.add(blockBase);
+
+      // Conical wells and PCR strip tubes
+      const wellGeo = new THREE.CylinderGeometry(0.08, 0.04, 0.25, 12);
+      const tubeMat = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.75,
+        roughness: 0.1
+      });
+
+      for (let r = -3; r <= 3; r++) {
+        for (let c = -4; c <= 4; c++) {
+          const well = new THREE.Mesh(wellGeo, tubeMat);
+          well.position.set(c * 0.22, 0.15, r * 0.22);
+          thermalBlockGroup.add(well);
+          pcrTubesList.push(well);
+        }
+      }
+      cyclerChassis.add(thermalBlockGroup);
+
+      // 4. Thermoelectric Peltier Semiconductor Elements (underneath block)
+      peltierCouplesGroup = new THREE.Group();
+      peltierCouplesGroup.position.set(0, 1.55, -0.4);
+      const peltierPlateGeo = new THREE.BoxGeometry(2.2, 0.08, 1.6);
+      const peltierPlateMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.5, roughness: 0.3 });
+      const peltierPlate = new THREE.Mesh(peltierPlateGeo, peltierPlateMat);
+      peltierCouplesGroup.add(peltierPlate);
+
+      // Semiconductor couples array
+      const coupleGeo = new THREE.BoxGeometry(0.1, 0.12, 0.1);
+      const coupleMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.8 });
+      for (let px = -0.8; px <= 0.8; px += 0.3) {
+        for (let pz = -0.6; pz <= 0.6; pz += 0.3) {
+          const coup = new THREE.Mesh(coupleGeo, coupleMat);
+          coup.position.set(px, -0.08, pz);
+          peltierCouplesGroup.add(coup);
+        }
+      }
+      cyclerChassis.add(peltierCouplesGroup);
+
+      // 5. Aluminum Finned Heat Sink & Dual Cooling Fans
+      const sinkGeo = new THREE.BoxGeometry(2.4, 0.6, 1.8);
+      const sinkMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.9, roughness: 0.4 });
+      const heatSink = new THREE.Mesh(sinkGeo, sinkMat);
+      heatSink.position.set(0, 1.15, -0.4);
+      cyclerChassis.add(heatSink);
+
+      // 6. Hinged Heated Lid (opens/closes)
+      heatedLidGroup = new THREE.Group();
+      heatedLidGroup.position.set(0, 2.05, -1.35); // Hinge pivot at back
+
+      const lidCoverGeo = new THREE.BoxGeometry(2.6, 0.45, 2.2);
+      const lidCoverMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.7, roughness: 0.3 });
+      const lidCover = new THREE.Mesh(lidCoverGeo, lidCoverMat);
+      lidCover.position.set(0, 0.22, 1.0);
+      heatedLidGroup.add(lidCover);
+
+      // 105°C Heated Platen plate inside lid
+      const platenGeo = new THREE.BoxGeometry(2.3, 0.05, 1.8);
+      const platenMat = new THREE.MeshStandardMaterial({
+        color: 0xf59e0b,
+        emissive: 0xd97706,
+        emissiveIntensity: 0.3,
+        roughness: 0.3
+      });
+      const platen = new THREE.Mesh(platenGeo, platenMat);
+      platen.position.set(0, -0.02, 1.0);
+      heatedLidGroup.add(platen);
+
+      cyclerChassis.add(heatedLidGroup);
+
+      scene.add(cyclerChassis);
+    }
+
+    // Thermal Simulation Step
+    function updateThermalKinetics(deltaTime) {
+      if (!isRunning) return;
+
+      phaseTimer += deltaTime;
+
+      // Determine active target temperature according to phase
+      let currentPhaseDuration = phaseDurations[currentPhase] || 25;
+
+      if (currentPhase === 'denat') {
+        targetTemp = denatTemp;
+        pcrPhaseBadge.textContent = 'DENATURATION (95°C)';
+        pcrPhaseBadge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-red-500/20 text-red-300 border border-red-500/30 font-mono';
+        hudDnaState.textContent = 'Single-Stranded (ssDNA Melting)';
+
+        if (phaseTimer >= currentPhaseDuration) {
+          currentPhase = 'anneal';
+          phaseTimer = 0;
+          playBeep(520, 0.15);
+        }
+      } else if (currentPhase === 'anneal') {
+        targetTemp = annealTemp;
+        pcrPhaseBadge.textContent = 'ANNEALING (55°C)';
+        pcrPhaseBadge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-mono';
+        hudDnaState.textContent = 'Primers Annealing to Targets';
+
+        if (phaseTimer >= currentPhaseDuration) {
+          currentPhase = 'extend';
+          phaseTimer = 0;
+          playBeep(660, 0.15);
+        }
+      } else if (currentPhase === 'extend') {
+        targetTemp = extendTemp;
+        pcrPhaseBadge.textContent = 'EXTENSION (72°C)';
+        pcrPhaseBadge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono';
+        hudDnaState.textContent = 'Taq Polymerase Synthesizing DNA';
+
+        if (phaseTimer >= currentPhaseDuration) {
+          // One PCR Cycle Completed!
+          currentCycle++;
+          dnaCopyCount = Math.min(1e12, Math.pow(2, currentCycle));
+          hudCycleDisplay.textContent = `${currentCycle} / ${totalCycles}`;
+          hudDnaCopies.textContent = formatSciNotation(dnaCopyCount);
+
+          if (currentCycle >= totalCycles) {
+            isRunning = false;
+            currentPhase = 'standby';
+            pcrPhaseBadge.textContent = 'RUN COMPLETED (4°C HOLD)';
+            pcrPhaseBadge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono';
+            btnRunLabel.textContent = 'เริ่มรอบ PCR ใหม่';
+            btnRunIcon.className = 'fa-solid fa-play';
+            playBeep(980, 0.4);
+            return;
+          }
+
+          currentPhase = 'denat';
+          phaseTimer = 0;
+          playBeep(880, 0.2);
+        }
+      }
+
+      // Heat transfer dynamics with material conductivity
+      // dT/dt = k_transfer * (targetTemp - currentTemp)
+      const kTransfer = (blockK / 205.0) * 0.18;
+      const prevT = currentTemp;
+      currentTemp += (targetTemp - currentTemp) * kTransfer * deltaTime;
+      const rampRate = (currentTemp - prevT) / deltaTime;
+
+      // Fourier heat flux: q = -k * (dT/dx)
+      const heatFlux = Math.abs(rampRate) * 0.85;
+
+      // Update UI Telemetry
+      hudTempDisplay.innerHTML = `${currentTemp.toFixed(1)} <span class="text-xs text-red-500 font-sans">°C</span>`;
+      hudRampRate.textContent = `${rampRate >= 0 ? '+' : ''}${rampRate.toFixed(1)} °C/s`;
+      hudHeatFlux.textContent = `${heatFlux.toFixed(1)} W/cm²`;
+
+      // Update Block Color Temperature Mapping
+      updateBlockThermalColor(currentTemp);
+
+      // Record in history for Loupe
+      if (tempHistory.length > 120) tempHistory.shift();
+      tempHistory.push(currentTemp);
+    }
+
+    function formatSciNotation(num) {
+      if (num < 1000) return num.toString();
+      const exp = Math.floor(Math.log10(num));
+      const mantissa = (num / Math.pow(10, exp)).toFixed(2);
+      return `${mantissa} × 10${toSuperscript(exp)}`;
+    }
+
+    function toSuperscript(n) {
+      const sup = { '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹' };
+      return n.toString().split('').map(c => sup[c] || c).join('');
+    }
+
+    function updateBlockThermalColor(temp) {
+      // Color interpolation:
+      // 55°C = Cyan (0x06b6d4)
+      // 72°C = Amber/Green (0x10b981)
+      // 95°C = Hot Red/Orange (0xef4444)
+      let colorHex = 0x94a3b8;
+      if (temp > 85) {
+        colorHex = 0xef4444; // Red
+      } else if (temp > 68) {
+        colorHex = 0x10b981; // Green
+      } else if (temp > 50) {
+        colorHex = 0x06b6d4; // Cyan
+      } else {
+        colorHex = 0x64748b; // Room temp gray
+      }
+
+      if (thermalBlockGroup && thermalBlockGroup.children[0]) {
+        thermalBlockGroup.children[0].material.color.setHex(colorHex);
+      }
+    }
+
+    // Handlers
+    function onBlockMaterialChange() {
+      blockMaterial = document.getElementById('blockMaterialSelect').value;
+      if (blockMaterial === 'aluminum') {
+        blockK = 205;
+        blockConductivityLabel.textContent = 'k = 205 W/(m·K)';
+      } else if (blockMaterial === 'silver') {
+        blockK = 429;
+        blockConductivityLabel.textContent = 'k = 429 W/(m·K) (Ultra-fast)';
+      } else if (blockMaterial === 'copper') {
+        blockK = 385;
+        blockConductivityLabel.textContent = 'k = 385 W/(m·K)';
+      } else if (blockMaterial === 'steel') {
+        blockK = 16;
+        blockConductivityLabel.textContent = 'k = 16 W/(m·K) (Lagging)';
+      }
+      playBeep(520, 0.1);
+    }
+
+    function onDenTChange(val) {
+      denatTemp = parseFloat(val);
+      denTDisplay.textContent = `${denatTemp.toFixed(1)} °C`;
+    }
+
+    function onAnnTChange(val) {
+      annealTemp = parseFloat(val);
+      annTDisplay.textContent = `${annealTemp.toFixed(1)} °C`;
+    }
+
+    function onExtTChange(val) {
+      extendTemp = parseFloat(val);
+      extTDisplay.textContent = `${extendTemp.toFixed(1)} °C`;
+    }
+
+    function onCyclesChange(val) {
+      totalCycles = parseInt(val);
+      cyclesDisplay.textContent = `${totalCycles} รอบ (2${toSuperscript(totalCycles)} copies)`;
+    }
+
+    function toggleRunPCR() {
+      isRunning = !isRunning;
+      initAudio();
+      if (isRunning) {
+        if (currentPhase === 'standby') {
+          currentPhase = 'denat';
+          phaseTimer = 0;
+        }
+        btnRunLabel.textContent = 'หยุดชั่วคราว';
+        btnRunIcon.className = 'fa-solid fa-pause';
+        playBeep(780, 0.15);
+      } else {
+        btnRunLabel.textContent = 'เดินรอบต่อ';
+        btnRunIcon.className = 'fa-solid fa-play';
+        playBeep(450, 0.15);
+      }
+    }
+
+    function fastForwardCycle() {
+      currentCycle = Math.min(totalCycles, currentCycle + 5);
+      dnaCopyCount = Math.pow(2, currentCycle);
+      hudCycleDisplay.textContent = `${currentCycle} / ${totalCycles}`;
+      hudDnaCopies.textContent = formatSciNotation(dnaCopyCount);
+      playBeep(880, 0.2);
+    }
+
+    function toggleHeatedLid() {
+      isLidClosed = !isLidClosed;
+      if (isLidClosed) {
+        btnToggleLid.innerHTML = '<i class="fa-solid fa-lock text-[10px]"></i> ฝาปิดสนิท (Closed)';
+        btnToggleLid.className = 'px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-mono transition';
+        hudLidStatus.textContent = 'Lid: 105.0 °C';
+        heatedLidGroup.rotation.x = 0;
+      } else {
+        btnToggleLid.innerHTML = '<i class="fa-solid fa-lock-open text-[10px]"></i> เปิดฝาอบ (Open)';
+        btnToggleLid.className = 'px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[11px] font-mono transition';
+        hudLidStatus.textContent = 'Lid: Open (Cooldown)';
+        heatedLidGroup.rotation.x = -Math.PI / 3;
+      }
+      playBeep(600, 0.1);
+    }
+
+    function resetParameters() {
+      isRunning = false;
+      currentTemp = 25.0;
+      currentCycle = 0;
+      dnaCopyCount = 1;
+      currentPhase = 'standby';
+      phaseTimer = 0;
+      tempHistory = [];
+
+      document.getElementById('denTSlider').value = 95;
+      document.getElementById('annTSlider').value = 55;
+      document.getElementById('extTSlider').value = 72;
+      document.getElementById('cyclesSlider').value = 30;
+
+      denatTemp = 95.0;
+      annealTemp = 55.0;
+      extendTemp = 72.0;
+      totalCycles = 30;
+
+      denTDisplay.textContent = '95.0 °C';
+      annTDisplay.textContent = '55.0 °C';
+      extTDisplay.textContent = '72.0 °C';
+      cyclesDisplay.textContent = '30 รอบ';
+      hudTempDisplay.innerHTML = '25.0 <span class="text-xs text-red-500 font-sans">°C</span>';
+      hudCycleDisplay.textContent = '0 / 30';
+      hudDnaCopies.textContent = '1.00 × 10⁰';
+      pcrPhaseBadge.textContent = 'STANDBY';
+      btnRunLabel.textContent = 'เริ่มเดินรอบ PCR';
+      btnRunIcon.className = 'fa-solid fa-play';
+
+      updateBlockThermalColor(25.0);
+      playBeep(440, 0.2);
+    }
+
+    function setCameraView(preset) {
+      if (preset === 'overview') {
+        camera.position.set(0, 3.8, 8.5);
+        controls.target.set(0, 0.8, 0);
+      } else if (preset === 'block') {
+        camera.position.set(0, 3.2, 2.2);
+        controls.target.set(0, 1.8, -0.4);
+      } else if (preset === 'peltier') {
+        camera.position.set(2.8, 2.2, 1.8);
+        controls.target.set(0, 1.3, -0.4);
+      }
+      controls.update();
+      playBeep(550, 0.08);
+    }
+
+    // Animation Loop
+    let lastTime = performance.now();
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const now = performance.now();
+      const dt = Math.min(0.1, (now - lastTime) / 1000.0);
+      lastTime = now;
+
+      // Update PCR Thermal Physics
+      updateThermalKinetics(dt);
+
+      controls.update();
+      renderer.render(scene, camera);
+
+      // Render 2D Loupe Kinetics
+      render2DLoupe();
+    }
+
+    // Render 2D Loupe Chart
+    function render2DLoupe() {
+      const w = loupeCanvas.width;
+      const h = loupeCanvas.height;
+      loupeCtx.clearRect(0, 0, w, h);
+
+      // Background
+      loupeCtx.fillStyle = '#030712';
+      loupeCtx.fillRect(0, 0, w, h);
+
+      // Temp Scale Grid (40°C to 100°C)
+      loupeCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      loupeCtx.lineWidth = 1;
+      for (let y = 20; y < h; y += 35) {
+        loupeCtx.beginPath(); loupeCtx.moveTo(0, y); loupeCtx.lineTo(w, y); loupeCtx.stroke();
+      }
+
+      // Draw Temp History Profile Line
+      if (tempHistory.length > 1) {
+        loupeCtx.beginPath();
+        loupeCtx.strokeStyle = currentPhase === 'denat' ? '#ef4444' : (currentPhase === 'anneal' ? '#06b6d4' : '#10b981');
+        loupeCtx.lineWidth = 2.5;
+
+        for (let i = 0; i < tempHistory.length; i++) {
+          const x = (i / 120.0) * w;
+          // Map 40°C (bottom) to 100°C (top)
+          const normT = (tempHistory[i] - 40.0) / 60.0;
+          const y = (h - 20) - (normT * (h - 40));
+          if (i === 0) loupeCtx.moveTo(x, y);
+          else loupeCtx.lineTo(x, y);
+        }
+        loupeCtx.stroke();
+      }
+
+      // Phase labels
+      loupeCtx.fillStyle = '#94a3b8';
+      loupeCtx.font = '9px Prompt';
+      loupeCtx.fillText('95°C', 5, 25);
+      loupeCtx.fillText('72°C', 5, 75);
+      loupeCtx.fillText('55°C', 5, 120);
+
+      document.getElementById('loupePhaseText').textContent = currentPhase === 'denat' ? 'ssDNA Denatured' : (currentPhase === 'anneal' ? 'Primers Bound' : (currentPhase === 'extend' ? 'Taq Extended' : 'Standby'));
+      document.getElementById('loupePhaseText').className = currentPhase === 'denat' ? 'text-red-400 font-bold' : (currentPhase === 'anneal' ? 'text-cyan-400 font-bold' : (currentPhase === 'extend' ? 'text-emerald-400 font-bold' : 'text-slate-400 font-bold'));
+      document.getElementById('loupeTimeText').textContent = `Cycle ${currentCycle}`;
+    }
+
+    // Responsive Canvas
+    function onWindowResize() {
+      if (!camera || !renderer || !threeMount) return;
+      camera.aspect = threeMount.clientWidth / threeMount.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(threeMount.clientWidth, threeMount.clientHeight);
+    }
+
+    // Full-Width Sidebar Toggle
+    let isSidebarHidden = false;
+    function toggleSidebar() {
+      const sidebar = document.getElementById('controlSidebar');
+      const container = document.getElementById('viewportContainer');
+      const label = document.getElementById('toggleSidebarLabel');
+
+      isSidebarHidden = !isSidebarHidden;
+      if (isSidebarHidden) {
+        sidebar.classList.add('hidden');
+        container.classList.remove('lg:col-span-8');
+        container.classList.add('lg:col-span-12');
+        label.textContent = 'แสดงแถบควบคุม';
+      } else {
+        sidebar.classList.remove('hidden');
+        container.classList.remove('lg:col-span-12');
+        container.classList.add('lg:col-span-8');
+        label.textContent = 'ขยายจอเต็ม';
+      }
+      setTimeout(onWindowResize, 100);
+      playBeep(500, 0.08);
+    }
+
+    // Card Minimization
+    function toggleCardBody(cardId) {
+      const body = document.getElementById(`${cardId}_body`);
+      const icon = document.getElementById(`${cardId}_icon`);
+      if (!body) return;
+
+      if (body.classList.contains('hidden')) {
+        body.classList.remove('hidden');
+        if (icon) {
+          icon.classList.remove('fa-plus');
+          icon.classList.add('fa-minus');
+        }
+      } else {
+        body.classList.add('hidden');
+        if (icon) {
+          icon.classList.remove('fa-minus');
+          icon.classList.add('fa-plus');
+        }
+      }
+      playBeep(420, 0.06);
+    }
+
+    function hideCard(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      card.classList.add('hidden');
+
+      const dock = document.getElementById('dockRestoreButtons');
+      const cardNames = {
+        'thermalHUD': 'โทรมาตรอุณหภูมิ',
+        'pcrCurveCard': 'จลนศาสตร์ DNA'
+      };
+
+      const btn = document.createElement('button');
+      btn.id = `restoreBtn_${cardId}`;
+      btn.className = 'px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-red-400 font-mono text-[10px] flex items-center gap-1 transition';
+      btn.innerHTML = `<i class="fa-solid fa-window-restore text-[9px]"></i> ${cardNames[cardId] || cardId}`;
+      btn.onclick = function() {
+        card.classList.remove('hidden');
+        btn.remove();
+        playBeep(550, 0.08);
+      };
+      dock.appendChild(btn);
+      playBeep(350, 0.08);
+    }
+
+    // Screenshot Capture API
+    window.captureSimulatorScreenshot = function() {
+      if (!renderer) return null;
+      renderer.render(scene, camera);
+      const dataUrl = renderer.domElement.toDataURL('image/png');
+      
+      const link = document.createElement('a');
+      link.download = `pcr_thermal_sim09_${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+
+      playBeep(950, 0.15);
+      return dataUrl;
+    };
+
+    window.onload = init;
+  </script>
+</body>
+</html>
