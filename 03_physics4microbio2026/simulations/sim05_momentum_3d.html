@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องปฏิบัติการ 3D โมเมนตัมและการชน (Conservation of Momentum & Air Track 3D Simulator)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js r128 & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- Google Fonts & Font Awesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #030712; color: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .font-digital { font-family: 'Orbitron', monospace; }
+    
+    /* Pure CSS Vector Typography Standard (Zero Tofu Box □) */
+    .vec {
+      display: inline-block;
+      position: relative;
+      font-family: 'Times New Roman', Cambria, serif;
+      font-style: italic;
+      font-weight: bold;
+      line-height: 1;
+      margin-top: 0.25em;
+    }
+    .vec::after {
+      content: '→';
+      position: absolute;
+      top: -0.45em;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0.85);
+      font-size: 0.72em;
+      font-style: normal;
+      font-weight: bold;
+      line-height: 1;
+      color: inherit;
+      pointer-events: none;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.6); }
+
+    /* Digital LED Glow */
+    .led-glow-emerald {
+      text-shadow: 0 0 10px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+    .led-glow-sky {
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.7), 0 0 20px rgba(56, 189, 248, 0.4);
+    }
+    .led-glow-amber {
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.7), 0 0 20px rgba(245, 158, 11, 0.4);
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col select-none overflow-hidden bg-slate-950">
+
+  <!-- Main Simulator Layout Grid -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 h-full overflow-hidden relative">
+
+    <!-- 3D Viewport Column -->
+    <div id="viewportContainer" class="lg:col-span-8 w-full h-[360px] sm:h-[440px] lg:h-full relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden transition-all duration-300">
+      
+      <!-- Three.js Canvas Mount Container -->
+      <div id="threeMount" class="w-full h-full block cursor-grab active:cursor-grabbing"></div>
+
+      <!-- Top-Left HUD: Dual Photogate Timer & Momentum Telemetry -->
+      <div id="photogateHUD" class="absolute top-3 left-3 bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-sky-500/30 shadow-2xl text-xs z-10 space-y-2 pointer-events-auto w-64 sm:w-72 shadow-sky-950/20">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5 gap-2">
+          <span class="font-bold text-sky-400 font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-stopwatch text-sky-300"></i> DUAL PHOTOGATE TELEMETRY
+          </span>
+          <div class="flex items-center gap-1.5">
+            <span id="gateStatusBadge" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-800 text-slate-300 border border-white/10 font-mono">
+              READY
+            </span>
+            <button onclick="toggleCardBody('photogateHUD')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="photogateHUD_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('photogateHUD')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="photogateHUD_body" class="space-y-2.5 transition-all">
+          <!-- Digital Velocity Readout Box -->
+          <div class="bg-black/90 p-2.5 rounded-xl border border-sky-500/30 text-center space-y-1 shadow-inner">
+            <div class="text-[10px] font-mono text-slate-400 flex justify-between px-1">
+              <span>INITIAL VELOCITY (<span class="font-serif italic">v</span>₁)</span>
+              <span class="text-sky-400">Flag = 10.0 cm</span>
+            </div>
+            <div id="hudV1Display" class="text-3xl font-digital font-bold text-sky-400 led-glow-sky tracking-wider">
+              0.000 <span class="text-xs text-sky-500 font-sans">m/s</span>
+            </div>
+            <div class="grid grid-cols-2 gap-1 text-[10px] font-mono text-slate-300 pt-1 border-t border-white/10">
+              <div class="text-left px-1">
+                <span class="text-slate-400"><span class="font-serif italic">v</span>₁' (หลังชน):</span>
+                <span id="hudV1Prime" class="text-amber-400 font-bold block">0.000 m/s</span>
+              </div>
+              <div class="text-right px-1">
+                <span class="text-slate-400"><span class="font-serif italic">v</span>₂' (หลังชน):</span>
+                <span id="hudV2Prime" class="text-emerald-400 font-bold block">0.000 m/s</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Momentum Conservation Telemetry -->
+          <div class="space-y-1 font-mono text-[10px] text-slate-300 bg-slate-950/80 p-2.5 rounded-xl border border-white/5">
+            <div class="flex justify-between">
+              <span>โมเมนตัมก่อนชน (<span class="vec text-amber-300">p</span><sub>initial</sub>):</span>
+              <span id="hudPBefore" class="text-amber-300 font-bold">0.000 kg&middot;m/s</span>
+            </div>
+            <div class="flex justify-between">
+              <span>โมเมนตัมหลังชน (<span class="vec text-emerald-300">p</span><sub>final</sub>):</span>
+              <span id="hudPAfter" class="text-emerald-400 font-bold">0.000 kg&middot;m/s</span>
+            </div>
+            <div class="flex justify-between">
+              <span>ความคลาดเคลื่อน (&Delta;<span class="font-serif italic">p</span>):</span>
+              <span id="hudDeltaP" class="text-white font-bold">0.00%</span>
+            </div>
+            <div class="flex justify-between border-t border-white/10 pt-1">
+              <span>สัมประสิทธิ์การคืนสภาพ (<span class="font-serif italic">e</span>):</span>
+              <span id="hudCoeffE" class="text-sky-300 font-bold">1.00 (Elastic)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top-Right HUD: Momentum Vectors & Kinetic Energy Loupe -->
+      <div id="vectorLoupeHUD" class="absolute top-3 right-3 bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-amber-500/30 shadow-2xl text-xs z-10 space-y-2 pointer-events-auto w-72 shadow-amber-950/20">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5 gap-2">
+          <span class="font-bold text-amber-400 font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-chart-column text-amber-300"></i> MOMENTUM &amp; ENERGY LOUPE
+          </span>
+          <div class="flex items-center gap-1.5">
+            <span id="colTypeBadge" class="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30 font-bold">
+              Elastic (e=1)
+            </span>
+            <button onclick="toggleCardBody('vectorLoupeHUD')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="vectorLoupeHUD_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('vectorLoupeHUD')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="vectorLoupeHUD_body" class="space-y-2 transition-all">
+          <!-- 2D Canvas: Vector Arrows & Kinetic Energy Bars -->
+          <div class="relative flex justify-center bg-slate-950 rounded-xl p-1.5 border border-amber-500/20 shadow-inner">
+            <canvas id="vectorCanvas" width="230" height="150" class="rounded-lg block"></canvas>
+            <div class="absolute bottom-2 right-3 text-[9px] font-mono text-slate-400 bg-slate-900/80 px-1.5 py-0.5 rounded border border-white/10">
+              Vector Phase Space
+            </div>
+          </div>
+
+          <!-- Kinetic Energy Telemetry Details -->
+          <div class="space-y-1 font-mono text-[10px] text-slate-300 bg-slate-950/80 p-2 rounded-xl border border-white/5">
+            <div class="flex justify-between">
+              <span>พลังงานจลน์ก่อนชน (<span class="font-serif italic">E</span><sub>k,before</sub>):</span>
+              <span id="hudKeBefore" class="text-sky-300 font-bold">0.000 J</span>
+            </div>
+            <div class="flex justify-between">
+              <span>พลังงานจลน์หลังชน (<span class="font-serif italic">E</span><sub>k,after</sub>):</span>
+              <span id="hudKeAfter" class="text-emerald-400 font-bold">0.000 J</span>
+            </div>
+            <div class="flex justify-between border-t border-white/10 pt-1">
+              <span>การสูญเสียพลังงาน (&Delta;<span class="font-serif italic">E</span><sub>k</sub>):</span>
+              <span id="hudDeltaKe" class="text-amber-300 font-bold">0.00 J (0.0%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Tips Floating Pill -->
+      <div class="absolute bottom-3 left-3 bg-slate-950/85 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-white/10 text-[11px] text-slate-400 pointer-events-none flex items-center gap-2">
+        <i class="fa-solid fa-circle-info text-sky-400"></i>
+        <span>คลิกค้างแล้วลากเพื่อหมุน 360° | ปรับมวลและเลือกชนิดการชนก่อนกดปล่อยรถทดลอง</span>
+      </div>
+
+      <!-- Floating Viewport HUD Dock / Quick Bar -->
+      <div id="viewportDockBar" class="absolute bottom-3 right-3 flex flex-wrap items-center gap-1.5 z-20 pointer-events-auto">
+        <button id="dockBtnPhotogate" onclick="toggleCardShow('photogateHUD', 'dockBtnPhotogate')" class="px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-slate-900/90 text-sky-300 border border-sky-500/30 hover:bg-sky-500/20 shadow-xl backdrop-blur-md transition flex items-center gap-1.5 ring-2 ring-sky-400">
+          <i class="fa-solid fa-stopwatch"></i> <span>Photogate HUD</span>
+        </button>
+        <button id="dockBtnVector" onclick="toggleCardShow('vectorLoupeHUD', 'dockBtnVector')" class="px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-slate-900/90 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20 shadow-xl backdrop-blur-md transition flex items-center gap-1.5 ring-2 ring-amber-400">
+          <i class="fa-solid fa-chart-column"></i> <span>Vector &amp; Energy</span>
+        </button>
+        <button id="dockBtnSidebar" onclick="toggleSidebar()" class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-gradient-to-r from-slate-800 to-slate-900 text-slate-200 border border-white/20 hover:border-sky-400 shadow-xl backdrop-blur-md transition flex items-center gap-1.5">
+          <i class="fa-solid fa-sliders text-sky-400"></i> <span id="dockSidebarLabel">ซ่อนแถบควบคุม</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Right Control Panel Column -->
+    <div id="controlSidebar" class="lg:col-span-4 bg-slate-900 border-t lg:border-t-0 lg:border-l border-white/10 p-4 sm:p-5 overflow-y-auto max-h-[460px] lg:max-h-none space-y-4 scrollbar-thin transition-all duration-300">
+
+      <!-- Collision Mode & Bumper Selection -->
+      <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-sky-500/30 space-y-2.5">
+        <div class="text-xs font-bold text-sky-400 font-mono flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-shuffle"></i> รูปแบบการชนและกันชน (Collision Mode)
+          </span>
+          <span class="text-[10px] text-slate-400">Air Track</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" id="btnModeElastic" onclick="setCollisionType('elastic')" class="col-type-btn py-2 px-3 rounded-xl text-xs font-mono font-bold bg-emerald-500/20 border border-emerald-400 text-emerald-300 flex items-center justify-center gap-1.5 transition">
+            <i class="fa-solid fa-magnet text-xs"></i> การชนแบบยืดหยุ่น (e=1)
+          </button>
+          <button type="button" id="btnModeInelastic" onclick="setCollisionType('inelastic')" class="col-type-btn py-2 px-3 rounded-xl text-xs font-mono bg-slate-900 border border-white/10 text-slate-400 flex items-center justify-center gap-1.5 hover:border-amber-400 hover:text-white transition">
+            <i class="fa-solid fa-link text-xs"></i> ไม่ยืดหยุ่นสมบูรณ์ (e=0)
+          </button>
+        </div>
+
+        <p id="modeDescText" class="text-[11px] text-slate-400 leading-relaxed bg-slate-900/60 p-2 rounded-xl border border-white/5">
+          *การชนแบบยืดหยุ่นสมบูรณ์: ติดตั้งกันชนสปริงใบไม้/แม่เหล็ก อนุรักษ์ทั้งโมเมนตัมและพลังงานจลน์ (<span class="font-serif italic">e</span> = 1.0)
+        </p>
+      </div>
+
+      <!-- Gliders Mass & Velocity Parameters -->
+      <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-emerald-500/30 space-y-3">
+        <div class="text-xs font-bold text-emerald-400 font-mono flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-weight-hanging"></i> มวลและความเร็วต้น (Gliders Parameters)
+          </span>
+          <span class="text-[10px] text-slate-400">Low Friction</span>
+        </div>
+
+        <!-- Glider 1 Mass (m1) -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs font-mono">
+            <span class="text-amber-300 font-bold flex items-center gap-1">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> มวลรถทดลองที่ 1 (<span class="font-serif italic">m</span>₁):
+            </span>
+            <span id="m1Label" class="text-amber-400 font-bold text-sm">200.0 g (0.200 kg)</span>
+          </div>
+          <input type="range" id="m1Slider" min="100" max="400" step="50" value="200" oninput="onM1Change()" class="w-full accent-amber-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>100 g</span>
+            <span>200 g</span>
+            <span>300 g</span>
+            <span>400 g</span>
+          </div>
+        </div>
+
+        <!-- Glider 2 Mass (m2) -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs font-mono">
+            <span class="text-sky-300 font-bold flex items-center gap-1">
+              <span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span> มวลรถทดลองที่ 2 (<span class="font-serif italic">m</span>₂):
+            </span>
+            <span id="m2Label" class="text-sky-400 font-bold text-sm">200.0 g (0.200 kg)</span>
+          </div>
+          <input type="range" id="m2Slider" min="100" max="400" step="50" value="200" oninput="onM2Change()" class="w-full accent-sky-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>100 g</span>
+            <span>200 g</span>
+            <span>300 g</span>
+            <span>400 g</span>
+          </div>
+        </div>
+
+        <!-- Launch Velocity (v1) -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs font-mono">
+            <span class="text-slate-300">แรงส่งความเร็วต้น (<span class="font-serif italic">v</span>₁):</span>
+            <span id="v1Label" class="text-emerald-400 font-bold text-sm">0.80 m/s</span>
+          </div>
+          <input type="range" id="v1Slider" min="0.4" max="1.6" step="0.1" value="0.8" oninput="onV1Change()" class="w-full accent-emerald-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>0.40 m/s (เบา)</span>
+            <span>0.80 m/s</span>
+            <span>1.60 m/s (เร็ว)</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <button id="btnLaunch" type="button" onclick="launchGlider()" class="py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40 transition active:scale-95">
+            <i class="fa-solid fa-play"></i> ปล่อยรถทดลอง (LAUNCH)
+          </button>
+          <button type="button" onclick="resetGliders()" class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/15 font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+            <i class="fa-solid fa-rotate-right text-sky-400"></i> รีเซ็ตตำแหน่ง
+          </button>
+        </div>
+      </div>
+
+      <!-- Physics & Aerosol Impaction Analogies -->
+      <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-white/10 space-y-2 text-xs">
+        <div class="font-bold text-amber-400 font-mono flex items-center justify-between">
+          <span><i class="fa-solid fa-atom"></i> กฎการอนุรักษ์โมเมนตัมและชีวโมเลกุล</span>
+          <span class="text-[10px] text-slate-400">Impulse</span>
+        </div>
+        <p class="text-[11px] text-slate-400 leading-relaxed">
+          ผลรวมโมเมนตัมก่อนชนเท่ากับผลรวมโมเมนตัมหลังชนเสมอ:
+        </p>
+        <div class="p-2.5 rounded-xl bg-slate-900 border border-white/5 font-mono text-[11px] text-center text-amber-200 space-y-1 shadow-inner">
+          <div><span class="font-serif italic">m</span>₁<span class="vec text-amber-300">v</span>₁ + <span class="font-serif italic">m</span>₂<span class="vec text-sky-300">v</span>₂ = <span class="font-serif italic">m</span>₁<span class="vec text-amber-300">v</span>₁' + <span class="font-serif italic">m</span>₂<span class="vec text-sky-300">v</span>₂'</div>
+          <div class="text-[10px] text-slate-400">การดล: <span class="vec">J</span> = &Delta;<span class="vec">p</span> = <span class="vec">F</span><sub>avg</sub>&middot;&Delta;<span class="font-serif italic">t</span></div>
+        </div>
+        <div class="text-[11px] text-slate-400 leading-relaxed bg-slate-900/50 p-2 rounded-xl border border-white/5">
+          <strong class="text-sky-300 font-mono">การประยุกต์ในจุลชีววิทยา:</strong> การดลและการชนของละอองลอยชีวภาพ (Bioaerosols) ในเครื่องดักจับเชื้อ Andersen Cascade Impactor อนุภาคที่มีโมเมนตัมสูงจะชนและติดบนแผ่นอาหารเลี้ยงเชื้อตามหลักการเฉื่อย
+        </div>
+      </div>
+
+      <!-- Web Audio Synthesizer Control -->
+      <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-950/60 border border-white/5 text-xs text-slate-400 font-mono">
+        <span class="flex items-center gap-1.5">
+          <i class="fa-solid fa-volume-high text-sky-400"></i> เสียงสังเคราะห์ (Web Audio API):
+        </span>
+        <button id="btnSoundToggle" onclick="toggleSound()" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold transition">
+          เปิดเสียง (ON)
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // ==========================================
+    // WEB AUDIO SYNTHESIZER
+    // ==========================================
+    let audioCtx = null;
+    let isSoundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleSound() {
+      isSoundEnabled = !isSoundEnabled;
+      const btn = document.getElementById('btnSoundToggle');
+      if (isSoundEnabled) {
+        btn.textContent = 'เปิดเสียง (ON)';
+        btn.className = 'px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold transition';
+      } else {
+        btn.textContent = 'ปิดเสียง (OFF)';
+        btn.className = 'px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 border border-white/10 font-bold transition';
+      }
+    }
+
+    function playLaunchSound() {
+      if (!isSoundEnabled) return;
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(450, audioCtx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.08);
+    }
+
+    function playBounceSound(isElastic) {
+      if (!isSoundEnabled) return;
+      initAudio();
+      if (isElastic) {
+        // High crisp spring ping
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.12);
+      } else {
+        // Soft damp Velcro thud
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(60, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+      }
+    }
+
+    function playGatePassBeep(freq = 1046.5) {
+      if (!isSoundEnabled) return;
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.06);
+    }
+
+    // ==========================================
+    // SIMULATOR PHYSICS ENGINE & PARAMETERS
+    // ==========================================
+    let m1 = 0.200; // kg (200 g)
+    let m2 = 0.200; // kg (200 g)
+    let v1_initial = 0.80; // m/s
+    let collisionType = 'elastic'; // 'elastic' or 'inelastic'
+    
+    // Position on 2.4 m Air Track (in meters, origin at left end 0.0 m)
+    let x1 = 0.25;
+    let x2 = 1.10;
+    let v1 = 0.0;
+    let v2 = 0.0;
+    let isMoving = false;
+    let hasCollided = false;
+    
+    // Gate Positions (m)
+    const gate1_x = 0.65; // Photogate 1
+    const gate2_x = 1.60; // Photogate 2
+    const flagLength = 0.10; // 10 cm flag
+
+    // Measured Telemetry
+    let measured_v1 = 0.0;
+    let measured_v1_prime = 0.0;
+    let measured_v2_prime = 0.0;
+    let gate1_triggered = false;
+    let gate2_triggered = false;
+
+    function setCollisionType(type) {
+      collisionType = type;
+      const bElastic = document.getElementById('btnModeElastic');
+      const bInelastic = document.getElementById('btnModeInelastic');
+      const badge = document.getElementById('colTypeBadge');
+      const desc = document.getElementById('modeDescText');
+
+      if (type === 'elastic') {
+        bElastic.className = 'col-type-btn py-2 px-3 rounded-xl text-xs font-mono font-bold bg-emerald-500/20 border border-emerald-400 text-emerald-300 flex items-center justify-center gap-1.5 transition';
+        bInelastic.className = 'col-type-btn py-2 px-3 rounded-xl text-xs font-mono bg-slate-900 border border-white/10 text-slate-400 flex items-center justify-center gap-1.5 hover:border-amber-400 hover:text-white transition';
+        badge.textContent = 'Elastic (e=1)';
+        badge.className = 'text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30 font-bold';
+        desc.innerHTML = '*การชนแบบยืดหยุ่นสมบูรณ์: ติดตั้งกันชนสปริงใบไม้/แม่เหล็ก อนุรักษ์ทั้งโมเมนตัมและพลังงานจลน์ (<span class="font-serif italic">e</span> = 1.0)';
+      } else {
+        bInelastic.className = 'col-type-btn py-2 px-3 rounded-xl text-xs font-mono font-bold bg-amber-500/20 border border-amber-400 text-amber-300 flex items-center justify-center gap-1.5 transition';
+        bElastic.className = 'col-type-btn py-2 px-3 rounded-xl text-xs font-mono bg-slate-900 border border-white/10 text-slate-400 flex items-center justify-center gap-1.5 hover:border-emerald-400 hover:text-white transition';
+        badge.textContent = 'Inelastic (e=0)';
+        badge.className = 'text-[9px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono border border-amber-500/30 font-bold';
+        desc.innerHTML = '*การชนแบบไม่ยืดหยุ่นสมบูรณ์: ติดตั้งกันชนเวลโคร (Velcro) รถทั้งสองคันจะเกาะติดกันไปหลังชน (<span class="font-serif italic">e</span> = 0.0, สูญเสียพลังงานจลน์สูงสุด)';
+      }
+      resetGliders();
+    }
+
+    function onM1Change() {
+      const g = parseInt(document.getElementById('m1Slider').value);
+      m1 = g / 1000;
+      document.getElementById('m1Label').textContent = `${g.toFixed(1)} g (${m1.toFixed(3)} kg)`;
+      resetGliders();
+    }
+
+    function onM2Change() {
+      const g = parseInt(document.getElementById('m2Slider').value);
+      m2 = g / 1000;
+      document.getElementById('m2Label').textContent = `${g.toFixed(1)} g (${m2.toFixed(3)} kg)`;
+      resetGliders();
+    }
+
+    function onV1Change() {
+      v1_initial = parseFloat(document.getElementById('v1Slider').value);
+      document.getElementById('v1Label').textContent = `${v1_initial.toFixed(2)} m/s`;
+      resetGliders();
+    }
+
+    function launchGlider() {
+      if (isMoving) return;
+      initAudio();
+      playLaunchSound();
+      
+      v1 = v1_initial;
+      v2 = 0.0;
+      isMoving = true;
+      hasCollided = false;
+      gate1_triggered = false;
+      gate2_triggered = false;
+
+      const badge = document.getElementById('gateStatusBadge');
+      badge.textContent = 'TRANSIT';
+      badge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono animate-pulse';
+
+      // Pre-compute expected theoretical values
+      computeTheoreticalMomentum();
+    }
+
+    function resetGliders() {
+      isMoving = false;
+      hasCollided = false;
+      x1 = 0.25;
+      x2 = 1.10;
+      v1 = 0.0;
+      v2 = 0.0;
+      measured_v1 = 0.0;
+      measured_v1_prime = 0.0;
+      measured_v2_prime = 0.0;
+      gate1_triggered = false;
+      gate2_triggered = false;
+
+      const badge = document.getElementById('gateStatusBadge');
+      badge.textContent = 'READY';
+      badge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-800 text-slate-300 border border-white/10 font-mono';
+
+      document.getElementById('hudV1Display').innerHTML = `0.000 <span class="text-xs text-sky-500 font-sans">m/s</span>`;
+      document.getElementById('hudV1Prime').textContent = '0.000 m/s';
+      document.getElementById('hudV2Prime').textContent = '0.000 m/s';
+      document.getElementById('hudPBefore').textContent = '0.000 kg·m/s';
+      document.getElementById('hudPAfter').textContent = '0.000 kg·m/s';
+      document.getElementById('hudDeltaP').textContent = '0.00%';
+      document.getElementById('hudKeBefore').textContent = '0.000 J';
+      document.getElementById('hudKeAfter').textContent = '0.000 J';
+      document.getElementById('hudDeltaKe').textContent = '0.00 J (0.0%)';
+      document.getElementById('hudCoeffE').textContent = collisionType === 'elastic' ? '1.00 (Elastic)' : '0.00 (Inelastic)';
+
+      updateGlider3DPositions();
+      drawVectorLoupe();
+    }
+
+    function computeTheoreticalMomentum() {
+      measured_v1 = v1_initial;
+      if (collisionType === 'elastic') {
+        measured_v1_prime = ((m1 - m2) / (m1 + m2)) * v1_initial;
+        measured_v2_prime = ((2 * m1) / (m1 + m2)) * v1_initial;
+      } else {
+        const vFinal = (m1 * v1_initial) / (m1 + m2);
+        measured_v1_prime = vFinal;
+        measured_v2_prime = vFinal;
+      }
+    }
+
+    // ==========================================
+    // SYNCHRONIZED 2D VECTOR & ENERGY LOUPE
+    // ==========================================
+    const vCanvas = document.getElementById('vectorCanvas');
+    const vCtx = vCanvas.getContext('2d');
+
+    function drawVectorLoupe() {
+      const w = vCanvas.width;
+      const h = vCanvas.height;
+      vCtx.clearRect(0, 0, w, h);
+
+      // Dark slate background with grid
+      vCtx.fillStyle = '#020617';
+      vCtx.fillRect(0, 0, w, h);
+
+      vCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      vCtx.lineWidth = 1;
+      for (let x = 0; x < w; x += 15) {
+        vCtx.beginPath(); vCtx.moveTo(x, 0); vCtx.lineTo(x, h); vCtx.stroke();
+      }
+      for (let y = 0; y < h; y += 15) {
+        vCtx.beginPath(); vCtx.moveTo(0, y); vCtx.lineTo(w, y); vCtx.stroke();
+      }
+
+      // Title & Division
+      vCtx.fillStyle = '#94a3b8';
+      vCtx.font = 'bold 9px Prompt';
+      vCtx.fillText('แผนภาพเวกเตอร์โมเมนตัม (Momentum Vectors)', 10, 14);
+
+      // Draw Momentum Vectors: Before and After
+      const cyBefore = 45;
+      const cyAfter = 90;
+      const scale = 380; // px per kg*m/s
+
+      // Before Collision
+      vCtx.fillStyle = '#64748b';
+      vCtx.font = '8px monospace';
+      vCtx.fillText('ก่อนชน:', 10, cyBefore + 3);
+
+      const p1_before = m1 * (measured_v1 || v1_initial);
+      const len1_b = p1_before * scale;
+
+      // Vector p1 arrow (Amber)
+      vCtx.strokeStyle = '#f59e0b';
+      vCtx.fillStyle = '#f59e0b';
+      vCtx.lineWidth = 2.5;
+      vCtx.beginPath();
+      vCtx.moveTo(50, cyBefore);
+      vCtx.lineTo(50 + len1_b, cyBefore);
+      vCtx.stroke();
+      vCtx.beginPath();
+      vCtx.moveTo(50 + len1_b + 4, cyBefore);
+      vCtx.lineTo(50 + len1_b - 2, cyBefore - 3);
+      vCtx.lineTo(50 + len1_b - 2, cyBefore + 3);
+      vCtx.fill();
+      vCtx.fillText(`p₁ = ${p1_before.toFixed(3)}`, 50 + len1_b / 2 - 15, cyBefore - 5);
+
+      // After Collision
+      vCtx.fillStyle = '#64748b';
+      vCtx.fillText('หลังชน:', 10, cyAfter + 3);
+
+      const p1_after = m1 * measured_v1_prime;
+      const p2_after = m2 * measured_v2_prime;
+      const len1_a = p1_after * scale;
+      const len2_a = p2_after * scale;
+
+      // Vector p1' arrow
+      if (Math.abs(len1_a) > 2) {
+        vCtx.strokeStyle = '#fbbf24';
+        vCtx.fillStyle = '#fbbf24';
+        vCtx.lineWidth = 2;
+        vCtx.beginPath();
+        vCtx.moveTo(50, cyAfter - 6);
+        vCtx.lineTo(50 + len1_a, cyAfter - 6);
+        vCtx.stroke();
+        vCtx.fillText(`p₁'=${p1_after.toFixed(3)}`, 50 + len1_a + (len1_a < 0 ? -35 : 5), cyAfter - 3);
+      }
+
+      // Vector p2' arrow (Sky Blue)
+      if (Math.abs(len2_a) > 2) {
+        vCtx.strokeStyle = '#38bdf8';
+        vCtx.fillStyle = '#38bdf8';
+        vCtx.lineWidth = 2.5;
+        vCtx.beginPath();
+        vCtx.moveTo(50, cyAfter + 6);
+        vCtx.lineTo(50 + len2_a, cyAfter + 6);
+        vCtx.stroke();
+        vCtx.beginPath();
+        vCtx.moveTo(50 + len2_a + 4, cyAfter + 6);
+        vCtx.lineTo(50 + len2_a - 2, cyAfter + 3);
+        vCtx.lineTo(50 + len2_a - 2, cyAfter + 9);
+        vCtx.fill();
+        vCtx.fillText(`p₂'=${p2_after.toFixed(3)}`, 50 + len2_a + 6, cyAfter + 9);
+      }
+
+      // Kinetic Energy Horizontal Bar Comparison at Bottom
+      const barY = 130;
+      const ke_b = 0.5 * m1 * (measured_v1 || v1_initial) ** 2;
+      const ke_a = 0.5 * m1 * measured_v1_prime ** 2 + 0.5 * m2 * measured_v2_prime ** 2;
+      const maxKeWidth = 140;
+      const keScale = ke_b > 0 ? maxKeWidth / ke_b : maxKeWidth;
+
+      vCtx.fillStyle = '#94a3b8';
+      vCtx.font = '8px monospace';
+      vCtx.fillText('KE:', 10, barY + 7);
+
+      // Before KE Bar (Sky)
+      vCtx.fillStyle = 'rgba(56, 189, 248, 0.4)';
+      vCtx.fillRect(35, barY - 4, maxKeWidth, 5);
+      vCtx.fillStyle = '#38bdf8';
+      vCtx.fillRect(35, barY - 4, ke_b * keScale, 5);
+
+      // After KE Bar (Emerald)
+      vCtx.fillStyle = 'rgba(16, 185, 129, 0.4)';
+      vCtx.fillRect(35, barY + 3, maxKeWidth, 5);
+      vCtx.fillStyle = '#10b981';
+      vCtx.fillRect(35, barY + 3, (hasCollided ? ke_a : ke_b) * keScale, 5);
+
+      vCtx.fillStyle = '#cbd5e1';
+      vCtx.font = '8px monospace';
+      const lossPct = ke_b > 0 ? ((ke_b - ke_a) / ke_b) * 100 : 0;
+      vCtx.fillText(hasCollided ? `ΔEk: -${lossPct.toFixed(1)}%` : 'Ek conserved', 35 + maxKeWidth + 6, barY + 5);
+    }
+
+    // ==========================================
+    // THREE.JS 3D SCENE & AIR TRACK RIG
+    // ==========================================
+    let scene, camera, renderer, controls;
+    let trackMesh, glider1Mesh, glider2Mesh;
+    let gate1LightMesh, gate2LightMesh;
+    let lastTime = 0;
+
+    // Track 3D Dimensions: Real track is 2.4 m long, mapped in 3D scene (scale: 1m = 10 units)
+    const SCENE_SCALE = 10;
+    const TRACK_LENGTH_M = 2.4;
+    const TRACK_LENGTH_3D = TRACK_LENGTH_M * SCENE_SCALE;
+
+    function initThree() {
+      const mount = document.getElementById('threeMount');
+      const width = mount.clientWidth || 800;
+      const height = mount.clientHeight || 550;
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+
+      camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
+      camera.position.set(0, 10, 22);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.25;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      mount.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 + 0.05;
+      controls.minDistance = 6;
+      controls.maxDistance = 45;
+      controls.target.set(0, 1.5, 0);
+
+      // Lighting
+      const hemiLight = new THREE.HemisphereLight(0xffffff, 0x0f172a, 1.2);
+      scene.add(hemiLight);
+
+      const mainLight = new THREE.DirectionalLight(0xffffff, 1.6);
+      mainLight.position.set(8, 18, 12);
+      mainLight.castShadow = true;
+      mainLight.shadow.mapSize.width = 2048;
+      mainLight.shadow.mapSize.height = 2048;
+      scene.add(mainLight);
+
+      const cyanRim = new THREE.DirectionalLight(0x38bdf8, 1.2);
+      cyanRim.position.set(-12, 8, -10);
+      scene.add(cyanRim);
+
+      // Floor & Tabletop
+      const tableGeo = new THREE.BoxGeometry(32, 1, 14);
+      const tableMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.6, metalness: 0.2 });
+      const table = new THREE.Mesh(tableGeo, tableMat);
+      table.position.y = -0.5;
+      table.receiveShadow = true;
+      scene.add(table);
+
+      const gridHelper = new THREE.GridHelper(30, 30, 0x38bdf8, 0x1e293b);
+      gridHelper.position.y = 0.01;
+      scene.add(gridHelper);
+
+      buildAirTrack3D();
+
+      window.addEventListener('resize', onWindowResize);
+      animate(0);
+    }
+
+    function buildAirTrack3D() {
+      // 1. Triangular Extruded Aluminum Air Track
+      const trackMat = new THREE.MeshStandardMaterial({
+        color: 0x94a3b8,
+        roughness: 0.15,
+        metalness: 0.85
+      });
+      const footMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.4, metalness: 0.7 });
+
+      // Track Prism Profile
+      const shape = new THREE.Shape();
+      shape.moveTo(0, 1.6);
+      shape.lineTo(1.2, 0);
+      shape.lineTo(-1.2, 0);
+      shape.closePath();
+
+      const extrudeSettings = {
+        steps: 1,
+        depth: TRACK_LENGTH_3D,
+        bevelEnabled: false
+      };
+
+      const prismGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+      prismGeo.center();
+      trackMesh = new THREE.Mesh(prismGeo, trackMat);
+      trackMesh.rotation.y = Math.PI / 2;
+      trackMesh.position.set(0, 1.4, 0);
+      trackMesh.castShadow = true;
+      trackMesh.receiveShadow = true;
+      scene.add(trackMesh);
+
+      // 3 Leveling Support Feet
+      [-10, 0, 10].forEach(x => {
+        const footGeo = new THREE.CylinderGeometry(0.5, 0.7, 0.8, 16);
+        const foot = new THREE.Mesh(footGeo, footMat);
+        foot.position.set(x, 0.4, 0);
+        foot.castShadow = true;
+        scene.add(foot);
+      });
+
+      // Air Blower End Manifold
+      const manifoldGeo = new THREE.CylinderGeometry(1.4, 1.4, 1.2, 24);
+      const manifold = new THREE.Mesh(manifoldGeo, footMat);
+      manifold.rotation.z = Math.PI / 2;
+      manifold.position.set(-TRACK_LENGTH_3D / 2 - 0.6, 1.4, 0);
+      scene.add(manifold);
+
+      // Air Hose Pipe
+      const hoseGeo = new THREE.CylinderGeometry(0.5, 0.5, 4.0, 16);
+      const hoseMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.5 });
+      const hose = new THREE.Mesh(hoseGeo, hoseMat);
+      hose.position.set(-TRACK_LENGTH_3D / 2 - 1.5, 0.8, -1.5);
+      hose.rotation.x = Math.PI / 3;
+      scene.add(hose);
+
+      // 2. Optical Photogates (U-shaped towers straddling the air track)
+      buildPhotogateTowers();
+
+      // 3. Gliders 1 & 2
+      glider1Mesh = buildGliderModel(0xf59e0b, 'Glider 1'); // Amber
+      glider2Mesh = buildGliderModel(0x0284c7, 'Glider 2'); // Sky Blue
+      scene.add(glider1Mesh);
+      scene.add(glider2Mesh);
+
+      updateGlider3DPositions();
+    }
+
+    function buildPhotogateTowers() {
+      const gateMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3, metalness: 0.8 });
+      const laserMat = new THREE.MeshBasicMaterial({ color: 0xff0044 });
+
+      // Photogate 1
+      const g1_3D_x = (gate1_x - TRACK_LENGTH_M / 2) * SCENE_SCALE;
+      const gate1Group = new THREE.Group();
+      gate1Group.position.set(g1_3D_x, 0, 0);
+
+      const archGeo = new THREE.BoxGeometry(0.8, 3.8, 3.4);
+      const archMesh = new THREE.Mesh(archGeo, gateMat);
+      archMesh.position.y = 2.4;
+      archMesh.castShadow = true;
+      gate1Group.add(archMesh);
+
+      gate1LightMesh = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 16), laserMat);
+      gate1LightMesh.position.set(0, 4.2, 0);
+      gate1Group.add(gate1LightMesh);
+      scene.add(gate1Group);
+
+      // Photogate 2
+      const g2_3D_x = (gate2_x - TRACK_LENGTH_M / 2) * SCENE_SCALE;
+      const gate2Group = new THREE.Group();
+      gate2Group.position.set(g2_3D_x, 0, 0);
+
+      const archMesh2 = new THREE.Mesh(archGeo, gateMat);
+      archMesh2.position.y = 2.4;
+      archMesh2.castShadow = true;
+      gate2Group.add(archMesh2);
+
+      gate2LightMesh = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 16), laserMat);
+      gate2LightMesh.position.set(0, 4.2, 0);
+      gate2Group.add(gate2LightMesh);
+      scene.add(gate2Group);
+    }
+
+    function buildGliderModel(colorHex, name) {
+      const gGroup = new THREE.Group();
+
+      const gliderMat = new THREE.MeshStandardMaterial({
+        color: colorHex,
+        roughness: 0.25,
+        metalness: 0.85
+      });
+      const flagMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.5 });
+      const bumperMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.9, roughness: 0.1 });
+
+      // Inverted V-Saddle Body
+      const saddleGeo = new THREE.BoxGeometry(2.0, 0.4, 2.2);
+      const saddle = new THREE.Mesh(saddleGeo, gliderMat);
+      saddle.position.y = 2.3;
+      saddle.castShadow = true;
+      gGroup.add(saddle);
+
+      // Vertical Flag (10.0 cm scaled = 1.0 unit)
+      const flagGeo = new THREE.BoxGeometry(1.0, 1.2, 0.08);
+      const flag = new THREE.Mesh(flagGeo, flagMat);
+      flag.position.set(0, 3.1, 0);
+      gGroup.add(flag);
+
+      // Front & Rear Spring Bumpers
+      const b1 = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.6, 12), bumperMat);
+      b1.rotation.z = Math.PI / 2;
+      b1.position.set(1.2, 2.3, 0);
+      gGroup.add(b1);
+
+      const b2 = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.6, 12), bumperMat);
+      b2.rotation.z = Math.PI / 2;
+      b2.position.set(-1.2, 2.3, 0);
+      gGroup.add(b2);
+
+      return gGroup;
+    }
+
+    function updateGlider3DPositions() {
+      if (glider1Mesh && glider2Mesh) {
+        const g1_3D_x = (x1 - TRACK_LENGTH_M / 2) * SCENE_SCALE;
+        const g2_3D_x = (x2 - TRACK_LENGTH_M / 2) * SCENE_SCALE;
+        glider1Mesh.position.x = g1_3D_x;
+        glider2Mesh.position.x = g2_3D_x;
+      }
+    }
+
+    function onWindowResize() {
+      const mount = document.getElementById('threeMount');
+      const width = mount.clientWidth;
+      const height = mount.clientHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+
+    // ==========================================
+    // ANIMATION & KINEMATICS INTEGRATION LOOP
+    // ==========================================
+    function animate(timestamp) {
+      requestAnimationFrame(animate);
+
+      const dt = lastTime ? Math.min((timestamp - lastTime) / 1000, 0.05) : 0.016;
+      lastTime = timestamp;
+
+      if (isMoving) {
+        // Move gliders
+        x1 += v1 * dt;
+        x2 += v2 * dt;
+
+        // Collision Detection: Glider length = 0.22 m (each half is 0.11 m)
+        const gliderCollisionDist = 0.23;
+        if (!hasCollided && (x2 - x1 <= gliderCollisionDist)) {
+          hasCollided = true;
+          playBounceSound(collisionType === 'elastic');
+
+          if (collisionType === 'elastic') {
+            const v1_post = ((m1 - m2) / (m1 + m2)) * v1;
+            const v2_post = ((2 * m1) / (m1 + m2)) * v1;
+            v1 = v1_post;
+            v2 = v2_post;
+          } else {
+            // Completely Inelastic
+            const v_common = (m1 * v1) / (m1 + m2);
+            v1 = v_common;
+            v2 = v_common;
+          }
+
+          // Compute & Display Momentum & Energy Telemetry
+          const pBefore = m1 * v1_initial;
+          const pAfter = m1 * v1 + m2 * v2;
+          const deltaP_pct = Math.abs((pAfter - pBefore) / pBefore) * 100;
+
+          const keBefore = 0.5 * m1 * v1_initial * v1_initial;
+          const keAfter = 0.5 * m1 * v1 * v1 + 0.5 * m2 * v2 * v2;
+          const deltaKe = keBefore - keAfter;
+          const coeffE = collisionType === 'elastic' ? 1.0 : 0.0;
+
+          document.getElementById('hudV1Prime').textContent = `${v1.toFixed(3)} m/s`;
+          document.getElementById('hudV2Prime').textContent = `${v2.toFixed(3)} m/s`;
+          document.getElementById('hudPBefore').textContent = `${pBefore.toFixed(3)} kg·m/s`;
+          document.getElementById('hudPAfter').textContent = `${pAfter.toFixed(3)} kg·m/s`;
+          document.getElementById('hudDeltaP').textContent = `${deltaP_pct.toFixed(2)}%`;
+          document.getElementById('hudKeBefore').textContent = `${keBefore.toFixed(3)} J`;
+          document.getElementById('hudKeAfter').textContent = `${keAfter.toFixed(3)} J`;
+          document.getElementById('hudDeltaKe').textContent = `${deltaKe.toFixed(3)} J (${((deltaKe/keBefore)*100).toFixed(1)}%)`;
+          document.getElementById('hudCoeffE').textContent = `${coeffE.toFixed(2)} (${collisionType === 'elastic' ? 'Elastic' : 'Inelastic'})`;
+
+          drawVectorLoupe();
+        }
+
+        // Photogate 1 Trigger (detects initial v1 before collision)
+        if (!gate1_triggered && x1 >= gate1_x - flagLength && x1 <= gate1_x + flagLength) {
+          gate1_triggered = true;
+          playGatePassBeep(1046.5);
+          document.getElementById('hudV1Display').innerHTML = `${v1.toFixed(3)} <span class="text-xs text-sky-500 font-sans">m/s</span>`;
+        }
+
+        // Photogate 2 Trigger (detects v2' after collision)
+        if (!gate2_triggered && x2 >= gate2_x - flagLength && x2 <= gate2_x + flagLength) {
+          gate2_triggered = true;
+          playGatePassBeep(1318.5);
+        }
+
+        // Stop when reaching track end
+        if (x2 >= TRACK_LENGTH_M - 0.15 || x1 <= 0.05) {
+          isMoving = false;
+          const badge = document.getElementById('gateStatusBadge');
+          badge.textContent = 'DONE';
+          badge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono';
+        }
+
+        updateGlider3DPositions();
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    // ==========================================
+    // STANDARDIZED SCREENSHOT API
+    // ==========================================
+    window.captureSimulatorScreenshot = function() {
+      if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+        return renderer.domElement.toDataURL('image/png');
+      }
+      return null;
+    };
+
+    // ==========================================
+    // HUD CARDS & FLOATING DOCK CONTROLLERS
+    // ==========================================
+    let isSidebarVisible = true;
+    function toggleSidebar() {
+      isSidebarVisible = !isSidebarVisible;
+      const vp = document.getElementById('viewportContainer');
+      const sb = document.getElementById('controlSidebar');
+      const lbl = document.getElementById('dockSidebarLabel');
+      if (isSidebarVisible) {
+        if (sb) sb.classList.remove('hidden');
+        if (vp) { vp.classList.remove('lg:col-span-12'); vp.classList.add('lg:col-span-8'); }
+        if (lbl) lbl.textContent = 'ซ่อนแถบควบคุม';
+      } else {
+        if (sb) sb.classList.add('hidden');
+        if (vp) { vp.classList.remove('lg:col-span-8'); vp.classList.add('lg:col-span-12'); }
+        if (lbl) lbl.textContent = 'เปิดแถบควบคุม';
+      }
+      setTimeout(() => {
+        if (typeof onWindowResize === 'function') onWindowResize();
+      }, 60);
+    }
+
+    function toggleCardBody(cardId) {
+      const body = document.getElementById(cardId + '_body');
+      const icon = document.getElementById(cardId + '_icon');
+      if (!body) return;
+      if (body.classList.contains('hidden')) {
+        body.classList.remove('hidden');
+        if (icon) { icon.classList.remove('fa-chevron-down'); icon.classList.add('fa-minus'); }
+      } else {
+        body.classList.add('hidden');
+        if (icon) { icon.classList.remove('fa-minus'); icon.classList.add('fa-chevron-down'); }
+      }
+    }
+
+    function hideCard(cardId) {
+      const card = document.getElementById(cardId);
+      if (card) card.classList.add('hidden');
+      if (cardId === 'photogateHUD') {
+        const b = document.getElementById('dockBtnPhotogate');
+        if (b) b.classList.remove('ring-2', 'ring-sky-400');
+      } else if (cardId === 'vectorLoupeHUD') {
+        const b = document.getElementById('dockBtnVector');
+        if (b) b.classList.remove('ring-2', 'ring-amber-400');
+      }
+    }
+
+    function toggleCardShow(cardId, dockBtnId) {
+      const card = document.getElementById(cardId);
+      const btn = document.getElementById(dockBtnId);
+      if (!card) return;
+      const ringClass = cardId === 'photogateHUD' ? 'ring-sky-400' : 'ring-amber-400';
+      if (card.classList.contains('hidden')) {
+        card.classList.remove('hidden');
+        const body = document.getElementById(cardId + '_body');
+        if (body) body.classList.remove('hidden');
+        const icon = document.getElementById(cardId + '_icon');
+        if (icon) { icon.classList.remove('fa-chevron-down'); icon.classList.add('fa-minus'); }
+        if (btn) btn.classList.add('ring-2', ringClass);
+      } else {
+        card.classList.add('hidden');
+        if (btn) btn.classList.remove('ring-2', ringClass);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initThree();
+      resetGliders();
+      drawVectorLoupe();
+    });
+  </script>
+</body>
+</html>
