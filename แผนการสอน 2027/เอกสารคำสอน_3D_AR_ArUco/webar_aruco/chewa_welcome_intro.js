@@ -1,19 +1,13 @@
 /**
  * ============================================================================
- * 3D PIXAR × STUDIO GHIBLI COURSE INTRODUCTION ANIMATION
+ * 3D PIXAR × STUDIO GHIBLI COURSE INTRODUCTION ANIMATION (COVER-MATCHED)
  * Instructor: Asst. Prof. Dr. Chewa Thassana (ผศ.ดร.ชีวะ ทัศนา)
  * Course: 4011111 Physics for Microbiology (ฟิสิกส์สำหรับจุลชีววิทยา)
  *
- * Features:
- *   1. Smartphone-first 3D Pixar × Studio Ghibli animated welcome screen
- *   2. 60FPS Canvas animation of Ghibli sunlit bokeh spores, floating DNA
- *      sparkles, and miniature rotating ArUco fiducial markers
- *   3. Animated 3D Pixar-Ghibli portrait of Asst. Prof. Dr. Chewa Thassana
- *      with breathing/floating motion, interactive holographic ArUco HUD,
- *      talking soundwave aura, and multi-slide course introduction dialogue
- *   4. Web Audio Ghibli-style warm harp chime + Thai SpeechSynthesis voice
- *   5. One-tap "📷 กล้อง AR" button that closes the intro and immediately
- *      opens the smartphone rear camera ready to scan ArUco markers (ID 0–11)
+ * Uses the exact 3D Pixar cover character of Asst. Prof. Dr. Chewa Thassana
+ * (wearing black eyeglasses, sky-blue collared shirt, and navy blazer beside
+ * the compound microscope and 3D holographic flagellated bacteria cube)
+ * with live 60FPS hologram & Studio Ghibli bioluminescent spore animation.
  * ============================================================================
  */
 (function () {
@@ -22,7 +16,7 @@
       tab: "👋 แนะนำรายวิชา",
       badge: "WELCOME • 4011111 PHYSICS FOR MICROBIOLOGY",
       title: "สวัสดีครับ! ยินดีต้อนรับสู่ฟิสิกส์สำหรับจุลชีววิทยา ✨",
-      text: "พี่ๆ และน้องๆ นักศึกษาทุกคนครับ อาจารย์ชีวะ (ผศ.ดร.ชีวะ ทัศนา) ขอต้อนรับเข้าสู่รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา 3(2-3-4) รายวิชานี้ออกแบบด้วยแนวคิด Low-Math, High-Intuition เรียนฟิสิกส์ให้เข้าใจง่ายผ่านเครื่องมือห้องแล็บจุลชีววิทยาจริงครับ",
+      text: "สวัสดีครับนักศึกษาทุกคน อาจารย์ชีวะ (ผศ.ดร.ชีวะ ทัศนา) ขอต้อนรับเข้าสู่รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา 3(2-3-4) รายวิชานี้ออกแบบด้วยแนวคิด Low-Math, High-Intuition เรียนฟิสิกส์ให้เข้าใจง่ายผ่านเครื่องมือห้องแล็บจุลชีววิทยาจริงครับ",
       voice: "สวัสดีครับนักศึกษาทุกคน อาจารย์ชีวะ ทัศนา ขอต้อนรับเข้าสู่รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา ครับ รายวิชานี้ออกแบบด้วยแนวคิด โลว์แมท ไฮอินทูอิชัน เรียนฟิสิกส์ให้เข้าใจง่ายผ่านเครื่องมือห้องแล็บจุลชีววิทยาจริงทั้งสิบสองบทครับ"
     },
     {
@@ -66,8 +60,8 @@
 
       const notes =
         type === "ar_launch"
-          ? [523.25, 659.25, 783.99, 1046.5, 1318.5] // C5 E5 G5 C6 E6 uplifting launch
-          : [440, 554.37, 659.25, 880]; // Warm A-major Ghibli chord arpeggio
+          ? [523.25, 659.25, 783.99, 1046.5, 1318.5]
+          : [440, 554.37, 659.25, 880];
 
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
@@ -87,7 +81,7 @@
   }
 
   // --------------------------------------------------------------------------
-  // 2. INJECT CSS STYLES FOR 3D PIXAR × GHIBLI WELCOME SCREEN
+  // 2. INJECT CSS STYLES FOR COVER-MATCHED 3D PIXAR × GHIBLI WELCOME SCREEN
   // --------------------------------------------------------------------------
   const style = document.createElement("style");
   style.textContent = `
@@ -101,9 +95,9 @@
       justify-content: flex-start;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: 14px 14px 96px;
+      padding: 10px 12px 92px;
       background:
-        radial-gradient(circle at 50% 18%, rgba(251, 191, 36, 0.22) 0%, rgba(16, 185, 129, 0.18) 34%, rgba(6, 24, 44, 0.96) 72%, #020617 100%);
+        radial-gradient(circle at 50% 15%, rgba(16, 185, 129, 0.24) 0%, rgba(6, 78, 99, 0.35) 38%, rgba(3, 10, 24, 0.96) 75%, #020617 100%);
       backdrop-filter: blur(20px) saturate(160%);
       -webkit-backdrop-filter: blur(20px) saturate(160%);
       transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1), transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
@@ -127,26 +121,25 @@
       position: relative;
       z-index: 5;
       width: 100%;
-      max-width: 540px;
+      max-width: 520px;
       margin: auto;
-      background: linear-gradient(160deg, rgba(15, 29, 48, 0.88) 0%, rgba(7, 16, 32, 0.95) 100%);
-      border: 1.5px solid rgba(56, 189, 248, 0.42);
+      background: linear-gradient(160deg, rgba(10, 25, 44, 0.92) 0%, rgba(4, 12, 26, 0.97) 100%);
+      border: 1.5px solid rgba(0, 240, 255, 0.42);
       border-radius: 26px;
-      padding: 14px 16px 18px;
+      padding: 13px 15px 16px;
       box-shadow:
-        0 24px 60px rgba(0, 0, 0, 0.75),
-        0 0 40px rgba(16, 185, 129, 0.2),
-        inset 0 1px 1px rgba(255, 255, 255, 0.25);
+        0 24px 60px rgba(0, 0, 0, 0.8),
+        0 0 42px rgba(16, 185, 129, 0.22),
+        inset 0 1px 1px rgba(255, 255, 255, 0.22);
       overflow: hidden;
     }
 
-    /* Warm Studio Ghibli Sunbeam Header Pill */
     .chewa-top-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      margin-bottom: 10px;
+      margin-bottom: 9px;
       flex-wrap: wrap;
     }
     .pixar-ghibli-badge {
@@ -156,19 +149,19 @@
       padding: 4px 11px;
       border-radius: 999px;
       font-family: 'Prompt', sans-serif;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
-      background: linear-gradient(135deg, rgba(251, 191, 36, 0.22), rgba(16, 185, 129, 0.25));
-      color: #fde68a;
-      border: 1px solid rgba(251, 191, 36, 0.55);
-      box-shadow: 0 0 16px rgba(251, 191, 36, 0.25);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.24), rgba(0, 240, 255, 0.22));
+      color: #a7f3d0;
+      border: 1px solid rgba(52, 211, 153, 0.55);
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.25);
     }
     .pixar-ghibli-dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: #fbbf24;
-      box-shadow: 0 0 8px #fbbf24;
+      background: #34d399;
+      box-shadow: 0 0 8px #34d399;
       animation: pulseGhibliDot 1.6s infinite ease-in-out;
     }
     @keyframes pulseGhibliDot {
@@ -185,90 +178,89 @@
       font-family: 'Prompt', sans-serif;
       font-size: 0.72rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #f59e0b, #10b981);
+      background: linear-gradient(135deg, #10b981, #06b6d4);
       color: #022c22;
-      border: 1px solid #fef08a;
+      border: 1px solid #a7f3d0;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
       transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
     .btn-voice-pill:hover, .btn-voice-pill.speaking {
       transform: translateY(-1px) scale(1.03);
-      box-shadow: 0 0 20px rgba(52, 211, 153, 0.75);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
     }
 
-    /* 3D Character Viewport Frame */
+    /* 3D Cover Character Viewport Frame (Framed to show full Microscope + Hologram Cube + Prof. Chewa) */
     .chewa-hero-viewport {
       position: relative;
       width: 100%;
-      aspect-ratio: 16 / 10;
+      aspect-ratio: 4 / 3.35;
       border-radius: 20px;
       overflow: hidden;
-      border: 2px solid rgba(251, 191, 36, 0.48);
+      border: 2px solid rgba(0, 240, 255, 0.52);
       box-shadow:
-        0 12px 32px rgba(0, 0, 0, 0.6),
-        0 0 28px rgba(56, 189, 248, 0.25);
-      background: #0f172a;
-      margin-bottom: 12px;
+        0 12px 32px rgba(0, 0, 0, 0.65),
+        0 0 28px rgba(16, 185, 129, 0.28);
+      background: #04131d;
+      margin-bottom: 11px;
     }
 
-    /* Animated 3D Pixar-Ghibli Character Image */
+    /* Animated Cover Portrait of Asst. Prof. Dr. Chewa Thassana */
     .chewa-char-img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center 22%;
-      transform-origin: center bottom;
+      object-position: center 12%;
+      transform-origin: 65% 50%;
       animation: chewaBreatheFloat 5.2s infinite ease-in-out;
-      filter: contrast(1.03) saturate(1.08);
     }
     .chewa-hero-viewport.speaking .chewa-char-img {
-      animation: chewaTalkingBounce 0.65s infinite ease-in-out;
+      animation: chewaTalkingBounce 0.62s infinite ease-in-out;
     }
     @keyframes chewaBreatheFloat {
-      0%, 100% { transform: scale(1.01) translateY(0px) rotate(0deg); }
-      50% { transform: scale(1.045) translateY(-5px) rotate(0.35deg); }
+      0%, 100% { transform: scale(1.005) translateY(0px); }
+      50% { transform: scale(1.035) translateY(-4px); }
     }
     @keyframes chewaTalkingBounce {
-      0%, 100% { transform: scale(1.03) translateY(0px); }
-      50% { transform: scale(1.055) translateY(-4px); }
+      0%, 100% { transform: scale(1.015) translateY(0px); }
+      50% { transform: scale(1.042) translateY(-4px); }
     }
 
-    /* Sunbeam & Magical Bokeh Overlay inside Character Viewport */
-    .ghibli-sunbeam-layer {
+    /* Live Interactive Hologram & Ghibli Light Overlay Canvas inside Portrait */
+    #chewa-holo-fx-canvas {
       position: absolute;
       inset: 0;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
-      background:
-        radial-gradient(circle at 22% 18%, rgba(254, 240, 138, 0.28) 0%, transparent 45%),
-        radial-gradient(circle at 75% 48%, rgba(56, 189, 248, 0.22) 0%, transparent 40%),
-        linear-gradient(to top, rgba(2, 6, 23, 0.82) 0%, rgba(2, 6, 23, 0.15) 36%, transparent 65%);
+      z-index: 2;
     }
 
-    /* Floating Holographic ArUco Marker over Prof. Chewa's Hand */
+    /* Floating Holographic ArUco Marker Badge */
     .floating-aruco-holo {
       position: absolute;
-      top: 12px;
-      left: 12px;
+      top: 10px;
+      right: 10px;
+      z-index: 4;
       display: flex;
       align-items: center;
       gap: 7px;
-      padding: 5px 10px;
-      border-radius: 12px;
-      background: rgba(3, 10, 26, 0.82);
+      padding: 4px 9px;
+      border-radius: 11px;
+      background: rgba(3, 12, 26, 0.84);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(0, 240, 255, 0.55);
+      border: 1px solid rgba(0, 240, 255, 0.6);
       box-shadow: 0 0 18px rgba(0, 240, 255, 0.35);
       animation: holoFloatBadge 3.2s infinite ease-in-out;
       cursor: pointer;
     }
     @keyframes holoFloatBadge {
       0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-5px); }
+      50% { transform: translateY(-4px); }
     }
     .holo-aruco-grid {
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       background: #fff;
       padding: 2px;
       border-radius: 4px;
@@ -279,15 +271,15 @@
     }
     .holo-aruco-txt {
       font-family: 'Prompt', sans-serif;
-      font-size: 0.65rem;
-      line-height: 1.2;
+      font-size: 0.62rem;
+      line-height: 1.18;
       color: #e0f2fe;
       font-weight: 600;
     }
     .holo-aruco-txt strong {
       color: #00f0ff;
       display: block;
-      font-size: 0.68rem;
+      font-size: 0.66rem;
     }
 
     /* Instructor Nameplate & Live Voice Wave Bar at Bottom of Portrait */
@@ -296,15 +288,16 @@
       bottom: 8px;
       left: 10px;
       right: 10px;
+      z-index: 4;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
       padding: 6px 12px;
       border-radius: 14px;
-      background: rgba(4, 12, 28, 0.86);
+      background: rgba(3, 12, 26, 0.88);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(251, 191, 36, 0.45);
+      border: 1px solid rgba(52, 211, 153, 0.5);
     }
     .chewa-prof-name {
       font-family: 'Prompt', sans-serif;
@@ -314,7 +307,7 @@
       line-height: 1.2;
     }
     .chewa-prof-affil {
-      font-size: 0.66rem;
+      font-size: 0.65rem;
       color: #cbd5e1;
     }
     .chewa-talk-wave {
@@ -354,7 +347,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 5px;
-      margin-bottom: 9px;
+      margin-bottom: 8px;
     }
     .intro-tab-btn {
       padding: 6px 4px;
@@ -382,12 +375,12 @@
     /* Animated Speech Bubble Card */
     .chewa-speech-bubble {
       position: relative;
-      background: rgba(9, 20, 38, 0.92);
+      background: rgba(7, 18, 34, 0.94);
       border: 1.5px solid rgba(52, 211, 153, 0.45);
       border-radius: 18px;
-      padding: 11px 14px;
-      margin-bottom: 13px;
-      min-height: 102px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      min-height: 98px;
       box-shadow: inset 0 0 24px rgba(16, 185, 129, 0.08);
     }
     .speech-badge {
@@ -396,11 +389,11 @@
       font-weight: 700;
       color: #34d399;
       letter-spacing: 0.3px;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
     .speech-title {
       font-family: 'Prompt', sans-serif;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       font-weight: 700;
       color: #fef08a;
       margin-bottom: 4px;
@@ -408,9 +401,9 @@
     }
     .speech-body {
       font-family: 'Sarabun', 'Prompt', sans-serif;
-      font-size: 0.8rem;
+      font-size: 0.79rem;
       color: #e2e8f0;
-      line-height: 1.5;
+      line-height: 1.48;
     }
 
     /* Primary CTA: Open AR Camera Ready to Scan ArUco Marker */
@@ -471,13 +464,13 @@
       gap: 8px;
     }
     .btn-secondary-studio {
-      padding: 9px 10px;
+      padding: 8px 10px;
       border-radius: 12px;
       background: rgba(15, 23, 42, 0.88);
       border: 1px solid rgba(56, 189, 248, 0.4);
       color: #bae6fd;
       font-family: 'Prompt', sans-serif;
-      font-size: 0.74rem;
+      font-size: 0.73rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
@@ -500,18 +493,18 @@
 
     @media (max-width: 480px) {
       #chewa-welcome-overlay {
-        padding: 8px 10px 88px;
+        padding: 8px 10px 86px;
       }
       .chewa-stage-card {
         padding: 11px 12px 14px;
         border-radius: 22px;
       }
       .chewa-hero-viewport {
-        aspect-ratio: 16 / 10.5;
+        aspect-ratio: 4 / 3.45;
       }
       .btn-open-ar-camera {
-        font-size: 0.86rem;
-        padding: 12px 12px;
+        font-size: 0.85rem;
+        padding: 11px 12px;
       }
       .intro-tab-btn {
         font-size: 0.62rem;
@@ -522,7 +515,7 @@
   document.head.appendChild(style);
 
   // --------------------------------------------------------------------------
-  // 3. BUILD DOM ELEMENTS FOR THE WELCOME OVERLAY
+  // 3. BUILD DOM ELEMENTS FOR THE COVER-MATCHED WELCOME OVERLAY
   // --------------------------------------------------------------------------
   const overlay = document.createElement("div");
   overlay.id = "chewa-welcome-overlay";
@@ -540,14 +533,14 @@
         </button>
       </div>
 
-      <!-- 3D Pixar × Studio Ghibli Animated Scene of Asst. Prof. Dr. Chewa Thassana -->
+      <!-- Cover-Matched 3D Pixar Scene of Asst. Prof. Dr. Chewa Thassana + Microscope + Hologram Cube -->
       <div class="chewa-hero-viewport" id="chewa-viewport-box">
         <img
-          src="chewa_pixar_ghibli_welcome.jpg"
-          alt="ผศ.ดร.ชีวะ ทัศนา แนะนำรายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา"
+          src="chewa_pixar_ghibli_welcome.jpg?v=2027.9"
+          alt="ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา แนะนำรายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา"
           class="chewa-char-img"
         />
-        <div class="ghibli-sunbeam-layer"></div>
+        <canvas id="chewa-holo-fx-canvas" width="640" height="540"></canvas>
 
         <!-- Floating Interactive Holographic ArUco Marker Badge -->
         <div class="floating-aruco-holo" id="holo-aruco-badge" title="แตะเพื่อเปิดกล้องสแกน ArUco Marker">
@@ -561,8 +554,8 @@
         <!-- Instructor Nameplate + Live Talking Equalizer -->
         <div class="chewa-nameplate">
           <div>
-            <div class="chewa-prof-name">ผศ.ดร.ชีวะ ทัศนา (Asst. Prof. Dr. Chewa Thassana)</div>
-            <div class="chewa-prof-affil">4011111 ฟิสิกส์สำหรับจุลชีววิทยา • คณะวิทยาศาสตร์และเทคโนโลยี มรภ.รำไพพรรณี</div>
+            <div class="chewa-prof-name">ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</div>
+            <div class="chewa-prof-affil">สาขาวิชาฟิสิกส์ คณะวิทยาศาสตร์และเทคโนโลยี มรภ.รำไพพรรณี</div>
           </div>
           <div class="chewa-talk-wave" id="chewa-wave-bars">
             <span></span><span></span><span></span><span></span><span></span>
@@ -602,19 +595,18 @@
   `;
   document.body.appendChild(overlay);
 
-  // Add "👨‍🏫 แนะนำวิชา" button to the Top HUD so the user can reopen the animation anytime
+  // Add "👨‍🏫 อ.ชีวะ แนะนำวิชา" button to the Top HUD
   const statusGroup = document.querySelector("#top-hud .status-group");
   if (statusGroup) {
     const reopenBtn = document.createElement("button");
     reopenBtn.className = "top-link-btn";
     reopenBtn.style.cssText =
-      "background:linear-gradient(135deg,#f59e0b,#10b981);color:#022c22;border-color:#fde68a;font-weight:700;";
+      "background:linear-gradient(135deg,#10b981,#06b6d4);color:#022c22;border-color:#a7f3d0;font-weight:700;";
     reopenBtn.innerHTML = "👨‍🏫 อ.ชีวะ แนะนำวิชา";
     reopenBtn.onclick = () => window.showChewaWelcome();
     statusGroup.insertBefore(reopenBtn, statusGroup.firstChild);
   }
 
-  // Update bottom center jewel label to say "กล้อง AR" clearly
   const jewelTxtEl = document.getElementById("jewel-text");
   if (jewelTxtEl) jewelTxtEl.textContent = "กล้อง AR";
 
@@ -734,7 +726,6 @@
     }
   };
 
-  // Auto-advance slides gently every 7.5 seconds while user reads (unless speaking)
   autoCycleTimer = setInterval(() => {
     if (!isWelcomeVisible || isSpeakingIntro) return;
     const nextIdx = (currentSlideIdx + 1) % INTRO_SLIDES.length;
@@ -784,17 +775,19 @@
     window.dismissChewaWelcome(true);
   };
 
-  // Check URL query: if ?skipIntro=1 is explicitly set, dismiss immediately
   const qs = new URLSearchParams(window.location.search);
   if (qs.get("skipIntro") === "1") {
     window.dismissChewaWelcome(false);
   }
 
   // --------------------------------------------------------------------------
-  // 6. 60FPS GHIBLI SUNLIT SPORES & BIOLUMINESCENT MICROBE CANVAS ANIMATION
+  // 6. 60FPS HOLOGRAM CUBE FX + GHIBLI BIOLUMINESCENT SPORES ANIMATION
   // --------------------------------------------------------------------------
   const pCanvas = document.getElementById("ghibli-particles-canvas");
   const pCtx = pCanvas.getContext("2d");
+  const hCanvas = document.getElementById("chewa-holo-fx-canvas");
+  const hCtx = hCanvas ? hCanvas.getContext("2d") : null;
+
   let cw = (pCanvas.width = window.innerWidth);
   let ch = (pCanvas.height = window.innerHeight);
 
@@ -806,20 +799,29 @@
   const spores = Array.from({ length: 34 }, (_, i) => ({
     x: Math.random() * cw,
     y: Math.random() * ch,
-    r: 2 + Math.random() * 5.5,
+    r: 2 + Math.random() * 5.2,
     vx: (Math.random() - 0.5) * 0.45,
     vy: -0.25 - Math.random() * 0.55,
     phase: Math.random() * Math.PI * 2,
-    hue: i % 3 === 0 ? "251, 191, 36" : i % 3 === 1 ? "52, 211, 153" : "56, 189, 248"
+    hue: i % 3 === 0 ? "52, 211, 153" : i % 3 === 1 ? "0, 240, 255" : "251, 191, 36"
   }));
 
-  function renderGhibliSpores(ts) {
-    requestAnimationFrame(renderGhibliSpores);
+  // Floating bioluminescent particles inside the cover's 3D Hologram Cube (left side: x 40..295, y 65..245)
+  const cubeMicrobes = Array.from({ length: 18 }, (_, i) => ({
+    x: 55 + Math.random() * 220,
+    y: 75 + Math.random() * 155,
+    r: 1.8 + Math.random() * 2.8,
+    phase: i * 0.7
+  }));
+
+  function renderGhibliAndHoloFX(ts) {
+    requestAnimationFrame(renderGhibliAndHoloFX);
     if (!isWelcomeVisible) return;
 
     pCtx.clearRect(0, 0, cw, ch);
-    const t = ts * 0.0015;
+    const t = ts * 0.0016;
 
+    // 1. Background Ghibli Bioluminescent Spores
     for (let i = 0; i < spores.length; i++) {
       const s = spores[i];
       s.x += s.vx + Math.sin(t + s.phase) * 0.25;
@@ -828,7 +830,7 @@
       if (s.x < -15) s.x = cw + 15;
       if (s.x > cw + 15) s.x = -15;
 
-      const alpha = 0.28 + 0.45 * (0.5 + 0.5 * Math.sin(t * 1.8 + s.phase));
+      const alpha = 0.25 + 0.45 * (0.5 + 0.5 * Math.sin(t * 1.8 + s.phase));
       const grad = pCtx.createRadialGradient(s.x, s.y, 0.5, s.x, s.y, s.r * 3.2);
       grad.addColorStop(0, `rgba(255, 255, 255, ${Math.min(1, alpha + 0.3)})`);
       grad.addColorStop(0.35, `rgba(${s.hue}, ${alpha})`);
@@ -839,6 +841,64 @@
       pCtx.arc(s.x, s.y, s.r * 3.2, 0, Math.PI * 2);
       pCtx.fill();
     }
+
+    // 2. Foreground Cover Portrait Hologram Cube & Microscope Beam Animation
+    if (hCtx) {
+      const w = hCanvas.width;
+      const h = hCanvas.height;
+      hCtx.clearRect(0, 0, w, h);
+
+      // Sweeping cyan laser scanline inside the 3D bacteria hologram cube (x: 26..306, y: 62..255)
+      const scanY = 68 + ((Math.sin(t * 1.35) * 0.5 + 0.5) * 180);
+      const scanGrad = hCtx.createLinearGradient(28, scanY, 304, scanY);
+      scanGrad.addColorStop(0, "rgba(0, 240, 255, 0)");
+      scanGrad.addColorStop(0.2, "rgba(52, 211, 153, 0.45)");
+      scanGrad.addColorStop(0.5, "rgba(255, 255, 255, 0.7)");
+      scanGrad.addColorStop(0.8, "rgba(0, 240, 255, 0.45)");
+      scanGrad.addColorStop(1, "rgba(0, 240, 255, 0)");
+      hCtx.fillStyle = scanGrad;
+      hCtx.fillRect(28, scanY - 1.5, 276, 3);
+
+      // Glowing microbes swimming inside the hologram cube
+      for (let i = 0; i < cubeMicrobes.length; i++) {
+        const m = cubeMicrobes[i];
+        const mx = m.x + Math.sin(t * 1.9 + m.phase) * 10;
+        const my = m.y + Math.cos(t * 1.5 + m.phase) * 8;
+        const a = 0.35 + 0.55 * (0.5 + 0.5 * Math.sin(t * 3 + m.phase));
+        const mg = hCtx.createRadialGradient(mx, my, 0.5, mx, my, m.r * 3.5);
+        mg.addColorStop(0, `rgba(255, 255, 255, ${a})`);
+        mg.addColorStop(0.4, `rgba(52, 211, 153, ${a * 0.85})`);
+        mg.addColorStop(1, "rgba(16, 185, 129, 0)");
+        hCtx.fillStyle = mg;
+        hCtx.beginPath();
+        hCtx.arc(mx, my, m.r * 3.5, 0, Math.PI * 2);
+        hCtx.fill();
+      }
+
+      // Pulsing green condenser light on microscope stage (x: 192, y: 422)
+      const stagePulse = 0.35 + 0.35 * Math.sin(t * 3.2);
+      const stageGrad = hCtx.createRadialGradient(192, 422, 2, 192, 422, 34);
+      stageGrad.addColorStop(0, `rgba(167, 243, 208, ${stagePulse + 0.25})`);
+      stageGrad.addColorStop(0.45, `rgba(16, 185, 129, ${stagePulse})`);
+      stageGrad.addColorStop(1, "rgba(16, 185, 129, 0)");
+      hCtx.fillStyle = stageGrad;
+      hCtx.beginPath();
+      hCtx.arc(192, 422, 34, 0, Math.PI * 2);
+      hCtx.fill();
+
+      // Subtle glasses reflection shimmer across Prof. Chewa's eyeglasses (x: 350..475, y: 135..168)
+      const glintCycle = (t * 0.55) % 4.0;
+      if (glintCycle < 1.2) {
+        const prog = glintCycle / 1.2;
+        const gx = 345 + prog * 135;
+        const gGrad = hCtx.createLinearGradient(gx - 18, 132, gx + 18, 168);
+        gGrad.addColorStop(0, "rgba(255, 255, 255, 0)");
+        gGrad.addColorStop(0.5, "rgba(255, 255, 255, 0.32)");
+        gGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+        hCtx.fillStyle = gGrad;
+        hCtx.fillRect(345, 134, 130, 34);
+      }
+    }
   }
-  requestAnimationFrame(renderGhibliSpores);
+  requestAnimationFrame(renderGhibliAndHoloFX);
 })();

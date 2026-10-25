@@ -1,4 +1,4 @@
-const CACHE_NAME = 'phys4microb-aruco-v2027-8';
+const CACHE_NAME = 'phys4microb-aruco-v2027-9';
 const ASSETS = [
   './ar_aruco_textbook.html',
   './aruco_marker_sheet.html',
