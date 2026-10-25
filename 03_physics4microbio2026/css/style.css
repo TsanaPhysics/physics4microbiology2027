@@ -35,11 +35,40 @@
     --font-heading: 'Outfit', 'Prompt', sans-serif;
     --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-    /* Spacing & Borders */
-    --radius-pill: 50px;
-    --radius-card: 32px; 
-    --radius-btn: 16px;
+    /* Spacing & Layout Tokens */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 2.5rem;
+    --space-3xl: 3.5rem;
+
+    /* Radius & Borders */
     --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 24px;
+    --radius-pill: 50px;
+    --radius-card: 28px; 
+    --radius-btn: 16px;
+
+    /* Shadows */
+    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+
+    /* Grayscale System */
+    --gray-50: rgba(255, 255, 255, 0.03);
+    --gray-100: rgba(255, 255, 255, 0.06);
+    --gray-200: rgba(255, 255, 255, 0.1);
+    --gray-300: #94a3b8;
+    --gray-400: #64748b;
+    --gray-500: #475569;
+    --gray-600: #334155;
+    --gray-700: #cbd5e1;
+    --gray-800: #e2e8f0;
+    --gray-900: #0f172a;
 
     /* Transitions */
     --transition-normal: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1094,18 +1123,19 @@ input[type="range"] {
     background: var(--primary-50);
 }
 
-/* Formula display */
+/* Formula display - Responsive Dark Glassmorphic */
 .formula-display {
-    background: var(--gray-900);
-    color: var(--primary-300);
-    padding: var(--space-lg) var(--space-xl);
-    border-radius: var(--radius-md);
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #38bdf8;
+    padding: 1.5rem 1.25rem;
+    border-radius: 18px;
     text-align: center;
-    font-size: 1.3rem;
-    font-family: var(--font-mono);
-    margin: var(--space-lg) 0;
+    font-size: 1.05rem;
+    margin: 1.5rem 0;
     position: relative;
-    overflow: hidden;
+    overflow-x: auto;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .formula-display::before {
@@ -1115,7 +1145,7 @@ input[type="range"] {
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--gradient-primary);
+    background: linear-gradient(90deg, #10b981, #38bdf8);
 }
 
 .formula-label {
@@ -1801,26 +1831,28 @@ input[type="range"] {
     counter-reset: step;
     display: flex;
     flex-direction: column;
-    gap: var(--space-lg);
+    gap: 24px;
+    margin: 20px 0;
 }
 
 .procedure-step {
-    display: flex;
-    gap: var(--space-lg);
-    padding: var(--space-xl);
-    background: rgba(30, 41, 59, 0.45);
+    display: block;
+    padding: 28px 24px 20px 24px;
+    background: rgba(30, 41, 59, 0.55);
     border-radius: 18px;
     border-left: 4px solid #10b981;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     position: relative;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin-top: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     transition: all 0.3s ease;
 }
 
 .procedure-step:hover {
-    background: rgba(30, 41, 59, 0.7);
+    background: rgba(30, 41, 59, 0.8);
     border-left-color: #38bdf8;
     transform: translateX(4px);
 }
@@ -1829,28 +1861,29 @@ input[type="range"] {
     counter-increment: step;
     content: 'ขั้นตอนที่ ' counter(step);
     position: absolute;
-    top: -12px;
+    top: -14px;
     left: 20px;
     background: linear-gradient(135deg, #10b981, #059669);
     color: white;
-    padding: 3px 14px;
+    padding: 4px 16px;
     border-radius: 50px;
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.5px;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    z-index: 2;
 }
 
 .step-content {
-    flex: 1;
     color: #cbd5e1;
 }
 
 .step-content p {
-    margin-bottom: var(--space-sm);
+    margin: 0;
     text-align: left;
     color: #cbd5e1;
     line-height: 1.7;
+    font-size: 0.95rem;
 }
 
 /* Data table for lab */
@@ -1936,22 +1969,31 @@ input[type="range"] {
 .safety-list {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .safety-list li {
-    padding: 8px 0;
-    padding-left: 28px;
+    padding: 10px 0;
+    padding-left: 24px;
     position: relative;
     color: #fca5a5;
     font-size: 0.95rem;
-    line-height: 1.5;
+    line-height: 1.6;
+    border-bottom: 1px solid rgba(239, 68, 68, 0.12);
+}
+
+.safety-list li:last-child {
+    border-bottom: none;
 }
 
 .safety-list li::before {
-    content: '⚠️';
+    content: '•';
     position: absolute;
-    left: 0;
-    font-size: 1rem;
+    left: 4px;
+    top: 2px;
+    color: #ef4444;
+    font-size: 1.5rem;
+    line-height: 1;
 }
 
 /* Lab questions */
