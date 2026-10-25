@@ -30,8 +30,15 @@ description: >-
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-### เสาหลักที่ 1: Three.js PBR High-Fidelity Rendering & Capture Buffer
-- **Color Management & Tone Mapping**: ใช้ `THREE.ACESFilmicToneMapping` พร้อม exposure ระหว่าง $1.1 - 1.2$ เพื่อให้มิติแสงเงาสมจริงระดับภาพยนตร์
+### เสาหลักที่ 1: Three.js PBR High-Fidelity Rendering, PMREM Studio Environment & Capture Buffer
+- **Color Management & Tone Mapping**: ใช้ `THREE.ACESFilmicToneMapping` พร้อม exposure ระหว่าง $1.15 - 1.25$ เพื่อให้มิติแสงเงาสมจริงระดับภาพยนตร์
+- **Procedural PMREM Studio Environment Map (ป้องกันปัญหาโลหะสะท้อนสีดำ)**:
+  - วัตถุที่เป็นโลหะขัดเงา ทองเหลือง สเตนเลส หรือแก้วสะท้อนแสงสูง (High Metallic/Roughness ต่ำ) จะสะท้อนเป็นสีดำสนิทหากไม่มี `scene.environment`
+  - สร้างแผนที่สภาพแวดล้อมสตูดิโอ 6 ทิศทางด้วย `THREE.PMREMGenerator(renderer)` จาก Canvas 2D เสมอ และผูกเข้ากับ `scene.environment` เพื่อให้โมเดลมีแสงสะท้อนและมิติที่สว่างชัดเจนในทุกสภาพแวดล้อม
+- **Resilient Viewport Dimensioning Protocol (ป้องกันปัญหา Viewport ว่างเปล่า / Aspect Ratio NaN)**:
+  - บังคับสไตล์ `html, body { height: 100%; overflow: hidden; }`
+  - กล่องแสดงผล `#viewportContainer` และ `#threeMount` ต้องใช้มิติ `w-full h-full`
+  - ในฟังก์ชัน `initThree()` และ `handleResize()` ต้องใช้ `mount.getBoundingClientRect()` พร้อมค่าสำรองความปลอดภัย (Fallback Guard เช่น ขั้นต่ำ 800x550px) เพื่อป้องกัน `mount.clientHeight = 0` ซึ่งจะทำให้ Three.js เกิดข้อผิดพลาด `camera.aspect = width / 0 = NaN`
 - **Preserve Drawing Buffer**: กำหนด `preserveDrawingBuffer: true` ใน `THREE.WebGLRenderer` ทุกตัว เพื่อให้สามารถดึงข้อมูลภาพจาก WebGL canvas ด้วย `toDataURL('image/png')` ได้ตลอดเวลาโดยไม่เกิดปัญหาภาพดำหรือว่างเปล่า
 - **Standardized Screenshot API**: ทุกไฟล์ Simulator ต้องเปิดเผยฟังก์ชันสากล:
   ```javascript
@@ -46,9 +53,10 @@ description: >-
 - **PBR Materials**: ใช้วัสดุ `MeshStandardMaterial` (โลหะ, พลาสติก) และ `MeshPhysicalMaterial` (แก้ว, น้ำ, น้ำมันหล่อลื่น, ฝาครอบจานเพาะเชื้อ) ปรับค่า `roughness`, `metalness`, และ `transmission` ตามหลักการสะท้อนแสงจริง
 
 ### เสาหลักที่ 2: Synchronized 2D Magnifier Loupe & Dynamic Readouts
-- เครื่องมือวัดละเอียด เช่น เวอร์เนียร์ ไมโครมิเตอร์ หรือไมโครปิเปต จะมีมุมมอง 3D ที่กว้างเกินกว่าจะอ่านขีดสเกลได้ชัดเจน
-- ต้องสร้าง **หน้าต่างขยายแบบ 2 มิติ (Synchronized 2D Canvas Loupe)** คู่ขนานกับมุมมอง 3D เสมอ
-- คำนวณตำแหน่งขีดสเกลหลักและสเกลเลื่อนสัมพันธ์กับค่าวัดปัจจุบัน ($x$) วาดเส้น Cursor อ้างอิงสีแดง/เขียว เพื่อให้นักศึกษาได้ฝึกทักษะการอ่านค่าจริง (Coincidence Reading)
+- เครื่องมือวัดละเอียด เช่น เวอร์เนียร์ ไมโครมิเตอร์ ไมโครปิเปต หรือชุดวัดความหนืดสโตกส์ จะมีมุมมอง 3D ที่กว้างเกินกว่าจะอ่านขีดสเกลหรือสังเกตเซลล์เดี่ยวได้ชัดเจน
+- ต้องสร้าง **หน้าต่างขยายแบบ 2 มิติ (Synchronized 2D Canvas Loupe / Micro-Loupe 1000x)** คู่ขนานกับมุมมอง 3D เสมอ
+- สำหรับเครื่องมือวัด: คำนวณตำแหน่งขีดสเกลหลักและสเกลเลื่อนสัมพันธ์กับค่าวัดปัจจุบัน ($x$) วาดเส้น Cursor อ้างอิงสีแดง/เขียว เพื่อให้นักศึกษาได้ฝึกทักษะการอ่านค่าจริง (Coincidence Reading)
+- สำหรับของไหลและเซลล์จุลินทรีย์ (Stokes' Viscometer): เลนส์ขยาย 1000x ต้องแสดง **เวกเตอร์แรง 3 มิติ 3 แรง** ที่เกาะติดกับตัวเซลล์จริง ($\vec{F}_g, \vec{F}_b, \vec{F}_d$) พร้อมเส้นกระแสการไหลแบบลามินาร์ (Hydrodynamic Streamlines) อ้อมผ่านเซลล์อย่างนุ่มนวลภายใต้เงื่อนไข $Re \ll 1$
 - รองรับโหมด **Learn Mode** (แสดงสูตรและขีดที่ตรงกัน) สลับกับ **Quiz / Exam Mode** (ซ่อนตัวเลขเฉลย ให้นักศึกษาอ่านค่าเอง)
 
 ### เสาหลักที่ 3: Interactive Physics Mechanics & Web Audio Synthesizer
@@ -56,11 +64,18 @@ description: >-
   - การเลื่อนของปากวัดเวอร์เนียร์ (Bounding clamp: $0 - 150\text{ mm}$)
   - การหมุนของ Thimble ไมโครมิเตอร์สัมพันธ์กับการเคลื่อนที่ของแกน Spindle ($0.5\text{ mm}$ ต่อการหมุน 1 รอบ)
   - กลไก **2-Stop Plunger** ของไมโครปิเปต: จังหวะที่ 1 ดูดสาร (Aspirate) จังหวะที่ 2 ปล่อยสารหมดจด (Blowout)
+  - **ชุดวัดความหนืดสโตกส์ (Falling-Sphere Viscometer & Stokes' Drag)**:
+    - กระบอกแก้วบอโรซิลิเกตทรงสูงพร้อมสเกลพิมพ์บอกระดับปริมาตรและความสูง ($0 - 100\text{ mL}$, $0 - 200\text{ mm}$) และผิวน้ำเว้า Meniscus
+    - เซนเซอร์โฟโตเกตเลเซอร์คู่ (Dual Optical Photogates) ตัดขวางกระบอกแก้วที่ระยะห่าง $s = 20\text{ cm}$
+    - นาฬิกาดิจิทัลตรวจจับมิลลิวินาที ($\Delta t$) ทำงานอัตโนมัติเมื่อวัตถุ/เซลล์เคลื่อนผ่านเกต
+    - คำนวณปรับแก้ผลกระทบผนังภาชนะตามหลัก Faxén ($f_w = 1 - 2.104(r/R) + 2.09(r/R)^3$)
+    - จำลองแรงเร่งปั่นเหวี่ยง ($1\times g$ ถึง $1000\times g$ RCF) เชื่อมโยงสู่การปั่นตกตะกอนในห้องปฏิบัติการจุลชีววิทยา
 - **ระบบสังเคราะห์เสียงสมจริง (Web Audio API Synthesizer)**:
   - ไร้การพึ่งพาไฟล์เสียงภายนอก (.mp3) ใช้ Web Audio Oscillator & Noise Buffer สังเคราะห์เสียงขึ้นแบบ Real-time:
     - เสียงคลิก Ratchet Stop ของไมโครมิเตอร์ (`AudioContext`, decaying sine wave + noise burst)
     - เสียงดูดและปล่อยของเหลวของไมโครปิเปต (Resonant bandpass filter sweeps)
     - เสียงมอเตอร์หมุนเครื่องปั่นเหวี่ยง (Ramping frequency generator)
+    - เสียง Beep และ Chime เมื่อวัตถุตัดผ่านลำแสงเลเซอร์ของโฟโตเกต (Dual photogate trigger cues)
 
 ### เสาหลักที่ 4: Strict Blank Interactive E-Report Protocol
 - **ช่องตารางว่างเปล่า 100%**: ห้ามใส่ค่าตัวเลขเฉลยล่วงหน้าในช่องกรอกผล (ห้าม hardcode pre-filled values) นักศึกษาต้องอ่านค่าวัดจาก 3D Simulator แล้วพิมพ์บันทึกค่าลงในช่อง input
