@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องปฏิบัติการ 3D กัมมันตภาพรังสีและการทำลายเชื้อจุลินทรีย์ (Radioactivity & Microbial Radiosterilization 3D)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js r128 & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- Google Fonts & Font Awesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #030712; color: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .font-digital { font-family: 'Orbitron', monospace; }
+    
+    /* Pure CSS Vector Standard */
+    .vec {
+      display: inline-block;
+      position: relative;
+      font-family: 'Times New Roman', Cambria, serif;
+      font-style: italic;
+      font-weight: bold;
+      line-height: 1;
+      margin-top: 0.25em;
+    }
+    .vec::after {
+      content: '→';
+      position: absolute;
+      top: -0.45em;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0.85);
+      font-size: 0.72em;
+      font-style: normal;
+      font-weight: bold;
+      line-height: 1;
+      color: inherit;
+      pointer-events: none;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(234, 179, 8, 0.3); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(234, 179, 8, 0.6); }
+
+    /* Digital LED Glow */
+    .led-glow-amber { text-shadow: 0 0 10px rgba(245, 158, 11, 0.7), 0 0 20px rgba(245, 158, 11, 0.4); }
+    .led-glow-red { text-shadow: 0 0 10px rgba(239, 68, 68, 0.8), 0 0 25px rgba(239, 68, 68, 0.5); }
+    .led-glow-emerald { text-shadow: 0 0 10px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4); }
+    .led-glow-cyan { text-shadow: 0 0 10px rgba(6, 182, 212, 0.7), 0 0 20px rgba(6, 182, 212, 0.4); }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col select-none overflow-hidden bg-slate-950">
+
+  <!-- Main Simulator Layout Grid -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden relative">
+
+    <!-- 3D Canvas Area (Interactive WebGL Viewport) -->
+    <div id="canvasContainer" class="lg:col-span-8 h-full w-full relative bg-slate-950 overflow-hidden flex items-center justify-center">
+      <canvas id="threeCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+
+      <!-- Top Overlay: Status Badges -->
+      <div class="absolute top-3 left-3 z-10 flex flex-wrap items-center gap-2 pointer-events-none">
+        <div class="px-3 py-1.5 rounded-xl bg-slate-900/90 backdrop-blur-md border border-amber-500/30 text-amber-400 font-mono text-xs flex items-center gap-2 shadow-lg">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+          <span class="font-bold">RADIOBIOLOGY &amp; GM COUNTER 3D</span>
+        </div>
+        <div id="radiationAlertBadge" class="hidden px-2.5 py-1 rounded-xl bg-red-950/80 backdrop-blur-md border border-red-500/40 text-red-300 font-mono text-[11px] items-center gap-1.5 shadow-lg animate-pulse">
+          <i class="fa-solid fa-radiation text-red-400"></i> HIGH DOSE RATE (&gt;10 &mu;Sv/h)
+        </div>
+        <div id="isotopeBadge" class="px-2.5 py-1 rounded-xl bg-slate-900/80 backdrop-blur-md border border-white/10 text-slate-300 font-mono text-[11px] flex items-center gap-1.5">
+          <i class="fa-solid fa-atom text-cyan-400"></i> Source: <span id="currentIsotopeLabel" class="text-white font-semibold">Co-60 (Gamma 1.17/1.33 MeV)</span>
+        </div>
+      </div>
+
+      <!-- Top Right: Interactive Telemetry HUD Card -->
+      <div id="radiationHUD" class="absolute top-3 right-3 z-10 w-72 bg-slate-900/85 backdrop-blur-md border border-amber-500/20 rounded-2xl p-3 shadow-2xl space-y-2.5 transition-all duration-300">
+        <!-- HUD Header with Minimize/Expand/Close buttons -->
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+          <div class="flex items-center gap-1.5">
+            <i class="fa-solid fa-radiation text-amber-400 text-xs"></i>
+            <span class="text-xs font-bold text-slate-200 font-mono">GM COUNTER TELEMETRY</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <button onclick="toggleCardContent('radiationHUD_content')" class="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded hover:bg-slate-800 transition" title="ย่อ/ขยายเนื้อหา">
+              <i class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('radiationHUD')" class="text-slate-400 hover:text-red-400 text-xs px-1.5 py-0.5 rounded hover:bg-slate-800 transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsible Content -->
+        <div id="radiationHUD_content" class="space-y-2 text-xs">
+          <!-- Count Rate: CPS and CPM -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono">Count Rate (CPS)</div>
+              <div class="text-base font-digital font-bold text-amber-400 led-glow-amber flex items-baseline justify-between">
+                <span id="hudCPS">248</span>
+                <span class="text-[10px] font-mono text-slate-400 font-normal">cps</span>
+              </div>
+            </div>
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono">Total Counts</div>
+              <div class="text-base font-digital font-bold text-cyan-400 led-glow-cyan flex items-baseline justify-between">
+                <span id="hudTotalCounts">1,480</span>
+                <span class="text-[10px] font-mono text-slate-400 font-normal">pts</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dose Rate and Cumulative Absorbed Dose -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono">Dose Rate (<em>H</em>)</div>
+              <div class="text-sm font-digital font-bold text-red-400 led-glow-red flex items-baseline justify-between">
+                <span id="hudDoseRate">14.8</span>
+                <span class="text-[10px] font-mono text-slate-400 font-normal">&mu;Sv/h</span>
+              </div>
+            </div>
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono">Cumulative Dose (<em>D</em>)</div>
+              <div class="text-sm font-digital font-bold text-emerald-400 flex items-baseline justify-between">
+                <span id="hudCumulativeDose">0.35</span>
+                <span class="text-[10px] font-mono text-slate-400 font-normal">kGy</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Microbial Survival % and Sterility Assurance -->
+          <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5 space-y-1">
+            <div class="flex justify-between text-[10px] font-mono text-slate-400">
+              <span>Microbial Survival (<em>N/N</em>₀)</span>
+              <span id="hudSurvivalPercent" class="text-amber-300 font-bold">12.5 %</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-950 rounded-full overflow-hidden border border-white/5">
+              <div id="hudSurvivalBar" class="h-full bg-gradient-to-r from-red-500 via-amber-500 to-emerald-500 w-[12.5%] transition-all duration-200"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Right: Synchronized 2D Reticle Loupe & Dose Analytics -->
+      <div id="radiationLoupeCard" class="absolute bottom-16 right-3 z-10 w-80 bg-slate-900/90 backdrop-blur-md border border-amber-500/20 rounded-2xl p-3 shadow-2xl space-y-2 transition-all duration-300">
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+          <div class="flex items-center gap-1.5">
+            <i class="fa-solid fa-chart-line text-amber-400 text-xs"></i>
+            <span class="text-xs font-bold text-slate-200 font-mono">SYNCHRONIZED RADIATION LOUPE</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <button onclick="toggleCardContent('radiationLoupeCard_content')" class="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded hover:bg-slate-800 transition" title="ย่อ/ขยายเนื้อหา">
+              <i class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('radiationLoupeCard')" class="text-slate-400 hover:text-red-400 text-xs px-1.5 py-0.5 rounded hover:bg-slate-800 transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Loupe View Modes Tab Header -->
+        <div id="radiationLoupeCard_content" class="space-y-2">
+          <div class="grid grid-cols-3 gap-1 bg-slate-950/80 p-0.5 rounded-xl border border-white/5 text-[10px] font-mono">
+            <button onclick="setLoupeTab('pulse')" id="tabBtn_pulse" class="py-1 rounded-lg bg-amber-600 text-white font-bold transition">
+              GM Pulses
+            </button>
+            <button onclick="setLoupeTab('decay')" id="tabBtn_decay" class="py-1 rounded-lg text-slate-400 hover:text-slate-200 transition">
+              Decay N(t)
+            </button>
+            <button onclick="setLoupeTab('survival')" id="tabBtn_survival" class="py-1 rounded-lg text-slate-400 hover:text-slate-200 transition">
+              D₁₀ Survival
+            </button>
+          </div>
+
+          <!-- 2D Canvas Loupe Viewport -->
+          <div class="relative w-full h-40 bg-slate-950 rounded-xl border border-white/10 overflow-hidden flex items-center justify-center">
+            <canvas id="loupeCanvas" width="320" height="160" class="w-full h-full block"></canvas>
+            <div id="loupeAnnotationOverlay" class="absolute bottom-1 right-2 text-[9px] font-mono text-amber-400/80 pointer-events-none">
+              Geiger Discharge Pulses
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center text-[10px] font-mono text-slate-400 px-1">
+            <span id="loupeStatusText" class="text-amber-400 font-semibold">Co-60 &bull; 248 CPS</span>
+            <span id="loupeMetricText" class="text-slate-500">t₁/₂ = 5.27 y</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Floating Dock Bar: Camera, Minimize/Restore, Fullscreen -->
+      <div id="viewportDockBar" class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-2xl z-20 flex items-center gap-2 text-xs">
+        <div id="dockRestoreButtons" class="flex items-center gap-1.5 empty:hidden"></div>
+
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- Camera Preset Angles -->
+        <button onclick="setCameraView('overview')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="มุมมองภาพรวม 3 มิติ">
+          <i class="fa-solid fa-cube text-[9px]"></i> 3D Vault
+        </button>
+        <button onclick="setCameraView('probe')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="เจาะจงหัววัดไกเกอร์ GM Probe">
+          <i class="fa-solid fa-bullseye text-[9px]"></i> GM Probe
+        </button>
+        <button onclick="setCameraView('shield')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="มุมมองช่องใส่แผ่นกำบังรังสี">
+          <i class="fa-solid fa-shield text-[9px]"></i> Shield
+        </button>
+        <button onclick="setCameraView('sample')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="มุมมองจานเพาะเชื้อจุลินทรีย์">
+          <i class="fa-solid fa-disease text-[9px]"></i> Inoculum
+        </button>
+
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- Fullscreen / Sidebar Toggle -->
+        <button onclick="toggleSidebar()" id="btnToggleSidebar" class="px-2.5 py-1 rounded-full bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-medium text-[10px] flex items-center gap-1 transition" title="ขยายจอภาพ 3D เต็มความกว้าง">
+          <i class="fa-solid fa-expand text-[9px]"></i> <span id="toggleSidebarLabel">ขยายจอเต็ม</span>
+        </button>
+        <button onclick="captureSimulatorScreenshot()" class="px-2.5 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-medium text-[10px] flex items-center gap-1 transition" title="บันทึกภาพหน้าจอหลักฐาน">
+          <i class="fa-solid fa-camera text-[9px]"></i> แคปเจอร์
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Interactive Control Panel Sidebar -->
+    <div id="controlSidebar" class="lg:col-span-4 h-full bg-slate-900/95 border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col overflow-y-auto p-4 space-y-4">
+      
+      <!-- Panel Header -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div>
+          <h2 class="text-sm font-bold text-amber-400 flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-amber-400"></i> แผงควบคุมแหล่งกำเนิดรังสีและหัววัดไกเกอร์
+          </h2>
+          <p class="text-[11px] text-slate-400">Radioisotopes, Shielding &amp; Microbial Radiosterilization</p>
+        </div>
+        <button onclick="resetParameters()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition flex items-center gap-1">
+          <i class="fa-solid fa-rotate-right"></i> รีเซ็ต
+        </button>
+      </div>
+
+      <!-- Audio Synthesizer Status & Sound Toggle -->
+      <div class="flex items-center justify-between bg-slate-950/60 p-2.5 rounded-xl border border-white/5">
+        <span class="text-xs text-slate-300 flex items-center gap-2">
+          <i class="fa-solid fa-volume-high text-amber-400"></i> เสียงสังเคราะห์ Geiger-Müller Clicker (Poisson)
+        </span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="soundToggle" class="sr-only peer" checked onchange="toggleSound(this.checked)">
+          <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+        </label>
+      </div>
+
+      <!-- Radioactive Isotope Source Selector -->
+      <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
+        <label class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-atom text-cyan-400"></i> เลือกไอโซโทปกัมมันตรังสี (Radioisotope Source)
+        </label>
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <button onclick="setIsotope('co60')" id="isoBtn_co60" class="py-2 px-2.5 rounded-xl bg-amber-600/30 border border-amber-500 text-amber-300 font-mono text-xs font-bold transition text-left">
+            ☢️ ⁶⁰Co (Gamma 1.25 MeV)
+          </button>
+          <button onclick="setIsotope('cs137')" id="isoBtn_cs137" class="py-2 px-2.5 rounded-xl bg-slate-800 text-slate-400 border border-white/5 font-mono text-xs transition hover:text-white text-left">
+            ☢️ ¹³⁷Cs (Gamma 662 keV)
+          </button>
+          <button onclick="setIsotope('p32')" id="isoBtn_p32" class="py-2 px-2.5 rounded-xl bg-slate-800 text-slate-400 border border-white/5 font-mono text-xs transition hover:text-white text-left">
+            ☢️ ³²P (Pure Beta 1.71 MeV)
+          </button>
+          <button onclick="setIsotope('c14')" id="isoBtn_c14" class="py-2 px-2.5 rounded-xl bg-slate-800 text-slate-400 border border-white/5 font-mono text-xs transition hover:text-white text-left">
+            ☢️ ¹⁴C (Soft Beta 156 keV)
+          </button>
+        </div>
+      </div>
+
+      <!-- Shielding Material Slot Selector -->
+      <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
+        <div class="flex justify-between items-center text-xs">
+          <span class="text-slate-300 font-medium flex items-center gap-1.5">
+            <i class="fa-solid fa-shield-halved text-emerald-400"></i> วัสดุกำบังรังสี (Radiation Shielding Slot)
+          </span>
+          <span class="font-mono text-emerald-400 font-bold" id="labelShield">แผ่นตะกั่ว 10 mm (Lead)</span>
+        </div>
+        <div class="grid grid-cols-3 gap-1.5 pt-1">
+          <button onclick="setShield('none', 0)" id="shBtn_none" class="py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition">
+            ไม่มีแผ่นกั้น (Air)
+          </button>
+          <button onclick="setShield('paper', 1)" id="shBtn_paper" class="py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition">
+            กระดาษ (1 mm)
+          </button>
+          <button onclick="setShield('al', 2)" id="shBtn_al" class="py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition">
+            อลูมิเนียม (2 mm)
+          </button>
+          <button onclick="setShield('pb5', 5)" id="shBtn_pb5" class="py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition">
+            ตะกั่ว 5 mm
+          </button>
+          <button onclick="setShield('pb10', 10)" id="shBtn_pb10" class="py-1.5 px-1 rounded-lg bg-emerald-600 text-white text-[11px] font-mono font-bold border border-emerald-400 transition">
+            ตะกั่ว 10 mm
+          </button>
+          <button onclick="setShield('pb20', 20)" id="shBtn_pb20" class="py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition">
+            ตะกั่ว 20 mm
+          </button>
+        </div>
+      </div>
+
+      <!-- Distance Slider: Inverse Square Law (r = 5 cm to 50 cm) -->
+      <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
+        <div class="flex justify-between items-center text-xs">
+          <span class="text-slate-300 font-medium flex items-center gap-1.5">
+            <i class="fa-solid fa-arrows-left-right text-cyan-400"></i> ระยะห่างจากแหล่งกำเนิด (Distance: <em>r</em>)
+          </span>
+          <span class="font-digital text-cyan-400 font-bold" id="sliderDistanceVal">10.0 cm</span>
+        </div>
+        <input type="range" id="distSlider" min="5" max="50" step="1" value="10" oninput="onDistanceChange(this.value)" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-500">
+        <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+          <span>5 cm (ความเข้มสูง)</span>
+          <span>10 cm (มาตรฐาน)</span>
+          <span>50 cm (ความเข้มต่ำ)</span>
+        </div>
+      </div>
+
+      <!-- Microbial Target Inoculum Species (Radiosterilization) -->
+      <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
+        <label class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-disease text-rose-400"></i> เชื้อจุลินทรีย์ทดสอบการทำลายเชื้อ (Radiosterilization Target)
+        </label>
+        <div class="grid grid-cols-3 gap-1.5 pt-1">
+          <button onclick="setTargetMicrobe('ecoli', 0.30)" id="mbBtn_ecoli" class="py-1.5 px-1 rounded-lg bg-rose-600 text-white text-[11px] font-mono font-bold border border-rose-400 transition text-center">
+            <em>E. coli</em> (0.3 kGy)
+          </button>
+          <button onclick="setTargetMicrobe('bacillus', 3.0)" id="mbBtn_bacillus" class="py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition text-center">
+            <em>B. pumilus</em> สปอร์ (3.0 kGy)
+          </button>
+          <button onclick="setTargetMicrobe('deinococcus', 10.0)" id="mbBtn_deinococcus" class="py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition text-center">
+            <em>D. radiodurans</em> (10 kGy)
+          </button>
+        </div>
+      </div>
+
+      <!-- Beam Shutter & Dose Delivery Control -->
+      <div class="space-y-2 pt-2 border-t border-white/10">
+        <div class="flex items-center gap-2">
+          <button onclick="toggleIrradiation()" id="btnShutter" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-500 hover:to-red-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-900/40 transition">
+            <i class="fa-solid fa-radiation"></i> เปิดชัตเตอร์ฉายรังสี (Open Shutter)
+          </button>
+          <button onclick="resetIrradiationDose()" class="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium text-xs transition" title="รีเซ็ตปริมาณรังสีสะสม">
+            <i class="fa-solid fa-arrow-rotate-left"></i>
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between text-xs bg-slate-950/60 p-2 rounded-xl border border-white/5">
+          <span class="text-slate-400 font-mono text-[11px]">อัตราเร่งการสะสมรังสี:</span>
+          <div class="flex items-center gap-1 font-mono text-[11px]">
+            <button onclick="setSimRate(1)" id="rtBtn_1" class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition">1x</button>
+            <button onclick="setSimRate(5)" id="rtBtn_5" class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition">5x</button>
+            <button onclick="setSimRate(20)" id="rtBtn_20" class="px-2 py-0.5 rounded bg-amber-600 text-white font-bold transition">20x</button>
+            <button onclick="setSimRate(50)" id="rtBtn_50" class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition">50x</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Theoretical Nuclear Biophysics Formulas -->
+      <div class="mt-auto bg-slate-950/80 p-3 rounded-xl border border-white/5 text-[11px] text-slate-400 space-y-1.5 leading-relaxed">
+        <div class="font-bold text-slate-300 flex items-center gap-1">
+          <i class="fa-solid fa-book-open text-amber-400"></i> สมการฟิสิกส์นิวเคลียร์และชีววิทยารังสี (Key Formulas)
+        </div>
+        <p>&bull; กฎการสลายตัว: <em>N</em>(<em>t</em>) = <em>N</em>₀ <em>e</em><sup>-&lambda;<em>t</em></sup>, &lambda; = ln 2 / <em>t</em><sub>1/2</sub></p>
+        <p>&bull; กฎกำลังสองผกผัน: <em>I</em>(<em>r</em>) = <em>I</em>₀ (<em>r</em>₀ / <em>r</em>)&sup2;</p>
+        <p>&bull; การลดทอนแผ่นกั้น: <em>I</em>(<em>x</em>) = <em>I</em>₀ <em>e</em><sup>-&mu;<em>x</em></sup>, HVL = ln 2 / &mu;</p>
+        <p>&bull; การทำลายเชื้อ: log₁₀(<em>N/N</em>₀) = -<em>D / D</em>₁₀</p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- JavaScript Simulator Implementation -->
+  <script>
+    // --- Global Simulator State ---
+    const state = {
+      shutterOpen: false,
+      simRate: 20, // 20x acceleration
+      elapsedSec: 0,
+      
+      // Isotope Parameters
+      isotope: 'co60',
+      initialActivity_Bq: 3.7e6, // 100 microCurie
+      halfLifeYears: 5.27,
+      radiationType: 'gamma', // 'gamma', 'beta'
+      baseCPS_at_10cm: 280,
+      
+      // Geometry & Shielding
+      distance_cm: 10.0,
+      shieldType: 'pb10',
+      shieldThickness_mm: 10.0,
+      shieldLinearAtten_cm: 0.77, // Lead mu = 0.77 cm^-1 for 1.25 MeV gamma
+      
+      // Detector & Dose
+      measuredCPS: 248,
+      totalCounts: 1480,
+      doseRate_uSv_h: 14.8,
+      cumulativeDose_kGy: 0.35,
+      
+      // Microbial Target
+      targetMicrobe: 'ecoli',
+      d10_kGy: 0.30,
+      survivalFraction: 0.125, // 12.5%
+      
+      // Audio & UI
+      soundEnabled: true,
+      activeLoupeTab: 'pulse'
+    };
+
+    // --- Web Audio Synthesizer (Stochastic Poisson GM Clicker) ---
+    let audioCtx = null;
+
+    function initAudio() {
+      if (audioCtx) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioCtx();
+      } catch (e) {}
+    }
+
+    function playGMClick() {
+      if (!state.soundEnabled) return;
+      initAudio();
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(1400 + (Math.random() - 0.5) * 400, audioCtx.currentTime);
+        g.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.008);
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.009);
+      } catch (e) {}
+    }
+
+    function playBeep(freq = 600, duration = 0.08) {
+      if (!state.soundEnabled) return;
+      initAudio();
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        g.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    // --- Three.js 3D Radiation Vault Scene Setup ---
+    let scene, camera, renderer, controls;
+    let vaultGroup, sourceMesh, gmProbeMesh, shieldMesh, beamMesh, petriMesh;
+
+    function init3D() {
+      const container = document.getElementById('canvasContainer');
+      const canvas = document.getElementById('threeCanvas');
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x050b14);
+
+      camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+      camera.position.set(0, 16, 22);
+
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 - 0.02;
+      controls.target.set(0, 0, 0);
+
+      // Studio Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+      scene.add(ambientLight);
+
+      const mainLight = new THREE.DirectionalLight(0xffffff, 1.1);
+      mainLight.position.set(12, 24, 15);
+      scene.add(mainLight);
+
+      const amberWarningLight = new THREE.DirectionalLight(0xf59e0b, 0.6);
+      amberWarningLight.position.set(-15, 12, -10);
+      scene.add(amberWarningLight);
+
+      // Ground Floor Grid
+      const grid = new THREE.GridHelper(50, 50, 0x1e293b, 0x0f172a);
+      grid.position.y = -3.2;
+      scene.add(grid);
+
+      // Build 3D Radiation Vault Components
+      buildRadiationVault();
+
+      window.addEventListener('resize', onWindowResize);
+      animate();
+    }
+
+    function buildRadiationVault() {
+      vaultGroup = new THREE.Group();
+
+      // Heavy Lead Chamber Base Plate
+      const baseGeo = new THREE.BoxGeometry(18, 0.6, 12);
+      const leadMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.5, metalness: 0.7 });
+      const baseMesh = new THREE.Mesh(baseGeo, leadMat);
+      baseMesh.position.y = -2.8;
+      vaultGroup.add(baseMesh);
+
+      // Optical Rail Track on Base (for distance adjustment r)
+      const railGeo = new THREE.BoxGeometry(14, 0.2, 0.8);
+      const chromeMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.15, metalness: 0.95 });
+      const railMesh = new THREE.Mesh(railGeo, chromeMat);
+      railMesh.position.set(0, -2.4, 0);
+      vaultGroup.add(railMesh);
+
+      // Radiation Source Housing (Heavy Cylindrical Lead Castle with Yellow Warning Trefoil)
+      const sourceHousingGeo = new THREE.CylinderGeometry(1.4, 1.6, 3.2, 24);
+      const yellowMat = new THREE.MeshStandardMaterial({ color: 0xeab308, roughness: 0.35, metalness: 0.4 });
+      const sourceHousing = new THREE.Mesh(sourceHousingGeo, yellowMat);
+      sourceHousing.position.set(-5.5, -0.8, 0);
+      vaultGroup.add(sourceHousing);
+
+      // Radioactive Isotope Capsule (Encapsulated Pellets)
+      const capGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.6, 16);
+      const capMat = new THREE.MeshStandardMaterial({ color: 0xef4444, emissive: 0xb91c1c, emissiveIntensity: 0.4 });
+      sourceMesh = new THREE.Mesh(capGeo, capMat);
+      sourceMesh.position.set(-5.5, 0.2, 0);
+      vaultGroup.add(sourceMesh);
+
+      // Radiation Warning Symbol Texture Sprite on Housing
+      const warnCanvas = document.createElement('canvas');
+      warnCanvas.width = 128; warnCanvas.height = 128;
+      const wctx = warnCanvas.getContext('2d');
+      wctx.fillStyle = '#0f172a';
+      wctx.font = 'bold 80px sans-serif';
+      wctx.textAlign = 'center';
+      wctx.textBaseline = 'middle';
+      wctx.fillText('☢', 64, 64);
+      const warnTex = new THREE.CanvasTexture(warnCanvas);
+      const warnSpriteMat = new THREE.SpriteMaterial({ map: warnTex, transparent: true });
+      const warnSprite = new THREE.Sprite(warnSpriteMat);
+      warnSprite.scale.set(1.5, 1.5, 1);
+      warnSprite.position.set(-5.5, 0.8, 1.65);
+      vaultGroup.add(warnSprite);
+
+      // Shielding Slot Holder (Interchangeable Lead / Aluminum / Paper Plates)
+      const slotGeo = new THREE.BoxGeometry(0.6, 4.2, 4.2);
+      const slotMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.4 });
+      const slotMesh = new THREE.Mesh(slotGeo, slotMat);
+      slotMesh.position.set(-1.5, -0.6, 0);
+      vaultGroup.add(slotMesh);
+
+      // Shield Plate (Dynamic material & thickness)
+      const shieldGeo = new THREE.BoxGeometry(0.35, 3.6, 3.6);
+      const shieldMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.8, roughness: 0.3 });
+      shieldMesh = new THREE.Mesh(shieldGeo, shieldMat);
+      shieldMesh.position.set(-1.5, -0.6, 0);
+      vaultGroup.add(shieldMesh);
+
+      // Geiger-Müller Probe (Cylindrical Stainless Steel with Mica Window)
+      const gmGeo = new THREE.CylinderGeometry(0.65, 0.65, 3.5, 24);
+      gmGeo.rotateZ(Math.PI / 2);
+      const gmMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.9, roughness: 0.2 });
+      gmProbeMesh = new THREE.Mesh(gmGeo, gmMat);
+      gmProbeMesh.position.set(4.5, -0.6, 0);
+      vaultGroup.add(gmProbeMesh);
+
+      // GM Thin Mica Window (Front Face towards radiation beam)
+      const windowGeo = new THREE.CircleGeometry(0.6, 24);
+      windowGeo.rotateY(-Math.PI / 2);
+      const winMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.1 });
+      const winMesh = new THREE.Mesh(windowGeo, winMat);
+      winMesh.position.set(-1.76, 0, 0);
+      gmProbeMesh.add(winMesh);
+
+      // Microbial Inoculum Petri Dish (Target Under Irradiation)
+      const petriGeo = new THREE.CylinderGeometry(1.6, 1.6, 0.3, 32);
+      const petriMat = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.5,
+        roughness: 0.1
+      });
+      petriMesh = new THREE.Mesh(petriGeo, petriMat);
+      petriMesh.position.set(1.5, -2.1, 0);
+      vaultGroup.add(petriMesh);
+
+      // Agar & Microbial Colony Film inside Petri Dish
+      const agarGeo = new THREE.CylinderGeometry(1.5, 1.5, 0.15, 32);
+      const agarMat = new THREE.MeshStandardMaterial({ color: 0xfef08a, roughness: 0.4 });
+      const agarMesh = new THREE.Mesh(agarGeo, agarMat);
+      agarMesh.position.set(0, -0.05, 0);
+      petriMesh.add(agarMesh);
+
+      // Radiation Beam Ray Visualization (Transparent glowing cone/cylinder)
+      const beamGeo = new THREE.CylinderGeometry(0.8, 0.4, 10.0, 16, 1, true);
+      beamGeo.rotateZ(Math.PI / 2);
+      const beamMat = new THREE.MeshBasicMaterial({
+        color: 0xf59e0b,
+        transparent: true,
+        opacity: 0,
+        side: THREE.DoubleSide
+      });
+      beamMesh = new THREE.Mesh(beamGeo, beamMat);
+      beamMesh.position.set(-0.5, -0.6, 0);
+      vaultGroup.add(beamMesh);
+
+      scene.add(vaultGroup);
+    }
+
+    // --- Animation & Physics Loop ---
+    let lastTime = performance.now();
+    let pulseHistory = [];
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const now = performance.now();
+      const dt = (now - lastTime) / 1000.0;
+      lastTime = now;
+
+      controls.update();
+
+      if (state.shutterOpen) {
+        const effectiveDt = dt * state.simRate;
+        state.elapsedSec += effectiveDt;
+        updateRadiationPhysics(effectiveDt);
+      }
+
+      // Render Synchronized 2D Reticle Loupe
+      render2DLoupe();
+
+      renderer.render(scene, camera);
+    }
+
+    function updateRadiationPhysics(dt) {
+      // 1. Inverse Square Law: I = I_0 * (r_0 / r)^2
+      const distRatio = 10.0 / state.distance_cm;
+      const geomFactor = Math.pow(distRatio, 2);
+
+      // 2. Shielding Attenuation: I = I_0 * e^(-mu * x)
+      let shieldFactor = 1.0;
+      if (state.shieldType === 'paper') {
+        shieldFactor = state.radiationType === 'alpha' ? 0.05 : 0.98;
+      } else if (state.shieldType === 'al') {
+        shieldFactor = state.radiationType === 'beta' ? 0.02 : 0.88;
+      } else if (state.shieldType.startsWith('pb')) {
+        const thickness_cm = state.shieldThickness_mm / 10.0;
+        shieldFactor = Math.exp(-state.shieldLinearAtten_cm * thickness_cm);
+      }
+
+      // 3. Current Measured CPS with Poisson stochastic fluctuations
+      const baseCPS = state.baseCPS_at_10cm * geomFactor * shieldFactor;
+      const noise = (Math.random() - 0.5) * Math.sqrt(baseCPS + 15) * 1.5;
+      state.measuredCPS = Math.max(12, Math.round(baseCPS + noise)); // background floor ~12 CPS
+
+      // Accumulate Total Counts
+      state.totalCounts += Math.round(state.measuredCPS * (dt / state.simRate));
+
+      // Dose Rate: 1 CPS ~ 0.06 uSv/h for Co-60
+      state.doseRate_uSv_h = state.measuredCPS * 0.06;
+
+      // Cumulative Absorbed Dose (kGy in microbial target)
+      const doseRate_kGy_per_sec = (state.measuredCPS / 300.0) * 0.002;
+      state.cumulativeDose_kGy += doseRate_kGy_per_sec * dt;
+
+      // Microbial Survival Fraction: log10(N/N0) = -D / D10
+      const logSurv = -state.cumulativeDose_kGy / state.d10_kGy;
+      state.survivalFraction = Math.max(1e-6, Math.pow(10, logSurv));
+
+      // Audio GM Clicks (Poisson distributed triggers)
+      const clicksToPlay = Math.min(10, Math.floor(state.measuredCPS * (dt / state.simRate)));
+      for (let i = 0; i < clicksToPlay; i++) {
+        setTimeout(playGMClick, Math.random() * (dt * 1000));
+      }
+
+      // Update Telemetry HUD
+      updateTelemetryHUD();
+    }
+
+    function updateTelemetryHUD() {
+      document.getElementById('hudCPS').textContent = state.measuredCPS;
+      document.getElementById('hudTotalCounts').textContent = state.totalCounts.toLocaleString();
+      document.getElementById('hudDoseRate').textContent = state.doseRate_uSv_h.toFixed(1);
+      document.getElementById('hudCumulativeDose').textContent = state.cumulativeDose_kGy.toFixed(2);
+
+      const survPercent = (state.survivalFraction * 100).toFixed(state.survivalFraction < 0.01 ? 3 : 1);
+      document.getElementById('hudSurvivalPercent').textContent = `${survPercent} %`;
+      document.getElementById('hudSurvivalBar').style.width = `${Math.min(100, state.survivalFraction * 100)}%`;
+
+      // Warning alert badge
+      const alertBadge = document.getElementById('radiationAlertBadge');
+      if (state.doseRate_uSv_h > 10.0 && state.shutterOpen) {
+        alertBadge.classList.remove('hidden');
+        alertBadge.classList.add('flex');
+      } else {
+        alertBadge.classList.add('hidden');
+        alertBadge.classList.remove('flex');
+      }
+    }
+
+    // --- Synchronized 2D Reticle Loupe Rendering ---
+    function render2DLoupe() {
+      const canvas = document.getElementById('loupeCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      if (state.activeLoupeTab === 'pulse') {
+        render2DGMDischargePulses(ctx, w, h);
+      } else if (state.activeLoupeTab === 'decay') {
+        render2DDecayKinetics(ctx, w, h);
+      } else {
+        render2DMicrobialD10Survival(ctx, w, h);
+      }
+    }
+
+    function render2DGMDischargePulses(ctx, w, h) {
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = 'bold 9px monospace';
+      ctx.fillText('GM TUBE IONIZATION PULSES: V(t)', 12, 16);
+
+      // Oscilloscope Grid Lines
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1;
+      for (let x = 20; x < w; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 25); ctx.lineTo(x, h - 15); ctx.stroke();
+      }
+      for (let y = 30; y < h - 10; y += 30) {
+        ctx.beginPath(); ctx.moveTo(15, y); ctx.lineTo(w - 15, y); ctx.stroke();
+      }
+
+      // Draw Townsend Avalanche Pulses
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      const baselineY = h - 35;
+      ctx.moveTo(15, baselineY);
+
+      const pulseDensity = Math.min(25, Math.floor(state.measuredCPS / 12));
+      for (let x = 20; x < w - 20; x += 12) {
+        if (state.shutterOpen && Math.random() < (pulseDensity / 25.0)) {
+          // Sharp spike rise followed by exponential dead-time recovery
+          ctx.lineTo(x, baselineY - 45 - Math.random() * 20);
+          ctx.lineTo(x + 4, baselineY - 12);
+          ctx.lineTo(x + 8, baselineY);
+        } else {
+          ctx.lineTo(x, baselineY + (Math.random() - 0.5) * 2);
+        }
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = '8px monospace';
+      ctx.fillText('Dead Time: τ = 100 μs', w - 120, h - 8);
+    }
+
+    function render2DDecayKinetics(ctx, w, h) {
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'bold 9px monospace';
+      ctx.fillText('RADIOACTIVE DECAY KINETICS: N(t) = N₀e^(-λt)', 12, 16);
+
+      // Axes
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(35, 25);
+      ctx.lineTo(35, h - 20);
+      ctx.lineTo(w - 15, h - 20);
+      ctx.stroke();
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = '8px Prompt';
+      ctx.fillText('0', 35, h - 8);
+      ctx.fillText('1 t₁/₂', 95, h - 8);
+      ctx.fillText('2 t₁/₂', 155, h - 8);
+      ctx.fillText('3 t₁/₂', 215, h - 8);
+      ctx.fillText('4 t₁/₂', 270, h - 8);
+      ctx.fillText('N/N₀', 6, 30);
+
+      // Exponential Decay Curve
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let px = 35; px <= w - 20; px += 4) {
+        const t_half = (px - 35) / 60.0;
+        const n_ratio = Math.pow(0.5, t_half);
+        const py = (h - 20) - n_ratio * (h - 45);
+        if (px === 35) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Horizontal 50% line (Half-life marker)
+      ctx.strokeStyle = '#38bdf8';
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(35, (h - 20) - 0.5 * (h - 45));
+      ctx.lineTo(95, (h - 20) - 0.5 * (h - 45));
+      ctx.lineTo(95, h - 20);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText('50% (t₁/₂)', 40, (h - 20) - 0.5 * (h - 45) - 4);
+    }
+
+    function render2DMicrobialD10Survival(ctx, w, h) {
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.fillStyle = '#10b981';
+      ctx.font = 'bold 9px monospace';
+      ctx.fillText('MICROBIAL D₁₀ SURVIVAL CURVE: log₁₀(N/N₀) vs Dose', 12, 16);
+
+      // Axes
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(35, 25);
+      ctx.lineTo(35, h - 20);
+      ctx.lineTo(w - 15, h - 20);
+      ctx.stroke();
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = '8px Prompt';
+      ctx.fillText('0', 35, h - 8);
+      ctx.fillText('1 kGy', 85, h - 8);
+      ctx.fillText('2 kGy', 135, h - 8);
+      ctx.fillText('5 kGy', 205, h - 8);
+      ctx.fillText('10 kGy', 270, h - 8);
+      ctx.fillText('log(S)', 4, 30);
+
+      // 3 Species Survival Slopes (E. coli, B. pumilus, D. radiodurans)
+      const species = [
+        { name: 'E. coli (D10=0.3)', color: '#ef4444', d10: 0.3 },
+        { name: 'B. pumilus (D10=3.0)', color: '#f59e0b', d10: 3.0 },
+        { name: 'D. radiodurans (D10=10.0)', color: '#10b981', d10: 10.0 }
+      ];
+
+      species.forEach(sp => {
+        ctx.strokeStyle = sp.color;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(35, 30);
+        const maxDose = 10.0;
+        const logReduction = maxDose / sp.d10;
+        const endY = Math.min(h - 20, 30 + (logReduction / 6.0) * (h - 50));
+        ctx.lineTo(w - 25, endY);
+        ctx.stroke();
+
+        ctx.fillStyle = sp.color;
+        ctx.font = '7px monospace';
+        ctx.fillText(sp.name, w - 120, endY - 2);
+      });
+
+      // Current Operating Dose Point
+      const curX = 35 + Math.min(1.0, state.cumulativeDose_kGy / 10.0) * (w - 60);
+      const logReducCurrent = state.cumulativeDose_kGy / state.d10_kGy;
+      const curY = Math.min(h - 20, 30 + (logReducCurrent / 6.0) * (h - 50));
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.beginPath();
+      ctx.arc(curX, curY, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // --- Interactive Parameter Controls ---
+    function setIsotope(iso) {
+      state.isotope = iso;
+      const isoConfigs = {
+        'co60': { label: '⁶⁰Co (Gamma 1.17/1.33 MeV)', hl: 5.27, type: 'gamma', cps: 280, color: 0xef4444, atten: 0.77 },
+        'cs137':{ label: '¹³⁷Cs (Gamma 662 keV)', hl: 30.1, type: 'gamma', cps: 210, color: 0x06b6d4, atten: 0.89 },
+        'p32':  { label: '³²P (Pure Beta 1.71 MeV)', hl: 0.039, type: 'beta', cps: 340, color: 0x10b981, atten: 2.50 },
+        'c14':  { label: '¹⁴C (Soft Beta 156 keV)', hl: 5730, type: 'beta', cps: 85, color: 0xa855f7, atten: 12.0 }
+      };
+
+      const cfg = isoConfigs[iso];
+      state.initialActivity_Bq = 3.7e6;
+      state.halfLifeYears = cfg.hl;
+      state.radiationType = cfg.type;
+      state.baseCPS_at_10cm = cfg.cps;
+      state.shieldLinearAtten_cm = cfg.atten;
+
+      document.getElementById('currentIsotopeLabel').textContent = cfg.label;
+      document.getElementById('loupeMetricText').textContent = `t₁/₂ = ${cfg.hl >= 1 ? cfg.hl + ' y' : (cfg.hl * 365.25).toFixed(1) + ' d'}`;
+
+      ['co60', 'cs137', 'p32', 'c14'].forEach(id => {
+        const btn = document.getElementById(`isoBtn_${id}`);
+        if (id === iso) {
+          btn.className = 'py-2 px-2.5 rounded-xl bg-amber-600/30 border border-amber-500 text-amber-300 font-mono text-xs font-bold transition text-left';
+        } else {
+          btn.className = 'py-2 px-2.5 rounded-xl bg-slate-800 text-slate-400 border border-white/5 font-mono text-xs transition hover:text-white text-left';
+        }
+      });
+
+      if (sourceMesh) sourceMesh.material.color.setHex(cfg.color);
+      playBeep(550, 0.08);
+    }
+
+    function setShield(type, thick_mm) {
+      state.shieldType = type;
+      state.shieldThickness_mm = thick_mm;
+
+      const labels = {
+        'none': 'ไม่มีแผ่นกั้น (Air)',
+        'paper': 'กระดาษ 1 mm (Paper)',
+        'al': 'อลูมิเนียม 2 mm (Al)',
+        'pb5': 'แผ่นตะกั่ว 5 mm (Lead)',
+        'pb10': 'แผ่นตะกั่ว 10 mm (Lead)',
+        'pb20': 'แผ่นตะกั่ว 20 mm (Lead)'
+      };
+      document.getElementById('labelShield').textContent = labels[type];
+
+      ['none', 'paper', 'al', 'pb5', 'pb10', 'pb20'].forEach(id => {
+        const btn = document.getElementById(`shBtn_${id}`);
+        if (id === type) {
+          btn.className = 'py-1.5 px-1 rounded-lg bg-emerald-600 text-white text-[11px] font-mono font-bold border border-emerald-400 transition';
+        } else {
+          btn.className = 'py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition';
+        }
+      });
+
+      // Update 3D Shield Mesh Appearance
+      if (shieldMesh) {
+        if (type === 'none') {
+          shieldMesh.visible = false;
+        } else {
+          shieldMesh.visible = true;
+          const colors = { 'paper': 0xf8fafc, 'al': 0xcbd5e1, 'pb5': 0x475569, 'pb10': 0x334155, 'pb20': 0x1e293b };
+          shieldMesh.material.color.setHex(colors[type] || 0x475569);
+          const thickScale = Math.max(0.1, thick_mm / 10.0);
+          shieldMesh.scale.x = thickScale;
+        }
+      }
+
+      playBeep(480, 0.05);
+    }
+
+    function onDistanceChange(val) {
+      state.distance_cm = parseFloat(val);
+      document.getElementById('sliderDistanceVal').textContent = `${state.distance_cm.toFixed(1)} cm`;
+
+      // Update 3D GM Probe Position along rail
+      if (gmProbeMesh) {
+        // Map 5 - 50 cm to Three.js X coordinates (-2.0 to 6.5)
+        const posX = -2.0 + (state.distance_cm / 50.0) * 8.5;
+        gmProbeMesh.position.x = posX;
+      }
+
+      playBeep(420, 0.04);
+    }
+
+    function setTargetMicrobe(mb, d10) {
+      state.targetMicrobe = mb;
+      state.d10_kGy = d10;
+
+      ['ecoli', 'bacillus', 'deinococcus'].forEach(id => {
+        const btn = document.getElementById(`mbBtn_${id}`);
+        if (id === mb) {
+          btn.className = 'py-1.5 px-1 rounded-lg bg-rose-600 text-white text-[11px] font-mono font-bold border border-rose-400 transition text-center';
+        } else {
+          btn.className = 'py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition text-center';
+        }
+      });
+
+      playBeep(520, 0.05);
+    }
+
+    function toggleIrradiation() {
+      initAudio();
+      state.shutterOpen = !state.shutterOpen;
+      const btn = document.getElementById('btnShutter');
+
+      if (state.shutterOpen) {
+        btn.innerHTML = '<i class="fa-solid fa-stop"></i> ปิดชัตเตอร์ (Close Shutter)';
+        btn.className = 'flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-red-900/60 transition';
+        if (beamMesh) beamMesh.material.opacity = 0.35;
+        playBeep(850, 0.12);
+      } else {
+        btn.innerHTML = '<i class="fa-solid fa-radiation"></i> เปิดชัตเตอร์ฉายรังสี (Open Shutter)';
+        btn.className = 'flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-500 hover:to-red-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-900/40 transition';
+        if (beamMesh) beamMesh.material.opacity = 0;
+        playBeep(400, 0.1);
+      }
+    }
+
+    function resetIrradiationDose() {
+      state.cumulativeDose_kGy = 0;
+      state.survivalFraction = 1.0;
+      state.totalCounts = 0;
+      updateTelemetryHUD();
+      playBeep(300, 0.15);
+    }
+
+    function setSimRate(rate) {
+      state.simRate = rate;
+      [1, 5, 20, 50].forEach(r => {
+        const btn = document.getElementById(`rtBtn_${r}`);
+        if (r === rate) {
+          btn.className = 'px-2 py-0.5 rounded bg-amber-600 text-white font-bold transition';
+        } else {
+          btn.className = 'px-2 py-0.5 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition';
+        }
+      });
+      playBeep(600, 0.05);
+    }
+
+    function setLoupeTab(tab) {
+      state.activeLoupeTab = tab;
+      ['pulse', 'decay', 'survival'].forEach(t => {
+        const btn = document.getElementById(`tabBtn_${t}`);
+        if (t === tab) {
+          btn.className = 'py-1 rounded-lg bg-amber-600 text-white font-bold transition';
+        } else {
+          btn.className = 'py-1 rounded-lg text-slate-400 hover:text-slate-200 transition';
+        }
+      });
+
+      const overlay = document.getElementById('loupeAnnotationOverlay');
+      if (tab === 'pulse') overlay.textContent = 'Geiger Discharge Pulses';
+      else if (tab === 'decay') overlay.textContent = 'Radioactive Decay Kinetics';
+      else overlay.textContent = 'Microbial D₁₀ Radiosterilization';
+
+      playBeep(550, 0.05);
+    }
+
+    function setCameraView(view) {
+      if (!camera || !controls) return;
+      if (view === 'overview') {
+        camera.position.set(0, 16, 22);
+        controls.target.set(0, 0, 0);
+      } else if (view === 'probe') {
+        camera.position.set(4.5, 4.0, 8.0);
+        controls.target.set(4.5, -0.6, 0);
+      } else if (view === 'shield') {
+        camera.position.set(-1.5, 3.5, 6.5);
+        controls.target.set(-1.5, -0.6, 0);
+      } else if (view === 'sample') {
+        camera.position.set(1.5, 5.0, 5.0);
+        controls.target.set(1.5, -2.1, 0);
+      }
+      controls.update();
+      playBeep(750, 0.06);
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('controlSidebar');
+      const container = document.getElementById('canvasContainer');
+      const label = document.getElementById('toggleSidebarLabel');
+
+      if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden');
+        container.classList.remove('lg:col-span-12');
+        container.classList.add('lg:col-span-8');
+        label.textContent = 'ขยายจอเต็ม';
+      } else {
+        sidebar.classList.add('hidden');
+        container.classList.remove('lg:col-span-8');
+        container.classList.add('lg:col-span-12');
+        label.textContent = 'ย่อแถบข้าง';
+      }
+      setTimeout(onWindowResize, 100);
+      playBeep(650, 0.06);
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('canvasContainer');
+      if (!renderer || !camera) return;
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    function toggleCardContent(contentId) {
+      const content = document.getElementById(contentId);
+      if (!content) return;
+      content.classList.toggle('hidden');
+      playBeep(420, 0.05);
+    }
+
+    function hideCard(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      card.classList.add('hidden');
+
+      const dock = document.getElementById('dockRestoreButtons');
+      const cardNames = {
+        'radiationHUD': 'โทรมาตร GM Counter',
+        'radiationLoupeCard': 'เลนส์ซูมรังสี'
+      };
+
+      const btn = document.createElement('button');
+      btn.id = `restoreBtn_${cardId}`;
+      btn.className = 'px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-amber-400 font-mono text-[10px] flex items-center gap-1 transition';
+      btn.innerHTML = `<i class="fa-solid fa-window-restore text-[9px]"></i> ${cardNames[cardId] || cardId}`;
+      btn.onclick = function() {
+        card.classList.remove('hidden');
+        btn.remove();
+        playBeep(550, 0.08);
+      };
+      dock.appendChild(btn);
+      playBeep(350, 0.08);
+    }
+
+    function resetParameters() {
+      setIsotope('co60');
+      setShield('pb10', 10);
+      document.getElementById('distSlider').value = 10;
+      onDistanceChange(10);
+      setTargetMicrobe('ecoli', 0.30);
+      if (state.shutterOpen) toggleIrradiation();
+      resetIrradiationDose();
+    }
+
+    function toggleSound(enabled) {
+      state.soundEnabled = enabled;
+      if (enabled) playBeep(800, 0.08);
+    }
+
+    window.captureSimulatorScreenshot = function() {
+      if (!renderer) return null;
+      renderer.render(scene, camera);
+      const dataUrl = renderer.domElement.toDataURL('image/png');
+      
+      const link = document.createElement('a');
+      link.download = `radiation_bio_sim12_${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+
+      playBeep(950, 0.15);
+      return dataUrl;
+    };
+
+    window.onload = function() {
+      init3D();
+      updateTelemetryHUD();
+    };
+  </script>
+</body>
+</html>
