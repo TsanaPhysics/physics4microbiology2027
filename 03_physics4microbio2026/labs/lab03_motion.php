@@ -118,6 +118,95 @@ include '../includes/header.php';
             </div>
         </section>
 
+        <!-- Academic Foundations & Mathematical Equations Suite -->
+        <div class="bg-slate-900/90 border border-sky-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+                <div class="space-y-1">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/30 font-mono">
+                        <i class="fa-solid fa-square-root-variable"></i> Newton's Laws &amp; Stokes' Viscometry Foundations
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                        หลักการและสมการฟิสิกส์พื้นฐาน (Theoretical Formulations)
+                    </h2>
+                    <p class="text-xs text-slate-400">
+                        กฎการเคลื่อนที่ของนิวตัน พลศาสตร์ของไหลตามกฎของสโตกส์ และการวิเคราะห์การตกตะกอนในงานจุลชีววิทยาสิ่งแวดล้อม
+                    </p>
+                </div>
+                <button type="button" onclick="toggleMathDetails('mathSuiteLab03')" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-sky-400 border border-sky-500/30 transition flex items-center gap-2 self-start sm:self-auto">
+                    <span id="mathSuiteLab03BtnText">ย่อ/ขยายสมการ</span> <i class="fa-solid fa-chevron-down text-xs"></i>
+                </button>
+            </div>
+
+            <div id="mathSuiteLab03" class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <!-- Card 1: Newton's 2nd Law & Terminal Velocity -->
+                <div class="p-5 rounded-2xl bg-slate-950/80 border border-sky-500/20 space-y-3.5 hover:border-sky-500/40 transition">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-sky-300 font-mono flex items-center gap-1.5">
+                            <i class="fa-solid fa-apple-whole text-sky-400"></i> ตอนที่ 1: กฎการเคลื่อนที่ของนิวตัน
+                        </span>
+                        <span class="text-[10px] px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 font-mono border border-sky-500/20">Eq. 3.1–3.2</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        ขณะลูกกลมตกในของเหลว มี 3 แรงกระทำ: แรงโน้มถ่วง ($F_g$), แรงลอยตัว ($F_b$), และแรงหนืด ($F_d$):
+                    </p>
+                    <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-sky-200">
+                        $$m \frac{dv}{dt} = F_g - F_b - F_d(v) \tag{3.1}$$
+                        $$m g - \rho_f V g - 6\pi \eta r v = m a$$
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        เมื่อความเร่งเป็นศูนย์ ($a = 0$) วัตถุจะเคลื่อนที่ด้วยอัตราเร็วคงที่ (Terminal Velocity, $v_t$):
+                    </p>
+                    <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-sky-200">
+                        $$\sum F_y = 0 \iff F_g = F_b + F_d(v_t) \tag{3.2}$$
+                    </div>
+                </div>
+
+                <!-- Card 2: Stokes' Viscosity & Ladenburg Correction -->
+                <div class="p-5 rounded-2xl bg-slate-950/80 border border-teal-500/20 space-y-3.5 hover:border-teal-500/40 transition">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-teal-300 font-mono flex items-center gap-1.5">
+                            <i class="fa-solid fa-droplet text-teal-400"></i> ตอนที่ 2: ความหนืดและการปรับแก้ผนัง
+                        </span>
+                        <span class="text-[10px] px-2 py-0.5 rounded bg-teal-500/10 text-teal-400 font-mono border border-teal-500/20">Eq. 3.3–3.5</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        อัตราเร็วสุดท้ายที่วัดได้จากโฟโตเกต ($v_t = h/t_{\text{avg}}$) นำไปคำนวณสัมประสิทธิ์ความหนืด ($\eta$):
+                    </p>
+                    <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-teal-200">
+                        $$\eta = \frac{2 r^2 (\rho_s - \rho_f) g}{9 v_t} \tag{3.3}$$
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        การปรับแก้ผลกระทบจากผนังทรงกระบอก (Ladenburg / Faxén Wall Effect Correction):
+                    </p>
+                    <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-teal-200">
+                        $$\eta_{\text{corrected}} = \frac{\eta_{\text{measured}}}{1 + 2.4 (d / D)} \tag{3.4}$$
+                    </div>
+                </div>
+
+                <!-- Card 3: Linear Regression & Microbial Sedimentation -->
+                <div class="p-5 rounded-2xl bg-slate-950/80 border border-amber-500/20 space-y-3.5 hover:border-amber-500/40 transition">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-amber-300 font-mono flex items-center gap-1.5">
+                            <i class="fa-solid fa-chart-line text-amber-400"></i> ตอนที่ 3: กราฟถดถอยและบ่อตกตะกอน
+                        </span>
+                        <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 font-mono border border-amber-500/20">Eq. 3.6–3.8</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        ความสัมพันธ์ระหว่าง $v_t$ กับกำลังสองของรัศมี $r^2$ เป็นเส้นตรงที่มีความชัน $m$:
+                    </p>
+                    <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-amber-200">
+                        $$v_t = \left[ \frac{2(\rho_s - \rho_f)g}{9\eta} \right] r^2 \implies \eta = \frac{2(\rho_s - \rho_f)g}{9 \times \text{Slope}} \tag{3.5}$$
+                    </div>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        การออกแบบบ่อตกตะกอนชีวภาพ (Surface Overflow Rate, SOR) สำหรับอนุภาคแขวนลอย (TSS):
+                    </p>
+                    <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-amber-200">
+                        $$\text{SOR} = \frac{Q}{A_{\text{basin}}} \le v_t, \quad t_{\text{settling}} = \frac{H}{v_t} \tag{3.6}$$
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Form: Student E-Report Submission -->
         <form id="labReportForm" onsubmit="handleReportSubmit(event)" class="space-y-8">
 
@@ -406,8 +495,34 @@ include '../includes/header.php';
                     <span class="text-xs text-rose-400 font-mono">* บังคับพิมพ์แสดงวิธีทำ</span>
                 </div>
                 <p class="text-xs text-slate-400">
-                    ให้นักศึกษาแสดงขั้นตอนการคำนวณ: 1) อัตราเร็วสุดท้าย $v_t = s/t$ 2) การปรับแก้ตัวคูณผนัง Faxén $f_w$ และ 3) การแทนค่าในสมการสโตกส์ $\eta = \frac{2r^2(\rho_p - \rho_f)g}{9v_t} \times f_w$ ของลูกกลมขนาดกลางและน้ำมันละหุ่ง
+                    ให้นักศึกษาแสดงขั้นตอนการคำนวณ: 1) อัตราเร็วสุดท้าย $v_t = h/\bar{t}$ 2) สัมประสิทธิ์ความหนืด $\eta$ และ 3) การปรับแก้ผนังทรงกระบอก $\eta_{\text{corrected}}$ ของลูกกลมขนาดกลางและสารทดสอบ
                 </p>
+
+                <!-- Formula Guide Box -->
+                <div class="p-4 rounded-2xl bg-slate-950/90 border border-sky-500/30 space-y-2.5">
+                    <div class="flex items-center justify-between text-xs font-bold text-sky-400 font-mono">
+                        <span><i class="fa-solid fa-book-open"></i> โครงสร้างสูตรคำนวณตามมาตรฐานวิชาการ (Academic Calculation Structure)</span>
+                        <span class="text-[10px] text-slate-400">แทนค่าตัวเลขจากตารางลงในกล่องข้อความ</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
+                        <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5 space-y-1">
+                            <span class="font-bold text-teal-400">1. การคำนวณอัตราเร็วสุดท้าย $v_t$:</span>
+                            <div class="text-[11px] font-mono text-slate-300">
+                                $\bar{t} = \frac{t_1 + t_2 + t_3}{3}\text{ s}, \quad v_t = \frac{h}{\bar{t}} = \frac{0.200\text{ m}}{\bar{t}}\text{ m/s}$<br>
+                                $\%Error = \frac{|v_{\text{exp}} - v_{\text{theo}}|}{v_{\text{theo}}} \times 100\%$
+                            </div>
+                        </div>
+                        <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5 space-y-1">
+                            <span class="font-bold text-amber-400">2. การคำนวณสัมประสิทธิ์ความหนืด $\eta$:</span>
+                            <div class="text-[11px] font-mono text-slate-300">
+                                $\eta = \frac{2 r^2 (\rho_s - \rho_f) g}{9 v_t}\text{ Pa}\cdot\text{s}$<br>
+                                $\eta_{\text{corrected}} = \frac{\eta}{1 + 2.4 (d/D)} \quad (D = 40.0\text{ mm})$<br>
+                                $\eta = \frac{2(\rho_s - \rho_f)g}{9 \times \text{Slope}}$ (จากกราฟ $v_t$ vs $r^2$)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <textarea id="lab_calculations" name="lab_calculations" rows="5" required placeholder="ตัวอย่างการคำนวณ:
 1. ลูกกลมขนาดกลาง (r = 1.50 mm = 1.5e-3 m, m = 0.1102 g, s = 0.20 m):
    t_avg = (1.09 + 1.10 + 1.09) / 3 = 1.093 s
@@ -807,6 +922,26 @@ async function handleReportSubmit(e) {
 function closeSubmitModal() {
     document.getElementById('submitModal').classList.add('hidden');
 }
+
+function toggleMathDetails(id) {
+    const el = document.getElementById(id);
+    const btn = document.getElementById(id + 'BtnText');
+    if (!el) return;
+    if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        if (btn) btn.textContent = 'ย่อสูตรสมการ';
+        if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+    } else {
+        el.classList.add('hidden');
+        if (btn) btn.textContent = 'ขยายสูตรสมการ';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
+    }
+});
 </script>
 
 <?php include '../includes/footer.php'; ?>

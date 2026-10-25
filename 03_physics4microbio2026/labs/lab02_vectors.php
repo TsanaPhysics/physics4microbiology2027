@@ -141,6 +141,95 @@ include '../includes/header.php';
 
     </div>
 
+    <!-- Academic Foundations & Mathematical Equations Suite -->
+    <div class="bg-slate-900/90 border border-amber-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+            <div class="space-y-1">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30 font-mono">
+                    <i class="fa-solid fa-square-root-variable"></i> Vector Mechanics &amp; Stokes' Hydrodynamics Foundations
+                </div>
+                <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                    หลักการและสมการฟิสิกส์พื้นฐาน (Theoretical Formulations)
+                </h2>
+                <p class="text-xs text-slate-400">
+                    การวิเคราะห์สมดุลสถิตของเวกเตอร์แรงในระนาบ 2 มิติ และกลศาสตร์ของไหลทางชีวภาพตามกฎของสโตกส์
+                </p>
+            </div>
+            <button type="button" onclick="toggleMathDetails('mathSuiteLab02')" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 transition flex items-center gap-2 self-start sm:self-auto">
+                <span id="mathSuiteLab02BtnText">ย่อ/ขยายสมการ</span> <i class="fa-solid fa-chevron-down text-xs"></i>
+            </button>
+        </div>
+
+        <div id="mathSuiteLab02" class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <!-- Card 1: Vector Component Method -->
+            <div class="p-5 rounded-2xl bg-slate-950/80 border border-amber-500/20 space-y-3.5 hover:border-amber-500/40 transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-amber-300 font-mono flex items-center gap-1.5">
+                        <i class="fa-solid fa-arrows-to-dot text-amber-400"></i> ตอนที่ 1: การรวมเวกเตอร์แรง
+                    </span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 font-mono border border-amber-500/20">Eq. 2.1–2.3</span>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                    การแยกองค์ประกอบแรงตามแกน $x$ และ $y$ เพื่อหาเวกเตอร์แรงลัพธ์ $\vec{R} = \vec{F}_1 + \vec{F}_2$:
+                </p>
+                <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-amber-200">
+                    $$R_x = \sum_{i=1}^n F_i \cos\theta_i, \quad R_y = \sum_{i=1}^n F_i \sin\theta_i \tag{2.1}$$
+                    $$R = \sqrt{R_x^2 + R_y^2}, \quad \theta_R = \operatorname{atan2}(R_y, R_x) \tag{2.2}$$
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                    แรงสมดุล $\vec{E}$ (Equilibrant) มีขนาดเท่ากับ $\vec{R}$ แต่มีทิศทางตรงกันข้าม ($180^\circ$):
+                </p>
+                <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-amber-200">
+                    $$E = R, \quad \theta_E = (\theta_R + 180^\circ) \bmod 360^\circ \tag{2.3}$$
+                </div>
+            </div>
+
+            <!-- Card 2: Three-Force Static Equilibrium -->
+            <div class="p-5 rounded-2xl bg-slate-950/80 border border-orange-500/20 space-y-3.5 hover:border-orange-500/40 transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-orange-300 font-mono flex items-center gap-1.5">
+                        <i class="fa-solid fa-scale-balanced text-orange-400"></i> ตอนที่ 2: เงื่อนไขสมดุลสถิต
+                    </span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 font-mono border border-orange-500/20">Eq. 2.4–2.5</span>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                    วัตถุจะอยู่ในสมดุลต่อการเลื่อนที่ (Translational Equilibrium) เมื่อผลรวมเวกเตอร์แรงลัพธ์เป็นศูนย์:
+                </p>
+                <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-orange-200">
+                    $$\sum \vec{F} = \vec{F}_1 + \vec{F}_2 + \vec{F}_3 = \mathbf{0} \tag{2.4}$$
+                    $$\sum F_x = 0 \quad \text{และ} \quad \sum F_y = 0 \tag{2.5}$$
+                </div>
+                <ul class="text-[11px] text-slate-400 space-y-1.5 list-disc list-inside">
+                    <li><strong class="text-amber-400">สมดุลสมมาตร 3 แรง:</strong> ขนาดแรงเท่ากัน $F_1 = F_2 = F_3$ ทำมุมต่างกัน $120^\circ$ รอบจุดศูนย์กลาง</li>
+                    <li><strong class="text-emerald-400">การตรวจสอบ:</strong> ห่วงวงแหวนกลางโต๊ะแรงจะลอยนิ่งไม่สัมผัสแกนกลาง</li>
+                </ul>
+            </div>
+
+            <!-- Card 3: Stokes' Microbial Hydrodynamics -->
+            <div class="p-5 rounded-2xl bg-slate-950/80 border border-sky-500/20 space-y-3.5 hover:border-sky-500/40 transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-sky-300 font-mono flex items-center gap-1.5">
+                        <i class="fa-solid fa-bacteria text-sky-400"></i> ตอนที่ 3: กฎของสโตกส์ในเซลล์
+                    </span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 font-mono border border-sky-500/20">Eq. 2.6–2.8</span>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                    แรงหนืดของของไหล ($F_d$) กระทำต่อเซลล์ทรงกลมรัศมี $r$ ที่เคลื่อนที่ด้วยความเร็ว $v$ ในของไหลความหนืด $\eta$:
+                </p>
+                <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-sky-200">
+                    $$F_d = 6\pi \eta r v \tag{2.6}$$
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                    เมื่อเซลล์ตกตะกอนด้วยความเร็วปลายคงที่ ($v_t$) ภายใต้แรงโน้มถ่วง แรงลอยตัว และแรงหนืด ($F_g = F_b + F_d$):
+                </p>
+                <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-sky-200">
+                    $$v_t = \frac{2 r^2 (\rho_c - \rho_f) g}{9 \eta} \implies r = \sqrt{\frac{9 \eta v_t}{2(\rho_c - \rho_f)g}} \tag{2.7}$$
+                    $$\text{RCF} = 1.118 \times 10^{-5} \cdot r_{\text{cm}} \cdot N^2 \quad [\times g] \tag{2.8}$$
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Interactive E-Report Submission Form -->
     <form id="labReportForm" onsubmit="validateAndSubmitReport(event)" class="space-y-6">
 
@@ -460,11 +549,38 @@ include '../includes/header.php';
             </h2>
 
             <div class="space-y-4">
-                <div class="space-y-1.5">
+                <div class="space-y-2.5">
                     <label class="block text-xs font-bold text-slate-300">
                         1. แสดงวิธีคำนวณอย่างละเอียด (Detailed Calculations) <span class="text-rose-400">*</span>
                     </label>
-                    <textarea id="lab_calculations" name="lab_calculations" rows="4" placeholder="ตัวอย่างการแสดงวิธีคำนวณ:
+
+                    <!-- Formula Guide Box -->
+                    <div class="p-4 rounded-2xl bg-slate-950/90 border border-amber-500/30 space-y-2.5">
+                        <div class="flex items-center justify-between text-xs font-bold text-amber-400 font-mono">
+                            <span><i class="fa-solid fa-book-open"></i> โครงสร้างสูตรคำนวณตามมาตรฐานวิชาการ (Academic Calculation Structure)</span>
+                            <span class="text-[10px] text-slate-400">แทนค่าตัวเลขจากตารางลงในกล่องข้อความ</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
+                            <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5 space-y-1">
+                                <span class="font-bold text-amber-400">1. การบวกเวกเตอร์และแรงสมดุล:</span>
+                                <div class="text-[11px] font-mono text-slate-300">
+                                    $R_x = F_1\cos\theta_1 + F_2\cos\theta_2, \quad R_y = F_1\sin\theta_1 + F_2\sin\theta_2$<br>
+                                    $R = \sqrt{R_x^2 + R_y^2}, \quad \theta_R = \operatorname{atan2}(R_y, R_x)$<br>
+                                    $E = R, \quad \theta_E = (\theta_R + 180^\circ) \bmod 360^\circ$
+                                </div>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5 space-y-1">
+                                <span class="font-bold text-sky-400">2. การคำนวณรัศมีเซลล์ตามกฎของสโตกส์:</span>
+                                <div class="text-[11px] font-mono text-slate-300">
+                                    $v_t = \frac{\Delta y}{\Delta t}\text{ m/s}$<br>
+                                    $r = \sqrt{\frac{9 \eta v_t}{2(\rho_{\text{cell}} - \rho_f)g}}\text{ m} \quad (\times 10^6 \to \mu\text{m})$<br>
+                                    $\text{RCF} = 1.118 \times 10^{-5} \cdot r_{\text{cm}} \cdot N^2$
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <textarea id="lab_calculations" name="lab_calculations" rows="5" placeholder="ตัวอย่างการแสดงวิธีคำนวณ:
 1. การบวกเวกเตอร์: Rx = F1 cos(theta1) + F2 cos(theta2) = ...
    Ry = F1 sin(theta1) + F2 sin(theta2) = ...
    |R| = sqrt(Rx^2 + Ry^2) = ...
@@ -955,6 +1071,26 @@ async function validateAndSubmitReport(e) {
 function closeSubmitModal() {
     document.getElementById('submitModal').classList.add('hidden');
 }
+
+function toggleMathDetails(id) {
+    const el = document.getElementById(id);
+    const btn = document.getElementById(id + 'BtnText');
+    if (!el) return;
+    if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        if (btn) btn.textContent = 'ย่อสูตรสมการ';
+        if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+    } else {
+        el.classList.add('hidden');
+        if (btn) btn.textContent = 'ขยายสูตรสมการ';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
+    }
+});
 </script>
 
 <?php include '../includes/footer.php'; ?>

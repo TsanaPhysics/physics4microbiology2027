@@ -134,6 +134,95 @@ include '../includes/header.php';
 
     </div>
 
+    <!-- Academic Foundations & Mathematical Equations Suite -->
+    <div class="bg-slate-900/90 border border-emerald-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4">
+            <div class="space-y-1">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-mono">
+                    <i class="fa-solid fa-square-root-variable"></i> Mathematical Foundations &amp; Metrology Standards
+                </div>
+                <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                    หลักการและสมการฟิสิกส์พื้นฐาน (Theoretical Formulations)
+                </h2>
+                <p class="text-xs text-slate-400">
+                    มาตรฐานการคำนวณสถิติความไม่แน่นอนทางมาตรวิทยา (GUM / ISO 8655) สำหรับการวัดความแม่นยำสูง
+                </p>
+            </div>
+            <button type="button" onclick="toggleMathDetails('mathSuiteLab01')" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 transition flex items-center gap-2 self-start sm:self-auto">
+                <span id="mathSuiteLab01BtnText">ย่อ/ขยายสมการ</span> <i class="fa-solid fa-chevron-down text-xs"></i>
+            </button>
+        </div>
+
+        <div id="mathSuiteLab01" class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <!-- Card 1: Statistical Metrology & Uncertainty -->
+            <div class="p-5 rounded-2xl bg-slate-950/80 border border-emerald-500/20 space-y-3.5 hover:border-emerald-500/40 transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-emerald-300 font-mono flex items-center gap-1.5">
+                        <i class="fa-solid fa-chart-line text-emerald-400"></i> ตอนที่ 1: สถิติและความไม่แน่นอน
+                    </span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono border border-emerald-500/20">Eq. 1.1–1.3</span>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                    เมื่อวัดปริมาณซ้ำ $N$ ครั้ง ค่าเฉลี่ยเลขคณิต ($\bar{x}$) และส่วนเบี่ยงเบนมาตรฐานของตัวอย่าง ($s$):
+                </p>
+                <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-emerald-200">
+                    $$\bar{x} = \frac{1}{N}\sum_{i=1}^N x_i \tag{1.1}$$
+                    $$s = \sqrt{\frac{1}{N-1}\sum_{i=1}^N (x_i - \bar{x})^2} \tag{1.2}$$
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                    ความไม่แน่นอนมาตรฐานของค่าเฉลี่ย $u(\bar{x})$ และการรายงานผลตามมาตรฐาน ISO/IEC Guide 98-3 (GUM):
+                </p>
+                <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-emerald-200">
+                    $$u(\bar{x}) = \frac{s}{\sqrt{N}}, \quad x = \bar{x} \pm u(\bar{x}) \tag{1.3}$$
+                </div>
+            </div>
+
+            <!-- Card 2: Micrometer Zero Error Correction -->
+            <div class="p-5 rounded-2xl bg-slate-950/80 border border-sky-500/20 space-y-3.5 hover:border-sky-500/40 transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-sky-300 font-mono flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-notch text-sky-400"></i> ตอนที่ 2: การปรับแก้ Zero Error
+                    </span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 font-mono border border-sky-500/20">Eq. 1.4</span>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                    ไมโครมิเตอร์วัดนอก (0-25 mm) ต้องตรวจสอบจุดศูนย์เมื่อหน้าสัมผัส Anvil และ Spindle ชนกัน:
+                </p>
+                <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-sky-200">
+                    $$x_{\text{true}} = x_{\text{measured}} - e_{\text{zero}} \tag{1.4}$$
+                </div>
+                <ul class="text-[11px] text-slate-400 space-y-1.5 list-disc list-inside">
+                    <li><strong class="text-emerald-400">Positive Zero Error (+):</strong> เส้นศูนย์ของ Thimble อยู่เลยแนว Datum Line (วัดได้เกิน ต้องหักออก)</li>
+                    <li><strong class="text-rose-400">Negative Zero Error (-):</strong> เส้นศูนย์ของ Thimble ยังไม่ถึงแนว Datum Line (วัดได้ขาด ต้องบวกชดเชย)</li>
+                </ul>
+            </div>
+
+            <!-- Card 3: ISO 8655 Gravimetric Micropipette Calibration -->
+            <div class="p-5 rounded-2xl bg-slate-950/80 border border-purple-500/20 space-y-3.5 hover:border-purple-500/40 transition">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-purple-300 font-mono flex items-center gap-1.5">
+                        <i class="fa-solid fa-eye-dropper text-purple-400"></i> ตอนที่ 3: ISO 8655 Gravimetric Method
+                    </span>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 font-mono border border-purple-500/20">Eq. 1.5–1.7</span>
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                    แปลงค่าน้ำหนักน้ำกลั่นที่ชั่งได้ ($m_i$) ไปเป็นปริมาตรจริง ($V_i$) ที่อุณหภูมิอ้างอิง $20^\circ\text{C}$ ด้วย $Z$-factor:
+                </p>
+                <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-purple-200">
+                    $$V_i = m_i \times Z \tag{1.5}$$
+                    $$\bar{V} = \frac{1}{n}\sum_{i=1}^n V_i = \bar{m} \times Z$$
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                    การประเมิน Systematic Error ($E\%$) และ Random Error ($\text{CV}\%$):
+                </p>
+                <div class="bg-slate-900/90 rounded-xl p-3 border border-white/5 text-center shadow-inner overflow-x-auto text-purple-200">
+                    $$E\% = \left(\frac{\bar{V} - V_0}{V_0}\right) \times 100\% \tag{1.6}$$
+                    $$\text{CV}\% = \left(\frac{s_V}{\bar{V}}\right) \times 100\% \tag{1.7}$$
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Interactive E-Report Submission Form -->
     <form id="labReportForm" onsubmit="validateAndSubmitReport(event)" class="space-y-6">
 
@@ -546,14 +635,39 @@ include '../includes/header.php';
 
             <div class="space-y-4">
                 <!-- Calculations Area -->
-                <div class="space-y-1.5">
+                <div class="space-y-2.5">
                     <label class="block text-xs font-bold text-slate-300">
                         1. แสดงวิธีคำนวณโดยละเอียด (Detailed Calculations) <span class="text-rose-400">*</span>
                     </label>
                     <p class="text-[11px] text-slate-400">
                         แสดงวิธีคำนวณหาค่าเฉลี่ย ($\bar{x}$), ค่าความไม่แน่นอน ($\pm \Delta x$), การแปลงมวลเป็นปริมาตรด้วย $Z$-factor ($V = m \times Z$), และการคำนวณ Inaccuracy ($E\%$) หรือ Imprecision ($\text{CV}\%$)
                     </p>
-                    <textarea id="lab_calculations" name="lab_calculations" rows="4" placeholder="ตัวอย่างการคำนวณ:
+
+                    <!-- Formula Guide Box -->
+                    <div class="p-4 rounded-2xl bg-slate-950/90 border border-amber-500/30 space-y-2.5">
+                        <div class="flex items-center justify-between text-xs font-bold text-amber-400 font-mono">
+                            <span><i class="fa-solid fa-book-open"></i> โครงสร้างสูตรคำนวณตามมาตรฐานวิชาการ (Academic Calculation Structure)</span>
+                            <span class="text-[10px] text-slate-400">แทนค่าตัวเลขจากตารางลงในกล่องข้อความ</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
+                            <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5 space-y-1">
+                                <span class="font-bold text-emerald-400">1. การคำนวณค่าเฉลี่ยและความไม่แน่นอน:</span>
+                                <div class="text-[11px] font-mono text-slate-300">
+                                    $\bar{x} = \frac{x_1 + x_2 + x_3}{3}, \quad u(\bar{x}) = \frac{s}{\sqrt{3}}$<br>
+                                    รายงานผลในรูป $\bar{x} \pm u(\bar{x})\text{ mm}$ พร้อมระบุเลขนัยสำคัญ
+                                </div>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5 space-y-1">
+                                <span class="font-bold text-purple-400">2. การคำนวณไมโครปิเปตตาม ISO 8655:</span>
+                                <div class="text-[11px] font-mono text-slate-300">
+                                    $\bar{V} = \bar{m} \times Z \quad (Z = 1.0033\ \mu\text{L/mg})$<br>
+                                    $E\% = \frac{\bar{V} - V_0}{V_0} \times 100\%, \quad \text{CV}\% = \frac{s}{\bar{V}} \times 100\%$
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <textarea id="lab_calculations" name="lab_calculations" rows="5" placeholder="ตัวอย่างการคำนวณ:
 - การคำนวณปริมาตรจริง P1000 ที่ 1000 µL: มวลเฉลี่ย m = 996.70 mg, Z = 1.0033 µL/mg -> V = 996.70 * 1.0033 = 999.99 µL
 - คำนวณ Systematic Error (E%): E% = [(999.99 - 1000) / 1000] * 100% = -0.001%
 - ส่วนเบี่ยงเบนมาตรฐาน s = 0.47 mg -> CV% = (0.47 / 996.70) * 100% = 0.05%" required class="w-full bg-slate-950 border border-white/15 focus:border-amber-400 rounded-2xl p-4 text-xs text-white placeholder-slate-600 outline-none transition font-mono leading-relaxed"></textarea>
@@ -1096,8 +1210,25 @@ function closeSubmitModal() {
     modal.classList.remove('flex');
 }
 
+function toggleMathDetails(id) {
+    const el = document.getElementById(id);
+    const btn = document.getElementById(id + 'BtnText');
+    if (!el) return;
+    if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        if (btn) btn.textContent = 'ย่อสูตรสมการ';
+        if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+    } else {
+        el.classList.add('hidden');
+        if (btn) btn.textContent = 'ขยายสูตรสมการ';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initInstrument3D();
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
+    }
 });
 </script>
 
