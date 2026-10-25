@@ -127,11 +127,16 @@
     if (sigFill) sigFill.style.width = pct + '%';
     if (!isTargetLocked && pct > 0 && pct < 100) {
       document.getElementById('reticle-caption').textContent =
-        '📡 กำลังอ่านรหัส ArUco บนหน้ากระดาษ/จอ (' + pct + '%) — โมเดล 3D แสดงผลพร้อมส่อง...';
+        '📡 ตรวจพบรหัส ArUco บนหน้ากระดาษ/จอ (' + pct + '%) — ถือค้างไว้เสี้ยววินาที...';
     }
   };
 
   window.toggleARCameraMode = async function () {
+    // If the 3D Pixar-Ghibli Prof. Chewa Welcome Screen is open, close it smoothly first
+    if (typeof window.dismissChewaWelcome === 'function') {
+      window.dismissChewaWelcome(false);
+    }
+
     const jewelBtn = document.getElementById('btn-ar-jewel');
     const jewelTxt = document.getElementById('jewel-text');
     const reticleEl = document.getElementById('ar-reticle');
@@ -154,26 +159,26 @@
         videoEl.style.display = 'block';
         document.body.classList.add('ar-active');
         isARMode = true;
-        isTargetLocked = true;
-        opticalLockFrames = 2;
+        isTargetLocked = false;
+        opticalLockFrames = 0;
 
         window.setDrawersVisible(false);
 
-        // GUARANTEE 3D MODEL IS VISIBLE IMMEDIATELY OVER CAMERA STREAM!
-        modelGroup.visible = true;
-        modelGroup.scale.setScalar(0.15);
+        // Start in READY-TO-SCAN ArUco Marker state (hide 3D model until marker is scanned or tapped)
+        modelGroup.visible = false;
+        modelGroup.scale.setScalar(0.08);
 
         reticleEl.style.display = 'block';
-        reticleEl.classList.add('locked');
-        window.updateReticleSignalUI(100);
+        reticleEl.classList.remove('locked');
+        window.updateReticleSignalUI(0);
         document.getElementById('reticle-caption').textContent =
-          '✅ แสดงโมเดล 3D บทที่ ' + (currentMarkerId + 1) + ' (ArUco ID ' + currentMarkerId + ') — ส่องมาร์กเกอร์อื่นเพื่อสลับบทอัตโนมัติ';
+          '📷 กล้อง AR พร้อมสแกน! ส่องกรอบเล็งไปที่ ArUco Marker (ID 0–11) ในหนังสือเรียน';
         simBtn.style.display = 'block';
-        simBtn.textContent = '🔄 ส่องเปลี่ยนมาร์กเกอร์ / ถัดไป (ID ' + ((currentMarkerId + 1) % 12) + ')';
+        simBtn.textContent = '🎯 แตะเพื่อจำลองล็อกมาร์กเกอร์ทันที (บทที่ ' + (currentMarkerId + 1) + ')';
         jewelBtn.classList.add('ar-on');
-        jewelTxt.textContent = 'โหมด 3D';
-        badge.className = 'status-badge';
-        badge.textContent = '● AR LIVE: ID ' + currentMarkerId + ' (บทที่ ' + (currentMarkerId + 1) + ')';
+        jewelTxt.textContent = 'กล้อง AR';
+        badge.className = 'status-badge scanning';
+        badge.textContent = '🔍 พร้อมสแกน ArUco Marker (ID 0–11)...';
 
         window.startArUcoOpticalScanner();
       } catch (err) {
@@ -199,7 +204,7 @@
     document.getElementById('ar-reticle').style.display = 'none';
     document.getElementById('sim-lock-btn').style.display = 'none';
     document.getElementById('btn-ar-jewel').classList.remove('ar-on');
-    document.getElementById('jewel-text').textContent = 'ส่อง AR';
+    document.getElementById('jewel-text').textContent = 'กล้อง AR';
     const badge = document.getElementById('tracking-badge');
     badge.className = 'status-badge';
     badge.textContent = '● HYPER-3D STUDIO (ID ' + currentMarkerId + ')';
@@ -212,11 +217,6 @@
 
     scanInterval = setInterval(() => {
       if (!isARMode || videoEl.readyState < 2) return;
-
-      // Always keep 3D model visible in AR mode so user never sees an empty screen
-      if (!modelGroup.visible) {
-        modelGroup.visible = true;
-      }
 
       const vw = videoEl.videoWidth || 640;
       const vh = videoEl.videoHeight || 480;
@@ -317,24 +317,26 @@
       if (isMonitorTargetVisible) {
         opticalLockFrames = Math.min(4, opticalLockFrames + 1);
       } else {
-        opticalLockFrames = Math.max(1, opticalLockFrames - 1);
+        opticalLockFrames = Math.max(0, opticalLockFrames - 1);
       }
 
       const signalPct = Math.min(100, Math.round((opticalLockFrames / 2) * 100));
       window.updateReticleSignalUI(signalPct);
 
-      if (opticalLockFrames >= 2 && topMatch && topMatch.bestDist <= 3) {
-        window.lockArUcoTarget(topMatch.bestId);
+      if (opticalLockFrames >= 2) {
+        const lockedId = (topMatch && topMatch.bestDist <= 3) ? topMatch.bestId : currentMarkerId;
+        window.lockArUcoTarget(lockedId);
       }
     }, 140);
   };
 
   window.lockArUcoTarget = function (detectedId) {
+    const wasLocked = isTargetLocked;
     const changed = currentMarkerId !== detectedId;
     isTargetLocked = true;
-    if (changed) {
+    if (!wasLocked || changed) {
       selectMarker(detectedId, true);
-      modelGroup.scale.setScalar(0.12);
+      modelGroup.scale.setScalar(0.10);
     }
     modelGroup.visible = true;
 
@@ -344,10 +346,10 @@
     const capEl = document.getElementById('reticle-caption');
     if (capEl) {
       capEl.textContent =
-        '✅ ล็อกสำเร็จ: ArUco ID ' + detectedId + ' (บทที่ ' + (detectedId + 1) + ') — ส่องมาร์กเกอร์อื่นหรือแตะกรอบเพื่อสลับบท';
+        '✅ ล็อกสำเร็จ: ArUco ID ' + detectedId + ' (บทที่ ' + (detectedId + 1) + ') — แตะกรอบเพื่อสแกนมาร์กเกอร์ใหม่';
     }
     const simBtn = document.getElementById('sim-lock-btn');
-    if (simBtn) simBtn.textContent = '🔄 สลับมาร์กเกอร์ถัดไป (ID ' + ((detectedId + 1) % 12) + ')';
+    if (simBtn) simBtn.textContent = '🔄 สแกน ArUco ใหม่ / ส่องมาร์กเกอร์ถัดไป';
     const badge = document.getElementById('tracking-badge');
     if (badge) {
       badge.className = 'status-badge';
@@ -356,18 +358,39 @@
   };
 
   window.unlockForRescan = function () {
-    // Keep 3D model visible while cycling to next marker or rescanning
-    const nextId = (currentMarkerId + 1) % 12;
-    window.lockArUcoTarget(nextId);
+    isTargetLocked = false;
+    opticalLockFrames = 0;
+    modelGroup.visible = false;
+    const reticleEl = document.getElementById('ar-reticle');
+    if (reticleEl) reticleEl.classList.remove('locked');
+    window.updateReticleSignalUI(0);
+    const capEl = document.getElementById('reticle-caption');
+    if (capEl) {
+      capEl.textContent = '📷 กล้อง AR พร้อมสแกน! ส่องกรอบเล็งไปที่ ArUco Marker (ID 0–11) ในหนังสือเรียน';
+    }
+    const simBtn = document.getElementById('sim-lock-btn');
+    if (simBtn) simBtn.textContent = '🎯 แตะเพื่อจำลองล็อกมาร์กเกอร์ทันที (บทที่ ' + (currentMarkerId + 1) + ')';
+    const badge = document.getElementById('tracking-badge');
+    if (badge) {
+      badge.className = 'status-badge scanning';
+      badge.textContent = '🔍 พร้อมสแกน ArUco Marker (ID 0–11)...';
+    }
   };
 
   window.handleReticleTap = function () {
     if (!isARMode) return;
-    window.lockArUcoTarget(currentMarkerId);
+    if (isTargetLocked) {
+      window.unlockForRescan();
+    } else {
+      window.lockArUcoTarget(currentMarkerId);
+    }
   };
 
   window.simulateMarkerLock = function () {
-    const nextId = (currentMarkerId + 1) % 12;
-    window.lockArUcoTarget(nextId);
+    if (isARMode && isTargetLocked) {
+      window.unlockForRescan();
+    } else {
+      window.lockArUcoTarget(currentMarkerId);
+    }
   };
 })();
