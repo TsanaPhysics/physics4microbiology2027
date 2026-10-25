@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องปฏิบัติการ 3D คานระดับไมโครและกลศาสตร์นาโน (AFM Micro-cantilever & Optical Tweezers 3D)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js r128 & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- Google Fonts & Font Awesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #030712; color: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .font-digital { font-family: 'Orbitron', monospace; }
+    
+    /* Pure CSS Vector Standard (Zero Tofu Box □) */
+    .vec {
+      display: inline-block;
+      position: relative;
+      font-family: 'Times New Roman', Cambria, serif;
+      font-style: italic;
+      font-weight: bold;
+      line-height: 1;
+      margin-top: 0.25em;
+    }
+    .vec::after {
+      content: '→';
+      position: absolute;
+      top: -0.45em;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0.85);
+      font-size: 0.72em;
+      font-style: normal;
+      font-weight: bold;
+      line-height: 1;
+      color: inherit;
+      pointer-events: none;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(244, 63, 94, 0.3); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(244, 63, 94, 0.6); }
+
+    /* Digital LED Glow */
+    .led-glow-rose {
+      text-shadow: 0 0 10px rgba(244, 63, 94, 0.7), 0 0 20px rgba(244, 63, 94, 0.4);
+    }
+    .led-glow-amber {
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.7), 0 0 20px rgba(245, 158, 11, 0.4);
+    }
+    .led-glow-emerald {
+      text-shadow: 0 0 10px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+    .led-glow-sky {
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.7), 0 0 20px rgba(56, 189, 248, 0.4);
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col select-none overflow-hidden bg-slate-950">
+
+  <!-- Main Simulator Layout Grid -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 h-full overflow-hidden relative">
+
+    <!-- 3D Viewport Column -->
+    <div id="viewportContainer" class="lg:col-span-8 w-full h-[360px] sm:h-[440px] lg:h-full relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden transition-all duration-300">
+      
+      <!-- Three.js Canvas Mount Container -->
+      <div id="threeMount" class="w-full h-full block cursor-grab active:cursor-grabbing"></div>
+
+      <!-- Top-Left HUD: Force Spectroscopy & Deflection Telemetry -->
+      <div id="forceHUD" class="absolute top-3 left-3 bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-rose-500/30 shadow-2xl text-xs z-10 space-y-2 pointer-events-auto w-64 sm:w-72 shadow-rose-950/20">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5 gap-2">
+          <span class="font-bold text-rose-400 font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-crosshairs text-rose-300"></i> FORCE SPECTROSCOPY
+          </span>
+          <div class="flex items-center gap-1.5">
+            <span id="cantileverStateBadge" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30 font-mono">
+              APPROACHING
+            </span>
+            <button onclick="toggleCardBody('forceHUD')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="forceHUD_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('forceHUD')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="forceHUD_body" class="space-y-2.5 transition-all">
+          <!-- Digital Force Readout Box -->
+          <div class="bg-black/90 p-2.5 rounded-xl border border-rose-500/30 text-center space-y-1 shadow-inner">
+            <div class="text-[10px] font-mono text-slate-400 flex justify-between px-1">
+              <span>INDENTATION FORCE (F)</span>
+              <span id="hudHookeFormula" class="text-rose-400 font-serif italic">F = -k<sub>c</sub>·&Delta;z</span>
+            </div>
+            <div id="hudForceDisplay" class="text-3xl font-digital font-bold text-rose-400 led-glow-rose tracking-wider">
+              0.00 <span class="text-xs text-rose-500 font-sans">nN</span>
+            </div>
+            <div class="grid grid-cols-2 gap-1 text-[10px] font-mono text-slate-300 pt-1 border-t border-white/10">
+              <div class="text-left px-1">
+                <span class="text-slate-400">Deflection &Delta;z:</span>
+                <span id="hudDeflection" class="text-amber-400 font-bold block">0.0 nm</span>
+              </div>
+              <div class="text-right px-1">
+                <span class="text-slate-400">Indentation &delta;:</span>
+                <span id="hudIndentation" class="text-emerald-400 font-bold block">0.0 nm</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Elastic Modulus & Adhesion Telemetry -->
+          <div class="space-y-1 font-mono text-[10px] text-slate-300 bg-slate-950/80 p-2.5 rounded-xl border border-white/5">
+            <div class="flex justify-between">
+              <span>มอดุลัสของยังก์ (E<sub>cell</sub>):</span>
+              <span id="hudYoungModulus" class="text-emerald-300 font-bold">35.0 MPa</span>
+            </div>
+            <div class="flex justify-between">
+              <span>แรงยึดติดพื้นผิว (F<sub>adh</sub>):</span>
+              <span id="hudAdhesion" class="text-amber-300 font-bold">0.45 nN</span>
+            </div>
+            <div class="flex justify-between">
+              <span>ตำแหน่งเพียโซสเตจ (z<sub>piezo</sub>):</span>
+              <span id="hudPiezoZ" class="text-cyan-300 font-bold">250.0 nm</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top-Right: 2D Synchronized Force-Distance Spectroscopy Curve Loupe -->
+      <div id="fzCurveCard" class="absolute top-3 right-3 bg-slate-900/95 backdrop-blur-md p-3 rounded-2xl border border-amber-500/30 shadow-2xl z-10 w-48 sm:w-56 pointer-events-auto shadow-amber-950/20">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5 mb-2 gap-2">
+          <span class="font-bold text-amber-400 text-xs font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-chart-line text-amber-300"></i> F-z FORCE CURVE
+          </span>
+          <div class="flex items-center gap-1.5">
+            <button onclick="toggleCardBody('fzCurveCard')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="fzCurveCard_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('fzCurveCard')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="fzCurveCard_body" class="space-y-2 transition-all">
+          <div class="relative w-full aspect-square bg-slate-950 rounded-xl overflow-hidden border border-amber-500/20 shadow-inner flex items-center justify-center">
+            <canvas id="fzCanvas" width="180" height="180" class="w-full h-full block"></canvas>
+            <!-- Loupe Optical Grid Overlay -->
+            <div class="absolute inset-0 pointer-events-none border border-amber-500/10 rounded-xl"></div>
+            <div class="absolute top-1 left-2 text-[9px] font-mono text-amber-400/80">Hertz Fit: &delta;<sup>3/2</sup></div>
+            <div class="absolute bottom-1 right-2 text-[9px] font-mono text-slate-500">Live Sweep</div>
+          </div>
+          <div class="text-[10px] text-center font-mono text-slate-400 flex justify-between px-1">
+            <span id="curvePhaseText" class="text-sky-400 font-bold">Approach</span>
+            <span id="contactPointText" class="text-slate-400">z₀ = 120 nm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Floating Dock Bar: Camera, Minimize/Restore, Fullscreen -->
+      <div id="viewportDockBar" class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-2xl z-20 flex items-center gap-2 text-xs">
+        <!-- Re-open Hidden Cards Dropdown / Buttons -->
+        <div id="dockRestoreButtons" class="flex items-center gap-1.5 empty:hidden"></div>
+
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- Camera Preset Angles -->
+        <button onclick="setCameraView('overview')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="มุมมองภาพรวม 3 มิติ">
+          <i class="fa-solid fa-cube text-[9px]"></i> 3D
+        </button>
+        <button onclick="setCameraView('tip')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="เจาะจงปลายเข็มสัมผัสผนังเซลล์">
+          <i class="fa-solid fa-bullseye text-[9px]"></i> Tip Contact
+        </button>
+        <button onclick="setCameraView('laser')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="เจาะจงลำแสงเลเซอร์สะท้อนคาน">
+          <i class="fa-solid fa-wand-magic-sparkles text-[9px]"></i> Optical Lever
+        </button>
+
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- Fullscreen / Sidebar Toggle -->
+        <button onclick="toggleSidebar()" id="btnToggleSidebar" class="px-2.5 py-1 rounded-full bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-medium text-[10px] flex items-center gap-1 transition" title="ขยายจอภาพ 3D เต็มความกว้าง">
+          <i class="fa-solid fa-expand text-[9px]"></i> <span id="toggleSidebarLabel">ขยายจอเต็ม</span>
+        </button>
+        <button onclick="captureSimulatorScreenshot()" class="px-2.5 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-medium text-[10px] flex items-center gap-1 transition" title="บันทึกภาพหน้าจอหลักฐาน">
+          <i class="fa-solid fa-camera text-[9px]"></i> แคปเจอร์
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Interactive Control Panel Sidebar -->
+    <div id="controlSidebar" class="lg:col-span-4 h-full bg-slate-900/95 border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col overflow-y-auto p-4 space-y-4">
+      
+      <!-- Panel Header -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div>
+          <h2 class="text-sm font-bold text-rose-400 flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-rose-400"></i> แผงควบคุมสเปกโทรสโกปีแรงนาโน
+          </h2>
+          <p class="text-[11px] text-slate-400">AFM Cantilever &amp; Cell Nanomechanics</p>
+        </div>
+        <button onclick="resetParameters()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition flex items-center gap-1">
+          <i class="fa-solid fa-rotate-right"></i> รีเซ็ต
+        </button>
+      </div>
+
+      <!-- Audio Synthesizer Status & Sound Toggle -->
+      <div class="flex items-center justify-between bg-slate-950/60 p-2.5 rounded-xl border border-white/5">
+        <span class="text-xs text-slate-300 flex items-center gap-2">
+          <i class="fa-solid fa-volume-high text-rose-400"></i> ซาวด์สังเคราะห์การเคลื่อนเพียโซและเลเซอร์
+        </span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="soundToggle" class="sr-only peer" checked onchange="toggleSound(this.checked)">
+          <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-rose-500"></div>
+        </label>
+      </div>
+
+      <!-- Specimen Type Selection -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <label class="text-xs font-semibold text-slate-300 flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-bacterium text-amber-400"></i> ตัวอย่างจุลินทรีย์ (Specimen)
+          </span>
+          <span id="specimenInfo" class="text-emerald-400 font-mono text-[11px]">E ≈ 35 MPa (Thick Peptidoglycan)</span>
+        </label>
+        <select id="specimenSelect" onchange="onSpecimenChange()" class="w-full bg-slate-900 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-rose-500 font-mono">
+          <option value="saureus" selected>Staphylococcus aureus (Gram+, E ≈ 35 MPa, ทรงกลมแข็ง)</option>
+          <option value="ecoli">Escherichia coli (Gram-, E ≈ 3.2 MPa, ทรงแท่งยืดหยุ่น)</option>
+          <option value="yeast">Saccharomyces cerevisiae (Yeast, E ≈ 18 MPa, แคนดิเดตผนังกลูแคน)</option>
+          <option value="pilus">Bacterial Pilus / Adhesin (การดึงคลายเกลียวและแรงฉีกขาด)</option>
+        </select>
+      </div>
+
+      <!-- Cantilever Spring Constant (k_c) Selection -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <label class="text-xs font-semibold text-slate-300 flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-ruler-horizontal text-sky-400"></i> ค่าคงที่สปริงของคาน (k<sub>c</sub>)
+          </span>
+          <span id="kcValueDisplay" class="text-sky-400 font-mono text-[11px]">k = 0.10 N/m (Soft Bio)</span>
+        </label>
+        <select id="kcSelect" onchange="onKcChange()" class="w-full bg-slate-900 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-rose-500 font-mono">
+          <option value="0.05">Si₃N₄ Triangular (k = 0.05 N/m, ไวต่อแรงระดับ pN สูงมาก)</option>
+          <option value="0.10" selected>Silicon Rectangular Bio (k = 0.10 N/m, มาตรฐานเซลล์แบคทีเรีย)</option>
+          <option value="0.35">Silicon Stiff Cantilever (k = 0.35 N/m, สำหรับผนังเซลล์หนา/สปอร์)</option>
+          <option value="0.80">Tapping Mode Cantilever (k = 0.80 N/m, แข็งสูง)</option>
+        </select>
+      </div>
+
+      <!-- Piezo Scanner Z-Displacement Slider -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-arrows-up-down text-rose-400"></i> การเคลื่อนเพียโซแกน Z (Piezo Z-Position)
+          </label>
+          <span id="piezoZDisplay" class="text-rose-400 font-digital font-bold text-base">250 nm</span>
+        </div>
+        <input type="range" id="piezoZSlider" min="0" max="400" step="2" value="250" oninput="onPiezoZChange(this.value)" class="w-full accent-rose-500 cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>0 nm (กดลึกสุด)</span>
+          <span>150 nm (จุดสัมผัส z₀)</span>
+          <span>400 nm (ยกพ้นผิว)</span>
+        </div>
+      </div>
+
+      <!-- Tip Radius Selection (Hertzian Mechanics) -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-dot text-amber-400"></i> รัศมีปลายเข็มสัมผัส (Tip Radius, R)
+          </label>
+          <span id="tipRDisplay" class="text-amber-400 font-mono font-bold text-xs">20 nm (Sharp Tip)</span>
+        </div>
+        <input type="range" id="tipRSlider" min="10" max="100" step="5" value="20" oninput="onTipRChange(this.value)" class="w-full accent-amber-500 cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>10 nm (Ultra-sharp)</span>
+          <span>20 nm</span>
+          <span>100 nm (Colloidal Probe)</span>
+        </div>
+      </div>
+
+      <!-- Automated Force Spectroscopy Cycle Buttons -->
+      <div class="space-y-2 pt-2">
+        <div class="grid grid-cols-2 gap-2">
+          <button id="btnAutoCycle" onclick="toggleAutoCycle()" class="py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-xs shadow-lg shadow-rose-950/40 flex items-center justify-center gap-2 transition active:scale-95">
+            <i id="btnAutoCycleIcon" class="fa-solid fa-play"></i> <span id="btnAutoCycleLabel">กวาด F-z อัตโนมัติ</span>
+          </button>
+          <button onclick="triggerPilusRupture()" class="py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-bold text-xs shadow-lg shadow-amber-950/40 flex items-center justify-center gap-2 transition active:scale-95">
+            <i class="fa-solid fa-link-slash"></i> ดึงฉีกพันธะ Adhesin
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Theory & Microbiology Application Tip -->
+      <div class="bg-rose-950/30 border border-rose-500/20 rounded-xl p-3 text-[11px] text-slate-300 space-y-1.5 mt-auto">
+        <div class="font-bold text-rose-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-info"></i> แบบจำลองการกดแบบเฮิร์ตซ์ (Hertz Contact Mechanics):
+        </div>
+        <p class="leading-relaxed text-slate-300">
+          ความสัมพันธ์ระหว่างแรงกด ($F$) กับระยะกดจม ($\delta$) บนผนังเซลล์ทรงกลม: $F = \frac{4}{3} \frac{E_{\text{cell}}}{1 - \nu^2} R^{1/2} \delta^{3/2}$ ทำให้คำนวณมอดุลัสของยังก์ ($E$) ของเปปทิโดไกลแคนได้โดยตรง ช่วยตรวจวัดความเสียหายของผนังเซลล์เมื่อถูกยาปฏิชีวนะกลุ่มเพนิซิลลินทำลาย
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Audio Synthesizer Engine -->
+  <script>
+    let audioCtx = null;
+    let piezoHumOsc = null;
+    let piezoHumGain = null;
+    let isSoundMuted = false;
+
+    function initAudio() {
+      if (audioCtx) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+
+        piezoHumOsc = audioCtx.createOscillator();
+        piezoHumOsc.type = 'triangle';
+        piezoHumOsc.frequency.setValueAtTime(140, audioCtx.currentTime);
+
+        piezoHumGain = audioCtx.createGain();
+        piezoHumGain.gain.setValueAtTime(0.0, audioCtx.currentTime);
+
+        piezoHumOsc.connect(piezoHumGain);
+        piezoHumGain.connect(audioCtx.destination);
+        piezoHumOsc.start();
+      } catch (e) {
+        console.warn('AudioContext not supported:', e);
+      }
+    }
+
+    function toggleSound(enabled) {
+      isSoundMuted = !enabled;
+      if (piezoHumGain && audioCtx) {
+        piezoHumGain.gain.setValueAtTime(isSoundMuted ? 0 : 0.015, audioCtx.currentTime);
+      }
+    }
+
+    function playSnapTone(freq = 880, duration = 0.12) {
+      if (isSoundMuted) return;
+      initAudio();
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+  </script>
+
+  <!-- Three.js Simulation & Nanomechanics Logic -->
+  <script>
+    // State Variables
+    let specimenType = 'saureus';
+    let springConstant = 0.10; // N/m
+    let tipRadius = 20.0; // nm
+    let piezoZ = 250.0; // nm (scanner position)
+    let contactPointZ = 150.0; // nm
+    let isAutoCycling = false;
+    let cycleDirection = -1; // -1 = approach, +1 = retract
+
+    // Mechanical Constants
+    const POISSON_RATIO = 0.5; // incompressible biological material
+    let cellYoungModulus = 35.0; // MPa for S. aureus
+    let measuredForce = 0.0; // nN
+    let cantileverDeflection = 0.0; // nm
+    let indentationDepth = 0.0; // nm
+    let adhesionForce = 0.45; // nN
+
+    // Force Curve History Buffer for Live 2D Loupe
+    let fzHistory = [];
+
+    // Three.js Core
+    let scene, camera, renderer, controls;
+    let threeMount = document.getElementById('threeMount');
+
+    // 3D Meshes
+    let cantileverGroup, cantileverBeam, tipPyramid, chipHolder;
+    let stageMesh, cellSpecimenMesh;
+    let laserBeamLine, reflectedLaserLine, qpdDetector;
+
+    // 2D Loupe Canvas
+    let fzCanvas = document.getElementById('fzCanvas');
+    let fzCtx = fzCanvas.getContext('2d');
+
+    // UI References
+    const hudForceDisplay = document.getElementById('hudForceDisplay');
+    const hudDeflection = document.getElementById('hudDeflection');
+    const hudIndentation = document.getElementById('hudIndentation');
+    const hudYoungModulus = document.getElementById('hudYoungModulus');
+    const hudAdhesion = document.getElementById('hudAdhesion');
+    const hudPiezoZ = document.getElementById('hudPiezoZ');
+    const cantileverStateBadge = document.getElementById('cantileverStateBadge');
+    const specimenInfo = document.getElementById('specimenInfo');
+    const kcValueDisplay = document.getElementById('kcValueDisplay');
+    const piezoZDisplay = document.getElementById('piezoZDisplay');
+    const tipRDisplay = document.getElementById('tipRDisplay');
+    const btnAutoCycleIcon = document.getElementById('btnAutoCycleIcon');
+    const btnAutoCycleLabel = document.getElementById('btnAutoCycleLabel');
+
+    function init() {
+      // 1. Scene
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+      scene.fog = new THREE.FogExp2(0x030712, 0.025);
+
+      // 2. Camera
+      camera = new THREE.PerspectiveCamera(45, threeMount.clientWidth / threeMount.clientHeight, 0.1, 100);
+      camera.position.set(0, 3.2, 7.8);
+
+      // 3. Renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+      renderer.setSize(threeMount.clientWidth, threeMount.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      threeMount.appendChild(renderer.domElement);
+
+      // 4. OrbitControls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 + 0.05;
+      controls.minDistance = 2.0;
+      controls.maxDistance = 22.0;
+      controls.target.set(0, 0.8, 0);
+
+      // 5. Lighting
+      setupLighting();
+
+      // 6. Stage & Optical Environment
+      buildStageAndOptics();
+
+      // 7. Micro-cantilever Beam & Tip
+      buildMicroCantilever();
+
+      // 8. Cell Specimen on Stage
+      buildCellSpecimen();
+
+      // 9. Resize Listener
+      window.addEventListener('resize', onWindowResize);
+
+      // Calculate Initial Mechanics
+      calculateMechanics();
+
+      // Start Loop
+      animate();
+    }
+
+    function setupLighting() {
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const mainLight = new THREE.DirectionalLight(0xffe4e6, 1.3);
+      mainLight.position.set(5, 10, 6);
+      mainLight.castShadow = true;
+      scene.add(mainLight);
+
+      const laserLight = new THREE.PointLight(0xf43f5e, 2.0, 10);
+      laserLight.position.set(0, 2.5, 0);
+      scene.add(laserLight);
+    }
+
+    function buildStageAndOptics() {
+      // Piezo Scanner Stage Base
+      const stageGeo = new THREE.CylinderGeometry(2.2, 2.4, 0.4, 32);
+      const stageMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.9, roughness: 0.2 });
+      stageMesh = new THREE.Mesh(stageGeo, stageMat);
+      stageMesh.position.set(0, 0.2, 0);
+      stageMesh.receiveShadow = true;
+      scene.add(stageMesh);
+
+      // Glass Coverslip on Stage
+      const glassGeo = new THREE.CylinderGeometry(1.6, 1.6, 0.05, 32);
+      const glassMat = new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.4,
+        roughness: 0.1,
+        transmission: 0.9
+      });
+      const glass = new THREE.Mesh(glassGeo, glassMat);
+      glass.position.set(0, 0.425, 0);
+      scene.add(glass);
+
+      // 4-Quadrant Photodiode (QPD) Detector
+      const qpdGeo = new THREE.BoxGeometry(0.8, 0.8, 0.15);
+      const qpdMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.3, metalness: 0.8 });
+      qpdDetector = new THREE.Mesh(qpdGeo, qpdMat);
+      qpdDetector.position.set(-2.4, 3.2, 0);
+      qpdDetector.rotation.y = Math.PI / 4;
+      scene.add(qpdDetector);
+
+      // QPD Target Grid
+      const qpdGridGeo = new THREE.PlaneGeometry(0.65, 0.65);
+      const qpdGridMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true });
+      const qpdGrid = new THREE.Mesh(qpdGridGeo, qpdGridMat);
+      qpdGrid.position.set(-2.35, 3.2, 0.05);
+      qpdGrid.rotation.y = Math.PI / 4;
+      scene.add(qpdGrid);
+
+      // Semiconductor Laser Diode Source
+      const laserSourceGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.6, 16);
+      const laserSourceMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.9 });
+      const laserSource = new THREE.Mesh(laserSourceGeo, laserSourceMat);
+      laserSource.rotation.z = Math.PI / 3;
+      laserSource.position.set(2.4, 3.2, 0);
+      scene.add(laserSource);
+
+      // Optical Lever Red Laser Rays (Incident & Reflected Lines)
+      const rayMat = new THREE.LineBasicMaterial({ color: 0xf43f5e, linewidth: 2 });
+      
+      const incPoints = [new THREE.Vector3(2.4, 3.2, 0), new THREE.Vector3(0, 1.4, 0)];
+      const incGeo = new THREE.BufferGeometry().setFromPoints(incPoints);
+      laserBeamLine = new THREE.Line(incGeo, rayMat);
+      scene.add(laserBeamLine);
+
+      const refPoints = [new THREE.Vector3(0, 1.4, 0), new THREE.Vector3(-2.35, 3.2, 0)];
+      const refGeo = new THREE.BufferGeometry().setFromPoints(refPoints);
+      reflectedLaserLine = new THREE.Line(refGeo, rayMat);
+      scene.add(reflectedLaserLine);
+    }
+
+    function buildMicroCantilever() {
+      cantileverGroup = new THREE.Group();
+      cantileverGroup.position.set(0, 1.4, 0);
+
+      // Silicon Chip Holder
+      const chipGeo = new THREE.BoxGeometry(1.2, 0.35, 0.9);
+      const chipMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.8, roughness: 0.3 });
+      chipHolder = new THREE.Mesh(chipGeo, chipMat);
+      chipHolder.position.set(1.1, 0.18, 0);
+      cantileverGroup.add(chipHolder);
+
+      // Rectangular Cantilever Beam (Gold reflective coating on top)
+      const beamGeo = new THREE.BoxGeometry(1.6, 0.04, 0.35);
+      const beamMat = new THREE.MeshStandardMaterial({
+        color: 0xfbbf24,
+        metalness: 0.95,
+        roughness: 0.15
+      });
+      cantileverBeam = new THREE.Mesh(beamGeo, beamMat);
+      cantileverBeam.position.set(0, 0, 0);
+      cantileverGroup.add(cantileverBeam);
+
+      // Sharp Pyramidal Tip at Free End
+      const tipGeo = new THREE.ConeGeometry(0.12, 0.35, 4);
+      const tipMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.8, roughness: 0.2 });
+      tipPyramid = new THREE.Mesh(tipGeo, tipMat);
+      tipPyramid.rotation.x = Math.PI;
+      tipPyramid.position.set(-0.7, -0.18, 0);
+      cantileverGroup.add(tipPyramid);
+
+      scene.add(cantileverGroup);
+    }
+
+    function buildCellSpecimen() {
+      // Bacterial Cell Model on Stage
+      // Mode S. aureus: Spherical coccus
+      const cellGeo = new THREE.SphereGeometry(0.65, 32, 24);
+      const cellMat = new THREE.MeshStandardMaterial({
+        color: 0x10b981,
+        roughness: 0.35,
+        metalness: 0.15,
+        emissive: 0x065f46,
+        emissiveIntensity: 0.2
+      });
+      cellSpecimenMesh = new THREE.Mesh(cellGeo, cellMat);
+      cellSpecimenMesh.position.set(-0.7, 0.9, 0); // Positioned directly below cantilever tip
+      scene.add(cellSpecimenMesh);
+    }
+
+    // Nanomechanical & Hertzian Contact Calculations
+    function calculateMechanics() {
+      // Piezo Z ranges 0 (deepest) to 400 nm (retracted high above)
+      // Contact occurs when piezoZ <= contactPointZ (150 nm)
+      if (piezoZ > contactPointZ) {
+        // Non-contact regime (Approach or Far Retract)
+        cantileverDeflection = 0.0;
+        indentationDepth = 0.0;
+        measuredForce = 0.0;
+        cantileverStateBadge.textContent = isAutoCycling ? (cycleDirection < 0 ? 'APPROACH' : 'RETRACT') : 'NON-CONTACT';
+        cantileverStateBadge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30 font-mono';
+      } else {
+        // In contact regime
+        // Total displacement: delta_z_total = contactPointZ - piezoZ
+        const totalDisplacement = (contactPointZ - piezoZ); // nm
+
+        // Partition total displacement between Cantilever Deflection (d_c) and Cell Indentation (delta):
+        // F = k_c * d_c = (4/3) * (E / (1 - nu^2)) * sqrt(R) * delta^(3/2)
+        // With totalDisplacement = d_c + delta
+        // We solve iteratively or using high-precision approximation:
+        const nu = POISSON_RATIO;
+        const E_effective = cellYoungModulus / (1 - nu * nu); // MPa = nN/nm^2 * 10^-3
+        const R_nm = tipRadius; // nm
+
+        // Estimate indentation depth:
+        const complianceRatio = springConstant / (E_effective * 0.001 * Math.sqrt(R_nm));
+        indentationDepth = totalDisplacement / (1.0 + complianceRatio * 0.4);
+        cantileverDeflection = totalDisplacement - indentationDepth; // nm
+
+        // Cantilever Deflection Force: F = k_c * d_c (in nN)
+        // springConstant is in N/m = nN/nm
+        measuredForce = springConstant * cantileverDeflection; // nN
+
+        cantileverStateBadge.textContent = 'INDENTING CELL';
+        cantileverStateBadge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 font-mono';
+      }
+
+      // Record point in F-z history for real-time Loupe
+      if (fzHistory.length > 80) fzHistory.shift();
+      fzHistory.push({ z: piezoZ, f: measuredForce });
+
+      // Update UI Telemetry
+      hudForceDisplay.innerHTML = `${measuredForce.toFixed(2)} <span class="text-xs text-rose-500 font-sans">nN</span>`;
+      hudDeflection.textContent = `${cantileverDeflection.toFixed(1)} nm`;
+      hudIndentation.textContent = `${indentationDepth.toFixed(1)} nm`;
+      hudPiezoZ.textContent = `${piezoZ.toFixed(0)} nm`;
+      hudYoungModulus.textContent = `${cellYoungModulus.toFixed(1)} MPa`;
+      hudAdhesion.textContent = `${adhesionForce.toFixed(2)} nN`;
+    }
+
+    // Handlers
+    function onSpecimenChange() {
+      specimenType = document.getElementById('specimenSelect').value;
+      if (specimenType === 'saureus') {
+        cellYoungModulus = 35.0; // MPa
+        adhesionForce = 0.45;
+        specimenInfo.textContent = 'E ≈ 35 MPa (Thick Peptidoglycan)';
+        cellSpecimenMesh.geometry = new THREE.SphereGeometry(0.65, 32, 24);
+        cellSpecimenMesh.scale.set(1.0, 1.0, 1.0);
+        cellSpecimenMesh.material.color.setHex(0x10b981);
+      } else if (specimenType === 'ecoli') {
+        cellYoungModulus = 3.2; // MPa
+        adhesionForce = 0.25;
+        specimenInfo.textContent = 'E ≈ 3.2 MPa (Thin Layer + Outer Mem)';
+        cellSpecimenMesh.geometry = new THREE.CylinderGeometry(0.45, 0.45, 1.2, 24);
+        cellSpecimenMesh.rotation.z = Math.PI / 2;
+        cellSpecimenMesh.scale.set(1.0, 1.0, 1.0);
+        cellSpecimenMesh.material.color.setHex(0x06b6d4);
+      } else if (specimenType === 'yeast') {
+        cellYoungModulus = 18.0; // MPa
+        adhesionForce = 0.85;
+        specimenInfo.textContent = 'E ≈ 18 MPa (Glucan/Mannan Capsule)';
+        cellSpecimenMesh.geometry = new THREE.SphereGeometry(0.85, 32, 24);
+        cellSpecimenMesh.scale.set(1.0, 1.0, 1.0);
+        cellSpecimenMesh.material.color.setHex(0xa855f7);
+      } else if (specimenType === 'pilus') {
+        cellYoungModulus = 1.2;
+        adhesionForce = 1.80; // High rupture force
+        specimenInfo.textContent = 'Pilus Uncoiling Force: 20-100 pN';
+        cellSpecimenMesh.geometry = new THREE.CylinderGeometry(0.4, 0.4, 1.0, 24);
+        cellSpecimenMesh.material.color.setHex(0xf59e0b);
+      }
+      playSnapTone(640, 0.15);
+      calculateMechanics();
+    }
+
+    function onKcChange() {
+      springConstant = parseFloat(document.getElementById('kcSelect').value);
+      kcValueDisplay.textContent = `k = ${springConstant.toFixed(2)} N/m`;
+      playSnapTone(520, 0.1);
+      calculateMechanics();
+    }
+
+    function onPiezoZChange(val) {
+      piezoZ = parseFloat(val);
+      piezoZDisplay.textContent = `${piezoZ.toFixed(0)} nm`;
+      calculateMechanics();
+    }
+
+    function onTipRChange(val) {
+      tipRadius = parseFloat(val);
+      tipRDisplay.textContent = `${tipRadius.toFixed(0)} nm`;
+      calculateMechanics();
+    }
+
+    function toggleAutoCycle() {
+      isAutoCycling = !isAutoCycling;
+      initAudio();
+      if (isAutoCycling) {
+        btnAutoCycleLabel.textContent = 'หยุดกวาด F-z';
+        btnAutoCycleIcon.className = 'fa-solid fa-pause';
+        playSnapTone(700, 0.15);
+      } else {
+        btnAutoCycleLabel.textContent = 'กวาด F-z อัตโนมัติ';
+        btnAutoCycleIcon.className = 'fa-solid fa-play';
+        playSnapTone(400, 0.15);
+      }
+    }
+
+    function triggerPilusRupture() {
+      adhesionForce = Math.max(0.1, adhesionForce + 0.3);
+      playSnapTone(1100, 0.2);
+      // Flash tip deflection
+      if (cantileverGroup) {
+        cantileverGroup.position.y += 0.15;
+        setTimeout(() => cantileverGroup.position.y -= 0.15, 80);
+      }
+    }
+
+    function resetParameters() {
+      piezoZ = 250.0;
+      springConstant = 0.10;
+      tipRadius = 20.0;
+      isAutoCycling = false;
+      document.getElementById('piezoZSlider').value = 250;
+      document.getElementById('kcSelect').value = '0.10';
+      document.getElementById('tipRSlider').value = 20;
+      piezoZDisplay.textContent = '250 nm';
+      kcValueDisplay.textContent = 'k = 0.10 N/m';
+      tipRDisplay.textContent = '20 nm';
+      btnAutoCycleLabel.textContent = 'กวาด F-z อัตโนมัติ';
+      btnAutoCycleIcon.className = 'fa-solid fa-play';
+      calculateMechanics();
+      playSnapTone(440, 0.2);
+    }
+
+    function setCameraView(preset) {
+      if (preset === 'overview') {
+        camera.position.set(0, 3.2, 7.8);
+        controls.target.set(0, 0.8, 0);
+      } else if (preset === 'tip') {
+        camera.position.set(-0.7, 1.4, 2.8);
+        controls.target.set(-0.7, 0.9, 0);
+      } else if (preset === 'laser') {
+        camera.position.set(1.5, 3.0, 4.2);
+        controls.target.set(0, 1.8, 0);
+      }
+      controls.update();
+      playSnapTone(550, 0.08);
+    }
+
+    // Animation Loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Automated Z-piezo triangle sweep
+      if (isAutoCycling) {
+        piezoZ += cycleDirection * 2.5;
+        if (piezoZ <= 10.0) {
+          cycleDirection = 1; // Start retraction
+          playSnapTone(760, 0.08);
+        } else if (piezoZ >= 380.0) {
+          cycleDirection = -1; // Start approach
+          playSnapTone(500, 0.08);
+        }
+        document.getElementById('piezoZSlider').value = piezoZ;
+        piezoZDisplay.textContent = `${piezoZ.toFixed(0)} nm`;
+        calculateMechanics();
+      }
+
+      // Update 3D Stage Height based on Piezo Z
+      // Higher piezoZ (retracted) -> stage moves down
+      const stageYOffset = (250.0 - piezoZ) * 0.0018;
+      if (stageMesh && cellSpecimenMesh) {
+        stageMesh.position.y = 0.2 + stageYOffset;
+        cellSpecimenMesh.position.y = 0.9 + stageYOffset;
+      }
+
+      // Update Cantilever Deflection tilt in 3D
+      if (cantileverBeam) {
+        // Bend cantilever beam slightly upward during contact force
+        cantileverBeam.rotation.z = -(cantileverDeflection * 0.0025);
+      }
+
+      // Update Optical Lever Reflected Laser Ray angle
+      if (reflectedLaserLine) {
+        const rayEnd = new THREE.Vector3(-2.35, 3.2 + (cantileverDeflection * 0.02), 0);
+        const refPositions = reflectedLaserLine.geometry.attributes.position.array;
+        refPositions[3] = rayEnd.x;
+        refPositions[4] = rayEnd.y;
+        refPositions[5] = rayEnd.z;
+        reflectedLaserLine.geometry.attributes.position.needsUpdate = true;
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+
+      // Render Synchronized 2D F-z Curve Loupe
+      render2DFzCurve();
+    }
+
+    // Render 2D F-z Spectroscopy Curve
+    function render2DFzCurve() {
+      const w = fzCanvas.width;
+      const h = fzCanvas.height;
+      fzCtx.clearRect(0, 0, w, h);
+
+      // Background grid
+      fzCtx.fillStyle = '#030712';
+      fzCtx.fillRect(0, 0, w, h);
+
+      fzCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      fzCtx.lineWidth = 1;
+      for (let x = 20; x < w; x += 30) {
+        fzCtx.beginPath(); fzCtx.moveTo(x, 0); fzCtx.lineTo(x, h); fzCtx.stroke();
+      }
+      for (let y = 20; y < h; y += 30) {
+        fzCtx.beginPath(); fzCtx.moveTo(0, y); fzCtx.lineTo(w, y); fzCtx.stroke();
+      }
+
+      // Zero Force Baseline Axis
+      const baselineY = h - 50;
+      fzCtx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+      fzCtx.setLineDash([4, 4]);
+      fzCtx.beginPath();
+      fzCtx.moveTo(0, baselineY);
+      fzCtx.lineTo(w, baselineY);
+      fzCtx.stroke();
+      fzCtx.setLineDash([]);
+
+      // Plot Theoretical Hertzian Curve (Red line)
+      fzCtx.beginPath();
+      fzCtx.strokeStyle = '#f43f5e';
+      fzCtx.lineWidth = 2.5;
+
+      const zContactX = (contactPointZ / 400.0) * w;
+      for (let x = 0; x < w; x += 3) {
+        let curveY = baselineY;
+        const curZ = (x / w) * 400.0;
+        if (curZ < contactPointZ) {
+          const delta = (contactPointZ - curZ);
+          const fTheo = 0.04 * Math.pow(delta, 1.35) * (cellYoungModulus / 35.0);
+          curveY = baselineY - (fTheo * 2.2);
+        }
+        if (x === 0) fzCtx.moveTo(x, curveY);
+        else fzCtx.lineTo(x, curveY);
+      }
+      fzCtx.stroke();
+
+      // Current Operating Point (Glowing Dot)
+      const curX = (piezoZ / 400.0) * w;
+      const curY = baselineY - (measuredForce * 2.2);
+
+      fzCtx.beginPath();
+      fzCtx.arc(curX, curY, 5, 0, Math.PI * 2);
+      fzCtx.fillStyle = '#38bdf8';
+      fzCtx.fill();
+      fzCtx.strokeStyle = '#ffffff';
+      fzCtx.lineWidth = 1.5;
+      fzCtx.stroke();
+
+      // Labels
+      fzCtx.fillStyle = '#94a3b8';
+      fzCtx.font = '9px Prompt';
+      fzCtx.fillText('F (nN)', 5, 15);
+      fzCtx.fillText('z (nm)', w - 30, baselineY + 16);
+    }
+
+    // Responsive Resize
+    function onWindowResize() {
+      if (!camera || !renderer || !threeMount) return;
+      camera.aspect = threeMount.clientWidth / threeMount.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(threeMount.clientWidth, threeMount.clientHeight);
+    }
+
+    // Full-Width Sidebar Toggle
+    let isSidebarHidden = false;
+    function toggleSidebar() {
+      const sidebar = document.getElementById('controlSidebar');
+      const container = document.getElementById('viewportContainer');
+      const label = document.getElementById('toggleSidebarLabel');
+
+      isSidebarHidden = !isSidebarHidden;
+      if (isSidebarHidden) {
+        sidebar.classList.add('hidden');
+        container.classList.remove('lg:col-span-8');
+        container.classList.add('lg:col-span-12');
+        label.textContent = 'แสดงแถบควบคุม';
+      } else {
+        sidebar.classList.remove('hidden');
+        container.classList.remove('lg:col-span-12');
+        container.classList.add('lg:col-span-8');
+        label.textContent = 'ขยายจอเต็ม';
+      }
+      setTimeout(onWindowResize, 100);
+      playSnapTone(500, 0.08);
+    }
+
+    // Card Minimization
+    function toggleCardBody(cardId) {
+      const body = document.getElementById(`${cardId}_body`);
+      const icon = document.getElementById(`${cardId}_icon`);
+      if (!body) return;
+
+      if (body.classList.contains('hidden')) {
+        body.classList.remove('hidden');
+        if (icon) {
+          icon.classList.remove('fa-plus');
+          icon.classList.add('fa-minus');
+        }
+      } else {
+        body.classList.add('hidden');
+        if (icon) {
+          icon.classList.remove('fa-minus');
+          icon.classList.add('fa-plus');
+        }
+      }
+      playSnapTone(420, 0.06);
+    }
+
+    function hideCard(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      card.classList.add('hidden');
+
+      const dock = document.getElementById('dockRestoreButtons');
+      const cardNames = {
+        'forceHUD': 'โทรมาตรแรงกด',
+        'fzCurveCard': 'กราฟ F-z'
+      };
+
+      const btn = document.createElement('button');
+      btn.id = `restoreBtn_${cardId}`;
+      btn.className = 'px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-rose-400 font-mono text-[10px] flex items-center gap-1 transition';
+      btn.innerHTML = `<i class="fa-solid fa-window-restore text-[9px]"></i> ${cardNames[cardId] || cardId}`;
+      btn.onclick = function() {
+        card.classList.remove('hidden');
+        btn.remove();
+        playSnapTone(550, 0.08);
+      };
+      dock.appendChild(btn);
+      playSnapTone(350, 0.08);
+    }
+
+    // Screenshot Capture API
+    window.captureSimulatorScreenshot = function() {
+      if (!renderer) return null;
+      renderer.render(scene, camera);
+      const dataUrl = renderer.domElement.toDataURL('image/png');
+      
+      const link = document.createElement('a');
+      link.download = `afm_nanomechanics_sim08_${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+
+      playSnapTone(950, 0.15);
+      return dataUrl;
+    };
+
+    window.onload = init;
+  </script>
+</body>
+</html>
