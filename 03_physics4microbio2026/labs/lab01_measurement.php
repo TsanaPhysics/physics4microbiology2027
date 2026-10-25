@@ -70,6 +70,9 @@ include '../includes/header.php';
                 <button onclick="resetBenchCamera()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs border border-white/10 transition" title="รีเซ็ตมุมมอง">
                     <i class="fa-solid fa-rotate-left"></i>
                 </button>
+                <a href="../simulations/sim_vernier_caliper_3d.html" target="_blank" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition flex items-center gap-1.5 ml-auto" title="เปิดหน้าต่างจำลอง 3 มิติเต็มรูปแบบ พร้อมแว่นขยายและโหมดทดสอบความรู้">
+                    <i class="fa-solid fa-expand"></i> 3D Caliper Fullscreen (Loupe &amp; Quiz) ↗
+                </a>
             </div>
         </div>
 

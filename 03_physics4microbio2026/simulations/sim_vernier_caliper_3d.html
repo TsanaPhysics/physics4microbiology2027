@@ -1,0 +1,2237 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Vernier Caliper Simulator | จำลองการใช้งานเวอร์เนียร์แคลิปเปอร์ 3 มิติ</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Prompt (Thai/UI) & JetBrains Mono (Metrology Readouts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Three.js & OrbitControls CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            lab: {
+              950: '#060a12',
+              900: '#0d1424',
+              850: '#131d33',
+              800: '#1b2845',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: #060a12;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scientific Range Slider */
+    input[type="range"].caliper-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, #1e293b 0%, #334155 100%);
+      border-radius: 999px;
+      outline: none;
+      border: 1px solid #475569;
+    }
+    input[type="range"].caliper-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #22d3ee, #0284c7);
+      border: 2px solid #f8fafc;
+      box-shadow: 0 0 12px rgba(34, 211, 238, 0.55);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    input[type="range"].caliper-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.12);
+      box-shadow: 0 0 18px rgba(34, 211, 238, 0.85);
+    }
+    input[type="range"].caliper-slider:disabled::-webkit-slider-thumb {
+      background: #64748b;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0d1424;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    /* 3D Callout Pins */
+    .part-pin {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+      z-index: 20;
+      transition: opacity 0.2s ease;
+    }
+    .part-pin-tooltip {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(6px);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .part-pin:hover .part-pin-tooltip,
+    .part-pin.active .part-pin-tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    /* Allow text selection inside input */
+    input[type="number"], input[type="text"] {
+      user-select: text;
+      -webkit-user-select: text;
+    }
+  </style>
+</head>
+<body class="min-h-screen lg:h-screen flex flex-col bg-lab-950 text-slate-100">
+
+  <!-- ==================== TOP HEADER BAR ==================== -->
+  <header class="shrink-0 h-auto sm:h-14 px-3 sm:px-5 py-2 sm:py-0 bg-lab-900/95 border-b border-slate-800/90 flex flex-wrap items-center justify-between gap-2 z-30 backdrop-blur-md">
+    <!-- Brand & Title -->
+    <div class="flex items-center gap-3">
+      <a href="../labs/lab01_measurement.php" class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 shrink-0 hover:scale-105 transition" title="กลับไปยังปฏิบัติการที่ 1">
+        <!-- Caliper Icon SVG -->
+        <svg class="w-5 h-5 text-slate-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 6h18M5 6v12l3-3V6M13 6v9l3 3V6M9 10h4"/>
+        </svg>
+      </a>
+      <div>
+        <h1 class="text-sm sm:text-base font-bold tracking-tight text-white flex items-center gap-2">
+          <span>3D Vernier Caliper Simulator</span>
+          <span class="hidden md:inline-block text-[11px] font-medium px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">Metrology Lab</span>
+        </h1>
+        <p class="text-[11px] text-slate-400 leading-tight">จำลองการใช้งานและการอ่านค่าเวอร์เนียร์แคลิปเปอร์ 3 มิติ • Physics for Microbiology 2026/2027</p>
+      </div>
+    </div>
+
+    <!-- Mode Switcher & Guide Button -->
+    <div class="flex items-center gap-2 ml-auto sm:ml-0">
+      <a href="../labs/lab01_measurement.php" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition flex items-center gap-1.5">
+        <span>← กลับสู่ Lab 01</span>
+      </a>
+
+      <div class="inline-flex p-1 rounded-xl bg-slate-950 border border-slate-800">
+        <button id="btnModeLearn" onclick="setAppMode('learn')" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          <span>โหมดเรียนรู้ (Learn)</span>
+        </button>
+        <button id="btnModeQuiz" onclick="setAppMode('quiz')" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 text-slate-400 hover:text-white">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span>โหมดฝึกทำโจทย์ (Quiz)</span>
+        </button>
+      </div>
+
+      <button onclick="toggleHelpModal(true)" class="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/80 transition" title="คู่มือการใช้งาน (How to Read)">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN WORKSPACE ==================== -->
+  <main class="flex-1 lg:overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+
+    <!-- LEFT/CENTER AREA: 3D VIEWPORT + 2D MAGNIFIER LOUPE -->
+    <section class="lg:col-span-8 flex flex-col lg:h-full border-b lg:border-b-0 lg:border-r border-slate-800/90 overflow-hidden">
+
+      <!-- 3D Viewport Wrapper -->
+      <div id="viewportContainer" class="relative flex-1 min-h-[340px] sm:min-h-[400px] lg:min-h-0 bg-gradient-to-b from-lab-900 via-lab-950 to-lab-900 overflow-hidden">
+        <!-- Three.js Canvas mounts here -->
+        <div id="threeMount" class="w-full h-full"></div>
+
+        <!-- Top-Left Overlay: Camera Presets & 3D Labels Toggle -->
+        <div class="absolute top-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 pointer-events-none z-20">
+          <div class="flex flex-wrap items-center gap-1.5 pointer-events-auto bg-slate-950/80 backdrop-blur-md p-1.5 rounded-xl border border-slate-800/90 shadow-lg">
+            <span class="text-[10px] uppercase tracking-wider text-slate-400 px-1.5 font-semibold hidden sm:inline">มุมกล้อง:</span>
+            <button onclick="setCameraPreset('reset')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-800/90 hover:bg-cyan-500/20 hover:text-cyan-300 text-slate-200 border border-slate-700/70 transition">มุมมอง 3D (Reset)</button>
+            <button onclick="setCameraPreset('front')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-800/90 hover:bg-cyan-500/20 hover:text-cyan-300 text-slate-200 border border-slate-700/70 transition">ด้านหน้า (Front)</button>
+            <button onclick="setCameraPreset('scale')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-800/90 hover:bg-cyan-500/20 hover:text-cyan-300 text-slate-200 border border-slate-700/70 transition">ขยายสเกล (Scale)</button>
+            <button onclick="setCameraPreset('inside')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-800/90 hover:bg-cyan-500/20 hover:text-cyan-300 text-slate-200 border border-slate-700/70 transition">ปากวัดใน (Inside)</button>
+            <button onclick="setCameraPreset('depth')" class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-800/90 hover:bg-cyan-500/20 hover:text-cyan-300 text-slate-200 border border-slate-700/70 transition">ก้านวัดลึก (Depth)</button>
+          </div>
+
+          <div class="flex items-center gap-1.5 pointer-events-auto">
+            <button id="btnToggleLabels" onclick="togglePartLabels()" class="px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 backdrop-blur-md hover:bg-cyan-500/30 transition flex items-center gap-1.5 shadow-lg">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+              <span>ป้ายส่วนประกอบ (Labels)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Bottom-Left Overlay: Interactive Hints & Status -->
+        <div class="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 pointer-events-none z-20">
+          <div class="px-3 py-1.5 rounded-xl bg-slate-950/75 backdrop-blur-md border border-slate-800/80 text-[11px] text-slate-300 flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span>คลิกลากที่ <strong class="text-cyan-300">ตัวเลื่อนเวอร์เนียร์</strong> เพื่อขยับสเกล • คลิกพื้นที่ว่างเพื่อหมุน/ซูมมุมกล้อง</span>
+          </div>
+
+          <!-- Status Badges (Locked / Clamped) -->
+          <div class="flex items-center gap-2">
+            <div id="badgeClamped" class="hidden px-3 py-1 rounded-xl bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[11px] font-semibold backdrop-blur-md shadow-lg">
+              ✓ สัมผัสชิ้นงานพอดี (Clamped)
+            </div>
+            <div id="badgeLocked" class="hidden px-3 py-1 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[11px] font-semibold backdrop-blur-md shadow-lg">
+              🔒 ล็อกสกรูอยู่ (Scale Locked)
+            </div>
+          </div>
+        </div>
+
+        <!-- 3D Anatomical Callout Labels Layer -->
+        <div id="labelsOverlay" class="absolute inset-0 pointer-events-none overflow-hidden z-10"></div>
+
+        <!-- Toast Feedback Banner -->
+        <div id="toastBanner" class="pointer-events-none opacity-0 transition-all duration-300 transform -translate-y-2 absolute top-16 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-xl bg-slate-900/95 border border-cyan-500/40 text-xs font-medium text-cyan-200 shadow-2xl">
+          แจ้งเตือนระบบ
+        </div>
+      </div>
+
+      <!-- ==================== 2D SYNCHRONIZED HIGH-PRECISION MAGNIFIER LOUPE ==================== -->
+      <div class="shrink-0 bg-lab-900 border-t border-slate-800 px-3 sm:px-4 py-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+          <div class="flex items-center gap-2">
+            <span class="p-1 rounded-lg bg-cyan-500/15 text-cyan-400 border border-cyan-500/30">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            </span>
+            <div>
+              <h2 class="text-xs font-bold text-slate-100">แว่นขยายสเกลความละเอียดสูง 2D (Synchronized Magnifier Loupe)</h2>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 text-[11px]">
+            <span id="loupeLegendLearn" class="hidden sm:flex items-center gap-3 mr-2 text-slate-400">
+              <span class="flex items-center gap-1"><i class="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block"></i> สเกลหลัก (MS)</span>
+              <span class="flex items-center gap-1"><i class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></i> ขีดที่ตรงกัน (VS)</span>
+            </span>
+            <button id="btnLoupeZoom" onclick="toggleLoupeZoom()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-mono text-[11px] transition">
+              ซูม: 1.0x
+            </button>
+          </div>
+        </div>
+
+        <!-- Crisp 2D Canvas Loupe (Supports Dragging too) -->
+        <div class="relative w-full h-[142px] sm:h-[152px] rounded-xl overflow-hidden border border-slate-700/80 shadow-inner bg-slate-950">
+          <canvas id="loupeCanvas" class="w-full h-full block cursor-ew-resize"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== RIGHT SIDEBAR: CONTROLS, METROLOGY & LAB MODES ==================== -->
+    <aside class="lg:col-span-4 lg:h-full lg:overflow-y-auto p-3.5 sm:p-4 space-y-3.5 bg-lab-950/90">
+
+      <!-- 1A. LEARN MODE: DIGITAL READOUT & FORMULA BREAKDOWN CARD -->
+      <div id="panelLearnReadout" class="p-3.5 rounded-2xl bg-gradient-to-br from-slate-900 to-lab-900 border border-slate-800 shadow-xl space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+            ค่าที่วัดได้สุทธิ (Corrected Reading)
+          </span>
+          <span id="badgeLeastCountTop" class="font-mono text-[11px] px-2 py-0.5 rounded-md bg-cyan-500/15 text-cyan-300 border border-cyan-500/30">
+            LC = 0.05 mm
+          </span>
+        </div>
+
+        <!-- Primary Digital Display -->
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800/90 flex items-baseline justify-between">
+          <div>
+            <div class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Millimeters (มิลลิเมตร)</div>
+            <div id="readoutMM" class="font-mono text-2xl sm:text-3xl font-bold text-cyan-300 tracking-tight">0.00 <span class="text-sm font-normal text-slate-400">mm</span></div>
+          </div>
+          <div class="text-right">
+            <div class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Centimeters (ซม.)</div>
+            <div id="readoutCM" class="font-mono text-lg font-semibold text-emerald-300">0.000 <span class="text-xs font-normal text-slate-400">cm</span></div>
+          </div>
+        </div>
+
+        <!-- Step-by-step Metrology Formula Breakdown -->
+        <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 space-y-1.5 text-xs">
+          <div class="flex justify-between items-center text-slate-300">
+            <span>1. สเกลหลัก <span class="text-cyan-400 font-medium">(Main Scale: MS)</span></span>
+            <span id="breakdownMS" class="font-mono font-semibold text-cyan-300">0.00 mm</span>
+          </div>
+          <div class="flex justify-between items-center text-slate-300">
+            <span>2. สเกลเวอร์เนียร์ <span class="text-emerald-400 font-medium">(ขีดที่ <span id="breakdownTickIdx">0</span> × <span id="breakdownLC">0.05</span>)</span></span>
+            <span id="breakdownVS" class="font-mono font-semibold text-emerald-300">+ 0.00 mm</span>
+          </div>
+          <div class="flex justify-between items-center text-slate-300 border-b border-slate-800 pb-1.5">
+            <span>3. ชดเชยค่าศูนย์ <span class="text-amber-400 font-medium">(− Zero Error)</span></span>
+            <span id="breakdownZE" class="font-mono font-semibold text-amber-300">− (0.00 mm)</span>
+          </div>
+          <div class="pt-0.5 flex justify-between items-center font-semibold text-[11px] text-slate-200">
+            <span>สูตร: <span class="font-mono text-slate-400">MS + VS − ZE</span></span>
+            <span id="breakdownEquation" class="font-mono text-white">0.00 + 0.00 − 0.00 = 0.00 mm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1B. QUIZ MODE: CHALLENGE & ANSWER SUBMISSION CARD -->
+      <div id="panelQuizCard" class="hidden p-3.5 rounded-2xl bg-gradient-to-br from-indigo-950/60 via-slate-900 to-lab-900 border border-indigo-500/40 shadow-xl space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
+            <span>🎯 โหมดฝึกทำโจทย์ (Lab Test)</span>
+          </span>
+          <div class="flex items-center gap-2 font-mono text-xs">
+            <span class="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">คะแนน: <strong id="quizScore">0/0</strong></span>
+            <span class="px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30">🔥 <strong id="quizStreak">0</strong></span>
+          </div>
+        </div>
+
+        <!-- Quiz Type Selector -->
+        <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800 text-[11px]">
+          <button id="btnQuizTypeScale" onclick="setQuizType('scale')" class="py-1.5 px-2 rounded-lg font-semibold bg-indigo-500 text-white transition">อ่านค่าจากสเกลที่กำหนด</button>
+          <button id="btnQuizTypeObject" onclick="setQuizType('object')" class="py-1.5 px-2 rounded-lg font-semibold text-slate-400 hover:text-white transition">วัดขนาดวัตถุปริศนา</button>
+        </div>
+
+        <!-- Prompt Instructions -->
+        <div id="quizPromptText" class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 leading-relaxed">
+          อ่านค่าจากสเกลเวอร์เนียร์ (ระวังค่าความคลาดเคลื่อนศูนย์หากมี) แล้วกรอกคำตอบในหน่วย <strong>mm</strong>
+        </div>
+
+        <!-- Input & Submit -->
+        <div class="flex gap-2">
+          <div class="relative flex-1">
+            <input id="quizInput" type="number" step="0.01" placeholder="เช่น 24.35" onkeydown="if(event.key==='Enter') submitQuizAnswer()" class="w-full px-3 py-2 pr-11 rounded-xl bg-slate-950 border border-slate-700 focus:border-cyan-400 focus:outline-none font-mono text-sm text-white" />
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono text-slate-400">mm</span>
+          </div>
+          <button id="btnSubmitQuiz" onclick="submitQuizAnswer()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs shadow-lg shadow-cyan-500/20 transition shrink-0">
+            ตรวจคำตอบ
+          </button>
+        </div>
+
+        <button onclick="generateNewQuizQuestion()" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-1.5">
+          <span>🎲 สุ่มโจทย์ข้อถัดไป (Next Question)</span>
+        </button>
+
+        <!-- Quiz Solution Feedback Box -->
+        <div id="quizFeedbackBox" class="hidden p-3 rounded-xl border text-xs space-y-1.5"></div>
+      </div>
+
+      <!-- 2. SLIDER & FINE STEP CONTROL DECK -->
+      <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-200">ควบคุมการเลื่อนสเกล (Carriage Control)</span>
+          <span id="sliderPosHint" class="font-mono text-[11px] text-slate-400">ระยะเปิดปากวัด: 0.00 mm</span>
+        </div>
+
+        <!-- Main Range Slider -->
+        <div>
+          <input id="mainRangeSlider" type="range" min="0" max="150" step="0.05" value="0" class="caliper-slider" oninput="onSliderInput(this.value)" />
+          <div class="flex justify-between font-mono text-[10px] text-slate-500 mt-1">
+            <span>0 mm</span>
+            <span>50 mm</span>
+            <span>100 mm</span>
+            <span>150 mm</span>
+          </div>
+        </div>
+
+        <!-- Fine Step Buttons -->
+        <div class="grid grid-cols-4 gap-1.5">
+          <button onclick="stepCaliper(-1.0)" class="py-1.5 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 border border-slate-700 font-mono text-xs text-slate-200 transition">-1.0 mm</button>
+          <button id="btnStepMinus" onclick="stepCaliperByLC(-1)" class="py-1.5 px-2 rounded-xl bg-slate-800 hover:bg-cyan-500/20 hover:border-cyan-500/40 active:scale-95 border border-slate-700 font-mono text-xs text-cyan-300 transition">-0.05</button>
+          <button id="btnStepPlus" onclick="stepCaliperByLC(1)" class="py-1.5 px-2 rounded-xl bg-slate-800 hover:bg-cyan-500/20 hover:border-cyan-500/40 active:scale-95 border border-slate-700 font-mono text-xs text-cyan-300 transition">+0.05</button>
+          <button onclick="stepCaliper(1.0)" class="py-1.5 px-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 border border-slate-700 font-mono text-xs text-slate-200 transition">+1.0 mm</button>
+        </div>
+
+        <!-- Zero & Lock Buttons -->
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="zeroCaliper()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-1.5">
+            <span>⏮ ปิดปากวัดสุด (Zero)</span>
+          </button>
+          <button id="btnLockToggle" onclick="toggleLock()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-amber-500/20 border border-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-1.5">
+            <span id="lockBtnIcon">🔓</span>
+            <span id="lockBtnLabel">ล็อกสเกล (Lock)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. 3D SAMPLE OBJECTS & MEASUREMENT MODES -->
+      <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-200">วัตถุตัวอย่างทดลองวัด 3 รูปแบบ (Sample Objects)</span>
+          <span id="objectModeTag" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">Free Move</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-1.5 text-[11px]">
+          <button data-obj="none" onclick="selectSampleObject('none')" class="obj-btn py-2 px-2.5 rounded-xl border text-left font-medium transition bg-cyan-500/20 border-cyan-500/50 text-cyan-200">
+            ✕ ไม่มีวัตถุ (Free)
+          </button>
+          <button data-obj="sphere" onclick="selectSampleObject('sphere')" class="obj-btn py-2 px-2.5 rounded-xl border text-left font-medium transition bg-slate-950/70 border-slate-800 text-slate-300 hover:border-slate-600">
+            ⚪ ลูกเหล็กทรงกลม (วัดนอก)
+          </button>
+          <button data-obj="tube" onclick="selectSampleObject('tube')" class="obj-btn py-2 px-2.5 rounded-xl border text-left font-medium transition bg-slate-950/70 border-slate-800 text-slate-300 hover:border-slate-600">
+            🧪 หลอดทดลองแก้ว (วัดนอก)
+          </button>
+          <button data-obj="block" onclick="selectSampleObject('block')" class="obj-btn py-2 px-2.5 rounded-xl border text-left font-medium transition bg-slate-950/70 border-slate-800 text-slate-300 hover:border-slate-600">
+            🟨 บล็อกมาตรฐาน (วัดนอก)
+          </button>
+          <button data-obj="ring" onclick="selectSampleObject('ring')" class="obj-btn py-2 px-2.5 rounded-xl border text-left font-medium transition bg-slate-950/70 border-slate-800 text-slate-300 hover:border-slate-600">
+            ⭕ แหวนท่อกลวง (วัดใน ID)
+          </button>
+          <button data-obj="depth" onclick="selectSampleObject('depth')" class="obj-btn py-2 px-2.5 rounded-xl border text-left font-medium transition bg-slate-950/70 border-slate-800 text-slate-300 hover:border-slate-600">
+            📐 บล็อกร่องลึก (วัดความลึก)
+          </button>
+        </div>
+
+        <!-- Object Action Controls -->
+        <div id="objectActionRow" class="hidden pt-1 grid grid-cols-2 gap-2">
+          <button onclick="autoFitToObject()" class="py-2 px-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-semibold transition flex items-center justify-center gap-1">
+            <span>🧲 เลื่อนหนีบวัตถุอัตโนมัติ</span>
+          </button>
+          <button onclick="randomizeObjectDimension()" class="py-2 px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold transition flex items-center justify-center gap-1">
+            <span>🔄 สุ่มขนาดชิ้นงานใหม่</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. METROLOGY SETTINGS: LEAST COUNT & ZERO ERROR -->
+      <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-3">
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-xs font-semibold text-slate-200">ความละเอียดสเกล (Least Count)</label>
+            <span id="vernierSpecText" class="text-[10px] text-slate-400 font-mono">20 ช่อง = 39 mm</span>
+          </div>
+          <div class="grid grid-cols-3 gap-1.5">
+            <button data-lc="0.1" onclick="setLeastCount(0.10)" class="lc-btn py-1.5 rounded-xl border font-mono text-xs font-semibold transition bg-slate-950 border-slate-800 text-slate-400 hover:text-white">
+              0.10 mm
+            </button>
+            <button data-lc="0.05" onclick="setLeastCount(0.05)" class="lc-btn py-1.5 rounded-xl border font-mono text-xs font-semibold transition bg-cyan-500/20 border-cyan-500/50 text-cyan-300">
+              0.05 mm
+            </button>
+            <button data-lc="0.02" onclick="setLeastCount(0.02)" class="lc-btn py-1.5 rounded-xl border font-mono text-xs font-semibold transition bg-slate-950 border-slate-800 text-slate-400 hover:text-white">
+              0.02 mm
+            </button>
+          </div>
+        </div>
+
+        <div class="pt-1 border-t border-slate-800/80">
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-xs font-semibold text-slate-200">จำลองความคลาดเคลื่อนศูนย์ (Zero Error)</label>
+            <span id="zeroErrorLabel" class="font-mono text-[11px] text-amber-300">0.00 mm (ปกติ)</span>
+          </div>
+          <div id="zeroErrorButtons" class="grid grid-cols-5 gap-1">
+            <!-- Dynamically populated to stay aligned with Least Count steps -->
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1.5 leading-relaxed">
+            ทดลองปิดปากวัดสุด (<span class="font-mono text-slate-300">Zero</span>) เพื่อสังเกตตำแหน่งขีด <span class="font-mono text-slate-300">0</span> ของสเกลเวอร์เนียร์เมื่อมีค่าความคลาดเคลื่อนศูนย์
+          </p>
+        </div>
+      </div>
+
+    </aside>
+  </main>
+
+  <!-- ==================== EDUCATIONAL GUIDE MODAL ==================== -->
+  <div id="helpModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
+    <div class="max-w-2xl w-full rounded-2xl bg-lab-900 border border-slate-700 shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <span class="text-cyan-400">📘</span> หลักการอ่านค่าเวอร์เนียร์แคลิปเปอร์ (How to Read a Vernier Caliper)
+        </h3>
+        <button onclick="toggleHelpModal(false)" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">✕</button>
+      </div>
+      <div class="p-5 space-y-4 text-xs sm:text-sm text-slate-300 max-h-[75vh] overflow-y-auto leading-relaxed">
+        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+          <h4 class="font-bold text-cyan-300">ขั้นตอนการอ่านค่า 3 ขั้นตอนมาตรฐาน</h4>
+          <ol class="list-decimal list-inside space-y-1.5">
+            <li><strong class="text-white">อ่านค่าสเกลหลัก (Main Scale - MS):</strong> ดูขีดสเกลหลัก (หน่วย mm) ที่อยู่ทางซ้ายมือหรือตรงกับขีด <code class="text-cyan-300">0</code> ของสเกลเวอร์เนียร์</li>
+            <li><strong class="text-white">อ่านค่าสเกลเวอร์เนียร์ (Vernier Scale - VS):</strong> สังเกตหาขีดของสเกลเวอร์เนียร์ที่ตรงกับขีดใดขีดหนึ่งบนสเกลหลักมากที่สุด แล้วนำลำดับช่องคูณด้วยความละเอียด (<code class="text-emerald-300">Least Count</code> เช่น 0.05 mm)</li>
+            <li><strong class="text-white">ชดเชยค่าความคลาดเคลื่อนศูนย์ (Zero Error - ZE):</strong> ก่อนวัดให้เลื่อนปิดปากวัดจนสนิท หากขีด 0 เหลื่อมไปทางขวาเป็นค่าบวก (+ZE) หรือทางซ้ายเป็นค่าลบ (-ZE) ให้นำมาลบออกตามสูตร:</li>
+          </ol>
+          <div class="mt-2 p-2.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 font-mono text-center text-cyan-200 font-semibold">
+            ค่าที่วัดได้จริง = MS + (ลำดับขีดที่ตรงกัน × ความละเอียด) − Zero Error
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="font-bold text-white mb-1">1. ปากวัดนอก (Outside Jaws)</div>
+            <p class="text-slate-400">ใช้วัดความกว้าง ความหนา หรือเส้นผ่านศูนย์กลางภายนอก (OD) โดยวางชิ้นงานแล้วเลื่อนปากวัดเข้าหนีบ</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="font-bold text-white mb-1">2. ปากวัดใน (Inside Jaws)</div>
+            <p class="text-slate-400">เขี้ยววัดด้านบนใช้วัดเส้นผ่านศูนย์กลางภายในท่อหรือร่อง (ID) โดยสอดเขี้ยวเข้าด้านในแล้วถ่างออกจนชนผนัง</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="font-bold text-white mb-1">3. ก้านวัดลึก (Depth Rod)</div>
+            <p class="text-slate-400">วางปลายรางสเกลหลักทาบปากหลุม แล้วเลื่อนก้านวัดความลึกยื่นลงไปแตะก้นหลุมพอดี</p>
+          </div>
+        </div>
+      </div>
+      <div class="px-5 py-3 bg-slate-900 border-t border-slate-800 flex justify-end">
+        <button onclick="toggleHelpModal(false)" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition">เข้าใจแล้ว เริ่มทดลองวัด</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== APPLICATION & 3D ENGINE SCRIPT ==================== -->
+  <script>
+    // =========================================================================
+    // 1. METROLOGY & APPLICATION STATE
+    // =========================================================================
+    const RESOLUTION_CONFIGS = {
+      0.1: {
+        lc: 0.10,
+        divisions: 10,
+        spanMM: 9,        // 10 divisions span 9 mm -> pitch = 0.90 mm
+        pitchMM: 0.90,
+        specText: '10 ช่อง = 9 mm (ช่องละ 0.90 mm)',
+        zeroStepMultipliers: [-2, -1, 0, 1, 2] // -0.20, -0.10, 0.00, +0.10, +0.20
+      },
+      0.05: {
+        lc: 0.05,
+        divisions: 20,
+        spanMM: 39,       // 20 divisions span 39 mm -> pitch = 1.95 mm
+        pitchMM: 1.95,
+        specText: '20 ช่อง = 39 mm (ช่องละ 1.95 mm)',
+        zeroStepMultipliers: [-2, -1, 0, 1, 2] // -0.10, -0.05, 0.00, +0.05, +0.10
+      },
+      0.02: {
+        lc: 0.02,
+        divisions: 50,
+        spanMM: 49,       // 50 divisions span 49 mm -> pitch = 0.98 mm
+        pitchMM: 0.98,
+        specText: '50 ช่อง = 49 mm (ช่องละ 0.98 mm)',
+        zeroStepMultipliers: [-5, -2, 0, 2, 5] // -0.10, -0.04, 0.00, +0.04, +0.10
+      }
+    };
+
+    const state = {
+      appMode: 'learn',         // 'learn' | 'quiz'
+      leastCount: 0.05,         // 0.10 | 0.05 | 0.02
+      zeroError: 0.00,          // in mm (quantized to leastCount)
+      physicalOpening: 24.35,   // Actual jaw gap / depth extension in mm (0.00 to 150.00)
+      targetOpening: null,      // Used for smooth Auto-Fit animation
+      isLocked: false,
+      showLabels: true,
+      loupeZoom: 1.0,           // 1.0 or 1.75
+
+      // Sample Object State
+      sampleType: 'none',       // 'none' | 'sphere' | 'tube' | 'block' | 'ring' | 'depth'
+      sampleSize: 28.40,        // True dimension of active sample object in mm
+
+      // Quiz State
+      quizType: 'scale',        // 'scale' | 'object'
+      quizAnswered: false,
+      quizExpectedAnswer: 0,
+      quizScoreRight: 0,
+      quizScoreTotal: 0,
+      quizStreak: 0
+    };
+
+    // Coordinate Constants (1 Three.js unit = 1 millimeter)
+    const MS_ZERO_X = 20.0;     // World X of Main Scale 0.00 mm graduation
+    const BEAM_END_X = 225.0;   // World X of right tail face of Main Scale Beam
+    const MAX_MM = 150.0;
+
+    // Three.js Globals
+    let scene, camera, renderer, controls;
+    let carriageGroup, depthRodMesh, lockScrewGroup, thumbWheelMesh;
+    let mainScaleTexture, vernierScaleTexture;
+    let mainScaleCanvas, vernierScaleCanvas;
+    let sampleObjectGroup;
+    let draggableMeshes = [];
+
+    // Camera Tweening State
+    const camTween = {
+      active: false,
+      pos: new THREE.Vector3(),
+      target: new THREE.Vector3()
+    };
+
+    // Direct 3D Dragging State
+    const dragState = {
+      active: false,
+      startMouseWorldX: 0,
+      startOpening: 0,
+      dragPlane: new THREE.Plane(new THREE.Vector3(0, 0, 1), 0),
+      raycaster: new THREE.Raycaster(),
+      ndc: new THREE.Vector2()
+    };
+
+    // 3D Anatomical Callout Definitions
+    const ANATOMY_PARTS = [
+      {
+        id: 'main_scale',
+        num: '1',
+        th: 'สเกลหลัก',
+        en: 'Main Scale Beam',
+        desc: 'รางสเกลหลักความยาว 0–150 mm (0–15 cm) อ่านค่ามิลลิเมตรเต็มก่อนขีด 0 ของสเกลเวอร์เนียร์',
+        getPos: () => new THREE.Vector3(115, 10, 2.5)
+      },
+      {
+        id: 'outside_jaws',
+        num: '2',
+        th: 'ปากวัดนอก',
+        en: 'Outside Jaws',
+        desc: 'ใช้วัดขนาดภายนอกชิ้นงาน เช่น ความกว้าง ความหนา หรือเส้นผ่านศูนย์กลางภายนอก (OD)',
+        getPos: () => new THREE.Vector3(state.physicalOpening * 0.5, -26, 2.2)
+      },
+      {
+        id: 'inside_jaws',
+        num: '3',
+        th: 'ปากวัดใน',
+        en: 'Inside Jaws',
+        desc: 'เขี้ยววัดด้านบน ใช้วัดเส้นผ่านศูนย์กลางภายในท่อหรือความกว้างร่องด้านใน (ID)',
+        getPos: () => new THREE.Vector3(state.physicalOpening * 0.5, 31, 2.0)
+      },
+      {
+        id: 'depth_rod',
+        num: '4',
+        th: 'ก้านวัดความลึก',
+        en: 'Depth Rod / Blade',
+        desc: 'ก้านโลหะด้านท้าย ยื่นออกตามระยะเลื่อนสเกล ใช้วัดความลึกของรู ร่อง หรือบ่าชิ้นงาน',
+        getPos: () => new THREE.Vector3(BEAM_END_X + Math.max(8, state.physicalOpening * 0.65), 6.2, 0)
+      },
+      {
+        id: 'vernier_scale',
+        num: '5',
+        th: 'สเกลเวอร์เนียร์',
+        en: 'Vernier Scale',
+        desc: 'สเกลขยายความละเอียดบนกรอบเลื่อน อ่านค่าทศนิยมจากขีดที่ตรงกับขีดบนสเกลหลักมากที่สุด',
+        getPos: () => new THREE.Vector3(state.physicalOpening + 36, -1.5, 3.4)
+      },
+      {
+        id: 'lock_thumb',
+        num: '6',
+        th: 'สกรูล็อก & ปุ่มเลื่อน',
+        en: 'Locking Screw & Thumb Wheel',
+        desc: 'ปุ่มกลิ้งนิ้วหัวแม่มือใช้เลื่อนสเกลอย่างละเอียด และสกรูด้านบนใช้ขันล็อกตรึงค่าที่วัดได้',
+        getPos: () => new THREE.Vector3(state.physicalOpening + 35, 25, 0)
+      }
+    ];
+
+    // =========================================================================
+    // 2. METROLOGY MATH HELPERS
+    // =========================================================================
+    function quantizeToLC(val, lc = state.leastCount) {
+      return Number((Math.round(val / lc) * lc).toFixed(4));
+    }
+
+    function getMovementBounds() {
+      let min = 0.0;
+      let max = MAX_MM;
+      if (state.sampleType === 'sphere' || state.sampleType === 'tube' || state.sampleType === 'block') {
+        min = state.sampleSize;
+      } else if (state.sampleType === 'ring') {
+        min = Math.min(8.0, state.sampleSize);
+        max = state.sampleSize;
+      } else if (state.sampleType === 'depth') {
+        min = 0.0;
+        max = state.sampleSize;
+      }
+      return { min, max };
+    }
+
+    function computeMetrology() {
+      const lc = state.leastCount;
+      const cfg = RESOLUTION_CONFIGS[lc];
+      const ze = state.zeroError;
+      const uncorrected = quantizeToLC(state.physicalOpening + ze, lc);
+
+      const totalSteps = Math.round(uncorrected / lc);
+      const N = cfg.divisions;
+
+      let msMM, tickIdx, vsMM;
+      if (totalSteps >= 0) {
+        msMM = Math.floor(totalSteps / N);
+        tickIdx = totalSteps % N;
+        vsMM = Number((tickIdx * lc).toFixed(2));
+      } else {
+        msMM = 0;
+        tickIdx = ((totalSteps % N) + N) % N;
+        vsMM = Number((tickIdx * lc).toFixed(2));
+      }
+
+      const corrected = Number((state.physicalOpening).toFixed(2));
+      const coincidingMainMM = Math.round(uncorrected + tickIdx * cfg.pitchMM);
+
+      return {
+        lc,
+        N,
+        ze,
+        uncorrected,
+        totalSteps,
+        msMM,
+        tickIdx,
+        vsMM,
+        corrected,
+        coincidingMainMM
+      };
+    }
+
+    // =========================================================================
+    // 3. PROCEDURAL METALLIC ENVIRONMENT & HIGH-DPI SCALE TEXTURES
+    // =========================================================================
+    function createStudioEnvMap(rendererInstance) {
+      const pmrem = new THREE.PMREMGenerator(rendererInstance);
+      pmrem.compileEquirectangularShader();
+
+      const envScene = new THREE.Scene();
+      envScene.background = new THREE.Color(0x1a2436);
+
+      const panelGeo = new THREE.PlaneGeometry(120, 40);
+      const warmLightMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+      const coolLightMat = new THREE.MeshBasicMaterial({ color: 0xbae6fd, side: THREE.DoubleSide });
+      const rimLightMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide });
+
+      const topStrip = new THREE.Mesh(panelGeo, warmLightMat);
+      topStrip.position.set(0, 60, 35);
+      topStrip.lookAt(0, 0, 0);
+      envScene.add(topStrip);
+
+      const frontStrip = new THREE.Mesh(panelGeo, coolLightMat);
+      frontStrip.position.set(30, 15, 75);
+      frontStrip.lookAt(0, 0, 0);
+      envScene.add(frontStrip);
+
+      const bottomStrip = new THREE.Mesh(panelGeo, rimLightMat);
+      bottomStrip.position.set(-30, -55, 40);
+      bottomStrip.lookAt(0, 0, 0);
+      envScene.add(bottomStrip);
+
+      const envRT = pmrem.fromScene(envScene, 0.04);
+      pmrem.dispose();
+      return envRT.texture;
+    }
+
+    function createBrushedBumpTexture() {
+      const c = document.createElement('canvas');
+      c.width = 512;
+      c.height = 128;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#808080';
+      ctx.fillRect(0, 0, c.width, c.height);
+
+      for (let i = 0; i < 900; i++) {
+        const y = Math.random() * c.height;
+        const lum = 110 + Math.floor(Math.random() * 36);
+        ctx.strokeStyle = `rgb(${lum},${lum},${lum})`;
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(c.width, y + (Math.random() - 0.5) * 1.5);
+        ctx.stroke();
+      }
+      const tex = new THREE.CanvasTexture(c);
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(4, 1);
+      return tex;
+    }
+
+    function buildMainScaleTexture() {
+      if (!mainScaleCanvas) {
+        mainScaleCanvas = document.createElement('canvas');
+        mainScaleCanvas.width = 4096;
+        mainScaleCanvas.height = 512;
+      }
+      const ctx = mainScaleCanvas.getContext('2d');
+      const W = mainScaleCanvas.width;
+      const H = mainScaleCanvas.height;
+
+      const grad = ctx.createLinearGradient(0, 0, 0, H);
+      grad.addColorStop(0, '#dfe6ee');
+      grad.addColorStop(0.5, '#f1f5f9');
+      grad.addColorStop(1, '#cbd5e1');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.strokeStyle = 'rgba(100,116,139,0.08)';
+      ctx.lineWidth = 2;
+      for (let y = 8; y < H; y += 14) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(W, y);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, H - 5, W, 5);
+
+      const xStartWorld = 12.0;
+      const xSpanWorld = 208.0;
+      const mmToPx = (mm) => ((MS_ZERO_X + mm - xStartWorld) / xSpanWorld) * W;
+
+      ctx.strokeStyle = '#090d16';
+      ctx.fillStyle = '#090d16';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+
+      for (let mm = 0; mm <= 155; mm++) {
+        const px = mmToPx(mm);
+        let tickH = H * 0.27;
+        let lw = 3.0;
+
+        if (mm % 10 === 0) {
+          tickH = H * 0.56;
+          lw = 4.4;
+        } else if (mm % 5 === 0) {
+          tickH = H * 0.41;
+          lw = 3.6;
+        }
+
+        ctx.lineWidth = lw;
+        ctx.beginPath();
+        ctx.moveTo(px, H);
+        ctx.lineTo(px, H - tickH);
+        ctx.stroke();
+
+        if (mm % 10 === 0 && mm <= 150) {
+          ctx.font = '700 108px "JetBrains Mono", monospace';
+          ctx.fillText(String(mm / 10), px, H - tickH - 18);
+        }
+      }
+
+      ctx.textAlign = 'left';
+      ctx.font = '700 72px "Prompt", sans-serif';
+      ctx.fillStyle = '#334155';
+      ctx.fillText('cm', mmToPx(153.5), H * 0.42);
+      ctx.font = '600 54px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#475569';
+      ctx.fillText('150mm STAINLESS HARDENED', mmToPx(162), H * 0.72);
+
+      if (!mainScaleTexture) {
+        mainScaleTexture = new THREE.CanvasTexture(mainScaleCanvas);
+        mainScaleTexture.anisotropy = renderer ? renderer.capabilities.getMaxAnisotropy() : 8;
+      }
+      mainScaleTexture.needsUpdate = true;
+      return mainScaleTexture;
+    }
+
+    function updateVernierScaleTexture() {
+      if (!vernierScaleCanvas) {
+        vernierScaleCanvas = document.createElement('canvas');
+        vernierScaleCanvas.width = 2048;
+        vernierScaleCanvas.height = 384;
+      }
+      const ctx = vernierScaleCanvas.getContext('2d');
+      const W = vernierScaleCanvas.width;
+      const H = vernierScaleCanvas.height;
+
+      const grad = ctx.createLinearGradient(0, 0, 0, H);
+      grad.addColorStop(0, '#e2e8f0');
+      grad.addColorStop(0.35, '#f8fafc');
+      grad.addColorStop(1, '#cbd5e1');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, W, 5);
+
+      const cfg = RESOLUTION_CONFIGS[state.leastCount];
+      const vxStart = 12.0;
+      const vxSpan = 66.0;
+      const localXToPx = (lx) => ((lx - vxStart) / vxSpan) * W;
+
+      ctx.strokeStyle = '#090d16';
+      ctx.fillStyle = '#090d16';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+
+      for (let k = 0; k <= cfg.divisions; k++) {
+        const lx = MS_ZERO_X + state.zeroError + k * cfg.pitchMM;
+        const px = localXToPx(lx);
+
+        let isMajor = false;
+        let label = null;
+
+        if (state.leastCount === 0.05) {
+          isMajor = (k % 2 === 0);
+          label = isMajor ? String(k / 2) : null;
+        } else if (state.leastCount === 0.02) {
+          isMajor = (k % 5 === 0);
+          label = isMajor ? String(k / 5) : null;
+        } else {
+          isMajor = true;
+          label = String(k);
+        }
+
+        const tickH = isMajor ? H * 0.46 : H * 0.28;
+        ctx.lineWidth = isMajor ? 4.2 : 2.8;
+        ctx.beginPath();
+        ctx.moveTo(px, 0);
+        ctx.lineTo(px, tickH);
+        ctx.stroke();
+
+        if (label !== null) {
+          ctx.font = '700 72px "JetBrains Mono", monospace';
+          ctx.fillText(label, px, tickH + 14);
+        }
+      }
+
+      ctx.textAlign = 'right';
+      ctx.font = '700 54px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#334155';
+      ctx.fillText(`${state.leastCount.toFixed(2)}mm`, W - 36, H - 72);
+
+      if (!vernierScaleTexture) {
+        vernierScaleTexture = new THREE.CanvasTexture(vernierScaleCanvas);
+        vernierScaleTexture.anisotropy = renderer ? renderer.capabilities.getMaxAnisotropy() : 8;
+      }
+      vernierScaleTexture.needsUpdate = true;
+      return vernierScaleTexture;
+    }
+
+    // =========================================================================
+    // 4. THREE.JS SCENE & ACCURATE 3D CALIPER CONSTRUCTION
+    // =========================================================================
+    function initThreeScene() {
+      const mount = document.getElementById('threeMount');
+      const rect = mount.getBoundingClientRect();
+
+      scene = new THREE.Scene();
+
+      camera = new THREE.PerspectiveCamera(38, rect.width / rect.height, 1, 2000);
+      camera.position.set(85, 22, 195);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(rect.width, rect.height);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.12;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      mount.appendChild(renderer.domElement);
+
+      scene.environment = createStudioEnvMap(renderer);
+
+      const ambient = new THREE.AmbientLight(0xdbeafe, 0.55);
+      scene.add(ambient);
+
+      const keyLight = new THREE.DirectionalLight(0xffffff, 1.15);
+      keyLight.position.set(90, 120, 140);
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.set(2048, 2048);
+      keyLight.shadow.camera.left = -80;
+      keyLight.shadow.camera.right = 280;
+      keyLight.shadow.camera.top = 90;
+      keyLight.shadow.camera.bottom = -90;
+      scene.add(keyLight);
+
+      const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.55);
+      rimLight.position.set(-80, -40, -90);
+      scene.add(rimLight);
+
+      const fillLight = new THREE.DirectionalLight(0xfef08a, 0.3);
+      fillLight.position.set(180, -60, 110);
+      scene.add(fillLight);
+
+      const gridHelper = new THREE.GridHelper(520, 52, 0x1e3a5f, 0x111c30);
+      gridHelper.position.set(110, -52, 0);
+      scene.add(gridHelper);
+
+      const benchPlane = new THREE.Mesh(
+        new THREE.PlaneGeometry(520, 320),
+        new THREE.MeshStandardMaterial({ color: 0x070d19, roughness: 0.9, metalness: 0.1 })
+      );
+      benchPlane.rotation.x = -Math.PI / 2;
+      benchPlane.position.set(110, -52.2, 0);
+      benchPlane.receiveShadow = true;
+      scene.add(benchPlane);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.08;
+      controls.target.set(82, 2, 0);
+      controls.minDistance = 35;
+      controls.maxDistance = 420;
+      controls.maxPolarAngle = Math.PI * 0.85;
+
+      buildCaliperModel();
+      sampleObjectGroup = new THREE.Group();
+      scene.add(sampleObjectGroup);
+
+      initPartLabelDOM();
+      setupViewportInteractions();
+    }
+
+    function buildCaliperModel() {
+      const bumpTex = createBrushedBumpTexture();
+
+      const steelMat = new THREE.MeshStandardMaterial({
+        color: 0xd4dde7,
+        metalness: 0.86,
+        roughness: 0.24,
+        bumpMap: bumpTex,
+        bumpScale: 0.04
+      });
+
+      const darkSteelMat = new THREE.MeshStandardMaterial({
+        color: 0x8fa0b5,
+        metalness: 0.85,
+        roughness: 0.32
+      });
+
+      const chromeMat = new THREE.MeshStandardMaterial({
+        color: 0xeef2f6,
+        metalness: 0.78,
+        roughness: 0.2
+      });
+
+      const caliperRoot = new THREE.Group();
+      scene.add(caliperRoot);
+
+      const fixedShape = new THREE.Shape();
+      fixedShape.moveTo(0, -44);
+      fixedShape.lineTo(0, -3.5);
+      fixedShape.lineTo(-0.9, -2.5);
+      fixedShape.lineTo(-0.9, 0);
+      fixedShape.lineTo(BEAM_END_X, 0);
+      fixedShape.lineTo(BEAM_END_X, 16);
+      fixedShape.lineTo(-9, 16);
+      fixedShape.lineTo(-15.5, 8);
+      fixedShape.lineTo(-15.5, -10);
+      fixedShape.lineTo(-8.5, -28);
+      fixedShape.lineTo(-2.6, -44);
+      fixedShape.closePath();
+
+      const beamExtrude = {
+        depth: 3.4,
+        bevelEnabled: true,
+        bevelThickness: 0.25,
+        bevelSize: 0.2,
+        bevelSegments: 2
+      };
+
+      const fixedBeamGeo = new THREE.ExtrudeGeometry(fixedShape, beamExtrude);
+      fixedBeamGeo.translate(0, 0, -1.7);
+      const fixedBeamMesh = new THREE.Mesh(fixedBeamGeo, steelMat);
+      fixedBeamMesh.castShadow = true;
+      fixedBeamMesh.receiveShadow = true;
+      caliperRoot.add(fixedBeamMesh);
+
+      const fixedNibShape = new THREE.Shape();
+      fixedNibShape.moveTo(0, 15.5);
+      fixedNibShape.lineTo(0, 36.5);
+      fixedNibShape.lineTo(1.7, 36.5);
+      fixedNibShape.lineTo(5.8, 25);
+      fixedNibShape.lineTo(9.5, 15.5);
+      fixedNibShape.closePath();
+
+      const fixedNibGeo = new THREE.ExtrudeGeometry(fixedNibShape, {
+        depth: 1.5,
+        bevelEnabled: true,
+        bevelThickness: 0.1,
+        bevelSize: 0.08,
+        bevelSegments: 1
+      });
+      fixedNibGeo.translate(0, 0, -1.65);
+      const fixedNibMesh = new THREE.Mesh(fixedNibGeo, steelMat);
+      fixedNibMesh.castShadow = true;
+      caliperRoot.add(fixedNibMesh);
+
+      buildMainScaleTexture();
+      const mainScalePlane = new THREE.Mesh(
+        new THREE.PlaneGeometry(208, 12.2),
+        new THREE.MeshStandardMaterial({
+          map: mainScaleTexture,
+          metalness: 0.32,
+          roughness: 0.38
+        })
+      );
+      mainScalePlane.position.set(116, 2.6 + 6.1, 1.98);
+      caliperRoot.add(mainScalePlane);
+
+      const grooveBack = new THREE.Mesh(
+        new THREE.BoxGeometry(BEAM_END_X, 2.2, 0.7),
+        darkSteelMat
+      );
+      grooveBack.position.set(BEAM_END_X / 2, 8.0, -2.0);
+      caliperRoot.add(grooveBack);
+
+      const depthRodLength = 215;
+      const depthRodGeo = new THREE.BoxGeometry(depthRodLength, 3.8, 1.15);
+      depthRodMesh = new THREE.Mesh(depthRodGeo, chromeMat);
+      depthRodMesh.castShadow = true;
+      depthRodMesh.position.set(BEAM_END_X - depthRodLength / 2 + state.physicalOpening, 6.2, -1.55);
+      caliperRoot.add(depthRodMesh);
+
+      carriageGroup = new THREE.Group();
+      carriageGroup.position.x = state.physicalOpening;
+      caliperRoot.add(carriageGroup);
+
+      const slideJawShape = new THREE.Shape();
+      slideJawShape.moveTo(0, -44);
+      slideJawShape.lineTo(0, -3.5);
+      slideJawShape.lineTo(0.9, -2.5);
+      slideJawShape.lineTo(0.9, 0.5);
+      slideJawShape.lineTo(15.5, 0.5);
+      slideJawShape.lineTo(15.5, -10);
+      slideJawShape.lineTo(8.5, -28);
+      slideJawShape.lineTo(2.6, -44);
+      slideJawShape.closePath();
+
+      const slideJawGeo = new THREE.ExtrudeGeometry(slideJawShape, beamExtrude);
+      slideJawGeo.translate(0, 0, -1.7);
+      const slideJawMesh = new THREE.Mesh(slideJawGeo, steelMat);
+      slideJawMesh.castShadow = true;
+      carriageGroup.add(slideJawMesh);
+      draggableMeshes.push(slideJawMesh);
+
+      const slideNibShape = new THREE.Shape();
+      slideNibShape.moveTo(0, 15.5);
+      slideNibShape.lineTo(0, 36.5);
+      slideNibShape.lineTo(-1.7, 36.5);
+      slideNibShape.lineTo(-5.8, 25);
+      slideNibShape.lineTo(-9.5, 15.5);
+      slideNibShape.closePath();
+
+      const slideNibGeo = new THREE.ExtrudeGeometry(slideNibShape, {
+        depth: 1.5,
+        bevelEnabled: true,
+        bevelThickness: 0.1,
+        bevelSize: 0.08,
+        bevelSegments: 1
+      });
+      slideNibGeo.translate(0, 0, 0.15);
+      const slideNibMesh = new THREE.Mesh(slideNibGeo, steelMat);
+      slideNibMesh.castShadow = true;
+      carriageGroup.add(slideNibMesh);
+      draggableMeshes.push(slideNibMesh);
+
+      const upperBridge = new THREE.Mesh(new THREE.BoxGeometry(72, 4.4, 6.2), steelMat);
+      upperBridge.position.set(42, 18.2, 0.2);
+      upperBridge.castShadow = true;
+      carriageGroup.add(upperBridge);
+      draggableMeshes.push(upperBridge);
+
+      const lowerSleeve = new THREE.Mesh(new THREE.BoxGeometry(72, 6.4, 6.2), steelMat);
+      lowerSleeve.position.set(42, -3.2, 0.2);
+      lowerSleeve.castShadow = true;
+      carriageGroup.add(lowerSleeve);
+      draggableMeshes.push(lowerSleeve);
+
+      const leftSidePillar = new THREE.Mesh(new THREE.BoxGeometry(6.5, 26, 6.2), steelMat);
+      leftSidePillar.position.set(9.2, 7.5, 0.2);
+      carriageGroup.add(leftSidePillar);
+      draggableMeshes.push(leftSidePillar);
+
+      const rightSidePillar = new THREE.Mesh(new THREE.BoxGeometry(4.5, 26, 6.2), steelMat);
+      rightSidePillar.position.set(76.5, 7.5, 0.2);
+      carriageGroup.add(rightSidePillar);
+      draggableMeshes.push(rightSidePillar);
+
+      const backCover = new THREE.Mesh(new THREE.BoxGeometry(72, 24.5, 1.4), darkSteelMat);
+      backCover.position.set(42, 7.5, -2.35);
+      carriageGroup.add(backCover);
+      draggableMeshes.push(backCover);
+
+      updateVernierScaleTexture();
+      const vernierBevelHeight = 7.4;
+      const vernierTiltAngle = 0.22;
+      const vernierGeo = new THREE.PlaneGeometry(66, vernierBevelHeight);
+      vernierGeo.translate(0, -vernierBevelHeight / 2, 0);
+
+      const vernierPlateMesh = new THREE.Mesh(
+        vernierGeo,
+        new THREE.MeshStandardMaterial({
+          map: vernierScaleTexture,
+          metalness: 0.3,
+          roughness: 0.36
+        })
+      );
+      vernierPlateMesh.position.set(45, 2.6, 2.02);
+      vernierPlateMesh.rotation.x = -vernierTiltAngle;
+      carriageGroup.add(vernierPlateMesh);
+      draggableMeshes.push(vernierPlateMesh);
+
+      lockScrewGroup = new THREE.Group();
+      lockScrewGroup.position.set(36, 23.2, 0.2);
+      carriageGroup.add(lockScrewGroup);
+
+      const screwStem = new THREE.Mesh(
+        new THREE.CylinderGeometry(1.7, 1.7, 5.5, 20),
+        darkSteelMat
+      );
+      screwStem.position.y = -1.2;
+      lockScrewGroup.add(screwStem);
+
+      const screwHead = new THREE.Mesh(
+        new THREE.CylinderGeometry(4.2, 4.2, 3.8, 32),
+        chromeMat
+      );
+      screwHead.position.y = 2.2;
+      lockScrewGroup.add(screwHead);
+      draggableMeshes.push(screwHead);
+
+      const thumbGeo = new THREE.CylinderGeometry(5.6, 5.6, 4.4, 28);
+      thumbGeo.rotateX(Math.PI / 2);
+      thumbWheelMesh = new THREE.Mesh(thumbGeo, darkSteelMat);
+      thumbWheelMesh.position.set(66, -5.8, 0.4);
+      carriageGroup.add(thumbWheelMesh);
+      draggableMeshes.push(thumbWheelMesh);
+
+      const thumbBracket = new THREE.Mesh(new THREE.BoxGeometry(14, 3.5, 5.4), steelMat);
+      thumbBracket.position.set(66, -2.5, 0.4);
+      carriageGroup.add(thumbBracket);
+      draggableMeshes.push(thumbBracket);
+    }
+
+    function rebuildSampleObject3D() {
+      while (sampleObjectGroup.children.length > 0) {
+        const child = sampleObjectGroup.children[0];
+        sampleObjectGroup.remove(child);
+        if (child.geometry) child.geometry.dispose();
+      }
+
+      if (state.sampleType === 'none') return;
+
+      const D = state.sampleSize;
+
+      if (state.sampleType === 'sphere') {
+        const r = D / 2;
+        const sphere = new THREE.Mesh(
+          new THREE.SphereGeometry(r, 48, 32),
+          new THREE.MeshStandardMaterial({ color: 0x93c5fd, metalness: 0.9, roughness: 0.14 })
+        );
+        sphere.position.set(r, -23, 0);
+        sphere.castShadow = true;
+        sampleObjectGroup.add(sphere);
+
+      } else if (state.sampleType === 'tube') {
+        const r = D / 2;
+        const tubeGroup = new THREE.Group();
+        tubeGroup.position.set(r, -22, 0);
+
+        const glassMat = new THREE.MeshStandardMaterial({
+          color: 0xe0f2fe,
+          metalness: 0.15,
+          roughness: 0.08,
+          transparent: true,
+          opacity: 0.52,
+          side: THREE.DoubleSide
+        });
+        const body = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 42, 40, 1, true), glassMat);
+        tubeGroup.add(body);
+
+        const bottomCap = new THREE.Mesh(
+          new THREE.SphereGeometry(r, 36, 20, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2),
+          glassMat
+        );
+        bottomCap.position.y = -21;
+        tubeGroup.add(bottomCap);
+
+        const rim = new THREE.Mesh(
+          new THREE.TorusGeometry(r + 0.5, 0.8, 14, 36),
+          glassMat
+        );
+        rim.rotation.x = Math.PI / 2;
+        rim.position.y = 21;
+        tubeGroup.add(rim);
+
+        const liqR = Math.max(2, r - 1.4);
+        const liquid = new THREE.Mesh(
+          new THREE.CylinderGeometry(liqR, liqR, 24, 32),
+          new THREE.MeshStandardMaterial({ color: 0x06b6d4, roughness: 0.2, transparent: true, opacity: 0.78 })
+        );
+        liquid.position.y = -8;
+        tubeGroup.add(liquid);
+
+        sampleObjectGroup.add(tubeGroup);
+
+      } else if (state.sampleType === 'block') {
+        const block = new THREE.Mesh(
+          new THREE.BoxGeometry(D, 24, 16),
+          new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.78, roughness: 0.24 })
+        );
+        block.position.set(D / 2, -23, 0);
+        block.castShadow = true;
+        sampleObjectGroup.add(block);
+
+      } else if (state.sampleType === 'ring') {
+        const innerR = D / 2;
+        const outerR = innerR + 5.5;
+
+        const ringShape = new THREE.Shape();
+        ringShape.absarc(0, 0, outerR, 0, Math.PI * 2, false);
+        const boreHole = new THREE.Path();
+        boreHole.absarc(0, 0, innerR, 0, Math.PI * 2, true);
+        ringShape.holes.push(boreHole);
+
+        const pipeGeo = new THREE.ExtrudeGeometry(ringShape, {
+          depth: 22,
+          bevelEnabled: true,
+          bevelThickness: 0.4,
+          bevelSize: 0.4,
+          curveSegments: 48
+        });
+        pipeGeo.rotateX(-Math.PI / 2);
+
+        const pipeMesh = new THREE.Mesh(
+          pipeGeo,
+          new THREE.MeshStandardMaterial({
+            color: 0x34d399,
+            metalness: 0.65,
+            roughness: 0.25,
+            transparent: true,
+            opacity: 0.78
+          })
+        );
+        pipeMesh.position.set(innerR, 24, 0);
+        sampleObjectGroup.add(pipeMesh);
+
+      } else if (state.sampleType === 'depth') {
+        const depthGroup = new THREE.Group();
+        const blockMat = new THREE.MeshStandardMaterial({
+          color: 0xa78bfa,
+          metalness: 0.65,
+          roughness: 0.28
+        });
+
+        const totalLen = D + 12;
+        const topWall = new THREE.Mesh(new THREE.BoxGeometry(totalLen, 6.5, 16), blockMat);
+        topWall.position.set(BEAM_END_X + totalLen / 2, 14.5, -1.5);
+        depthGroup.add(topWall);
+
+        const botWall = new THREE.Mesh(new THREE.BoxGeometry(totalLen, 6.5, 16), blockMat);
+        botWall.position.set(BEAM_END_X + totalLen / 2, -2.0, -1.5);
+        depthGroup.add(botWall);
+
+        const backChannel = new THREE.Mesh(new THREE.BoxGeometry(D, 10, 5), blockMat);
+        backChannel.position.set(BEAM_END_X + D / 2, 6.25, -7.0);
+        depthGroup.add(backChannel);
+
+        const stopFloor = new THREE.Mesh(
+          new THREE.BoxGeometry(12, 10.2, 16),
+          new THREE.MeshStandardMaterial({ color: 0xc4b5fd, metalness: 0.72, roughness: 0.22 })
+        );
+        stopFloor.position.set(BEAM_END_X + D + 6, 6.25, -1.5);
+        depthGroup.add(stopFloor);
+
+        sampleObjectGroup.add(depthGroup);
+      }
+    }
+
+    function renderLoupe2D() {
+      const canvas = document.getElementById('loupeCanvas');
+      if (!canvas) return;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+
+      const targetW = Math.round(rect.width * dpr);
+      const targetH = Math.round(rect.height * dpr);
+      if (canvas.width !== targetW || canvas.height !== targetH) {
+        canvas.width = targetW;
+        canvas.height = targetH;
+      }
+
+      const ctx = canvas.getContext('2d');
+      ctx.save();
+      ctx.scale(dpr, dpr);
+
+      const W = rect.width;
+      const H = rect.height;
+      const seamY = Math.round(H * 0.49);
+
+      const metro = computeMetrology();
+      const cfg = RESOLUTION_CONFIGS[state.leastCount];
+      const showHints = (state.appMode === 'learn') || (state.appMode === 'quiz' && state.quizAnswered);
+
+      const vernierZeroMM = state.physicalOpening + state.zeroError;
+      const centerMM = vernierZeroMM + (cfg.spanMM * 0.46);
+      const basePxPerMM = Math.max(12.5, (W / (cfg.spanMM + 16))) * state.loupeZoom;
+      const mmToX = (mm) => (W * 0.5) + (mm - centerMM) * basePxPerMM;
+
+      const topGrad = ctx.createLinearGradient(0, 0, 0, seamY);
+      topGrad.addColorStop(0, '#1e293b');
+      topGrad.addColorStop(0.25, '#e2e8f0');
+      topGrad.addColorStop(1, '#cbd5e1');
+      ctx.fillStyle = topGrad;
+      ctx.fillRect(0, 0, W, seamY);
+
+      const botGrad = ctx.createLinearGradient(0, seamY, 0, H);
+      botGrad.addColorStop(0, '#f8fafc');
+      botGrad.addColorStop(0.75, '#cbd5e1');
+      botGrad.addColorStop(1, '#94a3b8');
+      ctx.fillStyle = botGrad;
+      ctx.fillRect(0, seamY, W, H - seamY);
+
+      ctx.font = '600 10px "Prompt", sans-serif';
+      ctx.fillStyle = '#334155';
+      ctx.textAlign = 'left';
+      ctx.fillText('สเกลหลัก (MAIN SCALE - mm)', 10, 14);
+      ctx.fillText(`สเกลเวอร์เนียร์ (VERNIER - ${state.leastCount.toFixed(2)} mm)`, 10, H - 7);
+
+      const minVisibleMM = Math.floor(centerMM - (W * 0.6) / basePxPerMM) - 2;
+      const maxVisibleMM = Math.ceil(centerMM + (W * 0.6) / basePxPerMM) + 2;
+
+      for (let m = Math.max(-5, minVisibleMM); m <= Math.min(165, maxVisibleMM); m++) {
+        if (m < 0) continue;
+        const x = mmToX(m);
+        const isCM = (m % 10 === 0);
+        const isHalfCM = (m % 5 === 0 && !isCM);
+
+        const tickLen = isCM ? 32 : (isHalfCM ? 23 : 15);
+        const isMSMark = showHints && (m === metro.msMM) && (metro.totalSteps >= 0);
+        const isCoincideMain = showHints && (m === metro.coincidingMainMM);
+
+        ctx.beginPath();
+        ctx.moveTo(x, seamY);
+        ctx.lineTo(x, seamY - tickLen);
+
+        if (isCoincideMain) {
+          ctx.strokeStyle = '#059669';
+          ctx.lineWidth = 2.8;
+        } else if (isMSMark) {
+          ctx.strokeStyle = '#0284c7';
+          ctx.lineWidth = 2.8;
+        } else {
+          ctx.strokeStyle = '#0f172a';
+          ctx.lineWidth = isCM ? 2.0 : 1.25;
+        }
+        ctx.stroke();
+
+        if (isCM && m <= 160) {
+          ctx.font = '700 13px "JetBrains Mono", monospace';
+          ctx.fillStyle = isMSMark ? '#0369a1' : '#0f172a';
+          ctx.textAlign = 'center';
+          ctx.fillText(`${m}`, x, seamY - tickLen - 5);
+        }
+      }
+
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(0, seamY);
+      ctx.lineTo(W, seamY);
+      ctx.stroke();
+
+      for (let k = 0; k <= cfg.divisions; k++) {
+        const vMM = vernierZeroMM + k * cfg.pitchMM;
+        const x = mmToX(vMM);
+        if (x < -30 || x > W + 30) continue;
+
+        let isMajor = false;
+        let label = null;
+        if (state.leastCount === 0.05) {
+          isMajor = (k % 2 === 0);
+          label = isMajor ? String(k / 2) : null;
+        } else if (state.leastCount === 0.02) {
+          isMajor = (k % 5 === 0);
+          label = isMajor ? String(k / 5) : null;
+        } else {
+          isMajor = true;
+          label = String(k);
+        }
+
+        const tickLen = isMajor ? 28 : 17;
+        const isZeroTick = (k === 0);
+        const isCoincidingTick = showHints && ((k === metro.tickIdx) || (metro.tickIdx === 0 && k === cfg.divisions));
+
+        ctx.beginPath();
+        ctx.moveTo(x, seamY);
+        ctx.lineTo(x, seamY + tickLen);
+
+        if (isCoincidingTick) {
+          ctx.strokeStyle = '#059669';
+          ctx.lineWidth = 2.8;
+        } else if (showHints && isZeroTick) {
+          ctx.strokeStyle = '#0284c7';
+          ctx.lineWidth = 2.5;
+        } else {
+          ctx.strokeStyle = '#0f172a';
+          ctx.lineWidth = isMajor ? 1.9 : 1.15;
+        }
+        ctx.stroke();
+
+        if (label !== null) {
+          ctx.font = '700 12px "JetBrains Mono", monospace';
+          ctx.fillStyle = isCoincidingTick ? '#047857' : '#0f172a';
+          ctx.textAlign = 'center';
+          ctx.fillText(label, x, seamY + tickLen + 13);
+        }
+      }
+
+      if (showHints) {
+        if (metro.totalSteps >= 0) {
+          const msX = mmToX(metro.msMM);
+          ctx.fillStyle = '#0284c7';
+          ctx.beginPath();
+          ctx.arc(msX, seamY - 3, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+
+          const msText = `MS = ${metro.msMM} mm`;
+          ctx.font = '700 11px "JetBrains Mono", monospace';
+          const bw = ctx.measureText(msText).width + 12;
+          const bx = Math.max(6, Math.min(W - bw - 6, msX - bw / 2));
+          ctx.fillStyle = '#0f172a';
+          ctx.fillRect(bx, 4, bw, 19);
+          ctx.strokeStyle = '#38bdf8';
+          ctx.lineWidth = 1.2;
+          ctx.strokeRect(bx, 4, bw, 19);
+          ctx.fillStyle = '#38bdf8';
+          ctx.textAlign = 'center';
+          ctx.fillText(msText, bx + bw / 2, 17);
+        }
+
+        const coinX = mmToX(vernierZeroMM + metro.tickIdx * cfg.pitchMM);
+        ctx.save();
+        ctx.setLineDash([3, 3]);
+        ctx.strokeStyle = 'rgba(16, 185, 129, 0.75)';
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(coinX, seamY - 36);
+        ctx.lineTo(coinX, seamY + 46);
+        ctx.stroke();
+        ctx.restore();
+
+        const vsText = `ขีดที่ ${metro.tickIdx} (+${metro.vsMM.toFixed(2)})`;
+        ctx.font = '700 11px "Prompt", monospace';
+        const vbw = ctx.measureText(vsText).width + 14;
+        const vbx = Math.max(6, Math.min(W - vbw - 6, coinX - vbw / 2));
+        ctx.fillStyle = '#064e3b';
+        ctx.fillRect(vbx, H - 23, vbw, 19);
+        ctx.strokeStyle = '#34d399';
+        ctx.lineWidth = 1.2;
+        ctx.strokeRect(vbx, H - 23, vbw, 19);
+        ctx.fillStyle = '#6ee7b7';
+        ctx.textAlign = 'center';
+        ctx.fillText(vsText, vbx + vbw / 2, H - 10);
+      }
+
+      if (state.zeroError !== 0 && showHints) {
+        const zeStr = `Zero Error: ${state.zeroError > 0 ? '+' : ''}${state.zeroError.toFixed(2)} mm`;
+        ctx.font = '700 11px "JetBrains Mono", monospace';
+        const zw = ctx.measureText(zeStr).width + 14;
+        ctx.fillStyle = '#451a03';
+        ctx.fillRect(W - zw - 8, 5, zw, 19);
+        ctx.strokeStyle = '#f59e0b';
+        ctx.strokeRect(W - zw - 8, 5, zw, 19);
+        ctx.fillStyle = '#fcd34d';
+        ctx.textAlign = 'center';
+        ctx.fillText(zeStr, W - zw / 2 - 8, 18);
+      }
+
+      ctx.restore();
+    }
+
+    function setPhysicalOpening(newVal, fromAutoFit = false) {
+      if (state.isLocked && !fromAutoFit) {
+        showToast('🔒 สกรูล็อกทำงานอยู่ กรุณาปลดล็อกสเกลก่อนเลื่อน (Scale is Locked)');
+        syncControlsUI();
+        return;
+      }
+
+      if (!fromAutoFit) {
+        state.targetOpening = null;
+      }
+
+      const bounds = getMovementBounds();
+      const clamped = Math.max(bounds.min, Math.min(bounds.max, newVal));
+      state.physicalOpening = quantizeToLC(clamped);
+
+      update3DCaliperTransforms();
+      syncControlsUI();
+      renderLoupe2D();
+    }
+
+    function update3DCaliperTransforms() {
+      if (!carriageGroup) return;
+      carriageGroup.position.x = state.physicalOpening;
+
+      const depthRodLength = 215;
+      depthRodMesh.position.x = BEAM_END_X - depthRodLength / 2 + state.physicalOpening;
+
+      if (thumbWheelMesh) {
+        thumbWheelMesh.rotation.z = -state.physicalOpening * 0.22;
+      }
+    }
+
+    function syncControlsUI() {
+      const metro = computeMetrology();
+      const bounds = getMovementBounds();
+
+      const slider = document.getElementById('mainRangeSlider');
+      slider.step = state.leastCount;
+      slider.value = state.physicalOpening;
+      slider.disabled = state.isLocked;
+
+      document.getElementById('btnStepMinus').textContent = `-${state.leastCount.toFixed(2)}`;
+      document.getElementById('btnStepPlus').textContent = `+${state.leastCount.toFixed(2)}`;
+
+      const sliderHint = document.getElementById('sliderPosHint');
+      if (state.appMode === 'quiz' && !state.quizAnswered) {
+        sliderHint.textContent = 'โหมดทดสอบ: ซ่อนตัวเลขดิจิทัล';
+      } else {
+        sliderHint.textContent = `ระยะเปิดจริง: ${state.physicalOpening.toFixed(2)} mm`;
+      }
+
+      const badgeClamped = document.getElementById('badgeClamped');
+      let isTouchingSample = false;
+      if (state.sampleType === 'sphere' || state.sampleType === 'tube' || state.sampleType === 'block') {
+        isTouchingSample = Math.abs(state.physicalOpening - bounds.min) < 1e-4;
+      } else if (state.sampleType === 'ring' || state.sampleType === 'depth') {
+        isTouchingSample = Math.abs(state.physicalOpening - bounds.max) < 1e-4;
+      }
+      badgeClamped.classList.toggle('hidden', !isTouchingSample);
+
+      document.getElementById('badgeLeastCountTop').textContent = `LC = ${state.leastCount.toFixed(2)} mm`;
+      document.getElementById('readoutMM').innerHTML = `${metro.corrected.toFixed(2)} <span class="text-sm font-normal text-slate-400">mm</span>`;
+      document.getElementById('readoutCM').innerHTML = `${(metro.corrected / 10).toFixed(3)} <span class="text-xs font-normal text-slate-400">cm</span>`;
+
+      if (metro.totalSteps >= 0) {
+        document.getElementById('breakdownMS').textContent = `${metro.msMM.toFixed(2)} mm`;
+        document.getElementById('breakdownTickIdx').textContent = `${metro.tickIdx}`;
+        document.getElementById('breakdownLC').textContent = state.leastCount.toFixed(2);
+        document.getElementById('breakdownVS').textContent = `+ ${metro.vsMM.toFixed(2)} mm`;
+        const zeFormatted = `${metro.ze >= 0 ? '+' : ''}${metro.ze.toFixed(2)} mm`;
+        document.getElementById('breakdownZE').textContent = `− (${zeFormatted})`;
+        document.getElementById('breakdownEquation').textContent =
+          `${metro.msMM.toFixed(2)} + ${metro.vsMM.toFixed(2)} − (${metro.ze.toFixed(2)}) = ${metro.corrected.toFixed(2)} mm`;
+      } else {
+        document.getElementById('breakdownMS').textContent = `ต่ำกว่าขีด 0 (เช็คศูนย์)`;
+        document.getElementById('breakdownTickIdx').textContent = `${metro.tickIdx}`;
+        document.getElementById('breakdownLC').textContent = state.leastCount.toFixed(2);
+        document.getElementById('breakdownVS').textContent = `ขีดที่ ${metro.tickIdx} ตรงกัน`;
+        document.getElementById('breakdownZE').textContent = `ZE = ${metro.ze.toFixed(2)} mm`;
+        document.getElementById('breakdownEquation').textContent = `ปากวัดปิดสนิท = 0.00 mm (Zero Error ${metro.ze.toFixed(2)} mm)`;
+      }
+    }
+
+    function onSliderInput(val) {
+      setPhysicalOpening(parseFloat(val));
+    }
+
+    function stepCaliper(deltaMM) {
+      setPhysicalOpening(state.physicalOpening + deltaMM);
+    }
+
+    function stepCaliperByLC(steps) {
+      setPhysicalOpening(state.physicalOpening + steps * state.leastCount);
+    }
+
+    function zeroCaliper() {
+      if (state.sampleType !== 'none' && (state.sampleType === 'sphere' || state.sampleType === 'tube' || state.sampleType === 'block')) {
+        showToast('มีวัตถุกั้นระหว่างปากวัดนอก เลื่อนชนผิวชิ้นงานแทน');
+      }
+      setPhysicalOpening(0);
+    }
+
+    function toggleLock(forceState) {
+      state.isLocked = (typeof forceState === 'boolean') ? forceState : !state.isLocked;
+
+      const btn = document.getElementById('btnLockToggle');
+      const icon = document.getElementById('lockBtnIcon');
+      const label = document.getElementById('lockBtnLabel');
+      const badge = document.getElementById('badgeLocked');
+
+      if (state.isLocked) {
+        btn.className = 'py-2 px-3 rounded-xl bg-amber-500/25 border border-amber-400/60 text-xs font-semibold text-amber-200 transition flex items-center justify-center gap-1.5';
+        icon.textContent = '🔒';
+        label.textContent = 'ปลดล็อก (Unlock)';
+        badge.classList.remove('hidden');
+      } else {
+        btn.className = 'py-2 px-3 rounded-xl bg-slate-800 hover:bg-amber-500/20 border border-slate-700 text-xs font-semibold text-slate-200 transition flex items-center justify-center gap-1.5';
+        icon.textContent = '🔓';
+        label.textContent = 'ล็อกสเกล (Lock)';
+        badge.classList.add('hidden');
+      }
+
+      syncControlsUI();
+    }
+
+    function setLeastCount(newLC) {
+      state.leastCount = newLC;
+      const cfg = RESOLUTION_CONFIGS[newLC];
+
+      state.zeroError = 0.00;
+      state.sampleSize = quantizeToLC(state.sampleSize, newLC);
+      state.physicalOpening = quantizeToLC(state.physicalOpening, newLC);
+
+      document.querySelectorAll('.lc-btn').forEach(btn => {
+        const isSelected = Math.abs(parseFloat(btn.dataset.lc) - newLC) < 1e-4;
+        btn.className = isSelected
+          ? 'lc-btn py-1.5 rounded-xl border font-mono text-xs font-semibold transition bg-cyan-500/20 border-cyan-500/50 text-cyan-300'
+          : 'lc-btn py-1.5 rounded-xl border font-mono text-xs font-semibold transition bg-slate-950 border-slate-800 text-slate-400 hover:text-white';
+      });
+
+      document.getElementById('vernierSpecText').textContent = cfg.specText;
+
+      rebuildZeroErrorButtons();
+      updateVernierScaleTexture();
+      rebuildSampleObject3D();
+      update3DCaliperTransforms();
+      syncControlsUI();
+      renderLoupe2D();
+    }
+
+    function rebuildZeroErrorButtons() {
+      const container = document.getElementById('zeroErrorButtons');
+      const cfg = RESOLUTION_CONFIGS[state.leastCount];
+      container.innerHTML = '';
+
+      cfg.zeroStepMultipliers.forEach(mult => {
+        const val = Number((mult * state.leastCount).toFixed(2));
+        const isActive = Math.abs(state.zeroError - val) < 1e-4;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = val > 0 ? `+${val.toFixed(2)}` : val.toFixed(2);
+        btn.className = isActive
+          ? 'py-1.5 rounded-lg border font-mono text-[11px] font-semibold bg-amber-500/25 border-amber-400/60 text-amber-200 transition'
+          : 'py-1.5 rounded-lg border font-mono text-[11px] bg-slate-950 border-slate-800 text-slate-400 hover:text-white transition';
+        btn.onclick = () => setZeroError(val);
+        container.appendChild(btn);
+      });
+
+      const zeText = state.zeroError === 0
+        ? '0.00 mm (ปกติ)'
+        : `${state.zeroError > 0 ? '+' : ''}${state.zeroError.toFixed(2)} mm`;
+      document.getElementById('zeroErrorLabel').textContent = zeText;
+    }
+
+    function setZeroError(zeVal) {
+      state.zeroError = zeVal;
+      rebuildZeroErrorButtons();
+      updateVernierScaleTexture();
+      syncControlsUI();
+      renderLoupe2D();
+    }
+
+    function generateRandomObjectDimension(type) {
+      let min = 16, max = 55;
+      if (type === 'sphere') { min = 15; max = 46; }
+      else if (type === 'tube') { min = 14; max = 34; }
+      else if (type === 'block') { min = 18; max = 64; }
+      else if (type === 'ring') { min = 20; max = 48; }
+      else if (type === 'depth') { min = 16; max = 58; }
+
+      const raw = min + Math.random() * (max - min);
+      return quantizeToLC(raw, state.leastCount);
+    }
+
+    function selectSampleObject(type, keepQuizLock = false) {
+      if (state.isLocked && !keepQuizLock) {
+        toggleLock(false);
+      }
+
+      state.sampleType = type;
+
+      document.querySelectorAll('.obj-btn').forEach(btn => {
+        const active = btn.dataset.obj === type;
+        btn.className = active
+          ? 'obj-btn py-2 px-2.5 rounded-xl border text-left font-medium transition bg-cyan-500/20 border-cyan-500/50 text-cyan-200'
+          : 'obj-btn py-2 px-2.5 rounded-xl border text-left font-medium transition bg-slate-950/70 border-slate-800 text-slate-300 hover:border-slate-600';
+      });
+
+      const actionRow = document.getElementById('objectActionRow');
+      const modeTag = document.getElementById('objectModeTag');
+
+      if (type === 'none') {
+        actionRow.classList.add('hidden');
+        modeTag.textContent = 'Free Move';
+        rebuildSampleObject3D();
+        syncControlsUI();
+        return;
+      }
+
+      actionRow.classList.remove('hidden');
+      state.sampleSize = generateRandomObjectDimension(type);
+      rebuildSampleObject3D();
+
+      if (type === 'sphere' || type === 'tube' || type === 'block') {
+        modeTag.textContent = 'วัดภายนอก (Outside OD)';
+        state.physicalOpening = quantizeToLC(Math.min(MAX_MM, state.sampleSize + 9.0));
+        setCameraPreset('front');
+      } else if (type === 'ring') {
+        modeTag.textContent = 'วัดภายใน (Inside ID)';
+        state.physicalOpening = quantizeToLC(Math.max(8.0, state.sampleSize - 9.0));
+        setCameraPreset('inside');
+      } else if (type === 'depth') {
+        modeTag.textContent = 'วัดความลึก (Depth)';
+        state.physicalOpening = quantizeToLC(Math.max(0.0, state.sampleSize - 11.0));
+        setCameraPreset('depth');
+      }
+
+      update3DCaliperTransforms();
+      syncControlsUI();
+      renderLoupe2D();
+    }
+
+    function autoFitToObject() {
+      if (state.sampleType === 'none') return;
+      if (state.isLocked) toggleLock(false);
+      state.targetOpening = state.sampleSize;
+    }
+
+    function randomizeObjectDimension() {
+      if (state.sampleType === 'none') return;
+      selectSampleObject(state.sampleType);
+      showToast('🔄 สุ่มขนาดชิ้นงานใหม่เรียบร้อย ลองเลื่อนหนีบเพื่อวัดขนาด');
+    }
+
+    function setCameraPreset(preset) {
+      camTween.active = true;
+      if (preset === 'front') {
+        camTween.pos.set(82, 4, 185);
+        camTween.target.set(82, 0, 0);
+      } else if (preset === 'scale') {
+        const focusX = MS_ZERO_X + state.physicalOpening + 18;
+        camTween.pos.set(focusX, 3, 72);
+        camTween.target.set(focusX, 3, 0);
+      } else if (preset === 'inside') {
+        const focusX = Math.max(14, state.physicalOpening * 0.5);
+        camTween.pos.set(focusX, 34, 105);
+        camTween.target.set(focusX, 27, 0);
+      } else if (preset === 'depth') {
+        camTween.pos.set(BEAM_END_X + 20, 14, 115);
+        camTween.target.set(BEAM_END_X + 18, 6, 0);
+      } else {
+        camTween.pos.set(85, 24, 195);
+        camTween.target.set(82, 2, 0);
+      }
+    }
+
+    function initPartLabelDOM() {
+      const overlay = document.getElementById('labelsOverlay');
+      overlay.innerHTML = '';
+
+      ANATOMY_PARTS.forEach(part => {
+        const el = document.createElement('div');
+        el.id = `pin_${part.id}`;
+        el.className = 'part-pin';
+        el.innerHTML = `
+          <div class="px-2 py-0.5 rounded-full bg-slate-950/90 hover:bg-cyan-500 hover:text-slate-950 text-cyan-300 border border-cyan-400/60 text-[11px] font-semibold shadow-lg cursor-pointer flex items-center gap-1 transition">
+            <span class="w-4 h-4 rounded-full bg-cyan-500/25 text-[10px] font-mono flex items-center justify-center font-bold">${part.num}</span>
+            <span class="whitespace-nowrap">${part.th}</span>
+          </div>
+          <div class="part-pin-tooltip absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-56 p-2.5 rounded-xl bg-slate-900/95 border border-cyan-500/40 shadow-2xl text-left">
+            <div class="text-xs font-bold text-cyan-300">${part.th}</div>
+            <div class="text-[10px] font-mono text-slate-400 mb-1">${part.en}</div>
+            <div class="text-[11px] text-slate-200 leading-snug">${part.desc}</div>
+          </div>
+        `;
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          el.classList.toggle('active');
+        });
+        overlay.appendChild(el);
+      });
+    }
+
+    function togglePartLabels() {
+      state.showLabels = !state.showLabels;
+      const overlay = document.getElementById('labelsOverlay');
+      const btn = document.getElementById('btnToggleLabels');
+      overlay.style.display = state.showLabels ? 'block' : 'none';
+
+      btn.className = state.showLabels
+        ? 'px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 backdrop-blur-md hover:bg-cyan-500/30 transition flex items-center gap-1.5 shadow-lg'
+        : 'px-2.5 py-1.5 rounded-xl text-[11px] font-semibold bg-slate-900/80 text-slate-400 border border-slate-700 backdrop-blur-md hover:text-white transition flex items-center gap-1.5 shadow-lg';
+    }
+
+    function updatePartLabelsProjection() {
+      if (!state.showLabels || !camera || !renderer) return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      if (rect.width === 0) return;
+
+      ANATOMY_PARTS.forEach(part => {
+        const el = document.getElementById(`pin_${part.id}`);
+        if (!el) return;
+        const worldPos = part.getPos();
+        const projected = worldPos.clone().project(camera);
+
+        if (projected.z > 1) {
+          el.style.opacity = '0';
+          return;
+        }
+        const x = (projected.x * 0.5 + 0.5) * rect.width;
+        const y = (-projected.y * 0.5 + 0.5) * rect.height;
+        el.style.opacity = '1';
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+      });
+    }
+
+    function setAppMode(mode) {
+      state.appMode = mode;
+
+      const btnLearn = document.getElementById('btnModeLearn');
+      const btnQuiz = document.getElementById('btnModeQuiz');
+      const panelLearn = document.getElementById('panelLearnReadout');
+      const panelQuiz = document.getElementById('panelQuizCard');
+      const legendLearn = document.getElementById('loupeLegendLearn');
+
+      if (mode === 'learn') {
+        btnLearn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20';
+        btnQuiz.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 text-slate-400 hover:text-white';
+        panelLearn.classList.remove('hidden');
+        panelQuiz.classList.add('hidden');
+        legendLearn.classList.remove('hidden');
+        toggleLock(false);
+      } else {
+        btnQuiz.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 bg-indigo-500 text-white shadow-md shadow-indigo-500/30';
+        btnLearn.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 text-slate-400 hover:text-white';
+        panelLearn.classList.add('hidden');
+        panelQuiz.classList.remove('hidden');
+        legendLearn.classList.add('hidden');
+        generateNewQuizQuestion();
+      }
+
+      syncControlsUI();
+      renderLoupe2D();
+    }
+
+    function setQuizType(qType) {
+      state.quizType = qType;
+      document.getElementById('btnQuizTypeScale').className = qType === 'scale'
+        ? 'py-1.5 px-2 rounded-lg font-semibold bg-indigo-500 text-white transition'
+        : 'py-1.5 px-2 rounded-lg font-semibold text-slate-400 hover:text-white transition';
+      document.getElementById('btnQuizTypeObject').className = qType === 'object'
+        ? 'py-1.5 px-2 rounded-lg font-semibold bg-indigo-500 text-white transition'
+        : 'py-1.5 px-2 rounded-lg font-semibold text-slate-400 hover:text-white transition';
+
+      generateNewQuizQuestion();
+    }
+
+    function generateNewQuizQuestion() {
+      state.quizAnswered = false;
+      const input = document.getElementById('quizInput');
+      const feedback = document.getElementById('quizFeedbackBox');
+      const promptEl = document.getElementById('quizPromptText');
+      const btnSubmit = document.getElementById('btnSubmitQuiz');
+
+      input.value = '';
+      input.disabled = false;
+      btnSubmit.disabled = false;
+      feedback.classList.add('hidden');
+
+      const zeNotice = state.zeroError !== 0
+        ? ` <span class="text-amber-300 font-semibold">(มีค่า Zero Error = ${state.zeroError > 0 ? '+' : ''}${state.zeroError.toFixed(2)} mm)</span>`
+        : '';
+
+      if (state.quizType === 'scale') {
+        selectSampleObject('none', true);
+        const randomVal = quantizeToLC(4 + Math.random() * 115, state.leastCount);
+        state.physicalOpening = randomVal;
+        state.quizExpectedAnswer = Number(randomVal.toFixed(2));
+        update3DCaliperTransforms();
+        toggleLock(true);
+        setCameraPreset('scale');
+
+        promptEl.innerHTML = `<strong>โจทย์อ่านค่าสเกล:</strong> สเกลถูกล็อกไว้แล้ว จงอ่านค่าความยาวที่วัดได้สุทธิในหน่วย <strong>mm</strong>${zeNotice}`;
+      } else {
+        toggleLock(false);
+        const types = ['sphere', 'tube', 'block', 'ring', 'depth'];
+        const chosen = types[Math.floor(Math.random() * types.length)];
+        selectSampleObject(chosen, true);
+        state.quizExpectedAnswer = Number(state.sampleSize.toFixed(2));
+
+        promptEl.innerHTML = `<strong>โจทย์วัดวัตถุปริศนา:</strong> เลื่อนแคลิปเปอร์หนีบ/สัมผัสชิ้นงานให้พอดี แล้วอ่านค่าขนาดจริงของชิ้นงานในหน่วย <strong>mm</strong>${zeNotice}`;
+      }
+
+      syncControlsUI();
+      renderLoupe2D();
+    }
+
+    function submitQuizAnswer() {
+      if (state.quizAnswered) return;
+      const input = document.getElementById('quizInput');
+      const raw = parseFloat(input.value);
+
+      if (Number.isNaN(raw)) {
+        showToast('กรุณากรอกตัวเลขคำตอบในหน่วย mm ก่อนตรวจคำตอบ');
+        return;
+      }
+
+      if (state.quizType === 'object' && Math.abs(state.physicalOpening - state.sampleSize) > 1e-4) {
+        state.physicalOpening = state.sampleSize;
+        update3DCaliperTransforms();
+      }
+
+      state.quizAnswered = true;
+      state.quizScoreTotal += 1;
+
+      const expected = state.quizExpectedAnswer;
+      const isCorrect = Math.abs(raw - expected) < (state.leastCount * 0.45);
+
+      if (isCorrect) {
+        state.quizScoreRight += 1;
+        state.quizStreak += 1;
+      } else {
+        state.quizStreak = 0;
+      }
+
+      document.getElementById('quizScore').textContent = `${state.quizScoreRight}/${state.quizScoreTotal}`;
+      document.getElementById('quizStreak').textContent = `${state.quizStreak}`;
+
+      const metro = computeMetrology();
+      const feedback = document.getElementById('quizFeedbackBox');
+      feedback.classList.remove('hidden');
+
+      if (isCorrect) {
+        feedback.className = 'p-3 rounded-xl border border-emerald-500/50 bg-emerald-950/50 text-xs space-y-1 text-emerald-200';
+        feedback.innerHTML = `
+          <div class="font-bold text-emerald-300 text-sm">✅ ถูกต้องแม่นยำ! (${expected.toFixed(2)} mm)</div>
+          <div class="font-mono text-[11px] text-slate-200">
+            MS (${metro.msMM.toFixed(2)}) + VS [ขีด ${metro.tickIdx} × ${state.leastCount.toFixed(2)} = ${metro.vsMM.toFixed(2)}] − ZE (${metro.ze.toFixed(2)}) = <strong>${expected.toFixed(2)} mm</strong>
+          </div>
+        `;
+      } else {
+        feedback.className = 'p-3 rounded-xl border border-rose-500/50 bg-rose-950/50 text-xs space-y-1 text-rose-200';
+        feedback.innerHTML = `
+          <div class="font-bold text-rose-300 text-sm">❌ ยังไม่ตรง (คุณตอบ ${raw.toFixed(2)} mm • เฉลยคือ ${expected.toFixed(2)} mm)</div>
+          <div class="font-mono text-[11px] text-slate-200">
+            วิธีคิด: MS = ${metro.msMM.toFixed(2)} mm | ขีดเวอร์เนียร์ตรงที่ขีด ${metro.tickIdx} (+${metro.vsMM.toFixed(2)} mm) | ZE = ${metro.ze.toFixed(2)} mm
+          </div>
+          <div class="text-[11px] text-cyan-300">ดูเส้นชี้ตำแหน่งสีฟ้าและสีเขียวบนแว่นขยายสเกล 2D ด้านล่างประกอบ</div>
+        `;
+      }
+
+      syncControlsUI();
+      renderLoupe2D();
+    }
+
+    function getWorldXOnBeamPlane(clientX, clientY) {
+      const rect = renderer.domElement.getBoundingClientRect();
+      dragState.ndc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+      dragState.ndc.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+      dragState.raycaster.setFromCamera(dragState.ndc, camera);
+      const hitPoint = new THREE.Vector3();
+      dragState.raycaster.ray.intersectPlane(dragState.dragPlane, hitPoint);
+      return hitPoint ? hitPoint.x : 0;
+    }
+
+    function setupViewportInteractions() {
+      const dom = renderer.domElement;
+
+      dom.addEventListener('pointerdown', (e) => {
+        const rect = dom.getBoundingClientRect();
+        dragState.ndc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        dragState.ndc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        dragState.raycaster.setFromCamera(dragState.ndc, camera);
+
+        const hits = dragState.raycaster.intersectObjects(draggableMeshes, false);
+        if (hits.length > 0) {
+          if (state.isLocked) {
+            showToast('🔒 สกรูล็อกทำงานอยู่ ปลดล็อกสเกลก่อนเลื่อน');
+            return;
+          }
+          dragState.active = true;
+          controls.enabled = false;
+          camTween.active = false;
+          dragState.startMouseWorldX = getWorldXOnBeamPlane(e.clientX, e.clientY);
+          dragState.startOpening = state.physicalOpening;
+          dom.style.cursor = 'ew-resize';
+          dom.setPointerCapture(e.pointerId);
+        } else {
+          camTween.active = false;
+        }
+      });
+
+      dom.addEventListener('pointermove', (e) => {
+        if (dragState.active) {
+          const curWorldX = getWorldXOnBeamPlane(e.clientX, e.clientY);
+          const deltaMM = curWorldX - dragState.startMouseWorldX;
+          setPhysicalOpening(dragState.startOpening + deltaMM);
+          return;
+        }
+
+        const rect = dom.getBoundingClientRect();
+        dragState.ndc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        dragState.ndc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        dragState.raycaster.setFromCamera(dragState.ndc, camera);
+        const hits = dragState.raycaster.intersectObjects(draggableMeshes, false);
+        dom.style.cursor = hits.length > 0 ? (state.isLocked ? 'not-allowed' : 'ew-resize') : 'grab';
+      });
+
+      const endDrag = (e) => {
+        if (dragState.active) {
+          dragState.active = false;
+          controls.enabled = true;
+          dom.style.cursor = 'grab';
+          try { dom.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+      };
+      dom.addEventListener('pointerup', endDrag);
+      dom.addEventListener('pointercancel', endDrag);
+
+      const loupe = document.getElementById('loupeCanvas');
+      let loupeDrag = { active: false, startX: 0, startOpening: 0 };
+
+      loupe.addEventListener('pointerdown', (e) => {
+        if (state.isLocked) {
+          showToast('🔒 สกรูล็อกทำงานอยู่ ปลดล็อกสเกลก่อนเลื่อน');
+          return;
+        }
+        loupeDrag.active = true;
+        loupeDrag.startX = e.clientX;
+        loupeDrag.startOpening = state.physicalOpening;
+        loupe.setPointerCapture(e.pointerId);
+      });
+
+      loupe.addEventListener('pointermove', (e) => {
+        if (!loupeDrag.active) return;
+        const cfg = RESOLUTION_CONFIGS[state.leastCount];
+        const pxPerMM = Math.max(12.5, (loupe.getBoundingClientRect().width / (cfg.spanMM + 16))) * state.loupeZoom;
+        const deltaMM = (e.clientX - loupeDrag.startX) / pxPerMM;
+        setPhysicalOpening(loupeDrag.startOpening + deltaMM);
+      });
+
+      const endLoupeDrag = (e) => {
+        if (loupeDrag.active) {
+          loupeDrag.active = false;
+          try { loupe.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+      };
+      loupe.addEventListener('pointerup', endLoupeDrag);
+      loupe.addEventListener('pointercancel', endLoupeDrag);
+
+      window.addEventListener('keydown', (e) => {
+        if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          stepCaliperByLC(e.shiftKey ? 10 : 1);
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          stepCaliperByLC(e.shiftKey ? -10 : -1);
+        }
+      });
+
+      window.addEventListener('resize', handleResize);
+    }
+
+    function handleResize() {
+      if (!renderer || !camera) return;
+      const mount = document.getElementById('threeMount');
+      const rect = mount.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        camera.aspect = rect.width / rect.height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(rect.width, rect.height);
+      }
+      renderLoupe2D();
+    }
+
+    function toggleLoupeZoom() {
+      state.loupeZoom = state.loupeZoom === 1.0 ? 1.75 : 1.0;
+      document.getElementById('btnLoupeZoom').textContent = `ซูม: ${state.loupeZoom.toFixed(2)}x`;
+      renderLoupe2D();
+    }
+
+    function toggleHelpModal(show) {
+      const modal = document.getElementById('helpModal');
+      if (show) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const banner = document.getElementById('toastBanner');
+      banner.textContent = msg;
+      banner.classList.remove('opacity-0', '-translate-y-2');
+      banner.classList.add('opacity-100', 'translate-y-0');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        banner.classList.remove('opacity-100', 'translate-y-0');
+        banner.classList.add('opacity-0', '-translate-y-2');
+      }, 2400);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (state.targetOpening !== null) {
+        const diff = state.targetOpening - state.physicalOpening;
+        if (Math.abs(diff) <= state.leastCount) {
+          setPhysicalOpening(state.targetOpening, true);
+          state.targetOpening = null;
+          showToast('✓ เลื่อนหนีบสัมผัสชิ้นงานพอดีแล้ว');
+        } else {
+          const nextStep = state.physicalOpening + diff * 0.22;
+          state.physicalOpening = quantizeToLC(nextStep);
+          update3DCaliperTransforms();
+          syncControlsUI();
+          renderLoupe2D();
+        }
+      }
+
+      if (lockScrewGroup) {
+        const targetY = state.isLocked ? 21.1 : 23.2;
+        const targetRot = state.isLocked ? Math.PI * 1.5 : 0;
+        lockScrewGroup.position.y += (targetY - lockScrewGroup.position.y) * 0.2;
+        lockScrewGroup.rotation.y += (targetRot - lockScrewGroup.rotation.y) * 0.2;
+      }
+
+      if (camTween.active && camera && controls) {
+        camera.position.lerp(camTween.pos, 0.11);
+        controls.target.lerp(camTween.target, 0.11);
+        if (camera.position.distanceTo(camTween.pos) < 0.25 && controls.target.distanceTo(camTween.target) < 0.25) {
+          camTween.active = false;
+        }
+      }
+
+      if (controls) controls.update();
+      if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+        updatePartLabelsProjection();
+      }
+    }
+
+    window.onload = function () {
+      try {
+        initThreeScene();
+        rebuildZeroErrorButtons();
+        update3DCaliperTransforms();
+        syncControlsUI();
+        handleResize();
+        animate();
+      } catch (err) {
+        console.error('Initialization error:', err);
+      }
+    };
+  </script>
+</body>
+</html>
