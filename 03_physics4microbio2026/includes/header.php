@@ -37,8 +37,8 @@
         }
     </script>
     
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@300;400;500;600&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Fonts: Prompt & Sarabun for pristine Thai typography, Outfit & Inter for numerals & Latin -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom Style Sheet -->
@@ -64,17 +64,19 @@
         :root {
             --primary: #f97316;
             --secondary: #3b82f6;
-            --dark-bg: #1e293b;
+            --dark-bg: #0b1120;
         }
 
         body {
-            font-family: 'Inter', 'Sarabun', sans-serif;
+            font-family: 'Prompt', 'Sarabun', 'Inter', sans-serif;
             background-color: var(--dark-bg);
             color: #f1f5f9;
+            letter-spacing: normal !important;
         }
 
-        h1, h2, h3, .font-heading {
-            font-family: 'Outfit', sans-serif;
+        h1, h2, h3, h4, h5, h6, .font-heading {
+            font-family: 'Prompt', 'Outfit', sans-serif;
+            letter-spacing: normal !important;
         }
 
         .glass-nav {
@@ -106,7 +108,7 @@ $currentFilename = basename($_SERVER['PHP_SELF']);
 if (strpos($currentFilename, '_en.php') !== false) $currentLang = 'en';
 elseif (strpos($currentFilename, '_zh.php') !== false) $currentLang = 'zh';
 ?>
-<body class="lang-<?php echo $currentLang; ?> pt-28">
+<body class="lang-<?php echo $currentLang; ?> pt-32 pb-16 min-h-screen">
 
 <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl glass-nav rounded-2xl px-6 py-3 shadow-2xl">
     <div class="flex items-center justify-between">

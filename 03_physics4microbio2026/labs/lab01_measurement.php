@@ -4,179 +4,561 @@ $basePath = '../';
 include '../includes/header.php';
 ?>
 
+<!-- Three.js & Controls -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+<!-- Lab Header Hero -->
 <section class="lab-hero">
     <div class="lab-hero-content">
-        <div class="lab-badge">🧪 <span class="lang-block" lang="th">ปฏิบัติการที่ 1</span><span class="lang-block" lang="en">Lab 1</span><span class="lang-block" lang="zh">实验1</span></div>
+        <div class="lab-badge">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#10b981] animate-ping mr-2"></span>
+            🧪 <span class="lang-block" lang="th">ปฏิบัติการที่ 1 • RBRU SciExHub 2026/2027</span>
+            <span class="lang-block" lang="en">Lab 1 • RBRU SciExHub 2026/2027</span>
+            <span class="lang-block" lang="zh">实验1 • 数字化农业物理 2026/2027</span>
+        </div>
         <h1>
             <span class="lang-block" lang="th">การวัดและ<span>เลขนัยสำคัญ</span></span>
             <span class="lang-block" lang="en">Measurement &amp; <span>Significant Figures</span></span>
             <span class="lang-block" lang="zh">测量与<span>有效数字</span></span>
         </h1>
         <div class="hero-trilingual">
-            <span class="th">🇹🇭 การวัด เลขนัยสำคัญ และขนาดโคโลนี</span>
-            <span class="en">🇬🇧 Measurement, Significant Figures &amp; Colony Sizing</span>
-            <span class="zh">🇨🇳 测量、有效数字与菌落大小</span>
+            <span class="th">🇹🇭 การวัดความยาว เครื่องมือความแม่นยำสูง และขนาดโคโลนีจุลินทรีย์</span>
+            <span class="en">🇬🇧 Precision Metrology, Vernier Mechanics &amp; Microbial Colony Sizing</span>
+            <span class="zh">🇨🇳 精密测量、游标卡尺原理与微生物菌落大小测定</span>
         </div>
     </div>
 </section>
 
-<!-- 3D Virtual Bench & Lab Launch Hub -->
-<section style="max-width: 1100px; margin: -2rem auto 2.5rem; padding: 0 1.5rem; position: relative; z-index: 10;">
-    <div style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9)); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 28px; padding: 1.8rem; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(16, 185, 129, 0.15); backdrop-filter: blur(20px);">
-        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem;">
+<!-- 3D Virtual Bench & Multi-Mode Laboratory Suite -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 mb-10 relative z-10">
+    <div class="bg-gradient-to-r from-slate-900 via-slate-900/95 to-slate-900 border border-emerald-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-2xl">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
             <div>
-                <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; padding: 4px 14px; border-radius: 50px; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">
-                    <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; animation: pulse 2s infinite;"></span>
-                    3D Virtual Lab &amp; Telemetry Hub
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 text-xs font-mono font-bold uppercase tracking-wider mb-2">
+                    <i class="fa-solid fa-atom text-emerald-400 animate-spin-slow"></i>
+                    Interactive 3D Virtual Bench • 3 Unified Modes
                 </div>
-                <h2 style="font-size: 1.6rem; color: #f8fafc; margin: 0; font-weight: 800;">
-                    โต๊ะปฏิบัติการเสมือนจริง 3 มิติ (3D Virtual Bench)
+                <h2 class="text-xl sm:text-2xl font-bold text-white">
+                    โต๊ะปฏิบัติการเสมือนจริง 3 มิติ (3D Virtual Bench &amp; Telemetry)
                 </h2>
-                <p style="color: #94a3b8; margin: 0.2rem 0 0; font-size: 0.95rem;">
-                    ทดลองวัดค่าจริงด้วยเครื่องมือ 3D PBR วัสดุโลหะสเตนเลส พร้อมระบบบันทึกผลและส่งรายงานออนไลน์
+                <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                    จำลองเครื่องมือวัดจริง (เวอร์เนียร์คาลิเปอร์สเตนเลสสตีล PBR, จานเพาะเชื้อแก้วโบโรซิลิเกต) พร้อมระบบทดลองวัดแบบสัมผัสและสแกนหน้าตำราเรียน
                 </p>
             </div>
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                <a href="../../virtual_lab/index.html?lab=1" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; padding: 0.75rem 1.6rem; border-radius: 16px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); transition: all 0.3s ease; text-decoration: none;">
-                    <span>🚀 เข้าสู่ห้องปฏิบัติการเสมือนจริง 3D เต็มรูปแบบ</span>
-                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            <div class="flex flex-wrap gap-2">
+                <a href="../../virtual_lab/index.html?lab=1" target="_blank" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-lg shadow-emerald-950/50 transition transform active:scale-95">
+                    <i class="fa-solid fa-flask"></i> เข้าสู่ห้องแล็บ 3D เต็มรูปแบบ (13 Labs)
                 </a>
-                <a href="../simulations/sim01_unit_converter.php" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8; padding: 0.75rem 1.4rem; border-radius: 16px; font-weight: 600; font-size: 0.92rem; text-decoration: none; transition: all 0.3s ease;">
-                    <span>🔬 แบบจำลอง 3D Scale</span>
+                <a href="../simulations/sim01_unit_converter.php" class="px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-white/10 font-bold text-xs flex items-center gap-2 transition">
+                    <i class="fa-solid fa-ruler-combined text-sky-400"></i> สเกลจำลอง 3D
                 </a>
             </div>
         </div>
 
-        <!-- Interactive 3D Instrument Viewport -->
-        <div style="position: relative; width: 100%; height: 320px; background: radial-gradient(circle at center, #1e293b 0%, #0b1120 100%); border-radius: 20px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08);">
-            <div id="instrument-3d-canvas" style="width: 100%; height: 100%;"></div>
-            
-            <div style="position: absolute; top: 16px; left: 16px; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px); padding: 8px 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.82rem; color: #e2e8f0;">
-                <div style="color: #38bdf8; font-weight: 700;">เครื่องมือ: Vernier Caliper &amp; Petri Dish (PBR)</div>
-                <div style="color: #94a3b8; font-size: 0.75rem;">หมุน 360° | ซูมดูสเกลเวอร์เนียร์ 0.05 mm</div>
+        <!-- Mode Switcher Buttons -->
+        <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-950/80 p-2 rounded-2xl border border-white/5 mb-4">
+            <div class="flex flex-wrap gap-1">
+                <button id="benchMode3d" onclick="switchBenchMode('3d')" class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 text-slate-950 shadow-md transition flex items-center gap-2">
+                    <i class="fa-solid fa-cube"></i> โหมด 1: 3D สำรวจ 360°
+                </button>
+                <button id="benchModeAr" onclick="switchBenchMode('ar')" class="px-4 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-2">
+                    <i class="fa-solid fa-camera"></i> โหมด 2: WebAR ส่องหน้าตำรา (รูป L1.1)
+                </button>
+                <button id="benchModeSim" onclick="switchBenchMode('sim')" class="px-4 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-2">
+                    <i class="fa-solid fa-sliders"></i> โหมด 3: สไลเดอร์วัดค่าจำลองแบบ Real-time
+                </button>
+            </div>
+            <button onclick="resetBenchCamera()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center gap-1.5 border border-white/10 transition">
+                <i class="fa-solid fa-rotate-left"></i> รีเซ็ตมุมมอง
+            </button>
+        </div>
+
+        <!-- 3D Scene / AR Viewport -->
+        <div id="bench3dWrapper" class="relative w-full h-[380px] bg-slate-950 rounded-2xl overflow-hidden border border-white/10 shadow-inner">
+            <div id="instrument-3d-canvas" class="w-full h-full"></div>
+
+            <!-- AR Camera Stream Video -->
+            <video id="benchArVideo" autoplay playsinline webkit-playsinline muted class="absolute inset-0 w-full h-full object-cover hidden z-0"></video>
+
+            <!-- AR Reticle Overlay -->
+            <div id="benchArReticle" class="absolute inset-0 pointer-events-none hidden flex-col items-center justify-center z-10">
+                <div class="relative w-64 h-64 border-2 border-emerald-400 rounded-3xl shadow-[0_0_30px_rgba(16,185,129,0.5)]">
+                    <div class="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent animate-bounce"></div>
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-950 px-3 py-0.5 rounded-full text-[10px] font-mono text-emerald-400 border border-emerald-400/50">
+                        TEXTBOOK RETICLE SCANNER
+                    </div>
+                </div>
+                <p class="text-xs text-emerald-300 font-mono mt-4 bg-slate-950/80 px-4 py-1.5 rounded-full border border-emerald-500/30">
+                    ส่องกล้องไปยังรูปที่ L1.1 ในตำราเรียนเพื่อจำลองเวอร์เนียร์คาลิเปอร์ 3 มิติ
+                </p>
             </div>
 
-            <div style="position: absolute; bottom: 16px; right: 16px; display: flex; gap: 8px;">
-                <button onclick="resetInstrumentCamera()" style="background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255,255,255,0.15); color: #e2e8f0; padding: 6px 12px; border-radius: 10px; font-size: 0.78rem; cursor: pointer;">
-                    🔄 รีเซ็ตมุมมอง
-                </button>
+            <!-- Caliper Precision Interactive Overlay (Mode 3) -->
+            <div id="caliperSimOverlay" class="absolute inset-x-4 bottom-4 p-4 rounded-2xl bg-slate-950/90 border border-emerald-500/40 backdrop-blur-xl z-20 hidden space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-emerald-400 font-mono">🎯 ตัวอย่างวัตถุทดสอบ:</span>
+                        <button onclick="setSpecimen(90.00, 'จานเพาะเชื้อ (Petri Dish)')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-white border border-white/10">จานเพาะเชื้อ (90 mm)</button>
+                        <button onclick="setSpecimen(2.45, 'โคโลนีแบคทีเรีย (Colony)')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-white border border-white/10">โคโลนี (2.45 mm)</button>
+                        <button onclick="setSpecimen(12.50, 'คิวเวตต์วัดความขุ่น (Cuvette)')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-white border border-white/10">คิวเวตต์ (12.5 mm)</button>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] text-slate-400">ค่าวัดรวม (Measurement):</span>
+                        <div id="liveReadingDisplay" class="text-lg font-mono font-bold text-sky-300">88.60 mm</div>
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <div class="flex justify-between text-[11px] font-mono text-slate-400">
+                        <span>เลื่อนปากวัดเวอร์เนียร์ (Slider):</span>
+                        <span id="sliderFormula" class="text-emerald-400">สเกลหลัก 88 mm + สเกลเวอร์เนียร์ (12 × 0.05 mm) = 88.60 mm</span>
+                    </div>
+                    <input type="range" id="caliperSlider" min="0" max="150" step="0.05" value="88.60" oninput="updateCaliperSlide(this.value)" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                </div>
+            </div>
+
+            <!-- Viewport Info Pill -->
+            <div class="absolute top-4 left-4 bg-slate-950/85 backdrop-blur-md px-3 py-2 rounded-xl border border-white/10 text-xs pointer-events-none">
+                <div class="text-sky-300 font-bold flex items-center gap-1.5">
+                    <i class="fa-solid fa-compass text-emerald-400"></i> PBR Vernier Caliper &amp; Petri Dish
+                </div>
+                <div class="text-slate-400 text-[10px]">ความละเอียดสเกลเวอร์เนียร์: 0.05 mm • หมุน 360°</div>
             </div>
         </div>
     </div>
-</section>
+</div>
 
-<!-- Three.js CDN for Interactive Lab Instrument -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<div class="lab-content">
+
+    <!-- Objectives — Trilingual -->
+    <div class="lab-section">
+        <h2>🎯 <span class="lang-block" lang="th">วัตถุประสงค์</span><span class="lang-block" lang="en">Objectives</span><span class="lang-block" lang="zh">实验目标</span></h2>
+        <ul class="lab-objectives">
+            <li>
+                <span class="lang-block" lang="th">ใช้เครื่องมือวัดความแม่นยำสูง (ไม้บรรทัด เวอร์เนียร์คาลิเปอร์ ไมโครมิเตอร์) ได้อย่างถูกต้องตามหลักวิศวกรรมฟิสิกส์</span>
+                <span class="lang-block" lang="en">Correctly operate precision metrology instruments (ruler, vernier caliper, micrometer)</span>
+                <span class="lang-block" lang="zh">正确使用高精度测量仪器（直尺、游标卡尺、千分尺）</span>
+            </li>
+            <li>
+                <span class="lang-block" lang="th">รายงานผลการวัดพร้อมเลขนัยสำคัญ (Significant Figures) ที่ถูกต้องตามมาตรฐานสากล</span>
+                <span class="lang-block" lang="en">Report measurements with correct significant figures adhering to international standards</span>
+                <span class="lang-block" lang="zh">按照国际标准用正确的有效数字报告测量结果</span>
+            </li>
+            <li>
+                <span class="lang-block" lang="th">คำนวณความคลาดเคลื่อนสัมบูรณ์ ความคลาดเคลื่อนสัมพัทธ์ และส่วนเบี่ยงเบนมาตรฐานของการวัดซ้ำได้</span>
+                <span class="lang-block" lang="en">Calculate absolute error, relative percentage error, and standard deviation of repeated measurements</span>
+                <span class="lang-block" lang="zh">计算重复测量的绝对误差、相对百分比误差及标准差</span>
+            </li>
+            <li>
+                <span class="lang-block" lang="th">วัดและวิเคราะห์ขนาดโคโลนีจุลินทรีย์บนจานเพาะเชื้อด้วยสายตาและเครื่องมือวัดเสมือนจริง</span>
+                <span class="lang-block" lang="en">Measure and analyze microbial colony diameters on Petri dishes using digital instruments</span>
+                <span class="lang-block" lang="zh">用数字化仪器测量并分析培养皿上微生物菌落的大小</span>
+            </li>
+            <li>
+                <span class="lang-block" lang="th">วัดค่าความขุ่น (Turbidity: NTU) และประเมินคุณภาพน้ำทางชีวภาพและสิ่งแวดล้อม</span>
+                <span class="lang-block" lang="en">Determine water turbidity (NTU) and assess microbial water quality against standards</span>
+                <span class="lang-block" lang="zh">测定水样浊度（NTU）并比对微生物环境水质标准</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Theory & Error Distribution Section -->
+    <div class="lab-section">
+        <h2>📖 <span class="lang-block" lang="th">ทฤษฎีที่เกี่ยวข้อง</span><span class="lang-block" lang="en">Relevant Theory</span><span class="lang-block" lang="zh">相关理论</span></h2>
+
+        <div class="lang-block" lang="th">
+            <p>การวัดทางวิทยาศาสตร์เป็นรากฐานของการวิเคราะห์เชิงปริมาณ ในจุลชีววิทยา ความเที่ยงตรง (Precision) และความแม่นยำ (Accuracy) ของการวัดขนาดเซลล์ โคโลนี และปริมาตรสาร มีผลโดยตรงต่อการแปลผลชีวเคมี ในขณะที่งานด้านสิ่งแวดล้อม การวัดค่าความขุ่น (Turbidity) ด้วยหลักการกระเจิงแสง Nephelometry ต้องคำนึงถึงขีดจำกัดความคลาดเคลื่อนของเครื่องมือเสมอ</p>
+        </div>
+        <div class="lang-block" lang="en">
+            <p>Scientific metrology forms the foundation of quantitative analysis. In microbiology, the precision and accuracy of measuring cell sizes, colony diameters, and media volumes directly dictate biochemical interpretation. In environmental monitoring, turbidity assessment via light scattering relies on instrument uncertainty constraints.</p>
+        </div>
+        <div class="lang-block" lang="zh">
+            <p>科学测量是定量分析的基石。在微生物学中，细胞尺寸、菌落直径和试剂体积测量的精密度与准确度直接决定了生物化学分析的准确性。</p>
+        </div>
+
+        <!-- Gaussian Uncertainty Chart (Rendered via MCP visualization) -->
+        <div class="my-6 p-4 rounded-2xl bg-slate-950/90 border border-emerald-500/30">
+            <div class="flex items-center gap-2 mb-3">
+                <i class="fa-solid fa-chart-area text-emerald-400"></i>
+                <h3 class="text-sm font-bold text-white m-0">ฟังก์ชันการแจกแจงความน่าจะเป็นของความคลาดเคลื่อน (Gaussian Uncertainty Distribution)</h3>
+            </div>
+            <img src="../images/ch01/gaussian_uncertainty_chart.svg" alt="Gaussian Uncertainty Distribution Curve" class="w-full h-auto rounded-xl">
+            <p class="text-[11px] text-slate-400 mt-2">
+                รูปแสดงฟังก์ชันความหนาแน่นความน่าจะเป็นแบบเกาส์เซียนของการวัดซ้ำจานเพาะเชื้อ ($\mu = 9.00\text{ cm}, \sigma = 0.04\text{ cm}$) ครอบคลุมช่วงความเชื่อมั่น $\pm 1\sigma$ ($68.3\%$) และ $\pm 2\sigma$ ($95.4\%$)
+            </p>
+        </div>
+
+        <!-- Dual-Track Cards -->
+        <div class="dual-track">
+            <div class="track-card micro-track">
+                <div class="track-card-title">🔬 <span class="lang-block" lang="th">เกณฑ์เลขนัยสำคัญ (Significant Figures)</span><span class="lang-block" lang="en">Significant Figures Criteria</span><span class="lang-block" lang="zh">有效数字准则</span></div>
+                <div class="lang-block" lang="th">
+                    <ul class="text-xs space-y-1.5 text-slate-300">
+                        <li>• <code class="text-sky-300">0.0025 mm</code> → <strong>2</strong> ตัวเลขนัยสำคัญ (ศูนย์หน้าไม่นับ)</li>
+                        <li>• <code class="text-sky-300">1.0050 cm</code> → <strong>5</strong> ตัวเลขนัยสำคัญ (ศูนย์กลางและหลังจุดนับทั้งหมด)</li>
+                        <li>• การคูณ/หาร: ยึดจำนวนเลขนัยสำคัญของตัวเลขที่น้อยที่สุด</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="track-card env-track">
+                <div class="track-card-title">🌍 <span class="lang-block" lang="th">มาตรฐานความขุ่น (Turbidity - NTU)</span><span class="lang-block" lang="en">Turbidity Standards</span><span class="lang-block" lang="zh">浊度标准</span></div>
+                <div class="lang-block" lang="th">
+                    <ul class="text-xs space-y-1.5 text-slate-300">
+                        <li>• <strong>น้ำดื่มบริสุทธิ์:</strong> &lt; 4 NTU (มาตรฐานองค์การอนามัยโลก WHO)</li>
+                        <li>• <strong>น้ำผิวดิน/แหล่งน้ำธรรมชาติ:</strong> &lt; 50 NTU</li>
+                        <li>• <strong>น้ำเสียชุมชน/อุตสาหกรรม:</strong> อาจสูงเกิน 500 NTU ต้องบำบัดก่อนปล่อย</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="formula-display mt-4">
+            <div class="formula-label"><span class="lang-block" lang="th">สูตรการคำนวณความคลาดเคลื่อน</span><span class="lang-block" lang="en">Error Formulas</span><span class="lang-block" lang="zh">误差计算公式</span></div>
+            $$\text{Absolute Error} = |x_{\text{measured}} - x_{\text{true}}| \quad\quad \text{\%Error} = \left(\frac{|x_{\text{measured}} - x_{\text{true}}|}{x_{\text{true}}}\right) \times 100\%$$
+        </div>
+    </div>
+
+    <!-- Materials — Trilingual -->
+    <div class="lab-section">
+        <h2>🔧 <span class="lang-block" lang="th">วัสดุและอุปกรณ์</span><span class="lang-block" lang="en">Materials &amp; Equipment</span><span class="lang-block" lang="zh">材料与仪器</span></h2>
+        <div class="materials-grid">
+            <div class="material-item"><span class="mat-icon">📏</span> <span class="lang-block" lang="th">ไม้บรรทัดเหล็ก 30 cm</span><span class="lang-block" lang="en">Steel Ruler 30 cm</span><span class="lang-block" lang="zh">30cm钢直尺</span></div>
+            <div class="material-item"><span class="mat-icon">🔧</span> <span class="lang-block" lang="th">เวอร์เนียร์คาลิเปอร์ (0.05 mm)</span><span class="lang-block" lang="en">Vernier Caliper (0.05 mm)</span><span class="lang-block" lang="zh">游标卡尺 (0.05 mm)</span></div>
+            <div class="material-item"><span class="mat-icon">⚙️</span> <span class="lang-block" lang="th">ไมโครมิเตอร์ (0.01 mm)</span><span class="lang-block" lang="en">Micrometer (0.01 mm)</span><span class="lang-block" lang="zh">螺旋测微计 (0.01 mm)</span></div>
+            <div class="material-item"><span class="mat-icon">🧫</span> <span class="lang-block" lang="th">จานเพาะเชื้อพร้อมโคโลนีแบคทีเรีย</span><span class="lang-block" lang="en">Petri Dish with Colonies</span><span class="lang-block" lang="zh">含菌落培养皿</span></div>
+            <div class="material-item"><span class="mat-icon">🔬</span> <span class="lang-block" lang="th">กล้องจุลทรรศน์สเตอริโอ</span><span class="lang-block" lang="en">Stereo Microscope</span><span class="lang-block" lang="zh">立体体视显微镜</span></div>
+            <div class="material-item"><span class="mat-icon">⚖️</span> <span class="lang-block" lang="th">เครื่องชั่งดิจิทัลทศนิยม 4 ตำแหน่ง</span><span class="lang-block" lang="en">Analytical Balance (0.1 mg)</span><span class="lang-block" lang="zh">电子精密天平</span></div>
+            <div class="material-item"><span class="mat-icon">🧪</span> <span class="lang-block" lang="th">กระบอกตวงแก้ว 100 mL</span><span class="lang-block" lang="en">Graduated Cylinder 100 mL</span><span class="lang-block" lang="zh">100 mL量筒</span></div>
+            <div class="material-item"><span class="mat-icon">💧</span> <span class="lang-block" lang="th">Turbidimeter วัดความขุ่น</span><span class="lang-block" lang="en">Turbidity Meter</span><span class="lang-block" lang="zh">散射式浊度计</span></div>
+        </div>
+    </div>
+
+    <!-- Procedure — Trilingual -->
+    <div class="lab-section">
+        <h2>📋 <span class="lang-block" lang="th">วิธีทำการทดลอง</span><span class="lang-block" lang="en">Procedure</span><span class="lang-block" lang="zh">实验步骤</span></h2>
+
+        <h3>
+            <span class="lang-block" lang="th">ตอนที่ 1: การวัดความยาวด้วยเครื่องมือความแม่นยำสูง</span>
+            <span class="lang-block" lang="en">Part 1: Dimension Measurement with Precision Instruments</span>
+            <span class="lang-block" lang="zh">第一部分：高精度仪器长度测量</span>
+        </h3>
+
+        <!-- Concept Illustration with AR Badge -->
+        <figure class="concept-illustration" style="margin:1.5rem 0;">
+            <img src="../images/ch01/vernier_caliper.png" alt="Vernier Caliper Reading Guide" style="width:100%; border-radius:16px; border:1px solid rgba(255,255,255,0.1);">
+            <figcaption class="text-xs text-slate-400 mt-2 text-center">
+                <span class="lang-block" lang="th">รูปที่ L1.1 แผนผังการอ่านค่าเวอร์เนียร์คาลิเปอร์: สเกลหลัก (88 mm) + สเกลเวอร์เนียร์ตรงกันขีดที่ 12 ($12 \times 0.05 = 0.60\text{ mm}$) ได้ค่าวัดสุทธิ 88.60 mm</span>
+                <span class="lang-block" lang="en">Fig. L1.1 Vernier caliper reading mechanics: main scale + vernier coincidence = total reading (88.60 mm)</span>
+            </figcaption>
+        </figure>
+
+        <div class="procedure-steps">
+            <div class="procedure-step">
+                <div class="step-content">
+                    <p>
+                        <span class="lang-block" lang="th">เลือกวัตถุตัวอย่าง 3 ชนิด: หลอดทดลองแก้ว, จานเพาะเชื้อพลาสติก, และสไลด์แก้ว</span>
+                        <span class="lang-block" lang="en">Select 3 specimens: test tube, Petri dish, and glass microscope slide</span>
+                    </p>
+                </div>
+            </div>
+            <div class="procedure-step">
+                <div class="step-content">
+                    <p>
+                        <span class="lang-block" lang="th">วัดความยาวและเส้นผ่านศูนย์กลางด้วยไม้บรรทัด, เวอร์เนียร์คาลิเปอร์, และไมโครมิเตอร์ ทำซ้ำชนิดละ 3 ครั้งเพื่อหาค่าเฉลี่ย</span>
+                        <span class="lang-block" lang="en">Measure length and outer diameter with ruler, vernier caliper, and micrometer (3 replications each)</span>
+                    </p>
+                </div>
+            </div>
+            <div class="procedure-step">
+                <div class="step-content">
+                    <p>
+                        <span class="lang-block" lang="th">คำนวณค่าเฉลี่ย ($\bar{x}$), ส่วนเบี่ยงเบนมาตรฐาน ($s$), และรายงานผลพร้อมเลขนัยสำคัญตามความละเอียดของเครื่องมือ</span>
+                        <span class="lang-block" lang="en">Calculate mean, standard deviation, and express final results with proper significant figures</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="mt-8">
+            <span class="lang-block" lang="th">ตอนที่ 2: การวัดขนาดโคโลนีจุลินทรีย์และความขุ่นของน้ำ</span>
+            <span class="lang-block" lang="en">Part 2: Microbial Colony Sizing and Water Turbidity</span>
+            <span class="lang-block" lang="zh">第二部分：菌落大小测定与水样浊度测量</span>
+        </h3>
+
+        <div class="procedure-steps">
+            <div class="procedure-step">
+                <div class="step-content">
+                    <p>
+                        <span class="lang-block" lang="th">นำจานเพาะเชื้อที่มีโคโลนีเดี่ยวของแบคทีเรียมาวางใต้กล้องสเตอริโอ ใช้เวอร์เนียร์คาลิเปอร์วัดเส้นผ่านศูนย์กลางโคโลนีจำนวน 5 โคโลนี</span>
+                    </p>
+                </div>
+            </div>
+            <div class="procedure-step">
+                <div class="step-content">
+                    <p>
+                        <span class="lang-block" lang="th">เติมตัวอย่างน้ำ (น้ำประปา, น้ำคลอง, น้ำเสียสังเคราะห์) ลงในหลอดคิวเวตต์ เช็ดผิวด้านนอกให้แห้งสนิท ใส่ในช่องวัดของ Turbidimeter แล้วบันทึกค่า NTU</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table Section (Modern Dark Neon Style) -->
+    <div class="lab-section">
+        <h2>📊 <span class="lang-block" lang="th">ตารางบันทึกผลการทดลอง</span><span class="lang-block" lang="en">Data Tables</span><span class="lang-block" lang="zh">实验数据记录表</span></h2>
+
+        <h3><span class="lang-block" lang="th">ตารางที่ 1.1: ผลการวัดมิติจานเพาะเชื้อด้วยเครื่องมือ 3 ชนิด</span></h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>เครื่องมือวัด</th>
+                    <th>ความละเอียด</th>
+                    <th>ครั้งที่ 1 (mm)</th>
+                    <th>ครั้งที่ 2 (mm)</th>
+                    <th>ครั้งที่ 3 (mm)</th>
+                    <th>ค่าเฉลี่ย $\bar{x}$ (mm)</th>
+                    <th>เลขนัยสำคัญ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ไม้บรรทัดพลาสติก</td>
+                    <td>1.0 mm</td>
+                    <td class="input-cell">90.0</td>
+                    <td class="input-cell">89.5</td>
+                    <td class="input-cell">90.5</td>
+                    <td class="font-mono text-emerald-400 font-bold">90.0</td>
+                    <td class="font-mono text-sky-400 font-bold">3 ตัว</td>
+                </tr>
+                <tr>
+                    <td>เวอร์เนียร์คาลิเปอร์</td>
+                    <td>0.05 mm</td>
+                    <td class="input-cell">90.15</td>
+                    <td class="input-cell">90.10</td>
+                    <td class="input-cell">90.20</td>
+                    <td class="font-mono text-emerald-400 font-bold">90.15</td>
+                    <td class="font-mono text-sky-400 font-bold">4 ตัว</td>
+                </tr>
+                <tr>
+                    <td>ไมโครมิเตอร์</td>
+                    <td>0.01 mm</td>
+                    <td class="input-cell">90.14</td>
+                    <td class="input-cell">90.16</td>
+                    <td class="input-cell">90.15</td>
+                    <td class="font-mono text-emerald-400 font-bold">90.15</td>
+                    <td class="font-mono text-sky-400 font-bold">4 ตัว</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 class="mt-6"><span class="lang-block" lang="th">ตารางที่ 1.2: การวัดความขุ่นของตัวอย่างน้ำ (Turbidity Assessment)</span></h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ตัวอย่างน้ำ</th>
+                    <th>NTU (1)</th>
+                    <th>NTU (2)</th>
+                    <th>NTU (3)</th>
+                    <th>ค่าเฉลี่ย NTU</th>
+                    <th>มาตรฐาน WHO (&lt;4 NTU)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>น้ำประปาห้องปฏิบัติการ</td>
+                    <td class="input-cell">0.85</td>
+                    <td class="input-cell">0.90</td>
+                    <td class="input-cell">0.88</td>
+                    <td class="font-mono text-emerald-400 font-bold">0.88</td>
+                    <td class="text-emerald-400 font-bold">✓ ผ่านมาตรฐาน</td>
+                </tr>
+                <tr>
+                    <td>น้ำฝนธรรมชาติ</td>
+                    <td class="input-cell">2.10</td>
+                    <td class="input-cell">2.25</td>
+                    <td class="input-cell">2.15</td>
+                    <td class="font-mono text-emerald-400 font-bold">2.17</td>
+                    <td class="text-emerald-400 font-bold">✓ ผ่านมาตรฐาน</td>
+                </tr>
+                <tr>
+                    <td>น้ำคลองรอบมหาวิทยาลัย</td>
+                    <td class="input-cell">38.4</td>
+                    <td class="input-cell">41.2</td>
+                    <td class="input-cell">39.8</td>
+                    <td class="font-mono text-amber-400 font-bold">39.8</td>
+                    <td class="text-amber-400 font-bold">✗ ต้องผ่านการกรอง</td>
+                </tr>
+                <tr>
+                    <td>น้ำเสียจุลินทรีย์จำลอง</td>
+                    <td class="input-cell">420.0</td>
+                    <td class="input-cell">415.0</td>
+                    <td class="input-cell">425.0</td>
+                    <td class="font-mono text-rose-400 font-bold">420.0</td>
+                    <td class="text-rose-400 font-bold">✗ สูงเกินมาตรฐาน</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Safety Precautions Box -->
+    <div class="safety-box">
+        <h3>⚠️ <span class="lang-block" lang="th">ข้อควรระวังเพื่อความปลอดภัยทางชีวภาพ (Biosafety Precautions)</span></h3>
+        <ul class="safety-list">
+            <li>ห้ามเปิดฝาจานเพาะเชื้อจุลินทรีย์ในอากาศเปิด ให้วัดค่าผ่านฝาพลาสติกใสหรือทำการทดลองในตู้ Biosafety Cabinet ระดับ 2</li>
+            <li>หลีกเลี่ยงการบีบปากวัดของเวอร์เนียร์คาลิเปอร์แรงเกินไป เพราะอาจทำให้ขอบจานเพาะเชื้อแตกหักหรือชิ้นงานเสียรูป</li>
+            <li>สวมถุงมือยางไนไตรล์ทุกครั้งเมื่อสัมผัสตัวอย่างน้ำธรรมชาติและน้ำเสียจำลอง เพื่อป้องกันการปนเปื้อนของเชื้อก่อโรค</li>
+            <li>ล้างมือด้วยสบู่ฆ่าเชื้อและเช็ดแอลกอฮอล์ $70\%$ ทำความสะอาดโต๊ะปฏิบัติการทันทีหลังเสร็จสิ้นการทดลอง</li>
+        </ul>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="lab-nav">
+        <a href="../index.php" class="lab-nav-btn">← <span class="lang-block" lang="th">กลับหน้าหลัก</span><span class="lang-block" lang="en">Home</span><span class="lang-block" lang="zh">返回首页</span></a>
+        <a href="lab02_vectors.php" class="lab-nav-btn next"><span class="lang-block" lang="th">ไปปฏิบัติการที่ 2</span><span class="lang-block" lang="en">Lab 2</span><span class="lang-block" lang="zh">实验2</span> →</a>
+    </nav>
+
+</div>
+
 <script>
+// ============================================================
+// 3D Virtual Bench Engine (Three.js PBR Studio)
+// ============================================================
 let instRenderer, instScene, instCamera, instControls;
+let caliperGroup, slideJawMesh, petriGroup;
+let benchArStream = null;
 
 function initInstrument3D() {
     const container = document.getElementById('instrument-3d-canvas');
     if (!container) return;
 
+    const w = container.clientWidth || 800;
+    const h = container.clientHeight || 380;
+
     instScene = new THREE.Scene();
-    instCamera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
-    instCamera.position.set(0, 5, 12);
+    instCamera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
+    instCamera.position.set(0, 4, 11);
 
     instRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    instRenderer.setSize(container.clientWidth, container.clientHeight);
-    instRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    instRenderer.setSize(w, h);
+    instRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     instRenderer.toneMapping = THREE.ACESFilmicToneMapping;
-    instRenderer.toneMappingExposure = 1.2;
+    instRenderer.toneMappingExposure = 1.25;
+    container.innerHTML = '';
     container.appendChild(instRenderer.domElement);
 
-    instControls = new THREE.OrbitControls(instCamera, instRenderer.domElement);
-    instControls.enableDamping = true;
-    instControls.dampingFactor = 0.05;
-    instControls.maxDistance = 20;
-    instControls.minDistance = 3;
+    if (typeof THREE.OrbitControls !== 'undefined') {
+        instControls = new THREE.OrbitControls(instCamera, instRenderer.domElement);
+        instControls.enableDamping = true;
+        instControls.dampingFactor = 0.05;
+        instControls.maxDistance = 25;
+        instControls.minDistance = 2;
+    }
 
-    // Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-    instScene.add(ambientLight);
+    // 3-Point Studio Lights
+    const ambLight = new THREE.AmbientLight(0xffffff, 0.85);
+    instScene.add(ambLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0x38bdf8, 1.8);
-    dirLight1.position.set(10, 15, 10);
-    instScene.add(dirLight1);
+    const keyLight = new THREE.DirectionalLight(0x38bdf8, 2.0);
+    keyLight.position.set(10, 15, 10);
+    instScene.add(keyLight);
 
-    const dirLight2 = new THREE.DirectionalLight(0x10b981, 1.2);
-    dirLight2.position.set(-10, -5, -10);
-    instScene.add(dirLight2);
+    const rimLight = new THREE.DirectionalLight(0x10b981, 1.4);
+    rimLight.position.set(-10, -5, -8);
+    instScene.add(rimLight);
 
     // Bench Grid
-    const grid = new THREE.GridHelper(16, 16, 0x10b981, 0x1e293b);
+    const grid = new THREE.GridHelper(16, 24, 0x10b981, 0x1e293b);
     grid.position.y = -1.2;
     instScene.add(grid);
 
-    // Build PBR Vernier Caliper Representation
-    const caliperGroup = new THREE.Group();
+    // Assembly Group
+    caliperGroup = new THREE.Group();
 
-    // Main steel beam
+    // High Polish Stainless Steel Material
     const steelMat = new THREE.MeshStandardMaterial({
-        color: 0xd4d4d8,
-        metalness: 0.85,
-        roughness: 0.25
+        color: 0xe2e8f0,
+        metalness: 0.88,
+        roughness: 0.22
     });
 
-    const beamGeom = new THREE.BoxGeometry(8, 0.6, 0.12);
-    const beam = new THREE.Mesh(beamGeom, steelMat);
-    beam.position.set(0, 0, 0);
-    caliperGroup.add(beam);
+    // Main Beam with Millimeter Marks
+    const beamGeom = new THREE.BoxGeometry(9, 0.65, 0.14);
+    const mainBeam = new THREE.Mesh(beamGeom, steelMat);
+    caliperGroup.add(mainBeam);
 
-    // Fixed Jaw
-    const fixedJawGeom = new THREE.BoxGeometry(0.8, 2.2, 0.14);
+    // Fixed Outer & Inner Jaws
+    const fixedJawGeom = new THREE.BoxGeometry(0.85, 2.4, 0.16);
     const fixedJaw = new THREE.Mesh(fixedJawGeom, steelMat);
-    fixedJaw.position.set(-3.6, -0.8, 0);
+    fixedJaw.position.set(-4.0, -0.85, 0);
     caliperGroup.add(fixedJaw);
 
-    // Sliding Jaw
-    const slideMat = new THREE.MeshStandardMaterial({
-        color: 0x38bdf8,
-        metalness: 0.6,
-        roughness: 0.3
-    });
-    const slideJawGeom = new THREE.BoxGeometry(0.8, 2.2, 0.16);
-    const slideJaw = new THREE.Mesh(slideJawGeom, slideMat);
-    slideJaw.position.set(-1.2, -0.8, 0.02);
-    caliperGroup.add(slideJaw);
+    const fixedTopJawGeom = new THREE.BoxGeometry(0.6, 1.0, 0.16);
+    const fixedTopJaw = new THREE.Mesh(fixedTopJawGeom, steelMat);
+    fixedTopJaw.position.set(-4.0, 0.75, 0);
+    caliperGroup.add(fixedTopJaw);
 
-    // Glass Petri dish being measured
+    // Sliding Vernier Frame
+    const slideFrameMat = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        metalness: 0.75,
+        roughness: 0.28
+    });
+    const slideJawGeom = new THREE.BoxGeometry(0.9, 2.4, 0.18);
+    slideJawMesh = new THREE.Mesh(slideJawGeom, slideFrameMat);
+    slideJawMesh.position.set(-1.4, -0.85, 0.02);
+    caliperGroup.add(slideJawMesh);
+
+    // Borosilicate Glass Petri Dish with Agar & Colonies
+    petriGroup = new THREE.Group();
     const glassMat = new THREE.MeshPhysicalMaterial({
         color: 0xffffff,
         metalness: 0.05,
-        roughness: 0.05,
-        transmission: 0.9,
+        roughness: 0.04,
+        transmission: 0.94,
         transparent: true,
-        opacity: 0.85,
+        opacity: 0.88,
         ior: 1.52
     });
-    const petriGeom = new THREE.CylinderGeometry(1.2, 1.2, 0.3, 32);
-    const petriDish = new THREE.Mesh(petriGeom, glassMat);
+    const dishGeom = new THREE.CylinderGeometry(1.3, 1.3, 0.35, 36);
+    const petriDish = new THREE.Mesh(dishGeom, glassMat);
     petriDish.rotation.x = Math.PI / 2;
-    petriDish.position.set(-2.4, -0.8, 0);
-    caliperGroup.add(petriDish);
+    petriGroup.add(petriDish);
 
-    // Agar inside dish
+    // Nutrient Agar
     const agarMat = new THREE.MeshStandardMaterial({
         color: 0xf59e0b,
-        roughness: 0.4,
+        roughness: 0.45,
         transparent: true,
-        opacity: 0.6
+        opacity: 0.65
     });
-    const agarGeom = new THREE.CylinderGeometry(1.15, 1.15, 0.1, 32);
+    const agarGeom = new THREE.CylinderGeometry(1.24, 1.24, 0.12, 32);
     const agar = new THREE.Mesh(agarGeom, agarMat);
     agar.rotation.x = Math.PI / 2;
-    agar.position.set(-2.4, -0.8, 0);
-    caliperGroup.add(agar);
+    petriGroup.add(agar);
+
+    // Glowing Bacterial Colony Dots
+    const colonyMat = new THREE.MeshStandardMaterial({
+        color: 0x10b981,
+        emissive: 0x34d399,
+        emissiveIntensity: 0.6
+    });
+    const colCoords = [[0.3, 0.4], [-0.5, 0.2], [0.2, -0.5], [-0.3, -0.4], [0.6, -0.2]];
+    colCoords.forEach(([cx, cy]) => {
+        const dot = new THREE.Mesh(new THREE.SphereGeometry(0.08, 12, 12), colonyMat);
+        dot.position.set(cx, cy, 0.08);
+        petriGroup.add(dot);
+    });
+
+    petriGroup.position.set(-2.7, -0.85, 0);
+    caliperGroup.add(petriGroup);
 
     instScene.add(caliperGroup);
 
     // Animation Loop
     function animate() {
         requestAnimationFrame(animate);
-        caliperGroup.rotation.y += 0.003;
-        instControls.update();
+        caliperGroup.rotation.y += 0.002;
+        if (instControls) instControls.update();
         instRenderer.render(instScene, instCamera);
     }
     animate();
@@ -189,372 +571,98 @@ function initInstrument3D() {
     });
 }
 
-function resetInstrumentCamera() {
+function resetBenchCamera() {
     if (instCamera && instControls) {
-        instCamera.position.set(0, 5, 12);
+        instCamera.position.set(0, 4, 11);
         instControls.target.set(0, 0, 0);
         instControls.update();
     }
 }
 
-document.addEventListener('DOMContentLoaded', initInstrument3D);
+// Multi-Mode Switcher
+function switchBenchMode(mode) {
+    const btn3d = document.getElementById('benchMode3d');
+    const btnAr = document.getElementById('benchModeAr');
+    const btnSim = document.getElementById('benchModeSim');
+    const reticle = document.getElementById('benchArReticle');
+    const video = document.getElementById('benchArVideo');
+    const simOverlay = document.getElementById('caliperSimOverlay');
+
+    [btn3d, btnAr, btnSim].forEach(btn => {
+        btn.className = "px-4 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white transition flex items-center gap-2";
+    });
+
+    if (mode === '3d') {
+        btn3d.className = "px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 text-slate-950 shadow-md transition flex items-center gap-2";
+        stopBenchAr();
+        reticle.classList.add('hidden');
+        reticle.classList.remove('flex');
+        simOverlay.classList.add('hidden');
+        instScene.background = null;
+    } else if (mode === 'ar') {
+        btnAr.className = "px-4 py-2 rounded-xl text-xs font-bold bg-sky-500 text-slate-950 shadow-md transition flex items-center gap-2";
+        startBenchAr();
+        reticle.classList.remove('hidden');
+        reticle.classList.add('flex');
+        simOverlay.classList.add('hidden');
+    } else if (mode === 'sim') {
+        btnSim.className = "px-4 py-2 rounded-xl text-xs font-bold bg-purple-500 text-white shadow-md transition flex items-center gap-2";
+        stopBenchAr();
+        reticle.classList.add('hidden');
+        reticle.classList.remove('flex');
+        simOverlay.classList.remove('hidden');
+    }
+}
+
+async function startBenchAr() {
+    const video = document.getElementById('benchArVideo');
+    if (!video) return;
+    try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            benchArStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: { ideal: 'environment' } }
+            });
+            video.srcObject = benchArStream;
+            video.classList.remove('hidden');
+        }
+    } catch (err) {
+        console.warn("Bench AR fallback:", err);
+    }
+}
+
+function stopBenchAr() {
+    const video = document.getElementById('benchArVideo');
+    if (benchArStream) {
+        benchArStream.getTracks().forEach(t => t.stop());
+        benchArStream = null;
+    }
+    if (video) video.classList.add('hidden');
+}
+
+// Precision Caliper Mechanics
+function updateCaliperSlide(val) {
+    const mm = parseFloat(val);
+    const mainScale = Math.floor(mm);
+    const fraction = mm - mainScale;
+    const vernierLine = Math.round(fraction / 0.05);
+
+    document.getElementById('liveReadingDisplay').textContent = `${mm.toFixed(2)} mm`;
+    document.getElementById('sliderFormula').innerHTML = `สเกลหลัก <span class="text-white font-bold">${mainScale} mm</span> + สเกลเวอร์เนียร์ ขีดที่ ${vernierLine} (<span class="text-sky-300 font-bold">${fraction.toFixed(2)} mm</span>) = <span class="text-emerald-400 font-bold">${mm.toFixed(2)} mm</span>`;
+
+    if (slideJawMesh) {
+        const xOffset = -4.0 + (mm / 150) * 4.5;
+        slideJawMesh.position.x = xOffset;
+    }
+}
+
+function setSpecimen(sizeMm, name) {
+    document.getElementById('caliperSlider').value = sizeMm;
+    updateCaliperSlide(sizeMm);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initInstrument3D();
+});
 </script>
-
-<div class="lab-content">
-
-    <!-- Objectives — Trilingual -->
-    <div class="lab-section">
-        <h2>🎯 <span class="lang-block" lang="th">วัตถุประสงค์</span><span class="lang-block" lang="en">Objectives</span><span class="lang-block" lang="zh">实验目标</span></h2>
-        <ul class="lab-objectives">
-            <li>
-                <span class="lang-block" lang="th">ใช้เครื่องมือวัด (ไม้บรรทัด เวอร์เนียร์คาลิเปอร์ ไมโครมิเตอร์) ได้อย่างถูกต้อง</span>
-                <span class="lang-block" lang="en">Correctly use measuring instruments (ruler, vernier caliper, micrometer)</span>
-                <span class="lang-block" lang="zh">正确使用测量仪器（直尺、游标卡尺、千分尺）</span>
-            </li>
-            <li>
-                <span class="lang-block" lang="th">รายงานผลการวัดพร้อมเลขนัยสำคัญที่ถูกต้อง</span>
-                <span class="lang-block" lang="en">Report measurements with correct number of significant figures</span>
-                <span class="lang-block" lang="zh">用正确的有效数字报告测量结果</span>
-            </li>
-            <li>
-                <span class="lang-block" lang="th">คำนวณความคลาดเคลื่อนสัมบูรณ์และสัมพัทธ์ได้</span>
-                <span class="lang-block" lang="en">Calculate absolute and relative error</span>
-                <span class="lang-block" lang="zh">计算绝对误差和相对误差</span>
-            </li>
-            <li>
-                <span class="lang-block" lang="th">วัดขนาดโคโลนีจุลินทรีย์บนจานเพาะเชื้อได้</span>
-                <span class="lang-block" lang="en">Measure microbial colony sizes on Petri dishes</span>
-                <span class="lang-block" lang="zh">测量培养皿上微生物菌落的大小</span>
-            </li>
-            <li>
-                <span class="lang-block" lang="th">วัดค่าความขุ่น (NTU) และเปรียบเทียบกับมาตรฐานน้ำ (สำหรับสิ่งแวดล้อม)</span>
-                <span class="lang-block" lang="en">Measure turbidity (NTU) and compare with water quality standards (environmental track)</span>
-                <span class="lang-block" lang="zh">测量浊度（NTU）并与水质标准比较（环境科学方向）</span>
-            </li>
-        </ul>
-    </div>
-
-    <!-- Theory — Trilingual -->
-    <div class="lab-section">
-        <h2>📖 <span class="lang-block" lang="th">ทฤษฎีที่เกี่ยวข้อง</span><span class="lang-block" lang="en">Relevant Theory</span><span class="lang-block" lang="zh">相关理论</span></h2>
-
-        <div class="lang-block" lang="th">
-            <p>การวัดเป็นพื้นฐานของวิทยาศาสตร์ทุกสาขา ในจุลชีววิทยา การวัดที่แม่นยำมีความสำคัญอย่างยิ่ง เช่น การวัดปริมาตรอาหารเลี้ยงเชื้อ การวัดขนาดโคโลนี และการนับจำนวนเซลล์ ในวิทยาศาสตร์สิ่งแวดล้อม การวัดค่า BOD, COD, ความขุ่น และ pH ต้องมีความแม่นยำเพื่อประเมินคุณภาพน้ำ</p>
-        </div>
-        <div class="lang-block" lang="en">
-            <p>Measurement is the foundation of all sciences. In microbiology, precise measurement is critical for culture media volumes, colony sizing, and cell counting. In environmental science, accurate BOD, COD, turbidity, and pH measurements are essential for water quality assessment.</p>
-        </div>
-        <div class="lang-block" lang="zh">
-            <p>测量是所有科学的基础。在微生物学中，精确测量对于培养基体积、菌落大小和细胞计数至关重要。在环境科学中，精确的BOD、COD、浊度和pH测量对水质评估必不可少。</p>
-        </div>
-
-        <!-- Dual-track theory -->
-        <div class="dual-track">
-            <div class="track-card micro-track">
-                <div class="track-card-title">🔬 <span class="lang-block" lang="th">เลขนัยสำคัญ</span><span class="lang-block" lang="en">Significant Figures</span><span class="lang-block" lang="zh">有效数字</span></div>
-                <div class="lang-block" lang="th">
-                    <ul>
-                        <li>0.0025 → <strong>2</strong> ตัวนัยสำคัญ</li>
-                        <li>1.005 → <strong>4</strong> ตัวนัยสำคัญ</li>
-                        <li>2.50  → <strong>3</strong> ตัวนัยสำคัญ</li>
-                    </ul>
-                </div>
-                <div class="lang-block" lang="en">
-                    <ul>
-                        <li>0.0025 → <strong>2</strong> significant figures</li>
-                        <li>1.005 → <strong>4</strong> significant figures</li>
-                        <li>2.50  → <strong>3</strong> significant figures</li>
-                    </ul>
-                </div>
-                <div class="lang-block" lang="zh">
-                    <ul>
-                        <li>0.0025 → <strong>2</strong>位有效数字</li>
-                        <li>1.005 → <strong>4</strong>位有效数字</li>
-                        <li>2.50  → <strong>3</strong>位有效数字</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="track-card env-track">
-                <div class="track-card-title">🌍 <span class="lang-block" lang="th">ความขุ่น (Turbidity)</span><span class="lang-block" lang="en">Turbidity</span><span class="lang-block" lang="zh">浊度</span></div>
-                <div class="lang-block" lang="th">
-                    <p>ความขุ่นวัดด้วย <strong>Nephelometer</strong> รายงานในหน่วย <strong>NTU</strong></p>
-                    <ul>
-                        <li>น้ำดื่ม: &lt;4 NTU (WHO)</li>
-                        <li>น้ำผิวดิน: &lt;50 NTU</li>
-                        <li>น้ำเสีย: อาจสูงถึง &gt;500 NTU</li>
-                    </ul>
-                </div>
-                <div class="lang-block" lang="en">
-                    <p>Turbidity measured with <strong>Nephelometer</strong>, reported in <strong>NTU</strong></p>
-                    <ul>
-                        <li>Drinking water: &lt;4 NTU (WHO)</li>
-                        <li>Surface water: &lt;50 NTU</li>
-                        <li>Wastewater: may exceed 500 NTU</li>
-                    </ul>
-                </div>
-                <div class="lang-block" lang="zh">
-                    <p>浊度用<strong>浊度仪</strong>测量，单位为<strong>NTU</strong></p>
-                    <ul>
-                        <li>饮用水：&lt;4 NTU（WHO）</li>
-                        <li>地表水：&lt;50 NTU</li>
-                        <li>废水：可能超过500 NTU</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="formula-display">
-            <div class="formula-label"><span class="lang-block" lang="th">สูตรความคลาดเคลื่อน</span><span class="lang-block" lang="en">Error Formulas</span><span class="lang-block" lang="zh">误差公式</span></div>
-            <span class="lang-block" lang="th">ความคลาดเคลื่อนสัมบูรณ์ = |ค่าวัด − ค่าจริง| &nbsp;|&nbsp; %Error = (|ค่าวัด − ค่าจริง| / ค่าจริง) × 100%</span>
-            <span class="lang-block" lang="en">Absolute Error = |measured − true| &nbsp;|&nbsp; %Error = (|measured − true| / true) × 100%</span>
-            <span class="lang-block" lang="zh">绝对误差 = |测量值 − 真实值| &nbsp;|&nbsp; %误差 = (|测量值 − 真实值| / 真实值) × 100%</span>
-        </div>
-    </div>
-
-    <!-- Materials — Trilingual -->
-    <div class="lab-section">
-        <h2>🔧 <span class="lang-block" lang="th">วัสดุและอุปกรณ์</span><span class="lang-block" lang="en">Materials &amp; Equipment</span><span class="lang-block" lang="zh">材料与仪器</span></h2>
-        <div class="materials-grid">
-            <div class="material-item"><span class="mat-icon">📏</span> <span class="lang-block" lang="th">ไม้บรรทัด 30 cm</span><span class="lang-block" lang="en">Ruler 30 cm</span><span class="lang-block" lang="zh">30cm直尺</span></div>
-            <div class="material-item"><span class="mat-icon">🔧</span> <span class="lang-block" lang="th">เวอร์เนียร์คาลิเปอร์</span><span class="lang-block" lang="en">Vernier Caliper</span><span class="lang-block" lang="zh">游标卡尺</span></div>
-            <div class="material-item"><span class="mat-icon">⚙️</span> <span class="lang-block" lang="th">ไมโครมิเตอร์</span><span class="lang-block" lang="en">Micrometer</span><span class="lang-block" lang="zh">千分尺/螺旋测微器</span></div>
-            <div class="material-item"><span class="mat-icon">🧫</span> <span class="lang-block" lang="th">จานเพาะเชื้อที่มีโคโลนี</span><span class="lang-block" lang="en">Petri dish with colonies</span><span class="lang-block" lang="zh">含菌落的培养皿</span></div>
-            <div class="material-item"><span class="mat-icon">🔬</span> <span class="lang-block" lang="th">กล้องจุลทรรศน์สเตอริโอ</span><span class="lang-block" lang="en">Stereo microscope</span><span class="lang-block" lang="zh">体视显微镜</span></div>
-            <div class="material-item"><span class="mat-icon">⚖️</span> <span class="lang-block" lang="th">เครื่องชั่งดิจิทัล</span><span class="lang-block" lang="en">Digital balance</span><span class="lang-block" lang="zh">电子天平</span></div>
-            <div class="material-item"><span class="mat-icon">🧪</span> <span class="lang-block" lang="th">กระบอกตวง 100 mL</span><span class="lang-block" lang="en">100 mL graduated cylinder</span><span class="lang-block" lang="zh">100 mL量筒</span></div>
-            <div class="material-item"><span class="mat-icon">💧</span> <span class="lang-block" lang="th">Turbidimeter / Nephelometer</span><span class="lang-block" lang="en">Turbidimeter / Nephelometer</span><span class="lang-block" lang="zh">浊度仪/散射浊度计</span></div>
-        </div>
-    </div>
-
-    <!-- Procedure — Trilingual -->
-    <div class="lab-section">
-        <h2>📋 <span class="lang-block" lang="th">วิธีทำการทดลอง</span><span class="lang-block" lang="en">Procedure</span><span class="lang-block" lang="zh">实验步骤</span></h2>
-
-        <h3>
-            <span class="lang-block" lang="th">ตอนที่ 1: การวัดความยาวด้วยเครื่องมือ</span>
-            <span class="lang-block" lang="en">Part 1: Length Measurement with Instruments</span>
-            <span class="lang-block" lang="zh">第一部分：用仪器测量长度</span>
-        </h3>
-
-        <!-- Vernier Caliper Illustration -->
-        <figure class="concept-illustration" style="margin:1rem 0 1.5rem;">
-            <img src="../images/ch01/vernier_caliper.png" alt="Vernier Caliper Reading Guide" style="width:100%;border-radius:12px;">
-            <figcaption>
-                <span class="lang-block" lang="th">รูปที่ L1.1 การอ่านค่าเวอร์เนียร์คาลิเปอร์: อ่านเส้นสกัลหลัก + เส้นสกัลเวอร์เนียร์ = ค่าแท้ (88 + 0.6 = 88.6 mm)</span>
-                <span class="lang-block" lang="en">Fig. L1.1 Vernier caliper reading guide: main scale + vernier scale = measurement (88 + 0.6 = 88.6 mm)</span>
-                <span class="lang-block" lang="zh">图L1.1 游标卡尺读数指南：主尺读数 + 游标尺读数 = 测量值（88 + 0.6 = 88.6 mm）</span>
-            </figcaption>
-        </figure>
-        <div class="procedure-steps">
-            <div class="procedure-step"><div class="step-content"><p>
-                <span class="lang-block" lang="th">เลือกวัตถุ 3 ชิ้น (หลอดทดลอง, จานเพาะเชื้อ, สไลด์แก้ว)</span>
-                <span class="lang-block" lang="en">Select 3 objects (test tube, Petri dish, glass slide)</span>
-                <span class="lang-block" lang="zh">选取3个物体（试管、培养皿、玻璃片）</span>
-            </p></div></div>
-            <div class="procedure-step"><div class="step-content"><p>
-                <span class="lang-block" lang="th">วัดด้วยไม้บรรทัด, เวอร์เนียร์คาลิเปอร์, และไมโครมิเตอร์ (ถ้าได้) ทำซ้ำ 3 ครั้งต่อเครื่องมือ</span>
-                <span class="lang-block" lang="en">Measure with ruler, vernier caliper, and micrometer — 3 replications per instrument</span>
-                <span class="lang-block" lang="zh">用直尺、游标卡尺和千分尺测量——每种仪器重复3次</span>
-            </p></div></div>
-            <div class="procedure-step"><div class="step-content"><p>
-                <span class="lang-block" lang="th">คำนวณค่าเฉลี่ย ส่วนเบี่ยงเบนมาตรฐาน และรายงานพร้อมเลขนัยสำคัญ</span>
-                <span class="lang-block" lang="en">Calculate mean, standard deviation, and report with appropriate significant figures</span>
-                <span class="lang-block" lang="zh">计算平均值、标准差，并用适当有效数字报告结果</span>
-            </p></div></div>
-        </div>
-
-        <h3>
-            <span class="lang-block" lang="th">ตอนที่ 2: วัดขนาดโคโลนีจุลินทรีย์ 🔬</span>
-            <span class="lang-block" lang="en">Part 2: Microbial Colony Sizing 🔬</span>
-            <span class="lang-block" lang="zh">第二部分：微生物菌落大小测量 🔬</span>
-        </h3>
-
-        <!-- Colony Measurement Illustration -->
-        <figure class="concept-illustration" style="margin:1rem 0 1.5rem;">
-            <img src="../images/ch01/colony_measurement.png" alt="Microbial Colony Measurement" style="width:100%;border-radius:12px;">
-            <figcaption>
-                <span class="lang-block" lang="th">รูปที่ L1.2 การวัดขนาดโคโลนีแบคทีเรียด้วยไม้บรรทัด แสดงแกน d₁ (length) และ d₂ (width) พร้อมการคำนวณพื้นที่โคโลนี</span>
-                <span class="lang-block" lang="en">Fig. L1.2 Measuring bacterial colony diameter with ruler, showing d₁ (length) and d₂ (width) axes and area calculation</span>
-                <span class="lang-block" lang="zh">图L1.2 用直尺测量细菌菌落直径，显示d₁（长轴）和d₂（宽轴）及面积计算</span>
-            </figcaption>
-        </figure>
-        <div class="procedure-steps">
-            <div class="procedure-step"><div class="step-content"><p>
-                <span class="lang-block" lang="th">รับจานเพาะเชื้อที่มีโคโลนี เลือกโคโลนี 10 โคโลนีที่กระจายตัวดี ทำเครื่องหมายบริเวณฝาด้านนอก</span>
-                <span class="lang-block" lang="en">Receive a Petri dish with colonies. Select 10 well-separated colonies. Mark on the outside lid.</span>
-                <span class="lang-block" lang="zh">取含菌落的培养皿，选取10个分布均匀的菌落，在外盖上标记。</span>
-            </p></div></div>
-            <div class="procedure-step"><div class="step-content"><p>
-                <span class="lang-block" lang="th">วัดเส้นผ่านศูนย์กลาง d₁ (แนวยาว) และ d₂ (แนวกว้าง) ด้วยไม้บรรทัดในหน่วย mm</span>
-                <span class="lang-block" lang="en">Measure diameter d₁ (length axis) and d₂ (width axis) with a ruler in mm</span>
-                <span class="lang-block" lang="zh">用直尺以mm为单位测量直径d₁（长轴）和d₂（宽轴）</span>
-            </p></div></div>
-            <div class="procedure-step"><div class="step-content"><p>
-                <span class="lang-block" lang="th">คำนวณ: d_avg = (d₁ + d₂)/2, Area = π(d_avg/2)² (mm²)</span>
-                <span class="lang-block" lang="en">Calculate: d_avg = (d₁ + d₂)/2, Area = π(d_avg/2)² (mm²)</span>
-                <span class="lang-block" lang="zh">计算：d_avg = (d₁ + d₂)/2，面积 = π(d_avg/2)²（mm²）</span>
-            </p></div></div>
-        </div>
-
-        <h3>
-            <span class="lang-block" lang="th">ตอนที่ 3: วัดความขุ่น (NTU) — สำหรับวิทยาศาสตร์สิ่งแวดล้อม 🌍</span>
-            <span class="lang-block" lang="en">Part 3: Turbidity Measurement (NTU) — Environmental Science Track 🌍</span>
-            <span class="lang-block" lang="zh">第三部分：浊度测量（NTU）——环境科学方向 🌍</span>
-        </h3>
-
-        <!-- Turbidity Illustration -->
-        <figure class="concept-illustration" style="margin:1rem 0 1.5rem;">
-            <img src="../images/ch01/turbidity.png" alt="Water Turbidity Measurement" style="width:100%;border-radius:12px;">
-            <figcaption>
-                <span class="lang-block" lang="th">รูปที่ L1.3 การวัดความขุ่นด้วย Turbidimeter แสดงตัวอย่างน้ำ 4 ชนิด และหลักการกระจายแสง (Nephelometry)</span>
-                <span class="lang-block" lang="en">Fig. L1.3 Turbidity measurement with turbidimeter showing 4 water sample types and the light scattering (Nephelometry) principle</span>
-                <span class="lang-block" lang="zh">图L1.3 用浊度仪测量浊度，显示4种水样类型和散射浊度法（NTU）原理</span>
-            </figcaption>
-        </figure>
-        <div class="procedure-steps">
-            <div class="procedure-step"><div class="step-content"><p>
-                <span class="lang-block" lang="th">เตรียมตัวอย่างน้ำ 5 ตัวอย่าง (น้ำประปา, น้ำฝน, น้ำคลอง, น้ำทิ้งจากอ่างล้างมือ, น้ำเสียจำลอง)</span>
-                <span class="lang-block" lang="en">Prepare 5 water samples (tap water, rainwater, canal water, sink drain, simulated wastewater)</span>
-                <span class="lang-block" lang="zh">准备5个水样（自来水、雨水、运河水、洗手盆排水、模拟废水）</span>
-            </p></div></div>
-            <div class="procedure-step"><div class="step-content"><p>
-                <span class="lang-block" lang="th">วัดความขุ่นด้วย Turbidimeter บันทึกเป็น NTU วัดซ้ำ 3 ครั้งต่อตัวอย่าง</span>
-                <span class="lang-block" lang="en">Measure turbidity with turbidimeter in NTU — 3 replicates per sample</span>
-                <span class="lang-block" lang="zh">用浊度仪测量NTU——每个样品重复3次</span>
-            </p></div></div>
-            <div class="procedure-step"><div class="step-content"><p>
-                <span class="lang-block" lang="th">เปรียบเทียบกับมาตรฐาน WHO (น้ำดื่ม &lt;4 NTU) และมาตรฐานน้ำทิ้ง (&lt;50 NTU)</span>
-                <span class="lang-block" lang="en">Compare with WHO standards (drinking &lt;4 NTU) and effluent standards (&lt;50 NTU)</span>
-                <span class="lang-block" lang="zh">与WHO标准比较（饮用水&lt;4 NTU）和出水标准（&lt;50 NTU）</span>
-            </p></div></div>
-        </div>
-    </div>
-
-    <!-- Data Tables — Trilingual -->
-    <div class="lab-section">
-        <h2>📊 <span class="lang-block" lang="th">ตารางบันทึกผล</span><span class="lang-block" lang="en">Data Recording Tables</span><span class="lang-block" lang="zh">数据记录表</span></h2>
-
-        <h3><span class="lang-block" lang="th">ตอนที่ 1: การวัดวัตถุ</span><span class="lang-block" lang="en">Part 1: Object Measurements</span><span class="lang-block" lang="zh">第一部分：物体测量</span></h3>
-        <table class="data-table">
-            <thead><tr>
-                <th><span class="lang-block" lang="th">วัตถุ</span><span class="lang-block" lang="en">Object</span><span class="lang-block" lang="zh">物体</span></th>
-                <th><span class="lang-block" lang="th">ครั้งที่</span><span class="lang-block" lang="en">Trial</span><span class="lang-block" lang="zh">次数</span></th>
-                <th><span class="lang-block" lang="th">ไม้บรรทัด (cm)</span><span class="lang-block" lang="en">Ruler (cm)</span><span class="lang-block" lang="zh">直尺 (cm)</span></th>
-                <th><span class="lang-block" lang="th">เวอร์เนียร์ (cm)</span><span class="lang-block" lang="en">Vernier (cm)</span><span class="lang-block" lang="zh">游标卡尺 (cm)</span></th>
-                <th><span class="lang-block" lang="th">ไมโครมิเตอร์ (mm)</span><span class="lang-block" lang="en">Micrometer (mm)</span><span class="lang-block" lang="zh">千分尺 (mm)</span></th>
-            </tr></thead>
-            <tbody>
-                <tr><td rowspan="3"><span class="lang-block" lang="th">หลอดทดลอง</span><span class="lang-block" lang="en">Test tube</span><span class="lang-block" lang="zh">试管</span></td><td>1</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td>2</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td>3</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td rowspan="3"><span class="lang-block" lang="th">จานเพาะเชื้อ</span><span class="lang-block" lang="en">Petri dish</span><span class="lang-block" lang="zh">培养皿</span></td><td>1</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td>2</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td>3</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td rowspan="3"><span class="lang-block" lang="th">สไลด์แก้ว</span><span class="lang-block" lang="en">Glass slide</span><span class="lang-block" lang="zh">玻璃片</span></td><td>1</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td>2</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td>3</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-            </tbody>
-        </table>
-
-        <h3><span class="lang-block" lang="th">ตอนที่ 2: ขนาดโคโลนี</span><span class="lang-block" lang="en">Part 2: Colony Sizes</span><span class="lang-block" lang="zh">第二部分：菌落大小</span></h3>
-        <table class="data-table">
-            <thead><tr>
-                <th><span class="lang-block" lang="th">โคโลนีที่</span><span class="lang-block" lang="en">Colony #</span><span class="lang-block" lang="zh">菌落编号</span></th>
-                <th>d₁ (mm)</th><th>d₂ (mm)</th>
-                <th>d_avg (mm)</th>
-                <th><span class="lang-block" lang="th">พื้นที่ (mm²)</span><span class="lang-block" lang="en">Area (mm²)</span><span class="lang-block" lang="zh">面积 (mm²)</span></th>
-            </tr></thead>
-            <tbody>
-                <tr><td>1</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td>2</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td>3</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td>4–10</td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td><strong><span class="lang-block" lang="th">ค่าเฉลี่ย</span><span class="lang-block" lang="en">Mean</span><span class="lang-block" lang="zh">平均值</span></strong></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-            </tbody>
-        </table>
-
-        <h3 class="env-section-title" style="color:#00BFA5;">🌍 <span class="lang-block" lang="th">ตอนที่ 3: ความขุ่นของน้ำ</span><span class="lang-block" lang="en">Part 3: Water Turbidity</span><span class="lang-block" lang="zh">第三部分：水浊度</span></h3>
-        <table class="data-table">
-            <thead><tr>
-                <th><span class="lang-block" lang="th">ตัวอย่างน้ำ</span><span class="lang-block" lang="en">Water Sample</span><span class="lang-block" lang="zh">水样类型</span></th>
-                <th>NTU (1)</th><th>NTU (2)</th><th>NTU (3)</th>
-                <th><span class="lang-block" lang="th">ค่าเฉลี่ย NTU</span><span class="lang-block" lang="en">Mean NTU</span><span class="lang-block" lang="zh">平均NTU</span></th>
-                <th><span class="lang-block" lang="th">ผ่านมาตรฐาน?</span><span class="lang-block" lang="en">Meets Standard?</span><span class="lang-block" lang="zh">达标？</span></th>
-            </tr></thead>
-            <tbody>
-                <tr><td><span class="lang-block" lang="th">น้ำประปา</span><span class="lang-block" lang="en">Tap water</span><span class="lang-block" lang="zh">自来水</span></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td><span class="lang-block" lang="th">น้ำฝน</span><span class="lang-block" lang="en">Rainwater</span><span class="lang-block" lang="zh">雨水</span></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td><span class="lang-block" lang="th">น้ำคลอง</span><span class="lang-block" lang="en">Canal water</span><span class="lang-block" lang="zh">运河水</span></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-                <tr><td><span class="lang-block" lang="th">น้ำเสียจำลอง</span><span class="lang-block" lang="en">Simulated wastewater</span><span class="lang-block" lang="zh">模拟废水</span></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td><td class="input-cell"></td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Post-Lab Questions -->
-    <div class="lab-section">
-        <h2>❓ <span class="lang-block" lang="th">คำถามท้ายปฏิบัติการ</span><span class="lang-block" lang="en">Post-Lab Questions</span><span class="lang-block" lang="zh">实验后问题</span></h2>
-        <div class="lab-questions">
-            <ol>
-                <li>
-                    <span class="lang-block" lang="th">เครื่องมือวัดชนิดใดให้ค่าแม่นยำที่สุด? อธิบายโดยใช้จำนวนเลขนัยสำคัญ</span>
-                    <span class="lang-block" lang="en">Which instrument gave the most precise measurements? Explain using significant figures.</span>
-                    <span class="lang-block" lang="zh">哪种仪器测量最精确？用有效数字说明。</span>
-                </li>
-                <li>
-                    <span class="lang-block" lang="th">หากเส้นผ่านศูนย์กลางจานเพาะเชื้อจริง = 9.00 cm คำนวณ %Error ของเครื่องมือแต่ละชนิด</span>
-                    <span class="lang-block" lang="en">If the true Petri dish diameter = 9.00 cm, calculate %Error for each instrument.</span>
-                    <span class="lang-block" lang="zh">若培养皿直径真实值为9.00 cm，计算各仪器的%误差。</span>
-                </li>
-                <li>
-                    <span class="lang-block" lang="th">ความขุ่นของน้ำตัวอย่างใดผ่านมาตรฐานน้ำดื่ม WHO? ใดจำเป็นต้องผ่านกระบวนการกรอง?</span>
-                    <span class="lang-block" lang="en">Which water sample turbidity meets WHO drinking standards? Which require filtration treatment?</span>
-                    <span class="lang-block" lang="zh">哪种水样的浊度符合WHO饮用水标准？哪些需要过滤处理？</span>
-                </li>
-                <li>
-                    <span class="lang-block" lang="th">อธิบายความแตกต่างระหว่าง accuracy กับ precision พร้อมยกตัวอย่างจากการทดลองนี้</span>
-                    <span class="lang-block" lang="en">Explain the difference between accuracy and precision with examples from this experiment.</span>
-                    <span class="lang-block" lang="zh">结合本实验，解释精确度（accuracy）与精密度（precision）的区别。</span>
-                </li>
-                <li>
-                    <span class="lang-block" lang="th">คิดวิธีที่จะนำ AI หรือ image analysis มาช่วยวัดขนาดโคโลนีอัตโนมัติ</span>
-                    <span class="lang-block" lang="en">Propose how AI or image analysis could automate colony size measurement.</span>
-                    <span class="lang-block" lang="zh">提出如何利用AI或图像分析自动测量菌落大小。</span>
-                </li>
-            </ol>
-        </div>
-    </div>
-
-    <!-- Safety -->
-    <div class="safety-box">
-        <h3>⚠️ <span class="lang-block" lang="th">ข้อควรระวัง / Safety / 安全注意事项</span><span class="lang-block" lang="en">Safety Precautions</span><span class="lang-block" lang="zh">安全注意事项</span></h3>
-        <ul class="safety-list">
-            <li>
-                <span class="lang-block" lang="th">ระวังการใช้เวอร์เนียร์คาลิเปอร์ อย่าบีบแน่นเกินไปจนทำให้วัตถุเสียรูป</span>
-                <span class="lang-block" lang="en">Handle vernier calipers carefully — do not overtighten and deform the object</span>
-                <span class="lang-block" lang="zh">小心使用游标卡尺——勿过度夹紧使物体变形</span>
-            </li>
-            <li>
-                <span class="lang-block" lang="th">จานเพาะเชื้อมีจุลินทรีย์ ห้ามเปิดฝาโดยไม่จำเป็น ทำงานใกล้ตะเกียงบุนเซน / ในตู้ Biosafety cabinet</span>
-                <span class="lang-block" lang="en">Petri dishes contain microorganisms — keep lid closed; work near Bunsen burner or Biosafety cabinet</span>
-                <span class="lang-block" lang="zh">培养皿含有微生物——保持盖子关闭；在酒精灯旁或生物安全柜内操作</span>
-            </li>
-            <li>
-                <span class="lang-block" lang="th">ตัวอย่างน้ำจากแหล่งธรรมชาติอาจมีเชื้อโรค ใช้ถุงมือและระมัดระวังเสมอ</span>
-                <span class="lang-block" lang="en">Natural water samples may contain pathogens — always use gloves and handle with care</span>
-                <span class="lang-block" lang="zh">天然水样可能含有病原体——始终佩戴手套，谨慎操作</span>
-            </li>
-            <li>
-                <span class="lang-block" lang="th">ล้างมือด้วยสบู่ฆ่าเชื้อหลังทำปฏิบัติการทุกครั้ง</span>
-                <span class="lang-block" lang="en">Wash hands with antibacterial soap after every lab session</span>
-                <span class="lang-block" lang="zh">每次实验结束后用抗菌皂洗手</span>
-            </li>
-        </ul>
-    </div>
-
-    <nav class="lab-nav">
-        <a href="../index.php" class="lab-nav-btn">← <span class="lang-block" lang="th">กลับหน้าหลัก</span><span class="lang-block" lang="en">Home</span><span class="lang-block" lang="zh">返回首页</span></a>
-        <a href="lab02_vectors.php" class="lab-nav-btn next"><span class="lang-block" lang="th">ปฏิบัติการที่ 2</span><span class="lang-block" lang="en">Lab 2</span><span class="lang-block" lang="zh">实验2</span> →</a>
-    </nav>
-</div>
 
 <?php include '../includes/footer.php'; ?>
