@@ -75,15 +75,33 @@
     </div>
   </section>
   <script>
+    let landingAudio = null;
     function speakLandingIntro() {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      const msg = new SpeechSynthesisUtterance(
-        "สวัสดีครับนักศึกษาทุกคน อาจารย์ชีวะ ทัศนา ขอต้อนรับเข้าสู่รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา ครับ รายวิชานี้ออกแบบให้เข้าใจง่ายผ่านเครื่องมือห้องแล็บจุลชีววิทยาจริงทั้งสิบสองบท เมื่อพร้อมแล้ว กดที่ปุ่ม กล้องเออาร์ เพื่อเปิดกล้องสมาร์ทโฟนสแกนอารูโคมาร์กเกอร์ได้เลยครับ"
-      );
-      msg.lang = "th-TH";
-      msg.rate = 1.02;
-      window.speechSynthesis.speak(msg);
+      const btn = document.getElementById("btn-landing-voice");
+      if (landingAudio && !landingAudio.paused) {
+        landingAudio.pause();
+        landingAudio.currentTime = 0;
+        if (btn) btn.textContent = "🔊 ฟังเสียงแนะนำ";
+        return;
+      }
+      if (!landingAudio) {
+        landingAudio = new Audio("เอกสารคำสอน_3D_AR_ArUco/webar_aruco/audio/chewa_welcome_full.mp3");
+      }
+      if (btn) btn.textContent = "⏹️ หยุดเสียง";
+      landingAudio.onended = () => {
+        if (btn) btn.textContent = "🔊 ฟังเสียงแนะนำ";
+      };
+      landingAudio.play().catch(() => {
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance(
+          "สวัสดีครับนักศึกษาทุกคน อาจารย์ชีวะ ทัศนา ขอต้อนรับเข้าสู่รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา ครับ รายวิชานี้ออกแบบให้เข้าใจง่ายผ่านเครื่องมือห้องแล็บจุลชีววิทยาจริงทั้งสิบสองบท เมื่อพร้อมแล้ว กดที่ปุ่ม กล้องเออาร์ เพื่อเปิดกล้องสมาร์ทโฟนสแกนอารูโคมาร์กเกอร์ได้เลยครับ"
+        );
+        msg.lang = "th-TH";
+        msg.rate = 1.02;
+        msg.onend = () => { if (btn) btn.textContent = "🔊 ฟังเสียงแนะนำ"; };
+        window.speechSynthesis.speak(msg);
+      });
     }
   </script>
 

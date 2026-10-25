@@ -1,13 +1,18 @@
 /**
  * ============================================================================
- * 3D PIXAR × STUDIO GHIBLI COURSE INTRODUCTION ANIMATION (COVER-MATCHED)
+ * 3D PIXAR × STUDIO GHIBLI COURSE INTRODUCTION ANIMATION & VOICE NARRATION
  * Instructor: Asst. Prof. Dr. Chewa Thassana (ผศ.ดร.ชีวะ ทัศนา)
  * Course: 4011111 Physics for Microbiology (ฟิสิกส์สำหรับจุลชีววิทยา)
  *
- * Uses the exact 3D Pixar cover character of Asst. Prof. Dr. Chewa Thassana
- * (wearing black eyeglasses, sky-blue collared shirt, and navy blazer beside
- * the compound microscope and 3D holographic flagellated bacteria cube)
- * with live 60FPS hologram & Studio Ghibli bioluminescent spore animation.
+ * Features:
+ *   1. Exact cover-matched 3D Pixar portrait of Asst. Prof. Dr. Chewa Thassana
+ *      with compound microscope and 3D holographic flagellated bacteria cube
+ *   2. Real HTML5 MP3 Voice Narration (audio/intro_slide_1..4.mp3,
+ *      audio/chewa_welcome_full.mp3, and audio/ch01..ch12_voice.mp3) with
+ *      Web Speech API fallback so voice playback works 100% on iOS/Android
+ *   3. Live audio progress bar, talking bounce & equalizer wave animation
+ *   4. One-tap "📷 กล้อง AR" button that closes the intro and immediately
+ *      opens the smartphone rear camera ready to scan ArUco markers (ID 0–11)
  * ============================================================================
  */
 (function () {
@@ -17,28 +22,32 @@
       badge: "WELCOME • 4011111 PHYSICS FOR MICROBIOLOGY",
       title: "สวัสดีครับ! ยินดีต้อนรับสู่ฟิสิกส์สำหรับจุลชีววิทยา ✨",
       text: "สวัสดีครับนักศึกษาทุกคน อาจารย์ชีวะ (ผศ.ดร.ชีวะ ทัศนา) ขอต้อนรับเข้าสู่รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา 3(2-3-4) รายวิชานี้ออกแบบด้วยแนวคิด Low-Math, High-Intuition เรียนฟิสิกส์ให้เข้าใจง่ายผ่านเครื่องมือห้องแล็บจุลชีววิทยาจริงครับ",
-      voice: "สวัสดีครับนักศึกษาทุกคน อาจารย์ชีวะ ทัศนา ขอต้อนรับเข้าสู่รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา ครับ รายวิชานี้ออกแบบด้วยแนวคิด โลว์แมท ไฮอินทูอิชัน เรียนฟิสิกส์ให้เข้าใจง่ายผ่านเครื่องมือห้องแล็บจุลชีววิทยาจริงทั้งสิบสองบทครับ"
+      audio: "audio/intro_slide_1.mp3",
+      voice: "สวัสดีครับนักศึกษาทุกคน อาจารย์ชีวะ ทัศนา ขอต้อนรับเข้าสู่รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา จำนวน 3 หน่วยกิต ครับ รายวิชานี้ออกแบบด้วยแนวคิด โลว์แมท ไฮอินทูอิชัน เรียนฟิสิกส์ให้เข้าใจง่ายผ่านเครื่องมือห้องแล็บจุลชีววิทยาจริงทั้งสิบสองบทครับ"
     },
     {
       tab: "🔬 12 บท & แล็บ",
       badge: "12 OBE CHAPTERS • 13 HANDS-ON LABS",
       title: "เชื่อมโยงฟิสิกส์เข้ากับเครื่องมือจุลชีววิทยาครบ 12 บท 🧬",
       text: "เราจะเรียนรู้ตั้งแต่ไมโครปิเปต P1000, การว่ายของแฟลกเจลลา, กฎสโตกส์ในตู้ปลอดเชื้อ, เครื่องปั่นเหวี่ยง RCF (×g), หม้อนึ่ง Autoclave 121°C, เจลอิเล็กโทรโฟรีซิส, กล้องจุลทรรศน์หัวเลนส์น้ำมัน 100x ไปจนถึงการวัดความขุ่นเชื้อ OD600 ครับ",
-      voice: "เราจะเรียนรู้ฟิสิกส์ผ่านเครื่องมือจริงครบสิบสองบท ตั้งแต่ไมโครปิเปต พีหนึ่งพัน การว่ายของแฟลกเจลลา เครื่องปั่นเหวี่ยงอาร์ซีเอฟ หม้อนึ่งความดันไอออโตเคลฟ เจลอิเล็กโทรโฟรีซิส กล้องจุลทรรศน์หัวเลนส์น้ำมันร้อยเท่า ไปจนถึงการวัดความขุ่นโอดีหกร้อยครับ"
+      audio: "audio/intro_slide_2.mp3",
+      voice: "ตลอดทั้งสิบสองบทเรียน และสิบสามปฏิบัติการ เราจะเรียนรู้ฟิสิกส์ผ่านเครื่องมือจริง ตั้งแต่ไมโครปิเปต พีหนึ่งพัน การว่ายของแฟลกเจลลา กฎสโตกส์ในตู้ปลอดเชื้อ เครื่องปั่นเหวี่ยงอาร์ซีเอฟ หม้อนึ่งความดันไอออโตเคลฟ เจลอิเล็กโทรโฟรีซิส กล้องจุลทรรศน์หัวเลนส์น้ำมันร้อยเท่า ไปจนถึงการวัดความขุ่นโอดีหกร้อยครับ"
     },
     {
       tab: "📐 สูตรลัดเข้าใจง่าย",
       badge: "LOW-MATH GUIDE • NO CALCULUS REQUIRED",
       title: "เทคนิคบันได 1,000 เท่า & สามเหลี่ยมสูตรไร้แคลคูลัส 📐",
       text: "ไม่ต้องกังวลเรื่องคณิตศาสตร์ซับซ้อน! เราใช้เทคนิคบันไดเลื่อนจุดทศนิยมขั้นละ 1,000 เท่าสำหรับแปลงหน่วยไมโครลิตร และการปิดตัวแปรในผังสามเหลี่ยมสูตรคำนวณ ช่วยให้คำนวณผลแล็บจุลชีววิทยาได้รวดเร็วและแม่นยำครับ",
-      voice: "ไม่ต้องกังวลเรื่องคณิตศาสตร์ซับซ้อนครับ เราใช้เทคนิคบันไดเลื่อนจุดทศนิยมขั้นละหนึ่งพันเท่า และผังสามเหลี่ยมสูตรคำนวณไร้แคลคูลัส ช่วยให้คำนวณผลปฏิบัติการจุลชีววิทยาได้รวดเร็วและแม่นยำครับ"
+      audio: "audio/intro_slide_3.mp3",
+      voice: "ไม่ต้องกังวลเรื่องคณิตศาสตร์หรือแคลคูลัสซับซ้อนครับ เราใช้เทคนิคบันไดเลื่อนจุดทศนิยมขั้นละหนึ่งพันเท่า สำหรับแปลงหน่วยไมโครลิตร และผังสามเหลี่ยมสูตรคำนวณที่ช่วยให้คำนวณผลปฏิบัติการจุลชีววิทยาได้รวดเร็วและแม่นยำครับ"
     },
     {
       tab: "📷 วิธีส่องกล้อง AR",
       badge: "3D WebAR • ARUCO MARKER DICT_4X4_50 (ID 0–11)",
       title: "กดปุ่ม 'กล้อง AR' เพื่อสแกน ArUco Marker ได้เลย! 📷",
       text: "เมื่อกดปุ่ม '📷 กล้อง AR' ด้านล่าง ระบบจะเปิดกล้องสมาร์ทโฟนพร้อมกรอบเล็งเลเซอร์ทันที เพียงนำไปส่องที่มาร์กเกอร์ ArUco (ID 0–11) ในเอกสารคำสอน โมเดล 3 มิติจะลอยขึ้นมาให้หมุนสำรวจและปรับค่าตัวแปรได้แบบเรียลไทม์ครับ!",
-      voice: "พร้อมแล้วกดที่ปุ่ม กล้องเออาร์ ด้านล่างได้เลยครับ ระบบจะเปิดกล้องสมาร์ทโฟนทันที เพียงนำไปส่องที่มาร์กเกอร์อารูโค ไอดีศูนย์ถึงสิบเอ็ด ในเอกสารคำสอน โมเดลสามมิติจะลอยขึ้นมาให้หมุนสำรวจและทดลองปรับค่าได้จริงครับ"
+      audio: "audio/intro_slide_4.mp3",
+      voice: "เมื่อพร้อมแล้ว กดที่ปุ่ม กล้องเออาร์ ด้านล่างได้เลยครับ ระบบจะเปิดกล้องสมาร์ทโฟนทันที เพียงนำกรอบเล็งไปส่องที่มาร์กเกอร์อารูโค ไอดีศูนย์ถึงสิบเอ็ด ในเอกสารคำสอน โมเดลสามมิติจะลอยขึ้นมาให้หมุนสำรวจและทดลองปรับค่าได้จริงครับ"
     }
   ];
 
@@ -47,6 +56,8 @@
   let autoCycleTimer = null;
   let isWelcomeVisible = true;
   let isSpeakingIntro = false;
+  let activeAudioEl = new Audio();
+  activeAudioEl.preload = "auto";
 
   // --------------------------------------------------------------------------
   // 1. GHIBLI × SCI-FI CHIME SYNTHESIZER (Web Audio API)
@@ -70,7 +81,7 @@
         const t0 = ctx.currentTime + idx * 0.065;
         osc.frequency.setValueAtTime(freq, t0);
         gain.gain.setValueAtTime(0.001, t0);
-        gain.gain.linearRampToValueAtTime(0.085, t0 + 0.02);
+        gain.gain.linearRampToValueAtTime(0.075, t0 + 0.02);
         gain.gain.exponentialRampToValueAtTime(0.0008, t0 + 0.55);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -173,24 +184,24 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 5px 12px;
+      padding: 5px 13px;
       border-radius: 999px;
       font-family: 'Prompt', sans-serif;
-      font-size: 0.72rem;
+      font-size: 0.73rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #10b981, #06b6d4);
+      background: linear-gradient(135deg, #fbbf24, #10b981);
       color: #022c22;
-      border: 1px solid #a7f3d0;
+      border: 1.5px solid #fef08a;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+      box-shadow: 0 4px 16px rgba(251, 191, 36, 0.45);
       transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
     .btn-voice-pill:hover, .btn-voice-pill.speaking {
       transform: translateY(-1px) scale(1.03);
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+      background: linear-gradient(135deg, #00f0ff, #10b981);
+      box-shadow: 0 0 22px rgba(0, 240, 255, 0.85);
     }
 
-    /* 3D Cover Character Viewport Frame (Framed to show full Microscope + Hologram Cube + Prof. Chewa) */
     .chewa-hero-viewport {
       position: relative;
       width: 100%;
@@ -202,10 +213,10 @@
         0 12px 32px rgba(0, 0, 0, 0.65),
         0 0 28px rgba(16, 185, 129, 0.28);
       background: #04131d;
-      margin-bottom: 11px;
+      margin-bottom: 10px;
+      cursor: pointer;
     }
 
-    /* Animated Cover Portrait of Asst. Prof. Dr. Chewa Thassana */
     .chewa-char-img {
       width: 100%;
       height: 100%;
@@ -215,7 +226,7 @@
       animation: chewaBreatheFloat 5.2s infinite ease-in-out;
     }
     .chewa-hero-viewport.speaking .chewa-char-img {
-      animation: chewaTalkingBounce 0.62s infinite ease-in-out;
+      animation: chewaTalkingBounce 0.58s infinite ease-in-out;
     }
     @keyframes chewaBreatheFloat {
       0%, 100% { transform: scale(1.005) translateY(0px); }
@@ -223,10 +234,9 @@
     }
     @keyframes chewaTalkingBounce {
       0%, 100% { transform: scale(1.015) translateY(0px); }
-      50% { transform: scale(1.042) translateY(-4px); }
+      50% { transform: scale(1.045) translateY(-5px); }
     }
 
-    /* Live Interactive Hologram & Ghibli Light Overlay Canvas inside Portrait */
     #chewa-holo-fx-canvas {
       position: absolute;
       inset: 0;
@@ -236,7 +246,6 @@
       z-index: 2;
     }
 
-    /* Floating Holographic ArUco Marker Badge */
     .floating-aruco-holo {
       position: absolute;
       top: 10px;
@@ -282,7 +291,6 @@
       font-size: 0.66rem;
     }
 
-    /* Instructor Nameplate & Live Voice Wave Bar at Bottom of Portrait */
     .chewa-nameplate {
       position: absolute;
       bottom: 8px;
@@ -327,7 +335,7 @@
     .chewa-talk-wave.active span {
       background: #00f0ff;
       box-shadow: 0 0 6px #00f0ff;
-      animation: activeTalkWave 0.38s infinite ease-in-out;
+      animation: activeTalkWave 0.36s infinite ease-in-out;
     }
     .chewa-talk-wave span:nth-child(2) { animation-delay: 0.1s; }
     .chewa-talk-wave span:nth-child(3) { animation-delay: 0.2s; }
@@ -342,7 +350,6 @@
       50% { height: 18px; }
     }
 
-    /* Interactive Slide Tabs */
     .intro-tabs-row {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -372,16 +379,22 @@
       box-shadow: 0 0 12px rgba(0, 240, 255, 0.35);
     }
 
-    /* Animated Speech Bubble Card */
     .chewa-speech-bubble {
       position: relative;
       background: rgba(7, 18, 34, 0.94);
       border: 1.5px solid rgba(52, 211, 153, 0.45);
       border-radius: 18px;
-      padding: 10px 14px;
-      margin-bottom: 12px;
-      min-height: 98px;
+      padding: 10px 14px 12px;
+      margin-bottom: 11px;
+      min-height: 104px;
       box-shadow: inset 0 0 24px rgba(16, 185, 129, 0.08);
+    }
+    .speech-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 3px;
     }
     .speech-badge {
       font-family: 'JetBrains Mono', monospace;
@@ -389,7 +402,13 @@
       font-weight: 700;
       color: #34d399;
       letter-spacing: 0.3px;
-      margin-bottom: 2px;
+    }
+    .speech-audio-status {
+      font-family: 'Prompt', sans-serif;
+      font-size: 0.64rem;
+      font-weight: 600;
+      color: #38bdf8;
+      cursor: pointer;
     }
     .speech-title {
       font-family: 'Prompt', sans-serif;
@@ -405,8 +424,21 @@
       color: #e2e8f0;
       line-height: 1.48;
     }
+    .speech-progress-wrap {
+      margin-top: 8px;
+      height: 4px;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .speech-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #10b981, #00f0ff, #fbbf24);
+      transition: width 0.15s linear;
+    }
 
-    /* Primary CTA: Open AR Camera Ready to Scan ArUco Marker */
     .chewa-cta-stack {
       display: flex;
       flex-direction: column;
@@ -486,7 +518,6 @@
       border-color: #00f0ff;
     }
 
-    /* Keep Bottom Bar above Welcome Screen so tapping bottom 'กล้อง AR' jewel also works immediately */
     #bottom-bar {
       z-index: 200 !important;
     }
@@ -529,14 +560,14 @@
           <span>3D PIXAR × GHIBLI COURSE INTRO</span>
         </div>
         <button type="button" class="btn-voice-pill" id="btn-chewa-voice">
-          <span>🔊 ฟังเสียง อ.ชีวะ แนะนำวิชา</span>
+          <span>🔊 ฟังเสียงบรรยายแนะนำวิชา</span>
         </button>
       </div>
 
       <!-- Cover-Matched 3D Pixar Scene of Asst. Prof. Dr. Chewa Thassana + Microscope + Hologram Cube -->
-      <div class="chewa-hero-viewport" id="chewa-viewport-box">
+      <div class="chewa-hero-viewport" id="chewa-viewport-box" title="แตะที่ภาพเพื่อฟังเสียงบรรยายแนะนำรายวิชา">
         <img
-          src="chewa_pixar_ghibli_welcome.jpg?v=2027.9"
+          src="chewa_pixar_ghibli_welcome.jpg?v=2027.10"
           alt="ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา แนะนำรายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา"
           class="chewa-char-img"
         />
@@ -566,11 +597,17 @@
       <!-- 4 Interactive Course Intro Story Tabs -->
       <div class="intro-tabs-row" id="intro-tabs-container"></div>
 
-      <!-- Animated Speech Bubble -->
+      <!-- Animated Speech Bubble with Audio Progress Bar -->
       <div class="chewa-speech-bubble">
-        <div class="speech-badge" id="chewa-speech-badge"></div>
+        <div class="speech-top-row">
+          <div class="speech-badge" id="chewa-speech-badge"></div>
+          <div class="speech-audio-status" id="chewa-audio-status">🔊 แตะเพื่อฟังเสียงบรรยาย</div>
+        </div>
         <div class="speech-title" id="chewa-speech-title"></div>
         <div class="speech-body" id="chewa-speech-body"></div>
+        <div class="speech-progress-wrap">
+          <div class="speech-progress-bar" id="chewa-audio-progress"></div>
+        </div>
       </div>
 
       <!-- Primary Action Buttons -->
@@ -626,7 +663,7 @@
   }
 
   // --------------------------------------------------------------------------
-  // 4. SLIDE TAB SWITCHING, TYPEWRITER ANIMATION & THAI VOICE NARRATION
+  // 4. REAL MP3 NARRATION ENGINE + WEB SPEECH API FALLBACK (WELCOME + 12 CHAPTERS)
   // --------------------------------------------------------------------------
   const tabsContainer = document.getElementById("intro-tabs-container");
   INTRO_SLIDES.forEach((s, idx) => {
@@ -637,7 +674,7 @@
     btn.onclick = () => {
       if (autoCycleTimer) clearInterval(autoCycleTimer);
       playGhibliWelcomeChime("sparkle");
-      showIntroSlide(idx, false);
+      showIntroSlide(idx, true);
     };
     tabsContainer.appendChild(btn);
   });
@@ -647,13 +684,90 @@
     const vp = document.getElementById("chewa-viewport-box");
     const wave = document.getElementById("chewa-wave-bars");
     const voiceBtn = document.getElementById("btn-chewa-voice");
+    const statusTxt = document.getElementById("chewa-audio-status");
+    const aiWave = document.getElementById("ai-wave-ind");
+
     if (vp) vp.classList.toggle("speaking", talking);
     if (wave) wave.classList.toggle("active", talking);
+    if (aiWave) aiWave.classList.toggle("speaking", talking);
     if (voiceBtn) {
       voiceBtn.classList.toggle("speaking", talking);
       voiceBtn.innerHTML = talking
         ? "<span>⏹️ หยุดเสียงบรรยาย</span>"
-        : "<span>🔊 ฟังเสียง อ.ชีวะ แนะนำวิชา</span>";
+        : "<span>🔊 ฟังเสียงบรรยายแนะนำวิชา</span>";
+    }
+    if (statusTxt) {
+      statusTxt.textContent = talking ? "🔊 กำลังบรรยายเสียงภาษาไทย..." : "🔊 แตะเพื่อฟังเสียงบรรยาย";
+    }
+    if (!talking) {
+      const progBar = document.getElementById("chewa-audio-progress");
+      if (progBar) progBar.style.width = "0%";
+    }
+  }
+
+  function stopAllNarration() {
+    try {
+      activeAudioEl.pause();
+      activeAudioEl.currentTime = 0;
+    } catch (e) {}
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    setTalkingState(false);
+  }
+
+  activeAudioEl.addEventListener("timeupdate", () => {
+    const progBar = document.getElementById("chewa-audio-progress");
+    if (progBar && activeAudioEl.duration > 0) {
+      const pct = Math.min(100, (activeAudioEl.currentTime / activeAudioEl.duration) * 100);
+      progBar.style.width = pct + "%";
+    }
+  });
+
+  function playMP3WithFallback(mp3Url, fallbackText, onFinished) {
+    stopAllNarration();
+    setTalkingState(true);
+
+    activeAudioEl.src = mp3Url;
+    activeAudioEl.onended = () => {
+      setTalkingState(false);
+      if (typeof onFinished === "function") onFinished();
+    };
+    activeAudioEl.onerror = () => {
+      // Fallback to browser SpeechSynthesis if MP3 fails to load
+      if ("speechSynthesis" in window && fallbackText) {
+        const utter = new SpeechSynthesisUtterance(fallbackText);
+        utter.lang = "th-TH";
+        utter.rate = 1.02;
+        utter.onend = () => {
+          setTalkingState(false);
+          if (typeof onFinished === "function") onFinished();
+        };
+        utter.onerror = () => setTalkingState(false);
+        window.speechSynthesis.speak(utter);
+      } else {
+        setTalkingState(false);
+      }
+    };
+
+    const playPromise = activeAudioEl.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // If autoplay blocked or fallback needed
+        if ("speechSynthesis" in window && fallbackText) {
+          const utter = new SpeechSynthesisUtterance(fallbackText);
+          utter.lang = "th-TH";
+          utter.rate = 1.02;
+          utter.onend = () => {
+            setTalkingState(false);
+            if (typeof onFinished === "function") onFinished();
+          };
+          utter.onerror = () => setTalkingState(false);
+          window.speechSynthesis.speak(utter);
+        } else {
+          setTalkingState(false);
+        }
+      });
     }
   }
 
@@ -693,37 +807,48 @@
   }
 
   function speakChewaSlide(idx) {
-    if (!("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
     const slide = INTRO_SLIDES[idx];
-    const utter = new SpeechSynthesisUtterance(slide.voice);
-    utter.lang = "th-TH";
-    utter.rate = 1.02;
-    utter.pitch = 1.04;
-    setTalkingState(true);
-    utter.onend = () => {
-      if (idx + 1 < INTRO_SLIDES.length && isWelcomeVisible && isSpeakingIntro) {
+    playMP3WithFallback(slide.audio, slide.voice, () => {
+      if (idx + 1 < INTRO_SLIDES.length && isWelcomeVisible) {
         setTimeout(() => {
-          if (isWelcomeVisible && isSpeakingIntro) {
+          if (isWelcomeVisible) {
             showIntroSlide(idx + 1, true);
           }
-        }, 450);
-      } else {
-        setTalkingState(false);
+        }, 420);
       }
-    };
-    utter.onerror = () => setTalkingState(false);
-    window.speechSynthesis.speak(utter);
+    });
   }
 
-  document.getElementById("btn-chewa-voice").onclick = () => {
+  // Upgrade Chapter 1–12 Voice Narration (used by bottom bar 'AI เสียง' & CTRL drawer) to play real MP3!
+  window.speakCurrentChapter = function () {
+    const chNum = String((typeof currentMarkerId === "number" ? currentMarkerId : 0) + 1).padStart(2, "0");
+    const mp3File = `audio/ch${chNum}_voice.mp3`;
+    const fallbackVoice =
+      typeof CHAPTER_MODELS !== "undefined" && CHAPTER_MODELS[currentMarkerId]
+        ? CHAPTER_MODELS[currentMarkerId].voice
+        : "";
+    playMP3WithFallback(mp3File, fallbackVoice);
+  };
+
+  window.stopAISpeech = function () {
+    stopAllNarration();
+  };
+
+  function toggleWelcomeVoice() {
     playGhibliWelcomeChime("sparkle");
     if (isSpeakingIntro) {
-      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-      setTalkingState(false);
+      stopAllNarration();
     } else {
+      if (autoCycleTimer) clearInterval(autoCycleTimer);
       showIntroSlide(currentSlideIdx, true);
     }
+  }
+
+  document.getElementById("btn-chewa-voice").onclick = toggleWelcomeVoice;
+  document.getElementById("chewa-audio-status").onclick = toggleWelcomeVoice;
+  document.getElementById("chewa-viewport-box").onclick = (e) => {
+    if (e.target.closest("#holo-aruco-badge")) return;
+    toggleWelcomeVoice();
   };
 
   autoCycleTimer = setInterval(() => {
@@ -734,6 +859,13 @@
 
   showIntroSlide(0, false);
 
+  // Attempt gentle auto-start of Slide 1 narration (succeeds if user navigated via a click)
+  setTimeout(() => {
+    if (isWelcomeVisible && !isSpeakingIntro) {
+      speakChewaSlide(0);
+    }
+  }, 450);
+
   // --------------------------------------------------------------------------
   // 5. OPEN / DISMISS FUNCTIONS & DIRECT AR CAMERA LAUNCHER
   // --------------------------------------------------------------------------
@@ -741,8 +873,7 @@
     if (!isWelcomeVisible) return;
     isWelcomeVisible = false;
     if (autoCycleTimer) clearInterval(autoCycleTimer);
-    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-    setTalkingState(false);
+    stopAllNarration();
     if (playChime) playGhibliWelcomeChime("ar_launch");
     overlay.classList.add("hidden-intro");
   };
@@ -754,7 +885,7 @@
     isWelcomeVisible = true;
     overlay.classList.remove("hidden-intro");
     playGhibliWelcomeChime("sparkle");
-    showIntroSlide(0, false);
+    showIntroSlide(0, true);
   };
 
   async function launchARCameraFromWelcome() {
@@ -806,7 +937,6 @@
     hue: i % 3 === 0 ? "52, 211, 153" : i % 3 === 1 ? "0, 240, 255" : "251, 191, 36"
   }));
 
-  // Floating bioluminescent particles inside the cover's 3D Hologram Cube (left side: x 40..295, y 65..245)
   const cubeMicrobes = Array.from({ length: 18 }, (_, i) => ({
     x: 55 + Math.random() * 220,
     y: 75 + Math.random() * 155,
@@ -821,7 +951,6 @@
     pCtx.clearRect(0, 0, cw, ch);
     const t = ts * 0.0016;
 
-    // 1. Background Ghibli Bioluminescent Spores
     for (let i = 0; i < spores.length; i++) {
       const s = spores[i];
       s.x += s.vx + Math.sin(t + s.phase) * 0.25;
@@ -842,13 +971,11 @@
       pCtx.fill();
     }
 
-    // 2. Foreground Cover Portrait Hologram Cube & Microscope Beam Animation
     if (hCtx) {
       const w = hCanvas.width;
       const h = hCanvas.height;
       hCtx.clearRect(0, 0, w, h);
 
-      // Sweeping cyan laser scanline inside the 3D bacteria hologram cube (x: 26..306, y: 62..255)
       const scanY = 68 + ((Math.sin(t * 1.35) * 0.5 + 0.5) * 180);
       const scanGrad = hCtx.createLinearGradient(28, scanY, 304, scanY);
       scanGrad.addColorStop(0, "rgba(0, 240, 255, 0)");
@@ -859,7 +986,6 @@
       hCtx.fillStyle = scanGrad;
       hCtx.fillRect(28, scanY - 1.5, 276, 3);
 
-      // Glowing microbes swimming inside the hologram cube
       for (let i = 0; i < cubeMicrobes.length; i++) {
         const m = cubeMicrobes[i];
         const mx = m.x + Math.sin(t * 1.9 + m.phase) * 10;
@@ -875,7 +1001,6 @@
         hCtx.fill();
       }
 
-      // Pulsing green condenser light on microscope stage (x: 192, y: 422)
       const stagePulse = 0.35 + 0.35 * Math.sin(t * 3.2);
       const stageGrad = hCtx.createRadialGradient(192, 422, 2, 192, 422, 34);
       stageGrad.addColorStop(0, `rgba(167, 243, 208, ${stagePulse + 0.25})`);
@@ -886,7 +1011,6 @@
       hCtx.arc(192, 422, 34, 0, Math.PI * 2);
       hCtx.fill();
 
-      // Subtle glasses reflection shimmer across Prof. Chewa's eyeglasses (x: 350..475, y: 135..168)
       const glintCycle = (t * 0.55) % 4.0;
       if (glintCycle < 1.2) {
         const prog = glintCycle / 1.2;

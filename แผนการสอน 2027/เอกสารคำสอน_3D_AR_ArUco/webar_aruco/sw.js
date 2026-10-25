@@ -1,9 +1,14 @@
-const CACHE_NAME = 'phys4microb-aruco-v2027-9';
+const CACHE_NAME = 'phys4microb-aruco-v2027-10';
 const ASSETS = [
   './ar_aruco_textbook.html',
   './aruco_marker_sheet.html',
   './chewa_welcome_intro.js',
   './chewa_pixar_ghibli_welcome.jpg',
+  './audio/intro_slide_1.mp3',
+  './audio/intro_slide_2.mp3',
+  './audio/intro_slide_3.mp3',
+  './audio/intro_slide_4.mp3',
+  './audio/chewa_welcome_full.mp3',
   './manifest.json'
 ];
 
