@@ -41,6 +41,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@300;400;500;600&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="<?php echo $basePath ?? ''; ?>css/style.css">
+    
     <!-- MathJax for Equations -->
     <script>
         window.MathJax = {
@@ -103,7 +106,7 @@ $currentFilename = basename($_SERVER['PHP_SELF']);
 if (strpos($currentFilename, '_en.php') !== false) $currentLang = 'en';
 elseif (strpos($currentFilename, '_zh.php') !== false) $currentLang = 'zh';
 ?>
-<body class="lang-<?php echo $currentLang; ?>">
+<body class="lang-<?php echo $currentLang; ?> pt-28">
 
 <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl glass-nav rounded-2xl px-6 py-3 shadow-2xl">
     <div class="flex items-center justify-between">

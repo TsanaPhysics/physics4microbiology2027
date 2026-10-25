@@ -1684,16 +1684,23 @@ input[type="range"] {
     padding: var(--space-3xl) var(--space-xl);
 }
 
-/* Lab section blocks */
+/* Lab section blocks - Modern Dark Glassmorphism 2026/2027 */
 .lab-section {
     margin-bottom: var(--space-3xl);
-    background: white;
-    border-radius: var(--radius-lg);
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 24px;
     padding: var(--space-2xl);
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--gray-200);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     position: relative;
     overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.lab-section:hover {
+    border-color: rgba(16, 185, 129, 0.3);
 }
 
 .lab-section::before {
@@ -1702,24 +1709,27 @@ input[type="range"] {
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #2E7D32, #66BB6A, #A5D6A7);
+    height: 3px;
+    background: linear-gradient(90deg, #10b981, #38bdf8, #818cf8);
 }
 
 .lab-section h2 {
-    font-size: 1.5rem;
-    color: #2E7D32;
+    font-size: 1.6rem;
+    color: #38bdf8;
     margin-bottom: var(--space-lg);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    font-weight: 700;
+    text-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
 }
 
 .lab-section h3 {
-    font-size: 1.15rem;
-    color: var(--gray-800);
+    font-size: 1.25rem;
+    color: #f1f5f9;
     margin-top: var(--space-lg);
     margin-bottom: var(--space-md);
+    font-weight: 600;
 }
 
 /* Objectives list */
@@ -1729,78 +1739,115 @@ input[type="range"] {
 }
 
 .lab-objectives li {
-    padding: 8px 0;
-    padding-left: 30px;
+    padding: 10px 0;
+    padding-left: 36px;
     position: relative;
-    color: var(--gray-700);
+    color: #cbd5e1;
+    font-size: 1rem;
+    line-height: 1.6;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.lab-objectives li:last-child {
+    border-bottom: none;
 }
 
 .lab-objectives li::before {
     content: '🎯';
     position: absolute;
     left: 0;
-    top: 8px;
+    top: 10px;
+    font-size: 1.1rem;
+    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5));
 }
 
 /* Materials grid */
 .materials-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: var(--space-md);
 }
 
 .material-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: #F1F8E9;
-    border-radius: var(--radius-sm);
-    font-size: 0.9rem;
-    border: 1px solid #C8E6C9;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(30, 41, 59, 0.6);
+    border-radius: 16px;
+    font-size: 0.92rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.material-item:hover {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: rgba(16, 185, 129, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .material-item .mat-icon {
-    font-size: 1.2rem;
+    font-size: 1.35rem;
+    filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.4));
 }
 
 /* Procedure steps */
 .procedure-steps {
     counter-reset: step;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
 }
 
 .procedure-step {
     display: flex;
     gap: var(--space-lg);
-    margin-bottom: var(--space-lg);
-    padding: var(--space-lg);
-    background: var(--gray-50);
-    border-radius: var(--radius-md);
-    border-left: 4px solid #4CAF50;
+    padding: var(--space-xl);
+    background: rgba(30, 41, 59, 0.45);
+    border-radius: 18px;
+    border-left: 4px solid #10b981;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.procedure-step:hover {
+    background: rgba(30, 41, 59, 0.7);
+    border-left-color: #38bdf8;
+    transform: translateX(4px);
 }
 
 .procedure-step::before {
     counter-increment: step;
     content: 'ขั้นตอนที่ ' counter(step);
     position: absolute;
-    top: -10px;
-    left: 16px;
-    background: #4CAF50;
+    top: -12px;
+    left: 20px;
+    background: linear-gradient(135deg, #10b981, #059669);
     color: white;
-    padding: 2px 12px;
+    padding: 3px 14px;
     border-radius: 50px;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 
 .step-content {
     flex: 1;
+    color: #cbd5e1;
 }
 
 .step-content p {
     margin-bottom: var(--space-sm);
     text-align: left;
+    color: #cbd5e1;
+    line-height: 1.7;
 }
 
 /* Data table for lab */
@@ -1808,49 +1855,61 @@ input[type="range"] {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    border-radius: var(--radius-md);
+    border-radius: 16px;
     overflow: hidden;
     margin: var(--space-lg) 0;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .data-table thead {
-    background: linear-gradient(135deg, #1B5E20, #2E7D32);
+    background: linear-gradient(135deg, #0f172a, #1e293b);
 }
 
 .data-table th {
-    color: white;
-    padding: 12px 16px;
+    color: #38bdf8;
+    padding: 14px 16px;
     text-align: center;
-    font-weight: 600;
-    font-size: 0.85rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(56, 189, 248, 0.3);
 }
 
 .data-table td {
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--gray-200);
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 0.92rem;
+    color: #e2e8f0;
 }
 
 .data-table td.input-cell {
-    background: #FFFDE7;
-    min-width: 80px;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px dashed rgba(16, 185, 129, 0.3);
+    color: #34d399;
+    font-family: var(--font-mono);
+    min-width: 90px;
 }
 
 .data-table tbody tr:nth-child(even) {
-    background: var(--gray-50);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.data-table tbody tr:hover {
+    background: rgba(56, 189, 248, 0.05);
 }
 
 /* Safety box */
 .safety-box {
-    background: linear-gradient(135deg, rgba(244,67,54,0.08), rgba(198,40,40,0.05));
-    border: 1px solid rgba(244,67,54,0.3);
-    border-radius: var(--radius-md);
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 18px;
     padding: var(--space-lg) var(--space-xl);
     margin: var(--space-xl) 0;
     position: relative;
     overflow: hidden;
+    backdrop-filter: blur(8px);
 }
 
 .safety-box::before {
@@ -1858,15 +1917,17 @@ input[type="range"] {
     position: absolute;
     top: 0; left: 0;
     width: 5px; height: 100%;
-    background: linear-gradient(135deg, #C62828, #EF5350);
+    background: linear-gradient(180deg, #ef4444, #b91c1c);
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
 }
 
 .safety-box h3 {
-    color: #C62828;
+    color: #f87171;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     margin-top: 0;
+    font-size: 1.2rem;
 }
 
 .safety-list {
@@ -1875,15 +1936,19 @@ input[type="range"] {
 }
 
 .safety-list li {
-    padding: 6px 0;
-    padding-left: 24px;
+    padding: 8px 0;
+    padding-left: 28px;
     position: relative;
+    color: #fca5a5;
+    font-size: 0.95rem;
+    line-height: 1.5;
 }
 
 .safety-list li::before {
     content: '⚠️';
     position: absolute;
     left: 0;
+    font-size: 1rem;
 }
 
 /* Lab questions */
@@ -1894,7 +1959,9 @@ input[type="range"] {
 .lab-questions li {
     margin-bottom: var(--space-md);
     padding: var(--space-sm) 0;
-    border-bottom: 1px dashed var(--gray-300);
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+    line-height: 1.6;
 }
 
 /* ============ Simulation Styles ============ */

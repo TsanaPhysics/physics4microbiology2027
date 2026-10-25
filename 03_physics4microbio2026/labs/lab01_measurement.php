@@ -20,6 +20,186 @@ include '../includes/header.php';
     </div>
 </section>
 
+<!-- 3D Virtual Bench & Lab Launch Hub -->
+<section style="max-width: 1100px; margin: -2rem auto 2.5rem; padding: 0 1.5rem; position: relative; z-index: 10;">
+    <div style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9)); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 28px; padding: 1.8rem; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(16, 185, 129, 0.15); backdrop-filter: blur(20px);">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div>
+                <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; padding: 4px 14px; border-radius: 50px; font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">
+                    <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; animation: pulse 2s infinite;"></span>
+                    3D Virtual Lab &amp; Telemetry Hub
+                </div>
+                <h2 style="font-size: 1.6rem; color: #f8fafc; margin: 0; font-weight: 800;">
+                    โต๊ะปฏิบัติการเสมือนจริง 3 มิติ (3D Virtual Bench)
+                </h2>
+                <p style="color: #94a3b8; margin: 0.2rem 0 0; font-size: 0.95rem;">
+                    ทดลองวัดค่าจริงด้วยเครื่องมือ 3D PBR วัสดุโลหะสเตนเลส พร้อมระบบบันทึกผลและส่งรายงานออนไลน์
+                </p>
+            </div>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <a href="../../virtual_lab/index.html?lab=1" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; padding: 0.75rem 1.6rem; border-radius: 16px; font-weight: 700; font-size: 0.95rem; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); transition: all 0.3s ease; text-decoration: none;">
+                    <span>🚀 เข้าสู่ห้องปฏิบัติการเสมือนจริง 3D เต็มรูปแบบ</span>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </a>
+                <a href="../simulations/sim01_unit_converter.php" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); color: #38bdf8; padding: 0.75rem 1.4rem; border-radius: 16px; font-weight: 600; font-size: 0.92rem; text-decoration: none; transition: all 0.3s ease;">
+                    <span>🔬 แบบจำลอง 3D Scale</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Interactive 3D Instrument Viewport -->
+        <div style="position: relative; width: 100%; height: 320px; background: radial-gradient(circle at center, #1e293b 0%, #0b1120 100%); border-radius: 20px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08);">
+            <div id="instrument-3d-canvas" style="width: 100%; height: 100%;"></div>
+            
+            <div style="position: absolute; top: 16px; left: 16px; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px); padding: 8px 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.82rem; color: #e2e8f0;">
+                <div style="color: #38bdf8; font-weight: 700;">เครื่องมือ: Vernier Caliper &amp; Petri Dish (PBR)</div>
+                <div style="color: #94a3b8; font-size: 0.75rem;">หมุน 360° | ซูมดูสเกลเวอร์เนียร์ 0.05 mm</div>
+            </div>
+
+            <div style="position: absolute; bottom: 16px; right: 16px; display: flex; gap: 8px;">
+                <button onclick="resetInstrumentCamera()" style="background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255,255,255,0.15); color: #e2e8f0; padding: 6px 12px; border-radius: 10px; font-size: 0.78rem; cursor: pointer;">
+                    🔄 รีเซ็ตมุมมอง
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Three.js CDN for Interactive Lab Instrument -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+let instRenderer, instScene, instCamera, instControls;
+
+function initInstrument3D() {
+    const container = document.getElementById('instrument-3d-canvas');
+    if (!container) return;
+
+    instScene = new THREE.Scene();
+    instCamera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+    instCamera.position.set(0, 5, 12);
+
+    instRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    instRenderer.setSize(container.clientWidth, container.clientHeight);
+    instRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    instRenderer.toneMapping = THREE.ACESFilmicToneMapping;
+    instRenderer.toneMappingExposure = 1.2;
+    container.appendChild(instRenderer.domElement);
+
+    instControls = new THREE.OrbitControls(instCamera, instRenderer.domElement);
+    instControls.enableDamping = true;
+    instControls.dampingFactor = 0.05;
+    instControls.maxDistance = 20;
+    instControls.minDistance = 3;
+
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    instScene.add(ambientLight);
+
+    const dirLight1 = new THREE.DirectionalLight(0x38bdf8, 1.8);
+    dirLight1.position.set(10, 15, 10);
+    instScene.add(dirLight1);
+
+    const dirLight2 = new THREE.DirectionalLight(0x10b981, 1.2);
+    dirLight2.position.set(-10, -5, -10);
+    instScene.add(dirLight2);
+
+    // Bench Grid
+    const grid = new THREE.GridHelper(16, 16, 0x10b981, 0x1e293b);
+    grid.position.y = -1.2;
+    instScene.add(grid);
+
+    // Build PBR Vernier Caliper Representation
+    const caliperGroup = new THREE.Group();
+
+    // Main steel beam
+    const steelMat = new THREE.MeshStandardMaterial({
+        color: 0xd4d4d8,
+        metalness: 0.85,
+        roughness: 0.25
+    });
+
+    const beamGeom = new THREE.BoxGeometry(8, 0.6, 0.12);
+    const beam = new THREE.Mesh(beamGeom, steelMat);
+    beam.position.set(0, 0, 0);
+    caliperGroup.add(beam);
+
+    // Fixed Jaw
+    const fixedJawGeom = new THREE.BoxGeometry(0.8, 2.2, 0.14);
+    const fixedJaw = new THREE.Mesh(fixedJawGeom, steelMat);
+    fixedJaw.position.set(-3.6, -0.8, 0);
+    caliperGroup.add(fixedJaw);
+
+    // Sliding Jaw
+    const slideMat = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        metalness: 0.6,
+        roughness: 0.3
+    });
+    const slideJawGeom = new THREE.BoxGeometry(0.8, 2.2, 0.16);
+    const slideJaw = new THREE.Mesh(slideJawGeom, slideMat);
+    slideJaw.position.set(-1.2, -0.8, 0.02);
+    caliperGroup.add(slideJaw);
+
+    // Glass Petri dish being measured
+    const glassMat = new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        metalness: 0.05,
+        roughness: 0.05,
+        transmission: 0.9,
+        transparent: true,
+        opacity: 0.85,
+        ior: 1.52
+    });
+    const petriGeom = new THREE.CylinderGeometry(1.2, 1.2, 0.3, 32);
+    const petriDish = new THREE.Mesh(petriGeom, glassMat);
+    petriDish.rotation.x = Math.PI / 2;
+    petriDish.position.set(-2.4, -0.8, 0);
+    caliperGroup.add(petriDish);
+
+    // Agar inside dish
+    const agarMat = new THREE.MeshStandardMaterial({
+        color: 0xf59e0b,
+        roughness: 0.4,
+        transparent: true,
+        opacity: 0.6
+    });
+    const agarGeom = new THREE.CylinderGeometry(1.15, 1.15, 0.1, 32);
+    const agar = new THREE.Mesh(agarGeom, agarMat);
+    agar.rotation.x = Math.PI / 2;
+    agar.position.set(-2.4, -0.8, 0);
+    caliperGroup.add(agar);
+
+    instScene.add(caliperGroup);
+
+    // Animation Loop
+    function animate() {
+        requestAnimationFrame(animate);
+        caliperGroup.rotation.y += 0.003;
+        instControls.update();
+        instRenderer.render(instScene, instCamera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+        if (!container) return;
+        instCamera.aspect = container.clientWidth / container.clientHeight;
+        instCamera.updateProjectionMatrix();
+        instRenderer.setSize(container.clientWidth, container.clientHeight);
+    });
+}
+
+function resetInstrumentCamera() {
+    if (instCamera && instControls) {
+        instCamera.position.set(0, 5, 12);
+        instControls.target.set(0, 0, 0);
+        instControls.update();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initInstrument3D);
+</script>
+
 <div class="lab-content">
 
     <!-- Objectives — Trilingual -->
