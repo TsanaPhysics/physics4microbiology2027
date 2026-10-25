@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องปฏิบัติการ 3D ออสโมซิสและสมดุลเยื่อหุ้มเซลล์ (Osmosis, U-Tube Osmometer & Cell Plasmolysis 3D)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js r128 & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- Google Fonts & Font Awesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #030712; color: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .font-digital { font-family: 'Orbitron', monospace; }
+    
+    /* Pure CSS Vector Typography Standard (Zero Tofu Box □) */
+    .vec {
+      display: inline-block;
+      position: relative;
+      font-family: 'Times New Roman', Cambria, serif;
+      font-style: italic;
+      font-weight: bold;
+      line-height: 1;
+      margin-top: 0.25em;
+    }
+    .vec::after {
+      content: '→';
+      position: absolute;
+      top: -0.45em;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0.85);
+      font-size: 0.72em;
+      font-style: normal;
+      font-weight: bold;
+      line-height: 1;
+      color: inherit;
+      pointer-events: none;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.6); }
+
+    /* Digital LED Glow */
+    .led-glow-emerald {
+      text-shadow: 0 0 10px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+    .led-glow-sky {
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.7), 0 0 20px rgba(56, 189, 248, 0.4);
+    }
+    .led-glow-amber {
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.7), 0 0 20px rgba(245, 158, 11, 0.4);
+    }
+    .led-glow-rose {
+      text-shadow: 0 0 10px rgba(244, 63, 94, 0.7), 0 0 20px rgba(244, 63, 94, 0.4);
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col select-none overflow-hidden bg-slate-950">
+
+  <!-- Main Simulator Layout Grid -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 h-full overflow-hidden relative">
+
+    <!-- 3D Viewport Column -->
+    <div id="viewportContainer" class="lg:col-span-8 w-full h-[360px] sm:h-[440px] lg:h-full relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden transition-all duration-300">
+      
+      <!-- Three.js Canvas Mount Container -->
+      <div id="threeMount" class="w-full h-full block cursor-grab active:cursor-grabbing"></div>
+
+      <!-- Top-Left HUD: Real-time Osmotic Telemetry -->
+      <div id="osmoticHUD" class="absolute top-3 left-3 bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-sky-500/30 shadow-2xl text-xs z-10 space-y-2 pointer-events-auto w-64 sm:w-72 shadow-sky-950/20">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5 gap-2">
+          <span class="font-bold text-sky-400 font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-water text-sky-300"></i> OSMOTIC PRESSURE TELEMETRY
+          </span>
+          <div class="flex items-center gap-1.5">
+            <span id="osmoticStateBadge" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono">
+              ISOTONIC
+            </span>
+            <button onclick="toggleCardBody('osmoticHUD')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="osmoticHUD_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('osmoticHUD')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="osmoticHUD_body" class="space-y-2.5 transition-all">
+          <!-- Digital Pressure Readout Box -->
+          <div class="bg-black/90 p-2.5 rounded-xl border border-sky-500/30 text-center space-y-1 shadow-inner">
+            <div class="text-[10px] font-mono text-slate-400 flex justify-between px-1">
+              <span>OSMOTIC PRESSURE (&Pi;)</span>
+              <span id="hudVanTHoffFormula" class="text-sky-400 font-serif italic">&Pi; = iMRT</span>
+            </div>
+            <div id="hudPressureDisplay" class="text-3xl font-digital font-bold text-sky-400 led-glow-sky tracking-wider">
+              0.00 <span class="text-xs text-sky-500 font-sans">kPa</span>
+            </div>
+            <div class="grid grid-cols-2 gap-1 text-[10px] font-mono text-slate-300 pt-1 border-t border-white/10">
+              <div class="text-left px-1">
+                <span class="text-slate-400">Column &Delta;h:</span>
+                <span id="hudDeltaH" class="text-amber-400 font-bold block">0.0 mm</span>
+              </div>
+              <div class="text-right px-1">
+                <span class="text-slate-400">Turgor P<sub>turgor</sub>:</span>
+                <span id="hudTurgor" class="text-emerald-400 font-bold block">0.0 kPa</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cell & Flux Status Telemetry -->
+          <div class="space-y-1 font-mono text-[10px] text-slate-300 bg-slate-950/80 p-2.5 rounded-xl border border-white/5">
+            <div class="flex justify-between">
+              <span>ปริมาตรโพรโทพลาสต์ (V/V₀):</span>
+              <span id="hudVolumeRatio" class="text-emerald-300 font-bold">100.0%</span>
+            </div>
+            <div class="flex justify-between">
+              <span>ฟลักซ์การไหลของน้ำ (J<sub>v</sub>):</span>
+              <span id="hudWaterFlux" class="text-cyan-300 font-bold">0.00 &mu;m/s</span>
+            </div>
+            <div class="flex justify-between">
+              <span>สถานะผนังเซลล์ (Turgidity):</span>
+              <span id="hudWallStatus" class="text-amber-300 font-bold">Normal Flaccid</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top-Right: 2D Synchronized High-Mag Cell Loupe -->
+      <div id="cellLoupeCard" class="absolute top-3 right-3 bg-slate-900/95 backdrop-blur-md p-3 rounded-2xl border border-indigo-500/30 shadow-2xl z-10 w-44 sm:w-52 pointer-events-auto shadow-indigo-950/20">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5 mb-2 gap-2">
+          <span class="font-bold text-indigo-400 text-xs font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-microscope text-indigo-300"></i> CELL MEMBRANE LOUPE
+          </span>
+          <div class="flex items-center gap-1.5">
+            <button onclick="toggleCardBody('cellLoupeCard')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="cellLoupeCard_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('cellLoupeCard')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="cellLoupeCard_body" class="space-y-2 transition-all">
+          <div class="relative w-full aspect-square bg-slate-950 rounded-xl overflow-hidden border border-indigo-500/20 shadow-inner flex items-center justify-center">
+            <canvas id="loupeCanvas" width="180" height="180" class="w-full h-full block"></canvas>
+            <!-- Loupe Optical Grid Overlay -->
+            <div class="absolute inset-0 pointer-events-none border border-indigo-500/10 rounded-xl"></div>
+            <div class="absolute top-1 left-2 text-[9px] font-mono text-indigo-400/80">Mag: 1000x</div>
+            <div class="absolute bottom-1 right-2 text-[9px] font-mono text-slate-500">Scale: 5 &mu;m</div>
+          </div>
+          <div class="text-[10px] text-center font-mono text-slate-400 flex justify-between px-1">
+            <span id="loupeStateText" class="text-emerald-400 font-bold">Turgid Cell</span>
+            <span id="loupeShrinkText" class="text-slate-400">&Delta;V = 0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Floating Dock Bar: Minimize/Restore & Fullscreen Controls -->
+      <div id="viewportDockBar" class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-2xl z-20 flex items-center gap-2 text-xs">
+        <!-- Re-open Hidden Cards Dropdown / Buttons -->
+        <div id="dockRestoreButtons" class="flex items-center gap-1.5 empty:hidden"></div>
+
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- Camera Preset Angles -->
+        <button onclick="setCameraView('perspective')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="มุมมอง 3 มิติเฉียง">
+          <i class="fa-solid fa-cube text-[9px]"></i> 3D
+        </button>
+        <button onclick="setCameraView('utube')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="เจาะจงหลอด U-Tube">
+          <i class="fa-solid fa-flask-vial text-[9px]"></i> U-Tube
+        </button>
+        <button onclick="setCameraView('cell')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="เจาะจงเซลล์จุลินทรีย์">
+          <i class="fa-solid fa-circle-notch text-[9px]"></i> Cell
+        </button>
+
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- Fullscreen / Sidebar Toggle -->
+        <button onclick="toggleSidebar()" id="btnToggleSidebar" class="px-2.5 py-1 rounded-full bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 font-medium text-[10px] flex items-center gap-1 transition" title="เปิด/ปิดแถบควบคุมเพื่อขยายจอภาพ 3D เต็มความกว้าง">
+          <i class="fa-solid fa-expand text-[9px]"></i> <span id="toggleSidebarLabel">ขยายจอเต็ม</span>
+        </button>
+        <button onclick="captureSimulatorScreenshot()" class="px-2.5 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-medium text-[10px] flex items-center gap-1 transition" title="บันทึกภาพหน้าจอหลักฐาน">
+          <i class="fa-solid fa-camera text-[9px]"></i> แคปเจอร์
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Interactive Control Panel Sidebar -->
+    <div id="controlSidebar" class="lg:col-span-4 h-full bg-slate-900/95 border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col overflow-y-auto p-4 space-y-4">
+      
+      <!-- Panel Header -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div>
+          <h2 class="text-sm font-bold text-sky-400 flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-sky-400"></i> แผงควบคุมสภาวะออสโมซิส
+          </h2>
+          <p class="text-[11px] text-slate-400">Osmotic Solution & Microbial Cell Chamber</p>
+        </div>
+        <button onclick="resetExperiment()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition flex items-center gap-1">
+          <i class="fa-solid fa-rotate-right"></i> รีเซ็ต
+        </button>
+      </div>
+
+      <!-- Audio Synthesizer Status & Sound Toggle -->
+      <div class="flex items-center justify-between bg-slate-950/60 p-2.5 rounded-xl border border-white/5">
+        <span class="text-xs text-slate-300 flex items-center gap-2">
+          <i class="fa-solid fa-volume-high text-cyan-400"></i> ซาวด์สังเคราะห์จำลองการไหล
+        </span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="soundToggle" class="sr-only peer" checked onchange="toggleSound(this.checked)">
+          <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+        </label>
+      </div>
+
+      <!-- Mode Selector Tabs: U-Tube vs Microbial Cell -->
+      <div class="bg-slate-950 p-1.5 rounded-xl border border-white/5 grid grid-cols-2 gap-1 text-xs font-mono">
+        <button id="tabModeUtube" onclick="switchSimulationMode('utube')" class="py-1.5 rounded-lg bg-sky-600 text-white font-bold transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-flask-vial"></i> 1. U-Tube Osmometer
+        </button>
+        <button id="tabModeCell" onclick="switchSimulationMode('cell')" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white font-medium transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-circle-notch"></i> 2. Microbial Cell
+        </button>
+      </div>
+
+      <!-- Solute Species Selection -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <label class="text-xs font-semibold text-slate-300 flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-atom text-amber-400"></i> ชนิดสารละลาย (Solute Species)
+          </span>
+          <span id="labelVanTHoffFactor" class="text-amber-400 font-mono text-[11px]">i = 1.0 (Non-electrolyte)</span>
+        </label>
+        <select id="soluteSelect" onchange="onSoluteChange()" class="w-full bg-slate-900 border border-white/10 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-sky-500 font-mono">
+          <option value="sucrose" selected>ซูโครส (Sucrose, C₁₂H₂₂O₁₁) — i = 1.0</option>
+          <option value="nacl">โซเดียมคลอไรด์ (NaCl) — i = 1.9 (Electrolyte)</option>
+          <option value="glucose">กลูโคส (D-Glucose, C₆H₁₂O₆) — i = 1.0</option>
+          <option value="cacl2">แคลเซียมคลอไรด์ (CaCl₂) — i = 2.6 (Strong Electrolyte)</option>
+          <option value="peg">โพลีเอทิลีนไกลคอล (PEG 6000) — i = 1.0</option>
+        </select>
+      </div>
+
+      <!-- Solute Concentration Slider -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-droplet text-sky-400"></i> ความเข้มข้นสารละลาย (Molarity, M)
+          </label>
+          <span id="concDisplay" class="text-sky-400 font-digital font-bold text-base">0.40 M</span>
+        </div>
+        <input type="range" id="concSlider" min="0.0" max="2.0" step="0.05" value="0.40" oninput="onConcentrationChange(this.value)" class="w-full accent-sky-500 cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>0.00 M (น้ำบริสุทธิ์)</span>
+          <span>0.30 M (Isotonic)</span>
+          <span>2.00 M (Hypertonic สูง)</span>
+        </div>
+      </div>
+
+      <!-- Temperature Slider -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-temperature-half text-rose-400"></i> อุณหภูมิการทดลอง (T)
+          </label>
+          <span id="tempDisplay" class="text-rose-400 font-mono font-bold text-xs">25.0 °C (298.15 K)</span>
+        </div>
+        <input type="range" id="tempSlider" min="4" max="60" step="1" value="25" oninput="onTemperatureChange(this.value)" class="w-full accent-rose-500 cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>4 °C (Cold)</span>
+          <span>25 °C (Room Temp)</span>
+          <span>60 °C (Warm)</span>
+        </div>
+      </div>
+
+      <!-- Applied External Pressure (Reverse Osmosis / Piston) -->
+      <div class="space-y-2 bg-slate-950/80 p-3 rounded-xl border border-white/5">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-compress text-emerald-400"></i> แรงดันภายนอกลูกสูบ (Applied P<sub>ext</sub>)
+          </label>
+          <span id="appliedPressureDisplay" class="text-emerald-400 font-mono font-bold text-xs">0.0 kPa (Normal)</span>
+        </div>
+        <input type="range" id="appliedPressureSlider" min="0" max="2500" step="50" value="0" oninput="onAppliedPressureChange(this.value)" class="w-full accent-emerald-500 cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>0 kPa (Forward Osmosis)</span>
+          <span>&Pi; Equilibrium</span>
+          <span>2500 kPa (Reverse Osmosis)</span>
+        </div>
+      </div>
+
+      <!-- Simulation Velocity & Control Action Buttons -->
+      <div class="space-y-2 pt-2">
+        <div class="grid grid-cols-2 gap-2">
+          <button id="btnRunOsmosis" onclick="toggleRunSimulation()" class="py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold text-xs shadow-lg shadow-sky-950/40 flex items-center justify-center gap-2 transition active:scale-95">
+            <i id="btnRunIcon" class="fa-solid fa-play"></i> <span id="btnRunLabel">เริ่มการทดลอง</span>
+          </button>
+          <button onclick="injectRapidSolute()" class="py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-bold text-xs shadow-lg shadow-amber-950/40 flex items-center justify-center gap-2 transition active:scale-95">
+            <i class="fa-solid fa-syringe"></i> ฉีดสารละลาย +0.2M
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Theory & Microbiology Application Tip -->
+      <div class="bg-sky-950/30 border border-sky-500/20 rounded-xl p-3 text-[11px] text-slate-300 space-y-1.5 mt-auto">
+        <div class="font-bold text-sky-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-info"></i> กฎ van 't Hoff & ปรากฏการณ์ Plasmolysis:
+        </div>
+        <p class="leading-relaxed text-slate-300">
+          ความดันออสโมซิสเป็นสมบัติคอลลิเกทีฟ: $\Pi = i M R T$ เมื่อของเหลวภายนอกมีความเข้มข้นสูงกว่าภายในเซลล์ ($M_{\text{out}} > M_{\text{in}}$) น้ำจะแพร่ผ่านเยื่อหุ้มเซลล์ออกสู่ภายนอก ทำให้ Protoplast หดตัวแยกออกจากผนังเซลล์ เกิด <strong>Plasmolysis</strong> ส่งผลให้ Turgor pressure ตกฮวบ ซึ่งเป็นหลักการถนอมอาหารด้วยเกลือ/น้ำตาลเข้มข้น
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Hidden Audio Context & Sound Synthesizer Engine -->
+  <script>
+    // Web Audio API Sound Generator
+    let audioCtx = null;
+    let waterNoiseNode = null;
+    let waterGainNode = null;
+    let isSoundMuted = false;
+
+    function initAudio() {
+      if (audioCtx) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+        
+        // Build bubbling/trickling noise buffer
+        const bufferSize = audioCtx.sampleRate * 2;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+
+        const whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+        whiteNoise.loop = true;
+
+        // Bandpass filter for gentle fluid flow
+        const bandpass = audioCtx.createBiquadFilter();
+        bandpass.type = 'bandpass';
+        bandpass.frequency.value = 600;
+        bandpass.Q.value = 3.0;
+
+        waterGainNode = audioCtx.createGain();
+        waterGainNode.gain.value = 0.0;
+
+        whiteNoise.connect(bandpass);
+        bandpass.connect(waterGainNode);
+        waterGainNode.connect(audioCtx.destination);
+
+        whiteNoise.start();
+        waterNoiseNode = whiteNoise;
+      } catch (e) {
+        console.warn('Web Audio not supported or blocked:', e);
+      }
+    }
+
+    function toggleSound(enabled) {
+      isSoundMuted = !enabled;
+      if (waterGainNode && audioCtx) {
+        waterGainNode.gain.setValueAtTime(isSoundMuted ? 0 : 0.03, audioCtx.currentTime);
+      }
+    }
+
+    function playTone(freq, type = 'sine', duration = 0.15, gainVal = 0.08) {
+      if (isSoundMuted) return;
+      initAudio();
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function updateWaterSound(fluxRate) {
+      if (isSoundMuted || !waterGainNode || !audioCtx) return;
+      const targetGain = Math.min(0.06, Math.abs(fluxRate) * 0.008);
+      waterGainNode.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 0.1);
+    }
+  </script>
+
+  <!-- Main Three.js Simulation & Physics Logic -->
+  <script>
+    // State Variables
+    let simMode = 'utube'; // 'utube' or 'cell'
+    let isRunning = false;
+    let soluteType = 'sucrose';
+    let vanTHoffFactor = 1.0;
+    let molarity = 0.40; // mol/L
+    let tempC = 25.0; // °C
+    let tempK = 298.15; // K
+    let appliedPext = 0.0; // kPa
+
+    // Physics Constants
+    const R_GAS = 8.314462; // J/(mol·K) or kPa·L/(mol·K)
+    const RHO_WATER = 1000.0; // kg/m^3
+    const G_ACCEL = 9.80665; // m/s^2
+
+    // Dynamic Physics Variables
+    let currentDeltaH = 0.0; // mm
+    let targetDeltaH = 0.0; // mm
+    let osmoticPressure = 0.0; // kPa
+    let waterFlux = 0.0; // um/s
+    let protoplastScale = 1.0; // 0.4 (extreme plasmolysis) to 1.05 (turgid)
+    let turgorPressure = 0.0; // kPa
+
+    // Three.js Core Objects
+    let scene, camera, renderer, controls;
+    let threeMount = document.getElementById('threeMount');
+
+    // 3D Model Components
+    let utubeGroup, cellGroup;
+    let leftLiquidMesh, rightLiquidMesh, centralMembraneMesh;
+    let cellWallMesh, protoplastMesh, vacuoleMesh;
+    let waterParticleSystem, soluteParticleSystem;
+    let waterParticlesData = [], soluteParticlesData = [];
+
+    // 2D Loupe Canvas
+    let loupeCanvas = document.getElementById('loupeCanvas');
+    let loupeCtx = loupeCanvas.getContext('2d');
+
+    // UI Element References
+    const hudPressureDisplay = document.getElementById('hudPressureDisplay');
+    const hudDeltaH = document.getElementById('hudDeltaH');
+    const hudTurgor = document.getElementById('hudTurgor');
+    const hudVolumeRatio = document.getElementById('hudVolumeRatio');
+    const hudWaterFlux = document.getElementById('hudWaterFlux');
+    const hudWallStatus = document.getElementById('hudWallStatus');
+    const osmoticStateBadge = document.getElementById('osmoticStateBadge');
+    const labelVanTHoffFactor = document.getElementById('labelVanTHoffFactor');
+    const concDisplay = document.getElementById('concDisplay');
+    const tempDisplay = document.getElementById('tempDisplay');
+    const appliedPressureDisplay = document.getElementById('appliedPressureDisplay');
+    const btnRunIcon = document.getElementById('btnRunIcon');
+    const btnRunLabel = document.getElementById('btnRunLabel');
+
+    // Initializer
+    function init() {
+      // 1. Setup Three.js Scene
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+      scene.fog = new THREE.FogExp2(0x030712, 0.025);
+
+      // 2. Camera
+      camera = new THREE.PerspectiveCamera(45, threeMount.clientWidth / threeMount.clientHeight, 0.1, 100);
+      camera.position.set(0, 3.5, 9.5);
+
+      // 3. Renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+      renderer.setSize(threeMount.clientWidth, threeMount.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      threeMount.appendChild(renderer.domElement);
+
+      // 4. OrbitControls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 + 0.05;
+      controls.minDistance = 2.0;
+      controls.maxDistance = 25.0;
+      controls.target.set(0, 1.2, 0);
+
+      // 5. Lighting
+      setupLighting();
+
+      // 6. Laboratory Environment & Grid
+      setupEnvironment();
+
+      // 7. Build 3D U-Tube Osmometer
+      buildUtubeOsmometer();
+
+      // 8. Build 3D Microbial Cell Chamber
+      buildMicrobialCell();
+
+      // 9. Brownian Molecule Particle Systems
+      setupParticles();
+
+      // 10. Event Listeners
+      window.addEventListener('resize', onWindowResize);
+
+      // Calculate initial physics
+      calculatePhysics();
+
+      // Start Simulation Loop
+      animate();
+    }
+
+    function setupLighting() {
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const mainLight = new THREE.DirectionalLight(0xe0f2fe, 1.2);
+      mainLight.position.set(5, 12, 8);
+      mainLight.castShadow = true;
+      mainLight.shadow.mapSize.width = 1024;
+      mainLight.shadow.mapSize.height = 1024;
+      scene.add(mainLight);
+
+      const fillLight = new THREE.DirectionalLight(0x38bdf8, 0.6);
+      fillLight.position.set(-6, 4, -4);
+      scene.add(fillLight);
+
+      const rimLight = new THREE.PointLight(0xa855f7, 1.2, 20);
+      rimLight.position.set(0, 5, -3);
+      scene.add(rimLight);
+    }
+
+    function setupEnvironment() {
+      // Lab Bench Surface
+      const tableGeo = new THREE.BoxGeometry(16, 0.4, 10);
+      const tableMat = new THREE.MeshStandardMaterial({
+        color: 0x0f172a,
+        roughness: 0.25,
+        metalness: 0.85
+      });
+      const table = new THREE.Mesh(tableGeo, tableMat);
+      table.position.y = -0.2;
+      table.receiveShadow = true;
+      scene.add(table);
+
+      // Glowing Lab Grid
+      const grid = new THREE.GridHelper(16, 32, 0x38bdf8, 0x1e293b);
+      grid.position.y = 0.01;
+      scene.add(grid);
+    }
+
+    function buildUtubeOsmometer() {
+      utubeGroup = new THREE.Group();
+      utubeGroup.position.set(-2.2, 0, 0);
+
+      // Precision Borosilicate Glass Material
+      const glassMat = new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.25,
+        roughness: 0.05,
+        metalness: 0.1,
+        transmission: 0.9,
+        ior: 1.52,
+        reflectivity: 0.5,
+        side: THREE.DoubleSide
+      });
+
+      // U-Tube Geometry Components
+      // Left Arm Glass Outer Tube
+      const tubeRadius = 0.45;
+      const armHeight = 4.2;
+      const armSpacing = 2.4;
+
+      const leftArmGeo = new THREE.CylinderGeometry(tubeRadius, tubeRadius, armHeight, 32, 1, true);
+      const leftArm = new THREE.Mesh(leftArmGeo, glassMat);
+      leftArm.position.set(-armSpacing / 2, armHeight / 2 + 0.4, 0);
+      utubeGroup.add(leftArm);
+
+      // Right Arm Glass Outer Tube
+      const rightArmGeo = new THREE.CylinderGeometry(tubeRadius, tubeRadius, armHeight, 32, 1, true);
+      const rightArm = new THREE.Mesh(rightArmGeo, glassMat);
+      rightArm.position.set(armSpacing / 2, armHeight / 2 + 0.4, 0);
+      utubeGroup.add(rightArm);
+
+      // Horizontal Connector / Bottom Tube
+      const bottomGeo = new THREE.CylinderGeometry(tubeRadius, tubeRadius, armSpacing, 32, 1, true);
+      const bottomTube = new THREE.Mesh(bottomGeo, glassMat);
+      bottomTube.rotation.z = Math.PI / 2;
+      bottomTube.position.set(0, 0.4, 0);
+      utubeGroup.add(bottomTube);
+
+      // Central Teflon Membrane Ring / Flange Clamp
+      const clampGeo = new THREE.CylinderGeometry(tubeRadius * 1.35, tubeRadius * 1.35, 0.22, 32);
+      const clampMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.9, roughness: 0.3 });
+      const clampRing = new THREE.Mesh(clampGeo, clampMat);
+      clampRing.rotation.z = Math.PI / 2;
+      clampRing.position.set(0, 0.4, 0);
+      utubeGroup.add(clampRing);
+
+      // Semi-permeable Membrane Disk
+      const memGeo = new THREE.CylinderGeometry(tubeRadius * 0.98, tubeRadius * 0.98, 0.05, 32);
+      const memMat = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        emissive: 0x0284c7,
+        emissiveIntensity: 0.4,
+        roughness: 0.7,
+        metalness: 0.1
+      });
+      centralMembraneMesh = new THREE.Mesh(memGeo, memMat);
+      centralMembraneMesh.rotation.z = Math.PI / 2;
+      centralMembraneMesh.position.set(0, 0.4, 0);
+      utubeGroup.add(centralMembraneMesh);
+
+      // Liquid Columns (Fluid mesh inside tubes)
+      const liquidRadius = tubeRadius * 0.94;
+      
+      // Left Liquid (Pure H2O - Crystal Cyan)
+      const leftLiqMat = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.75,
+        roughness: 0.1,
+        metalness: 0.2
+      });
+      const leftLiqGeo = new THREE.CylinderGeometry(liquidRadius, liquidRadius, 2.0, 32);
+      leftLiquidMesh = new THREE.Mesh(leftLiqGeo, leftLiqMat);
+      leftLiquidMesh.position.set(-armSpacing / 2, 1.4, 0);
+      utubeGroup.add(leftLiquidMesh);
+
+      // Right Liquid (Solute Solution - Tinted Amber/Violet)
+      const rightLiqMat = new THREE.MeshStandardMaterial({
+        color: 0xf59e0b,
+        transparent: true,
+        opacity: 0.75,
+        roughness: 0.1,
+        metalness: 0.2
+      });
+      const rightLiqGeo = new THREE.CylinderGeometry(liquidRadius, liquidRadius, 2.0, 32);
+      rightLiquidMesh = new THREE.Mesh(rightLiqGeo, rightLiqMat);
+      rightLiquidMesh.position.set(armSpacing / 2, 1.4, 0);
+      utubeGroup.add(rightLiquidMesh);
+
+      // Heavy Metal Laboratory Stand & Clamp
+      const standBaseGeo = new THREE.BoxGeometry(4.2, 0.25, 2.0);
+      const standBaseMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.9, roughness: 0.3 });
+      const standBase = new THREE.Mesh(standBaseGeo, standBaseMat);
+      standBase.position.set(0, 0.125, 0);
+      standBase.castShadow = true;
+      utubeGroup.add(standBase);
+
+      const standRodGeo = new THREE.CylinderGeometry(0.12, 0.12, 5.0, 16);
+      const standRodMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.95, roughness: 0.1 });
+      const standRod = new THREE.Mesh(standRodGeo, standRodMat);
+      standRod.position.set(0, 2.5, -0.6);
+      standRod.castShadow = true;
+      utubeGroup.add(standRod);
+
+      // Graduated Ruler Scales along both arms
+      createRulerScale(-armSpacing / 2 - 0.55, utubeGroup);
+      createRulerScale(armSpacing / 2 + 0.55, utubeGroup);
+
+      scene.add(utubeGroup);
+    }
+
+    function createRulerScale(xPos, parent) {
+      const rulerGeo = new THREE.BoxGeometry(0.1, 4.0, 0.05);
+      const rulerMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.5 });
+      const ruler = new THREE.Mesh(rulerGeo, rulerMat);
+      ruler.position.set(xPos, 2.4, 0);
+      parent.add(ruler);
+
+      // Tick marks
+      for (let i = 0; i <= 20; i++) {
+        const tickY = 0.5 + (i * 0.18);
+        const tickWidth = (i % 5 === 0) ? 0.22 : 0.12;
+        const tickGeo = new THREE.BoxGeometry(tickWidth, 0.015, 0.06);
+        const tickMat = new THREE.MeshBasicMaterial({ color: (i % 5 === 0) ? 0x38bdf8 : 0x94a3b8 });
+        const tick = new THREE.Mesh(tickGeo, tickMat);
+        tick.position.set(xPos, tickY, 0.01);
+        parent.add(tick);
+      }
+    }
+
+    function buildMicrobialCell() {
+      cellGroup = new THREE.Group();
+      cellGroup.position.set(2.8, 2.0, 0);
+
+      // 1. Rigid Peptidoglycan / Yeast Glucan Cell Wall (Wireframe/Semi-translucent mesh)
+      const wallGeo = new THREE.SphereGeometry(1.6, 32, 24);
+      const wallMat = new THREE.MeshStandardMaterial({
+        color: 0x10b981,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.35,
+        roughness: 0.4
+      });
+      cellWallMesh = new THREE.Mesh(wallGeo, wallMat);
+      cellGroup.add(cellWallMesh);
+
+      // Outer rigid boundary rim
+      const outerRimGeo = new THREE.SphereGeometry(1.61, 32, 24);
+      const outerRimMat = new THREE.MeshPhysicalMaterial({
+        color: 0x059669,
+        transparent: true,
+        opacity: 0.15,
+        roughness: 0.1,
+        transmission: 0.7,
+        side: THREE.BackSide
+      });
+      const outerRim = new THREE.Mesh(outerRimGeo, outerRimMat);
+      cellGroup.add(outerRim);
+
+      // 2. Phospholipid Bilayer Plasma Membrane (Dynamic Deformable Protoplast)
+      const protoGeo = new THREE.SphereGeometry(1.56, 48, 36);
+      const protoMat = new THREE.MeshStandardMaterial({
+        color: 0x06b6d4,
+        emissive: 0x0891b2,
+        emissiveIntensity: 0.25,
+        roughness: 0.2,
+        metalness: 0.15,
+        transparent: true,
+        opacity: 0.85
+      });
+      protoplastMesh = new THREE.Mesh(protoGeo, protoMat);
+      cellGroup.add(protoplastMesh);
+
+      // 3. Central Vacuole / Nucleoid Region
+      const vacGeo = new THREE.SphereGeometry(0.7, 24, 20);
+      const vacMat = new THREE.MeshStandardMaterial({
+        color: 0xa855f7,
+        emissive: 0x7e22ce,
+        emissiveIntensity: 0.35,
+        transparent: true,
+        opacity: 0.65
+      });
+      vacuoleMesh = new THREE.Mesh(vacGeo, vacMat);
+      vacuoleMesh.position.set(0.1, 0.1, 0.1);
+      cellGroup.add(vacuoleMesh);
+
+      // 4. Petri Dish / Chamber Base
+      const dishGeo = new THREE.CylinderGeometry(2.4, 2.4, 0.25, 48);
+      const dishMat = new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.3,
+        roughness: 0.1,
+        transmission: 0.85
+      });
+      const dish = new THREE.Mesh(dishGeo, dishMat);
+      dish.position.set(0, -2.0, 0);
+      cellGroup.add(dish);
+
+      scene.add(cellGroup);
+    }
+
+    function setupParticles() {
+      // 1. Water Brownian Particles (H2O cyan glowing beads)
+      const waterCount = 200;
+      const waterGeo = new THREE.BufferGeometry();
+      const waterPos = new Float32Array(waterCount * 3);
+
+      for (let i = 0; i < waterCount; i++) {
+        const x = (Math.random() - 0.5) * 3.0 - 2.2;
+        const y = 0.4 + Math.random() * 2.5;
+        const z = (Math.random() - 0.5) * 0.5;
+        waterPos[i * 3] = x;
+        waterPos[i * 3 + 1] = y;
+        waterPos[i * 3 + 2] = z;
+
+        waterParticlesData.push({
+          vx: (Math.random() - 0.5) * 0.015,
+          vy: (Math.random() - 0.5) * 0.015,
+          vz: (Math.random() - 0.5) * 0.015,
+          inLeftArm: x < -2.2
+        });
+      }
+
+      waterGeo.setAttribute('position', new THREE.BufferAttribute(waterPos, 3));
+      const waterMat = new THREE.PointsMaterial({
+        color: 0x38bdf8,
+        size: 0.07,
+        transparent: true,
+        opacity: 0.9,
+        blending: THREE.AdditiveBlending
+      });
+      waterParticleSystem = new THREE.Points(waterGeo, waterMat);
+      scene.add(waterParticleSystem);
+
+      // 2. Solute Particles (Trapped on Right Arm / Large Yellow Hydrated Ions)
+      const soluteCount = 80;
+      const soluteGeo = new THREE.BufferGeometry();
+      const solutePos = new Float32Array(soluteCount * 3);
+
+      for (let i = 0; i < soluteCount; i++) {
+        const x = (Math.random() - 0.5) * 0.6 + (-2.2 + 1.2);
+        const y = 0.5 + Math.random() * 2.0;
+        const z = (Math.random() - 0.5) * 0.5;
+        solutePos[i * 3] = x;
+        solutePos[i * 3 + 1] = y;
+        solutePos[i * 3 + 2] = z;
+
+        soluteParticlesData.push({
+          vx: (Math.random() - 0.5) * 0.01,
+          vy: (Math.random() - 0.5) * 0.01,
+          vz: (Math.random() - 0.5) * 0.01
+        });
+      }
+
+      soluteGeo.setAttribute('position', new THREE.BufferAttribute(solutePos, 3));
+      const soluteMat = new THREE.PointsMaterial({
+        color: 0xf59e0b,
+        size: 0.12,
+        transparent: true,
+        opacity: 0.95
+      });
+      soluteParticleSystem = new THREE.Points(soluteGeo, soluteMat);
+      scene.add(soluteParticleSystem);
+    }
+
+    // Physical van 't Hoff Calculations
+    function calculatePhysics() {
+      tempK = tempC + 273.15;
+      
+      // van 't Hoff Theoretical Osmotic Pressure: Pi = i * M * R * T
+      // M is in mol/L = 1000 mol/m^3
+      // Pi = i * (M * 1000) * 8.314 * T (in Pa)
+      // Pi in kPa = i * M * 8.314462 * T
+      osmoticPressure = vanTHoffFactor * molarity * R_GAS * tempK; // in kPa
+
+      // Net Effective Pressure across membrane: Delta P_net = Pi - P_ext
+      const netEffectiveP = osmoticPressure - appliedPext;
+
+      // In U-Tube: Equilibrium column height difference Delta h:
+      // Delta P = rho * g * Delta h  =>  Delta h = Delta P / (rho * g)
+      // Delta h (in meters) = (netEffectiveP * 1000 Pa) / (1000 kg/m^3 * 9.80665 m/s^2) = netEffectiveP / 9.80665
+      // Delta h in mm = (netEffectiveP / 9.80665) * 1000 mm / 100 (scaled for visual apparatus)
+      // We scale physically so 100 kPa corresponds to ~50 mm visible height difference
+      targetDeltaH = Math.max(-120, Math.min(180, (netEffectiveP / 9.80665) * 0.5));
+
+      // Water flux J_v = L_p * (Delta P_net)
+      waterFlux = netEffectiveP * 0.045; // um/s
+
+      // Microbial Cell Osmotic Equilibrium:
+      // In 0.30 M isotonic reference:
+      // If M < 0.30 (Hypotonic): Protoplast swells to 1.0 (firm against cell wall), Turgor pressure builds!
+      // Turgor pressure = Pi_internal - Pi_external
+      // If M > 0.30 (Hypertonic): Water leaves cell, Turgor pressure = 0, Protoplast shrinks (Plasmolysis)!
+      const isoRef = 0.30;
+      if (molarity <= isoRef) {
+        // Hypotonic -> Turgid
+        protoplastScale = 1.0;
+        turgorPressure = Math.max(0, (isoRef - molarity) * vanTHoffFactor * R_GAS * tempK);
+      } else {
+        // Hypertonic -> Plasmolysis
+        turgorPressure = 0.0;
+        // Protoplast volume ratio: V/V0 ~ isoRef / molarity
+        const volRatio = Math.max(0.35, Math.min(1.0, Math.pow(isoRef / molarity, 0.75)));
+        protoplastScale = Math.cbrt(volRatio); // linear radial scale
+      }
+
+      // Update UI Telemetry
+      hudPressureDisplay.innerHTML = `${osmoticPressure.toFixed(2)} <span class="text-xs text-sky-500 font-sans">kPa</span>`;
+      hudDeltaH.textContent = `${currentDeltaH.toFixed(1)} mm`;
+      hudTurgor.textContent = `${turgorPressure.toFixed(1)} kPa`;
+      hudWaterFlux.textContent = `${waterFlux.toFixed(2)} &mu;m/s`;
+
+      const volRatioPercent = Math.pow(protoplastScale, 3) * 100;
+      hudVolumeRatio.textContent = `${volRatioPercent.toFixed(1)}%`;
+
+      // Status Badges
+      if (molarity < 0.25) {
+        osmoticStateBadge.textContent = 'HYPOTONIC';
+        osmoticStateBadge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-mono';
+        hudWallStatus.textContent = 'Turgid (เต่งตึงมาก)';
+        hudWallStatus.className = 'text-cyan-300 font-bold';
+      } else if (molarity <= 0.35) {
+        osmoticStateBadge.textContent = 'ISOTONIC';
+        osmoticStateBadge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono';
+        hudWallStatus.textContent = 'Normal Flaccid (สมดุล)';
+        hudWallStatus.className = 'text-emerald-300 font-bold';
+      } else if (molarity <= 0.7) {
+        osmoticStateBadge.textContent = 'HYPERTONIC';
+        osmoticStateBadge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono';
+        hudWallStatus.textContent = 'Incipient Plasmolysis';
+        hudWallStatus.className = 'text-amber-300 font-bold';
+      } else {
+        osmoticStateBadge.textContent = 'EXTREME PLASMOLYSIS';
+        osmoticStateBadge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 font-mono';
+        hudWallStatus.textContent = 'Severe Shrinkage (เหี่ยวรุนแรง)';
+        hudWallStatus.className = 'text-rose-400 font-bold';
+      }
+
+      updateWaterSound(waterFlux);
+    }
+
+    // Interactive Handlers
+    function onSoluteChange() {
+      soluteType = document.getElementById('soluteSelect').value;
+      if (soluteType === 'sucrose' || soluteType === 'glucose' || soluteType === 'peg') {
+        vanTHoffFactor = 1.0;
+        labelVanTHoffFactor.textContent = 'i = 1.0 (Non-electrolyte)';
+      } else if (soluteType === 'nacl') {
+        vanTHoffFactor = 1.9;
+        labelVanTHoffFactor.textContent = 'i = 1.9 (Electrolyte dissociation)';
+      } else if (soluteType === 'cacl2') {
+        vanTHoffFactor = 2.6;
+        labelVanTHoffFactor.textContent = 'i = 2.6 (Strong electrolyte)';
+      }
+      playTone(480, 'sine', 0.1, 0.05);
+      calculatePhysics();
+    }
+
+    function onConcentrationChange(val) {
+      molarity = parseFloat(val);
+      concDisplay.textContent = `${molarity.toFixed(2)} M`;
+      calculatePhysics();
+    }
+
+    function onTemperatureChange(val) {
+      tempC = parseFloat(val);
+      tempK = tempC + 273.15;
+      tempDisplay.textContent = `${tempC.toFixed(1)} °C (${tempK.toFixed(2)} K)`;
+      calculatePhysics();
+    }
+
+    function onAppliedPressureChange(val) {
+      appliedPext = parseFloat(val);
+      appliedPressureDisplay.textContent = `${appliedPext.toFixed(0)} kPa (${appliedPext > osmoticPressure ? 'Reverse Osmosis' : 'Forward'})`;
+      calculatePhysics();
+    }
+
+    function toggleRunSimulation() {
+      isRunning = !isRunning;
+      initAudio();
+      if (isRunning) {
+        btnRunLabel.textContent = 'หยุดชั่วคราว';
+        btnRunIcon.className = 'fa-solid fa-pause';
+        playTone(600, 'sine', 0.15, 0.08);
+      } else {
+        btnRunLabel.textContent = 'เริ่มการทดลองต่อ';
+        btnRunIcon.className = 'fa-solid fa-play';
+        playTone(400, 'sine', 0.1, 0.05);
+      }
+    }
+
+    function injectRapidSolute() {
+      molarity = Math.min(2.0, molarity + 0.20);
+      document.getElementById('concSlider').value = molarity.toFixed(2);
+      concDisplay.textContent = `${molarity.toFixed(2)} M`;
+      playTone(750, 'triangle', 0.2, 0.09);
+      calculatePhysics();
+    }
+
+    function resetExperiment() {
+      molarity = 0.40;
+      tempC = 25.0;
+      appliedPext = 0.0;
+      currentDeltaH = 0.0;
+      targetDeltaH = 0.0;
+      isRunning = false;
+
+      document.getElementById('concSlider').value = 0.40;
+      document.getElementById('tempSlider').value = 25;
+      document.getElementById('appliedPressureSlider').value = 0;
+      concDisplay.textContent = '0.40 M';
+      tempDisplay.textContent = '25.0 °C (298.15 K)';
+      appliedPressureDisplay.textContent = '0.0 kPa (Normal)';
+      btnRunLabel.textContent = 'เริ่มการทดลอง';
+      btnRunIcon.className = 'fa-solid fa-play';
+
+      playTone(320, 'sine', 0.2, 0.06);
+      calculatePhysics();
+    }
+
+    function switchSimulationMode(mode) {
+      simMode = mode;
+      const btnUtube = document.getElementById('tabModeUtube');
+      const btnCell = document.getElementById('tabModeCell');
+
+      if (mode === 'utube') {
+        btnUtube.className = 'py-1.5 rounded-lg bg-sky-600 text-white font-bold transition flex items-center justify-center gap-1.5';
+        btnCell.className = 'py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white font-medium transition flex items-center justify-center gap-1.5';
+        setCameraView('utube');
+      } else {
+        btnCell.className = 'py-1.5 rounded-lg bg-sky-600 text-white font-bold transition flex items-center justify-center gap-1.5';
+        btnUtube.className = 'py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white font-medium transition flex items-center justify-center gap-1.5';
+        setCameraView('cell');
+      }
+    }
+
+    function setCameraView(preset) {
+      if (preset === 'perspective') {
+        camera.position.set(0, 3.5, 9.5);
+        controls.target.set(0, 1.2, 0);
+      } else if (preset === 'utube') {
+        camera.position.set(-2.2, 2.2, 5.5);
+        controls.target.set(-2.2, 1.8, 0);
+      } else if (preset === 'cell') {
+        camera.position.set(2.8, 2.0, 5.2);
+        controls.target.set(2.8, 2.0, 0);
+      }
+      controls.update();
+      playTone(520, 'sine', 0.08, 0.04);
+    }
+
+    // Animation & Render Loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Smooth liquid meniscus height evolution towards target equilibrium
+      if (isRunning) {
+        currentDeltaH += (targetDeltaH - currentDeltaH) * 0.035;
+      }
+
+      // Update 3D U-Tube Liquid Levels
+      const heightOffset = (currentDeltaH / 100.0) * 0.6; // 3D units
+      if (leftLiquidMesh && rightLiquidMesh) {
+        // Left arm drops by heightOffset/2
+        leftLiquidMesh.scale.y = Math.max(0.2, 1.0 - heightOffset * 0.5);
+        leftLiquidMesh.position.y = 1.4 - (heightOffset * 0.5);
+
+        // Right arm rises by heightOffset/2
+        rightLiquidMesh.scale.y = Math.max(0.2, 1.0 + heightOffset * 0.5);
+        rightLiquidMesh.position.y = 1.4 + (heightOffset * 0.5);
+      }
+
+      // Update 3D Microbial Cell Protoplast Shrinkage / Swelling
+      if (protoplastMesh) {
+        const curScale = protoplastMesh.scale.x;
+        const newScale = curScale + (protoplastScale - curScale) * 0.05;
+        protoplastMesh.scale.set(newScale, newScale, newScale);
+
+        // Slight undulating membrane movement for living cell effect
+        const time = performance.now() * 0.002;
+        const wave = 1.0 + Math.sin(time) * 0.015;
+        protoplastMesh.scale.multiplyScalar(wave);
+
+        if (vacuoleMesh) {
+          const vacScale = Math.max(0.3, newScale * 0.7);
+          vacuoleMesh.scale.set(vacScale, vacScale, vacScale);
+        }
+      }
+
+      // Update Molecule Brownian Particles
+      if (waterParticleSystem) {
+        const pos = waterParticleSystem.geometry.attributes.position.array;
+        for (let i = 0; i < waterParticlesData.length; i++) {
+          const p = waterParticlesData[i];
+          pos[i * 3] += p.vx + (isRunning ? (waterFlux > 0 ? 0.003 : -0.003) : 0);
+          pos[i * 3 + 1] += p.vy;
+          pos[i * 3 + 2] += p.vz;
+
+          // Boundary bouncing in U-Tube
+          if (pos[i * 3] < -3.6) pos[i * 3] = -0.8;
+          if (pos[i * 3] > -0.8) pos[i * 3] = -3.6;
+          if (pos[i * 3 + 1] < 0.4 || pos[i * 3 + 1] > 3.2) p.vy *= -1;
+        }
+        waterParticleSystem.geometry.attributes.position.needsUpdate = true;
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+
+      // Render Synchronized 2D Loupe
+      render2DLoupe();
+    }
+
+    // 2D Synchronized Loupe Cross-Section Renderer
+    function render2DLoupe() {
+      const w = loupeCanvas.width;
+      const h = loupeCanvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+
+      loupeCtx.clearRect(0, 0, w, h);
+
+      // Solution background tint based on tonicity
+      if (molarity < 0.25) {
+        loupeCtx.fillStyle = 'rgba(6, 182, 212, 0.08)'; // Hypotonic
+      } else if (molarity <= 0.35) {
+        loupeCtx.fillStyle = 'rgba(16, 185, 129, 0.06)'; // Isotonic
+      } else {
+        loupeCtx.fillStyle = 'rgba(245, 158, 11, 0.12)'; // Hypertonic
+      }
+      loupeCtx.fillRect(0, 0, w, h);
+
+      // Rigid Cell Wall Boundary (Green Solid Outline)
+      const wallRadius = 68;
+      loupeCtx.beginPath();
+      loupeCtx.arc(cx, cy, wallRadius, 0, Math.PI * 2);
+      loupeCtx.strokeStyle = '#10b981';
+      loupeCtx.lineWidth = 4;
+      loupeCtx.stroke();
+
+      // Periplasmic Space Label if Plasmolyzed
+      const protoRadius = wallRadius * protoplastScale;
+
+      // Deformed/Shrunk Plasma Membrane & Protoplast
+      loupeCtx.beginPath();
+      if (protoplastScale < 0.95) {
+        // Plasmolyzed crumpled shape
+        const points = 16;
+        for (let i = 0; i <= points; i++) {
+          const angle = (i / points) * Math.PI * 2;
+          const wobble = Math.sin(angle * 4) * (1.0 - protoplastScale) * 12;
+          const r = protoRadius + wobble;
+          const px = cx + Math.cos(angle) * r;
+          const py = cy + Math.sin(angle) * r;
+          if (i === 0) loupeCtx.moveTo(px, py);
+          else loupeCtx.lineTo(px, py);
+        }
+        loupeCtx.closePath();
+      } else {
+        loupeCtx.arc(cx, cy, protoRadius, 0, Math.PI * 2);
+      }
+
+      // Protoplast Fill Gradient
+      const protoGrad = loupeCtx.createRadialGradient(cx, cy, 5, cx, cy, protoRadius);
+      protoGrad.addColorStop(0, 'rgba(168, 85, 247, 0.85)');
+      protoGrad.addColorStop(0.7, 'rgba(6, 182, 212, 0.7)');
+      protoGrad.addColorStop(1, 'rgba(14, 165, 233, 0.9)');
+      loupeCtx.fillStyle = protoGrad;
+      loupeCtx.fill();
+      loupeCtx.strokeStyle = '#38bdf8';
+      loupeCtx.lineWidth = 2.5;
+      loupeCtx.stroke();
+
+      // Central Vacuole / Nucleus
+      loupeCtx.beginPath();
+      loupeCtx.arc(cx - 10, cy - 8, protoRadius * 0.35, 0, Math.PI * 2);
+      loupeCtx.fillStyle = 'rgba(147, 51, 234, 0.7)';
+      loupeCtx.fill();
+
+      // Dynamic Water Flux Arrows across membrane
+      if (molarity < 0.25) {
+        // Influx arrows ->
+        drawFluxArrows(cx, cy, wallRadius + 18, wallRadius - 6, '#38bdf8');
+      } else if (molarity > 0.35) {
+        // Efflux arrows <-
+        drawFluxArrows(cx, cy, protoRadius + 6, wallRadius + 18, '#f59e0b');
+      }
+
+      // Update Text below Loupe
+      const shrinkPercent = Math.round((1.0 - Math.pow(protoplastScale, 3)) * 100);
+      document.getElementById('loupeShrinkText').textContent = shrinkPercent > 0 ? `Shrink: -${shrinkPercent}%` : 'Turgid (+0%)';
+      document.getElementById('loupeStateText').textContent = molarity < 0.25 ? 'Turgid Cell' : (molarity <= 0.35 ? 'Normal Cell' : 'Plasmolyzed');
+      document.getElementById('loupeStateText').className = molarity < 0.25 ? 'text-cyan-400 font-bold' : (molarity <= 0.35 ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold');
+    }
+
+    function drawFluxArrows(cx, cy, rStart, rEnd, color) {
+      loupeCtx.strokeStyle = color;
+      loupeCtx.fillStyle = color;
+      loupeCtx.lineWidth = 1.5;
+
+      const numArrows = 6;
+      for (let i = 0; i < numArrows; i++) {
+        const a = (i / numArrows) * Math.PI * 2;
+        const x1 = cx + Math.cos(a) * rStart;
+        const y1 = cy + Math.sin(a) * rStart;
+        const x2 = cx + Math.cos(a) * rEnd;
+        const y2 = cy + Math.sin(a) * rEnd;
+
+        loupeCtx.beginPath();
+        loupeCtx.moveTo(x1, y1);
+        loupeCtx.lineTo(x2, y2);
+        loupeCtx.stroke();
+
+        // Arrow head
+        const headAngle = Math.atan2(y2 - y1, x2 - x1);
+        loupeCtx.beginPath();
+        loupeCtx.moveTo(x2, y2);
+        loupeCtx.lineTo(x2 - 6 * Math.cos(headAngle - 0.45), y2 - 6 * Math.sin(headAngle - 0.45));
+        loupeCtx.lineTo(x2 - 6 * Math.cos(headAngle + 0.45), y2 - 6 * Math.sin(headAngle + 0.45));
+        loupeCtx.fill();
+      }
+    }
+
+    // Responsive Canvas Resizing
+    function onWindowResize() {
+      if (!camera || !renderer || !threeMount) return;
+      camera.aspect = threeMount.clientWidth / threeMount.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(threeMount.clientWidth, threeMount.clientHeight);
+    }
+
+    // Full-Width Sidebar Toggle
+    let isSidebarHidden = false;
+    function toggleSidebar() {
+      const sidebar = document.getElementById('controlSidebar');
+      const container = document.getElementById('viewportContainer');
+      const label = document.getElementById('toggleSidebarLabel');
+
+      isSidebarHidden = !isSidebarHidden;
+      if (isSidebarHidden) {
+        sidebar.classList.add('hidden');
+        container.classList.remove('lg:col-span-8');
+        container.classList.add('lg:col-span-12');
+        label.textContent = 'แสดงแถบควบคุม';
+      } else {
+        sidebar.classList.remove('hidden');
+        container.classList.remove('lg:col-span-12');
+        container.classList.add('lg:col-span-8');
+        label.textContent = 'ขยายจอเต็ม';
+      }
+      setTimeout(onWindowResize, 100);
+      playTone(500, 'sine', 0.08, 0.04);
+    }
+
+    // HUD Card Collapsing and Closing Logic
+    function toggleCardBody(cardId) {
+      const body = document.getElementById(`${cardId}_body`);
+      const icon = document.getElementById(`${cardId}_icon`);
+      if (!body) return;
+
+      if (body.classList.contains('hidden')) {
+        body.classList.remove('hidden');
+        if (icon) {
+          icon.classList.remove('fa-plus');
+          icon.classList.add('fa-minus');
+        }
+      } else {
+        body.classList.add('hidden');
+        if (icon) {
+          icon.classList.remove('fa-minus');
+          icon.classList.add('fa-plus');
+        }
+      }
+      playTone(450, 'sine', 0.06, 0.03);
+    }
+
+    function hideCard(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      card.classList.add('hidden');
+
+      // Add restore button in dock bar
+      const dock = document.getElementById('dockRestoreButtons');
+      const cardNames = {
+        'osmoticHUD': 'แรงดันออสโมซิส',
+        'cellLoupeCard': 'เลนส์เซลล์'
+      };
+
+      const btn = document.createElement('button');
+      btn.id = `restoreBtn_${cardId}`;
+      btn.className = 'px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-sky-400 font-mono text-[10px] flex items-center gap-1 transition';
+      btn.innerHTML = `<i class="fa-solid fa-window-restore text-[9px]"></i> ${cardNames[cardId] || cardId}`;
+      btn.onclick = function() {
+        card.classList.remove('hidden');
+        btn.remove();
+        playTone(550, 'sine', 0.08, 0.04);
+      };
+      dock.appendChild(btn);
+      playTone(350, 'sine', 0.08, 0.03);
+    }
+
+    // Screenshot Capture API
+    window.captureSimulatorScreenshot = function() {
+      if (!renderer) return null;
+      renderer.render(scene, camera);
+      const dataUrl = renderer.domElement.toDataURL('image/png');
+      
+      // Auto-download for student convenience
+      const link = document.createElement('a');
+      link.download = `osmosis_sim06_${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+
+      playTone(880, 'sine', 0.15, 0.1);
+      return dataUrl;
+    };
+
+    // Auto-init on load
+    window.onload = init;
+  </script>
+</body>
+</html>
