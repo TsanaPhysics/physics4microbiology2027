@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>กำลังนำทางสู่ระบบ 3D WebAR & เอกสารคำสอน — 4011111 ฟิสิกส์สำหรับจุลชีววิทยา</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+  <script>
+    (function () {
+      const repoBase = "/physics4microbiology2027/";
+      const rawPath = decodeURIComponent(window.location.pathname || "");
+      const query = window.location.search || "";
+      const hash = window.location.hash || "";
+
+      // 1. Auto-route any 06_เอกสารคำสอน_3D_AR_ArUco PDF request to the canonical path
+      if (rawPath.indexOf("06_เอกสารคำสอน_3D_AR_ArUco") !== -1) {
+        if (rawPath.indexOf("/เอกสารคำสอน_3D_AR_ArUco/06_") !== -1) {
+          window.location.replace(repoBase + "แผนการสอน%202027/06_เอกสารคำสอน_3D_AR_ArUco_4011111_ฟิสิกส์สำหรับจุลชีววิทยา_พร้อมปก.pdf");
+          return;
+        }
+      }
+      if (rawPath.indexOf("main.pdf") !== -1 && rawPath.indexOf("เอกสารคำสอน_3D_AR_ArUco") !== -1) {
+        window.location.replace(repoBase + "แผนการสอน%202027/เอกสารคำสอน_3D_AR_ArUco/06_เอกสารคำสอน_3D_AR_ArUco_4011111_ฟิสิกส์สำหรับจุลชีววิทยา_พร้อมปก.pdf");
+        return;
+      }
+
+      // 2. Auto-route any ArUco marker sheet request
+      if (rawPath.indexOf("marker") !== -1 || rawPath.indexOf("aruco_marker_sheet") !== -1) {
+        window.location.replace(repoBase + "แผนการสอน%202027/เอกสารคำสอน_3D_AR_ArUco/webar_aruco/aruco_marker_sheet.html" + query + hash);
+        return;
+      }
+
+      // 3. Auto-route any P1000 showcase request
+      if (rawPath.toLowerCase().indexOf("p1000") !== -1) {
+        window.location.replace(repoBase + "p1000.html" + query + hash);
+        return;
+      }
+
+      // 4. Auto-route any WebAR / ArUco scanner request or ?id=0..11 parameter
+      if (
+        rawPath.indexOf("ar_aruco_textbook") !== -1 ||
+        rawPath.indexOf("webar_aruco") !== -1 ||
+        rawPath.indexOf("/ar") !== -1 ||
+        query.indexOf("id=") !== -1
+      ) {
+        window.location.replace(repoBase + "แผนการสอน%202027/เอกสารคำสอน_3D_AR_ArUco/webar_aruco/ar_aruco_textbook.html" + query + hash);
+        return;
+      }
+    })();
+  </script>
+  <style>
+    body {
+      background: #020617;
+      color: #f8fafc;
+      font-family: 'Prompt', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .card {
+      max-width: 560px;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1.5px solid #00f0ff;
+      border-radius: 20px;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(0, 240, 255, 0.18);
+    }
+    h1 { font-size: 1.25rem; color: #38bdf8; margin: 0 0 10px; }
+    p { font-size: 0.9rem; color: #cbd5e1; margin-bottom: 20px; line-height: 1.5; }
+    .btn-list { display: flex; flex-direction: column; gap: 10px; }
+    a.btn {
+      display: block;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      text-decoration: none;
+      transition: transform 0.15s;
+    }
+    a.btn:hover { transform: translateY(-2px); }
+    .btn-ar { background: linear-gradient(90deg, #00f0ff, #10b981); color: #020617; }
+    .btn-pdf { background: #0284c7; color: #ffffff; }
+    .btn-markers { background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; }
+    .btn-home { background: #0f172a; color: #94a3b8; border: 1px solid #334155; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🚀 ระบบนำทางอัตโนมัติ 4011111 ฟิสิกส์สำหรับจุลชีววิทยา</h1>
+    <p>เลือกเปิดใช้งานระบบ 3D WebAR + ArUco (ID 0–11) หรือดาวน์โหลดเอกสารคำสอนฉบับเต็มด้านล่าง:</p>
+    <div class="btn-list">
+      <a class="btn btn-ar" href="/physics4microbiology2027/แผนการสอน%202027/เอกสารคำสอน_3D_AR_ArUco/webar_aruco/ar_aruco_textbook.html">
+        📷 เปิดแอปส่องมาร์กเกอร์ 3D WebAR + มือคู่ MediaPipe (ID 0–11)
+      </a>
+      <a class="btn btn-pdf" href="/physics4microbiology2027/แผนการสอน%202027/เอกสารคำสอน_3D_AR_ArUco/06_เอกสารคำสอน_3D_AR_ArUco_4011111_ฟิสิกส์สำหรับจุลชีววิทยา_พร้อมปก.pdf">
+        📘 เปิดเอกสารคำสอน 3D AR ArUco ฉบับเต็ม (PDF 115 หน้า พร้อมปก)
+      </a>
+      <a class="btn btn-markers" href="/physics4microbiology2027/แผนการสอน%202027/เอกสารคำสอน_3D_AR_ArUco/webar_aruco/aruco_marker_sheet.html">
+        🖨️ เปิดแผ่นรวมมาร์กเกอร์ ArUco (ID 0–11) สำหรับส่อง/พิมพ์
+      </a>
+      <a class="btn btn-home" href="/physics4microbiology2027/แผนการสอน%202027/index.html">
+        🏠 กลับหน้าแดชบอร์ดรายวิชา (OBE Courseware Hub)
+      </a>
+    </div>
+  </div>
+</body>
+</html>
