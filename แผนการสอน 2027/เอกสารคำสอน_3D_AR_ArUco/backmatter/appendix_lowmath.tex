@@ -1,0 +1,99 @@
+\chapter*{ภาคผนวก ก\quad คัมภีร์สรุปสูตรฟิสิกส์ฉบับเข้าใจง่ายและเกณฑ์ประเมินผล OBE}
+\addcontentsline{toc}{chapter}{ภาคผนวก ก\quad คัมภีร์สรุปสูตรฟิสิกส์ฉบับเข้าใจง่ายและเกณฑ์ประเมินผล OBE}
+\markboth{ภาคผนวก ก\quad คัมภีร์สรุปสูตรฟิสิกส์ฉบับเข้าใจง่าย}{ภาคผนวก ก\quad คัมภีร์สรุปสูตรฟิสิกส์ฉบับเข้าใจง่าย}
+
+\section*{ส่วนที่ 1\quad เทคนิคสามเหลี่ยมสูตรคำนวณสำหรับนักศึกษาจุลชีววิทยา}
+
+เพื่อช่วยให้นักศึกษาสาขาวิชาจุลชีววิทยาสามารถแก้โจทย์ฟิสิกส์ได้โดยไม่ต้องย้ายข้างสมการที่ซับซ้อน เราสามารถจัดรูปสมการ 3 ตัวแปรให้อยู่ในรูป \textbf{สามเหลี่ยมสูตรคำนวณ} (\textbf{Formula Triangle}) โดยมีหลักการใช้งานง่ายเพียงข้อเดียวคือ \textbf{ต้องการหาตัวแปรใด ให้เอานิ้วปิดตัวแปรนั้น} หากตัวแปรที่เหลืออยู่บรรทัดเดียวกันให้นำมาคูณกัน หากอยู่คนละบรรทัด (บนกับล่าง) ให้นำตัวบนตั้งแล้วหารด้วยตัวล่าง ดังแสดงใน\mbox{ภาพที่} ก.1
+
+\begin{figure}[H]
+\centering
+\resizebox{0.88\textwidth}{!}{%
+\begin{tikzpicture}[font=\sffamily]
+    % Triangle 1: v = s / t
+    \begin{scope}[shift={(0,0)}]
+        \fill[boxBlueBg] (0,0) -- (4.2,0) -- (2.1,3.4) -- cycle;
+        \draw[physRoyalBlue, line width=1.6pt] (0,0) -- (4.2,0) -- (2.1,3.4) -- cycle;
+        \draw[physRoyalBlue, line width=1.2pt] (1.05,1.7) -- (3.15,1.7);
+        \draw[physRoyalBlue, line width=1.2pt] (2.1,0) -- (2.1,1.7);
+        \node[font=\Large\bfseries, color=physRoyalBlue] at (2.1,2.35) {$s$};
+        \node[font=\Large\bfseries, color=bioEmerald] at (1.35,0.75) {$v$};
+        \node[font=\Large\bfseries, color=physAmber] at (2.85,0.75) {$t$};
+        \node[font=\small\bfseries, color=charcoal] at (2.1,-0.55) {อัตราเร็ว $v = \dfrac{s}{t}$};
+    \end{scope}
+
+    % Triangle 2: F = m * a
+    \begin{scope}[shift={(5.4,0)}]
+        \fill[boxGreenBg] (0,0) -- (4.2,0) -- (2.1,3.4) -- cycle;
+        \draw[bioEmerald, line width=1.6pt] (0,0) -- (4.2,0) -- (2.1,3.4) -- cycle;
+        \draw[bioEmerald, line width=1.2pt] (1.05,1.7) -- (3.15,1.7);
+        \draw[bioEmerald, line width=1.2pt] (2.1,0) -- (2.1,1.7);
+        \node[font=\Large\bfseries, color=physRoyalBlue] at (2.1,2.35) {$F$};
+        \node[font=\Large\bfseries, color=bioEmerald] at (1.35,0.75) {$m$};
+        \node[font=\Large\bfseries, color=physAmber] at (2.85,0.75) {$a$};
+        \node[font=\small\bfseries, color=charcoal] at (2.1,-0.55) {กฎนิวตัน $F = m \times a$};
+    \end{scope}
+
+    % Triangle 3: V = I * R
+    \begin{scope}[shift={(10.8,0)}]
+        \fill[boxAmberBg] (0,0) -- (4.2,0) -- (2.1,3.4) -- cycle;
+        \draw[physAmber, line width=1.6pt] (0,0) -- (4.2,0) -- (2.1,3.4) -- cycle;
+        \draw[physAmber, line width=1.2pt] (1.05,1.7) -- (3.15,1.7);
+        \draw[physAmber, line width=1.2pt] (2.1,0) -- (2.1,1.7);
+        \node[font=\Large\bfseries, color=physRoyalBlue] at (2.1,2.35) {$V$};
+        \node[font=\Large\bfseries, color=bioEmerald] at (1.35,0.75) {$I$};
+        \node[font=\Large\bfseries, color=physAmber] at (2.85,0.75) {$R$};
+        \node[font=\small\bfseries, color=charcoal] at (2.1,-0.55) {กฎของโอห์ม $V = I \times R$};
+    \end{scope}
+\end{tikzpicture}%
+}
+\caption{ผังสามเหลี่ยมสูตรคำนวณหลักสำหรับการแก้โจทย์ฟิสิกส์โดยไม่ต้องย้ายข้างสมการ}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{ตารางสรุปสูตรฟิสิกส์ประจำรายวิชา 4011111 (แจกให้นักศึกษาใช้ประกอบการทำข้อสอบกลางภาคและปลายภาค)}
+\small
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{3.3cm} p{4.5cm} >{\raggedright\arraybackslash}X}
+\toprule
+หมวดหมู่และบทเรียน & สมการพร้อมใช้ & ความหมายและการประยุกต์ในห้องแล็บจุลชีววิทยา \\
+\midrule
+บทที่ 1 การแปลงหน่วย & $1\text{ mm} = 1{,}000\text{ }\mu\text{m}$\newline $1\text{ mL} = 1{,}000\text{ }\mu\text{L}$ & ใช้แปลงขนาดเซลล์แบคทีเรีย ($\mu\text{m}$) ไวรัส ($\text{nm}$) และการตั้งค่าไมโครปิเปต ($\mu\text{L}$) \\
+\addlinespace[4pt]
+บทที่ 2 การเคลื่อนที่ & $v = \dfrac{s}{t}$ และ $x_{\text{rms}} = \sqrt{2Dt}$ & คำนวณอัตราเร็วการว่ายของแบคทีเรียมีแฟลกเจลลา และระยะการแพร่ของสารอาหารในวุ้น \\
+\addlinespace[4pt]
+บทที่ 3 แรงและความหนืด & $F_{\text{drag}} = 6\pi \eta r v$\newline $v_t = \dfrac{2 r^2 (\rho_p - \rho_f) g}{9\eta}$ & กฎของสโตกส์อธิบายอัตราเร็วตกตะกอนของเซลล์ในอาหารเลี้ยงเชื้อเหลวที่มีความหนืด $\eta$ \\
+\addlinespace[4pt]
+บทที่ 4 เครื่องปั่นเหวี่ยง & $\text{RCF} = 1.118 \times 10^{-5} \times r_{\text{cm}} \times (\text{RPM})^2$ & แปลงความเร็วรอบเครื่องปั่นเหวี่ยง (RPM) เป็นค่าแรงเหวี่ยงสัมพัทธ์ ($\times g$) ตามรัศมีโรเตอร์ $r_{\text{cm}}$ \\
+\addlinespace[4pt]
+บทที่ 5--6 ความร้อนและไอน้ำ & $Q = mc\Delta T$ และ $Q = mL_v$\newline $P_1 / T_1 = P_2 / T_2$ & คำนวณพลังงานความร้อนของตู้อบ Incubator และความร้อนแฝงของไอน้ำในหม้อนึ่ง Autoclave ($121\,^\circ\text{C}$) \\
+\addlinespace[4pt]
+บทที่ 7--8 ไฟฟ้าชีวภาพ & $F_e = \dfrac{k q_1 q_2}{r^2}$,\quad $V = IR$,\quad $P = VI$ & แรงดึงดูดระหว่างสีย้อมแกรมกับผนังเซลล์ประจุลบ และการเคลื่อนที่ของ DNA ใน Gel Electrophoresis \\
+\addlinespace[4pt]
+บทที่ 9--10 กล้องจุลทรรศน์ & $n_1 \sin\theta_1 = n_2 \sin\theta_2$\newline $M_{\text{total}} = M_{\text{obj}} \times M_{\text{oc}}$\newline $d_{\min} = \dfrac{0.61\lambda}{\text{NA}}$ & คำนวณกำลังขยายรวมและขีดจำกัดการแยกชัด $d_{\min}$ เมื่อหยดน้ำมันช่วยส่อง Immersion Oil ($n=1.515$) \\
+\addlinespace[4pt]
+บทที่ 11--12 รังสีและ $\text{OD}_{600}$ & $N = N_0 \left(\dfrac{1}{2}\right)^n$,\quad $A = \varepsilon b c$ & คำนวณจำนวนสารกัมมันตรังสีหรือจำนวนเชื้อที่ลดลงตามครึ่งชีวิต และการวัดความขุ่นเซลล์ $\text{OD}_{600}$ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section*{ส่วนที่ 2\quad เกณฑ์การประเมินผลแบบรูบริกส์ตามผลลัพธ์การเรียนรู้ (CLO Rubrics)}
+
+\begin{table}[H]
+\centering
+\caption{เกณฑ์รูบริกส์สำหรับการประเมินผลลัพธ์การเรียนรู้รายวิชา (CLO1 ถึง CLO4)}
+\footnotesize
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{2.2cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\toprule
+ผลลัพธ์ (CLO) & ระดับดีเยี่ยม (4 คะแนน) & ระดับดี (3 คะแนน) & ระดับต้องปรับปรุง (1--2 คะแนน) \\
+\midrule
+CLO1 ความรู้ฟิสิกส์พื้นฐาน & อธิบายหลักการฟิสิกส์และเลือกใช้สูตรคำนวณพร้อมระบุหน่วย SI ได้ถูกต้องครบถ้วนทุกขั้นตอน & อธิบายหลักการและแทนค่าในสูตรได้ถูกต้อง แต่มีความคลาดเคลื่อนของการแปลงหน่วยเล็กน้อย & ยังสับสนในการเลือกใช้สูตรคำนวณหรือละเลยการระบุหน่วยวัดทางวิทยาศาสตร์ \\
+\addlinespace[4pt]
+CLO2 ประยุกต์ใช้กับเครื่องมือจุลชีววิทยา & วิเคราะห์กลไกฟิสิกส์ของเครื่องมือ (เช่น Autoclave, Centrifuge, กล้องจุลทรรศน์) และเสนอแนวทางแก้ปัญหาหน้างานได้ถูกต้องชัดเจน & อธิบายหลักการทำงานของเครื่องมือได้ถูกต้อง แต่การเชื่อมโยงสู่การแก้ปัญหาในห้องแล็บยังไม่ครบทุกประเด็น & อธิบายได้เฉพาะขั้นตอนการกดปุ่มใช้งานเครื่องมือ แต่ยังไม่สามารถอธิบายเหตุผลทางฟิสิกส์เบื้องหลังได้ \\
+\addlinespace[4pt]
+CLO3 ความปลอดภัยและจรรยาบรรณ & ปฏิบัติการทดลองด้วยความระมัดระวัง สวมใส่อุปกรณ์ป้องกันครบถ้วน และบันทึกข้อมูลจริงจากเครื่องมือวัดอย่างซื่อสัตย์ 100\% & ปฏิบัติตามกฎความปลอดภัยได้ดีและบันทึกข้อมูลตามจริง แต่ยังต้องได้รับคำแนะนำในการตั้งค่าเครื่องมือบางขั้นตอน & ประมาทในการใช้อุปกรณ์ไฟฟ้าหรือความร้อน หรือมีการดัดแปลงตัวเลขผลการทดลองให้ตรงกับทฤษฎี \\
+\addlinespace[4pt]
+CLO4 การทำงานเป็นทีมและสื่อสาร & แบ่งหน้าที่ในกลุ่มอย่างสมดุล เขียนรายงานปฏิบัติการและวาดกราฟได้ถูกต้องตามหลักวิชาการ และนำเสนอได้ชัดเจน & ทำงานร่วมกับกลุ่มได้ดี รายงานมีความครบถ้วนแต่กราฟหรือการสรุปผลยังขาดรายละเอียดบางส่วน & ขาดการมีส่วนร่วมในการทำแล็บกลุ่ม หรือส่งรายงานไม่ครบตามหัวข้อมาตรฐาน \\
+\bottomrule
+\end{tabularx}
+\end{table}

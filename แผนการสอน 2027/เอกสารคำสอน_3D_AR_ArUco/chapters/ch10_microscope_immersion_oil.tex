@@ -1,0 +1,188 @@
+\cleardoublepage
+\phantomsection
+\begin{planbox}[แผนบริหารการสอนประจำบทที่ 10\quad กล้องจุลทรรศน์ ขีดจำกัดการแยกชัด และน้ำมันช่วยส่อง (สัปดาห์ที่ 11)]
+\noindent\textbf{1. หัวข้อเนื้อหาประจำบท (บรรยาย 2 ชั่วโมง และปฏิบัติการ 3 ชั่วโมง)}
+\begin{itemize}
+    \item 10.1 หลักการเกิดภาพของเลนส์นูนและระบบเลนส์คู่ของกล้องจุลทรรศน์แบบใช้แสง (Compound Light Microscope)
+    \item 10.2 กำลังขยายรวม ($M_{\text{total}}$) ค่าตัวเลขรูรับแสง (Numerical Aperture, $\text{NA}$) และขีดจำกัดการแยกชัด ($d_{\min}$)
+    \item 10.3 ฟิสิกส์ของน้ำมันช่วยส่อง (Immersion Oil, $n = 1.515$) สำหรับเลนส์ใกล้วัตถุกำลังขยาย 100x
+    \item 10.4 ปฏิบัติการที่ 10 การหาความยาวโฟกัสเลนส์นูนและพิสูจน์ความแตกต่างของภาพแบคทีเรียที่หัวเลนส์ 100x เมื่อใช้และไม่ใช้น้ำมันช่วยส่อง
+\end{itemize}
+
+\noindent\textbf{2. วัตถุประสงค์เชิงพฤติกรรมและผลลัพธ์การเรียนรู้รายวิชา (CLOs ที่เชื่อมโยง PLOs)}
+\begin{enumerate}
+    \item คำนวณกำลังขยายรวมและขีดจำกัดการแยกชัด ($d_{\min} = 0.61\lambda / \text{NA}$) ของกล้องจุลทรรศน์ได้ \textbf{(CLO1 เชื่อมโยง PLO2)}
+    \item อธิบายเหตุผลทางฟิสิกส์ของดัชนีหักเหได้ว่าทำไมเมื่อใช้หัวเลนส์ 100x จึงต้องหยด Immersion Oil เสมอ และทำไมการเพิ่มกำลังขยายแต่เพียงอย่างเดียวโดยไม่เพิ่มค่า $\text{NA}$ จึงได้เพียงภาพขยายที่เบลอ (Empty Magnification) \textbf{(CLO1, CLO2 เชื่อมโยง PLO2, PLO3)}
+    \item ปฏิบัติการใช้และทำความสะอาดเลนส์หัวน้ำมันของกล้องจุลทรรศน์อย่างถูกวิธีตามจรรยาบรรณห้องแล็บ \textbf{(CLO3, CLO4 เชื่อมโยง PLO1, PLO5, PLO6)}
+\end{enumerate}
+
+\noindent\textbf{3. กิจกรรมการจัดการเรียนรู้เชิงรุก (Active Learning \& OBE)}
+\begin{itemize}
+    \item \textbf{Problem-Based Lab}\quad ให้นักศึกษาเปรียบเทียบการคำนวณค่า $d_{\min}$ ของแสงสีน้ำเงิน ($\lambda = 450\text{ nm}$) กับแสงสีแดง ($\lambda = 650\text{ nm}$) เพื่อตอบคำถามว่าทำไมกล้องจุลทรรศน์คุณภาพสูงจึงนิยมใส่แผ่นกรองแสงสีน้ำเงิน (Blue Filter) ไว้ใต้ฐานไฟ
+\end{itemize}
+
+\noindent\textbf{4. สื่อการเรียนรู้และแหล่งเรียนรู้}
+\begin{itemize}
+    \item เอกสารคำสอนบทที่ 10 กล้องจุลทรรศน์แบบใช้แสง สไลด์ถาวรแบคทีเรียย้อมสีแกรม และน้ำมันช่วยส่อง Immersion Oil
+\end{itemize}
+
+\noindent\textbf{5. การวัดและประเมินผลประจำบท}
+\begin{itemize}
+    \item การตรวจใบงานคำนวณกำลังขยายและขีดจำกัดการแยกชัด \textbf{(CLO1, CLO2)}
+    \item การสอบปฏิบัติทักษะการใช้หัวเลนส์ 100x และรายงานปฏิบัติการที่ 10 \textbf{(CLO3, CLO4)}
+\end{itemize}
+\end{planbox}
+\clearpage
+
+\chapter{กล้องจุลทรรศน์ ขีดจำกัดการแยกชัด และน้ำมันช่วยส่อง}
+\index{กล้องจุลทรรศน์}\index{ขีดจำกัดการแยกชัด}\index{น้ำมันช่วยส่อง Immersion Oil}\index{Numerical Aperture}
+
+\section{ระบบเลนส์และกำลังขยายรวมของกล้องจุลทรรศน์}
+
+กล้องจุลทรรศน์แบบใช้แสงประกอบด้วยเลนส์นูน 2 ชุดทำงานร่วมกัน ได้แก่ \textbf{เลนส์ใกล้วัตถุ} (\textbf{Objective Lens} ซึ่งมีกำลังขยาย $M_{\text{obj}}$ ให้เลือกตั้งแต่ $4\times, 10\times, 40\times$ และ $100\times$) ทำหน้าที่สร้างภาพจริงหัวกลับขนาดขยายขึ้นมาก่อนในขั้นแรก จากนั้น\textbf{เลนส์ใกล้ตา} (\textbf{Ocular Lens} หรือ Eyepiece ซึ่งปกติมีกำลังขยาย $M_{\text{oc}} = 10\times$) จะทำหน้าที่ขยายภาพนั้นซ้ำอีกครั้งจนเกิดเป็น\textbf{ภาพเสมือนหัวกลับขนาดใหญ่}ที่ตาของนักศึกษามองเห็น โดยคำนวณ\textbf{กำลังขยายรวม} (\textbf{Total Magnification}, $M_{\text{total}}$) ได้จากผลคูณอย่างง่ายในสมการที่ (10.1)
+
+\begin{equation}
+    M_{\text{total}} = M_{\text{obj}} \times M_{\text{oc}}
+\end{equation}
+
+ตัวอย่างเช่น เมื่อหมุนเลนส์ใกล้วัตถุหัวน้ำมัน $100\times$ ร่วมกับเลนส์ใกล้ตา $10\times$ จะได้กำลังขยายรวมเท่ากับ $100 \times 10 = 1{,}000$ เท่า
+
+\section{ขีดจำกัดการแยกชัดและเหตุผลทางฟิสิกส์ที่ต้องหยดน้ำมันช่วยส่อง}
+
+ในงานจุลชีววิทยา ภาพที่ขยายใหญ่ขึ้นไม่ได้แปลว่าจะคมชัดเสมอไป หัวใจสำคัญที่สุดของกล้องจุลทรรศน์คือ \textbf{อำนาจการแยกชัด} (\textbf{Resolution}) ซึ่งวัดจากระยะห่างที่แคบที่สุดระหว่างจุดสองจุดที่กล้องยังสามารถแยกออกเป็นสองจุดได้ เรียกว่า \textbf{ขีดจำกัดการแยกชัด} (\textbf{Limit of Resolution}, $d_{\min}$) ตามสมการของอับเบอ (Abbe's Equation) ในสมการที่ (10.2)
+
+\begin{equation}
+    d_{\min} = \frac{0.61 \lambda}{\text{NA}} = \frac{0.61 \lambda}{n \sin\theta}
+\end{equation}
+
+โดยที่ $\lambda$ คือความยาวคลื่นของแสงที่ใช้ส่อง, $n$ คือดัชนีหักเหของตัวกลางที่อยู่ระหว่างแผ่นสไลด์กับหน้าเลนส์ใกล้วัตถุ, $\theta$ คือครึ่งมุมกรวยของแสงที่เข้าสู่เลนส์ และ $\text{NA} = n\sin\theta$ คือ\textbf{ค่าตัวเลขรูรับแสง} (\textbf{Numerical Aperture}) ซึ่งพิมพ์กำกับไว้ข้างกระบอกเลนส์ใกล้วัตถุทุกหัว (เช่น $100\times / 1.25\text{ Oil}$)
+
+\begin{conceptbox}[ทำไมค่า $d_{\min}$ ยิ่งน้อย ภาพแบคทีเรียยิ่งคมชัด]
+\begin{itemize}
+    \item ค่า $d_{\min}$ คือระยะห่างน้อยที่สุดที่แยกออกได้ ดังนั้น \textbf{ยิ่งค่า $d_{\min}$ มีค่าน้อย กล้องจุลทรรศน์ยิ่งมีความละเอียดคมชัดสูง}
+    \item การทำให้ $d_{\min}$ มีค่าน้อยลงทำได้ 2 วิธี คือ \textbf{(1) ลดความยาวคลื่นแสง $\lambda$} (เช่น ใช้แผ่นกรองแสงสีน้ำเงิน $\lambda \approx 450\text{ nm}$ หรือใช้ลำอิเล็กตรอนในกล้องจุลทรรศน์อิเล็กตรอน) และ \textbf{(2) เพิ่มค่าดัชนีหักเห $n$} โดยการหยด\textbf{น้ำมันช่วยส่อง} (\textbf{Immersion Oil}, $n = 1.515$) แทนที่อากาศ ($n = 1.000$)
+\end{itemize}
+\end{conceptbox}
+
+ดังแสดงใน\mbox{ภาพที่} 10.1 เมื่อใช้หัวเลนส์ $100\times$ ซึ่งอยู่ชิดแผ่นสไลด์มาก หากปล่อยให้มีช่องว่างเป็นอากาศ ($n = 1.000$) ลำแสงที่พุ่งออกจากแผ่นสไลด์แก้ว ($n = 1.515$) จะหักเหเบนหนีออกจากเส้นแนวฉากและเกิดการสะท้อนกลับหมดจนไม่เข้าสู่หน้าเลนส์ ภาพจึงมืดและพร่ามัว แต่เมื่อหยด \textbf{Immersion Oil} ซึ่งมีค่า $n = 1.515$ เท่ากับเนื้อกระจกสไลด์ทุกประการ แสงจะเดินทางเป็นเส้นตรงจากสไลด์ผ่านหยดน้ำมันเข้าสู่เลนส์ใกล้วัตถุได้เต็มที่โดยไม่เกิดการหักเหสูญเสียลำแสง ทำให้ค่า $\text{NA}$ เพิ่มขึ้นถึง $1.25\text{--}1.40$ และแยกชัดได้ถึงระดับ $d_{\min} \approx 0.2\text{ }\mu\text{m}$ ($200\text{ nm}$)
+
+\begin{figure}[H]
+\centering
+\resizebox{0.88\textwidth}{!}{%
+\begin{tikzpicture}[font=\sffamily, >=Stealth]
+    % Left: Dry (Air gap n=1.0) -> Rays Refracted Away
+    \begin{scope}[shift={(0,0)}]
+        \draw[fill=boxRedBg, draw=crimsonAlert, line width=1.2pt, rounded corners=4pt] (0,0) rectangle (6.8,4.8);
+        \node[font=\bfseries\color{crimsonAlert}] at (3.4,4.35) {(ก) ไม่หยดน้ำมัน (ผ่านอากาศ $n = 1.000$)};
+
+        % Slide
+        \fill[physCyan!25, draw=physRoyalBlue, line width=1.1pt] (1.0,1.2) rectangle (5.8,1.9);
+        \node[font=\scriptsize\bfseries, color=physRoyalBlue] at (3.4,1.55) {กระจกสไลด์ ($n = 1.515$)};
+        \fill[crimsonAlert] (3.4,1.9) circle (2.8pt);
+
+        % Objective Lens 100x
+        \fill[charcoal!85, draw=charcoal, line width=1.2pt] (2.2,2.7) -- (4.6,2.7) -- (5.0,3.8) -- (1.8,3.8) -- cycle;
+        \fill[physCyan!40] (2.4,2.7) rectangle (4.4,2.95);
+        \node[white, font=\footnotesize\bfseries] at (3.4,3.35) {เลนส์ใกล้วัตถุ 100x};
+
+        % Light Rays refracting out
+        \draw[->, crimsonAlert, line width=1.5pt] (3.4,1.9) -- (2.6,2.2) -- (1.1,2.5);
+        \draw[->, crimsonAlert, line width=1.5pt] (3.4,1.9) -- (4.2,2.2) -- (5.7,2.5);
+        \draw[->, physAmber, line width=1.2pt] (3.4,1.9) -- (3.1,2.7);
+        \draw[->, physAmber, line width=1.2pt] (3.4,1.9) -- (3.7,2.7);
+
+        \node[font=\footnotesize, align=center, color=charcoal] at (3.4,0.55) {แสงหักเหหนีออกด้านข้าง (สูญเสียแสง)\\ค่า $\text{NA}$ ต่ำ $\rightarrow$ \textbf{ภาพแบคทีเรียมืดและเบลอ}};
+    \end{scope}
+
+    % Right: With Immersion Oil (n=1.515) -> Straight Rays into Lens
+    \begin{scope}[shift={(7.6,0)}]
+        \draw[fill=boxGreenBg, draw=bioEmerald, line width=1.2pt, rounded corners=4pt] (0,0) rectangle (6.8,4.8);
+        \node[font=\bfseries\color{bioEmerald!90!black}] at (3.4,4.35) {(ข) หยดน้ำมันช่วยส่อง ($n = 1.515$)};
+
+        % Slide
+        \fill[physCyan!25, draw=physRoyalBlue, line width=1.1pt] (1.0,1.2) rectangle (5.8,1.9);
+        \node[font=\scriptsize\bfseries, color=physRoyalBlue] at (3.4,1.55) {กระจกสไลด์ ($n = 1.515$)};
+
+        % Oil Drop bridging slide and lens
+        \fill[physAmber!45, draw=physAmber, line width=1.0pt] (2.1,1.9) rectangle (4.7,2.7);
+        \node[font=\scriptsize\bfseries, color=physAmber!90!black] at (5.5,2.3) {Immersion Oil};
+
+        \fill[bioEmerald] (3.4,1.9) circle (2.8pt);
+
+        % Objective Lens 100x
+        \fill[charcoal!85, draw=charcoal, line width=1.2pt] (2.2,2.7) -- (4.6,2.7) -- (5.0,3.8) -- (1.8,3.8) -- cycle;
+        \fill[physCyan!40] (2.4,2.7) rectangle (4.4,2.95);
+        \node[white, font=\footnotesize\bfseries] at (3.4,3.35) {เลนส์ใกล้วัตถุ 100x};
+
+        % Light Rays going straight into lens
+        \draw[->, bioEmerald!90!black, line width=1.6pt] (3.4,1.9) -- (2.5,2.85);
+        \draw[->, bioEmerald!90!black, line width=1.6pt] (3.4,1.9) -- (4.3,2.85);
+        \draw[->, bioEmerald!90!black, line width=1.6pt] (3.4,1.9) -- (2.9,2.85);
+        \draw[->, bioEmerald!90!black, line width=1.6pt] (3.4,1.9) -- (3.9,2.85);
+
+        \node[font=\footnotesize, align=center, color=charcoal] at (3.4,0.55) {$n_{\text{glass}} = n_{\text{oil}} = 1.515$ แสงพุ่งตรงเข้าเลนส์เต็มที่\\ค่า $\text{NA} = 1.25$ $\rightarrow$ \textbf{แยกชัดถึง $0.22\text{ }\mu\text{m}$ คมกริบ}};
+    \end{scope}
+\end{tikzpicture}%
+}
+\caption{การเปรียบเทียบทางเดินแสงเข้าสู่เลนส์ใกล้วัตถุ 100x ระหว่างกรณีไม่หยดน้ำมันและกรณีหยดน้ำมันช่วยส่อง}
+\end{figure}
+
+\vspace{4pt}
+\arucomarkerbadge{9}{10}{กล้องจุลทรรศน์เลนส์ประกอบและบทบาทของ Immersion Oil ที่หัวเลนส์ 100x}{เปรียบเทียบกรวยแสงที่พุ่งเข้าสู่หัวเลนส์ $100\times$ ระหว่างกรณีหยดน้ำมันช่วยส่อง ($n=1.515$) กับช่องว่างอากาศ ($n=1.00$) และคำนวณ $d_{\min}$}{ตัวกลางระหว่างสไลด์กับเลนส์ (อากาศ vs. น้ำมัน $n=1.515$), ความยาวคลื่นแสง $\lambda$ ($\text{nm}$)}
+
+
+\begin{worked}[การคำนวณขีดจำกัดการแยกชัดของกล้องจุลทรรศน์เมื่อใช้หัวเลนส์น้ำมัน 100x]
+\textbf{โจทย์ปัญหา}\quad นักศึกษาส่องดูแบคทีเรียย้อมสีแกรมด้วยเลนส์ใกล้วัตถุหัวน้ำมัน $100\times$ ซึ่งมีค่า $\text{NA} = 1.25$ โดยใช้แสงสีเขียว-น้ำเงินที่มีความยาวคลื่นเฉลี่ย $\lambda = 500\text{ nm}$ ($0.50\text{ }\mu\text{m}$) จงคำนวณหาขีดจำกัดการแยกชัด ($d_{\min}$) ของกล้องจุลทรรศน์นี้ และพิจารณาว่ากล้องตัวนี้สามารถมองเห็นเซลล์แบคทีเรียขนาด $1.0\text{ }\mu\text{m}$ และไวรัสขนาด $0.08\text{ }\mu\text{m}$ ($80\text{ nm}$) แยกเป็นอนุภาคชัดเจนได้หรือไม่
+
+\textbf{วิธีทำทีละขั้นตอนฉบับเข้าใจง่าย}
+\begin{enumerate}
+    \item \textbf{ขั้นที่ 1 แทนค่า $\lambda = 0.50\text{ }\mu\text{m}$ และ $\text{NA} = 1.25$ ลงในสูตร $d_{\min} = \dfrac{0.61\lambda}{\text{NA}}$}
+    \[
+        d_{\min} = \frac{0.61 \times 0.50\text{ }\mu\text{m}}{1.25} = \frac{0.305}{1.25} = 0.244\text{ }\mu\text{m} \quad (\text{หรือ } 244\text{ nm})
+    \]
+    \item \textbf{ขั้นที่ 2 เปรียบเทียบขนาดสิ่งมีชีวิตกับค่า $d_{\min} = 0.244\text{ }\mu\text{m}$}
+    \begin{itemize}
+        \item เซลล์แบคทีเรียมีขนาด $1.0\text{ }\mu\text{m}$ ซึ่ง\textbf{ใหญ่กว่า}ขีดจำกัด $0.244\text{ }\mu\text{m}$ จึง\textbf{มองเห็นรูปร่างได้อย่างคมชัด}
+        \item ไวรัสมีขนาด $0.08\text{ }\mu\text{m}$ ซึ่ง\textbf{เล็กกว่า}ขีดจำกัด $0.244\text{ }\mu\text{m}$ จึง\textbf{ไม่สามารถมองเห็นได้ด้วยกล้องจุลทรรศน์แบบใช้แสง} (ต้องใช้กล้องจุลทรรศน์อิเล็กตรอน)
+    \end{itemize}
+\end{enumerate}
+\textbf{คำตอบ}\quad ขีดจำกัดการแยกชัดมีค่าเท่ากับ $0.244\text{ }\mu\text{m}$ ($244\text{ nm}$) สามารถมองเห็นแบคทีเรียได้ชัดเจน แต่ไม่สามารถมองเห็นไวรัสได้
+\end{worked}
+
+\section{ปฏิบัติการประจำสัปดาห์ที่ 11}
+
+\begin{labbox}[ปฏิบัติการที่ 10\quad เลนส์นูน กล้องจุลทรรศน์ และบทบาทของ Immersion Oil (3 ชั่วโมง)]
+\noindent\textbf{ผลลัพธ์การเรียนรู้ที่ประเมิน}\quad CLO1 (ทัศนศาสตร์ของเลนส์และกล้องจุลทรรศน์), CLO2 (การใช้ Immersion Oil แก้ปัญหาภาพมัว), CLO3 (วินัยการดูแลรักษาหัวเลนส์), CLO4 (รายงานกลุ่ม)
+
+\vspace{4pt}
+\noindent\textbf{1. วัสดุและอุปกรณ์}
+\begin{itemize}
+    \item เลนส์นูนพร้อมรางวัดความยาวโฟกัส ($f$), กล้องจุลทรรศน์แบบใช้แสง, สไลด์ถาวรแบคทีเรียย้อมสีแกรม (\textit{S. aureus} และ \textit{E. coli}), น้ำมันช่วยส่อง (Immersion Oil) และกระดาษเช็ดเลนส์ (Lens Paper)
+\end{itemize}
+
+\noindent\textbf{2. ขั้นตอนการทดลอง}
+\begin{enumerate}
+    \item บันทึกค่ากำลังขยาย ($M_{\text{obj}}$) และค่าตัวเลขรูรับแสง ($\text{NA}$) ที่พิมพ์อยู่บนกระบอกเลนส์ใกล้วัตถุทั้ง 4 หัว ($4\times, 10\times, 40\times$ และ $100\times$) พร้อมคำนวณค่า $d_{\min}$ ที่ความยาวคลื่นแสง $\lambda = 550\text{ nm}$ ($0.55\text{ }\mu\text{m}$)
+    \item ปรับโฟกัสสไลด์แบคทีเรียที่หัวเลนส์ $10\times$ และ $40\times$ จากนั้นหมุนกึ่งกลางก่อนเข้าหัว $100\times$ ลองสังเกตความสว่างและความคมชัดก่อนหยดน้ำมัน เทียบกับหลังหยด Immersion Oil 1 หยดลงบนสไลด์แล้วหมุนหัว $100\times$ แตะหยดน้ำมันพร้อมปรับปุ่มละเอียด (Fine Adjustment)
+\end{enumerate}
+
+\noindent\textbf{3. ตารางบันทึกผลการทดลอง}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{c c c c >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{หัวเลนส์} & \textbf{กำลังขยายรวม} & \textbf{ค่า $\text{NA}$} & \textbf{$d_{\min}$ ($\mu\text{m}$)} & \textbf{ความคมชัดของเซลล์แบคทีเรีย} \\
+\midrule
+$10\times$ & $100\times$ & $0.25$ & ............ & \dotfill \\
+$40\times$ & $400\times$ & $0.65$ & ............ & \dotfill \\
+$100\times$ (Oil) & $1{,}000\times$ & $1.25$ & ............ & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{labbox}
+
+\section*{คำถามท้ายบทที่ 10 (ทบทวนแนวคิดและการคำนวณเบื้องต้น)}
+\begin{enumerate}
+    \item เลนส์ใกล้วัตถุขนาด $40\times$ มีค่า $\text{NA} = 0.65$ หากใช้แสงสีเขียวที่มีความยาวคลื่น $\lambda = 0.55\text{ }\mu\text{m}$ จงคำนวณหาค่าขีดจำกัดการแยกชัด ($d_{\min}$) ในหน่วยไมโครเมตร
+    \item เพราะเหตุใดหลังเสร็จสิ้นการส่องกล้องจุลทรรศน์ด้วยหัวเลนส์น้ำมัน $100\times$ นักศึกษาจึงต้องใช้กระดาษเช็ดเลนส์เช็ดคราบน้ำมันออกจากหน้าเลนส์ทันที และห้ามให้หัวเลนส์ $40\times$ สัมผัสโดนหยดน้ำมันโดยเด็ดขาด
+\end{enumerate}

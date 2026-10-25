@@ -1,0 +1,39 @@
+\chapter*{คู่มือการใช้งานระบบ 3D WebAR และแผ่นรวมมาร์กเกอร์ ArUco (ID 0--11)}
+\addcontentsline{toc}{chapter}{คู่มือการใช้งานระบบ 3D WebAR และแผ่นรวมมาร์กเกอร์ ArUco (ID 0--11)}
+\markboth{คู่มือการใช้งานระบบ 3D WebAR และแผ่นรวมมาร์กเกอร์ ArUco}{คู่มือการใช้งานระบบ 3D WebAR และแผ่นรวมมาร์กเกอร์ ArUco}
+
+เอกสารคำสอน \textbf{รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา (ฉบับบูรณาการเทคโนโลยีความจริงเสริม 3 มิติ — 3D WebAR \& ArUco Marker Edition)} เล่มนี้ ได้ผสานมาร์กเกอร์มาตรฐานสากล \textbf{ArUco Fiducial Marker (พจนานุกรม \texttt{DICT\_4X4\_50} รหัส ID 0 ถึง ID 11)} ลงในเนื้อหาทั้ง 12 บทเรียน เพื่อให้นักศึกษาสาขาจุลชีววิทยาสามารถใช้กล้องสมาร์ทโฟนหรือแท็บเล็ตส่องไปที่หน้าหนังสือเรียน แล้วสำรวจโครงสร้างและกลไกทางฟิสิกส์ของเครื่องมือวิทยาศาสตร์ในรูปแบบ \textbf{วัตถุ 3 มิติแบบโต้ตอบได้ (Interactive 3D PBR Simulation)} โดยไม่ต้องติดตั้งแอปพลิเคชันเพิ่มเติม
+
+\section*{1. โครงสร้างทางเรขาคณิตของมาร์กเกอร์ ArUco (4x4 Binary Matrix)}
+มาร์กเกอร์ ArUco แต่ละรหัสประกอบด้วยตารางขนาด $6 \times 6$ ช่อง โดยขอบนอกสุดความหนา $1$ ช่องเป็น\textbf{กรอบสีดำทึบต่อเนื่อง} เพื่อให้อัลกอริทึมคอมพิวเตอร์วิทัศน์ตรวจจับรูปสี่เหลี่ยมจัตุรัสและคำนวณมุมเอียงของหน้ากระดาษได้แม้อยู่ในสภาพแสงน้อย ส่วนพื้นที่ด้านในขนาด $4 \times 4$ ช่อง ($16\text{ บิต}$) แทนรหัสเลขฐานสองเฉพาะตัวของแต่ละบทเรียน (ตั้งแต่ \textbf{ArUco ID 0} สำหรับบทที่ 1 ไปจนถึง \textbf{ArUco ID 11} สำหรับบทที่ 12) พร้อมจุดสามเหลี่ยมสีเขียวมรกตที่มุมบนซ้ายเพื่อบอกทิศทางการวางตั้งขึ้นของมาร์กเกอร์
+
+\section*{2. ขั้นตอนการส่องมาร์กเกอร์ ArUco เพื่อเรียกดูแบบจำลอง 3 มิติ}
+\begin{enumerate}
+    \item \textbf{เปิดระบบสแกนเนอร์ WebAR}\quad เปิดไฟล์เว็บแอป \href{webar_aruco/ar_aruco_textbook.html}{\texttt{webar\_aruco/ar\_aruco\_textbook.html}} ผ่านเบราว์เซอร์บนสมาร์ทโฟน แท็บเล็ต หรือคอมพิวเตอร์พกพา
+    \item \textbf{เปิดกล้อง AR และส่องไปที่มาร์กเกอร์}\quad กดปุ่มอัญมณีตรงกลางแถบด้านล่างเพื่อเปิดกล้องหลัง แล้วนำกรอบเล็งเลเซอร์ส่องไปที่มาร์กเกอร์ \textbf{ArUco ID 0--11} ในแต่ละบท (หรือส่องจากตารางรวมด้านล่างนี้)
+    \item \textbf{หมุนสำรวจและปรับค่าตัวแปรทางฟิสิกส์}\quad เมื่อระบบล็อกรหัส ArUco สำเร็จ กรอบเล็งจะเปลี่ยนเป็นสีเขียวมรกตพร้อมเสียงสัญญาณ และแบบจำลองเครื่องมือจุลชีววิทยา 3 มิติจะลอยขึ้นมาบนหน้าหนังสือ นักศึกษาสามารถใช้นิ้วหมุนดูรอบทิศทาง $360^\circ$ และเลื่อนแถบสไลเดอร์ด้านขวา (\textbf{CTRL}) เพื่อปรับค่าความเร็วรอบ $\text{RPM}$, ความดันไอน้ำ, แรงดันไฟฟ้า หรือหยดน้ำมันช่วยส่องที่หัวเลนส์ $100\times$ ได้แบบเรียลไทม์
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\caption{แผ่นรวมมาร์กเกอร์ ArUco (DICT\_4X4\_50 รหัส ID 0 ถึง ID 11) สำหรับส่องดูโมเดล 3 มิติครบทั้ง 12 บทเรียน}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{>{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X}
+\toprule
+\drawaruco[2.2cm]{0}\par\textbf{ID 0 (บทที่ 1)}\par{\scriptsize ไมโครปิเปตและการเจือจาง} &
+\drawaruco[2.2cm]{1}\par\textbf{ID 1 (บทที่ 2)}\par{\scriptsize แฟลกเจลลาและบราวน์เนียน} &
+\drawaruco[2.2cm]{2}\par\textbf{ID 2 (บทที่ 3)}\par{\scriptsize กฎสโตกส์และตู้ปลอดเชื้อ} &
+\drawaruco[2.2cm]{3}\par\textbf{ID 3 (บทที่ 4)}\par{\scriptsize เครื่องปั่นเหวี่ยง RCF ($\times g$)} \\
+\midrule
+\drawaruco[2.2cm]{4}\par\textbf{ID 4 (บทที่ 5)}\par{\scriptsize ตู้อบ $37\,^\circ\text{C}$ และเครื่อง PCR} &
+\drawaruco[2.2cm]{5}\par\textbf{ID 5 (บทที่ 6)}\par{\scriptsize หม้อนึ่ง Autoclave $121\,^\circ\text{C}$} &
+\drawaruco[2.2cm]{6}\par\textbf{ID 6 (บทที่ 7)}\par{\scriptsize ประจุผิวเซลล์และการย้อมแกรม} &
+\drawaruco[2.2cm]{7}\par\textbf{ID 7 (บทที่ 8)}\par{\scriptsize Gel Electrophoresis} \\
+\midrule
+\drawaruco[2.2cm]{8}\par\textbf{ID 8 (บทที่ 9)}\par{\scriptsize Refractometer วัดน้ำหมัก} &
+\drawaruco[2.2cm]{9}\par\textbf{ID 9 (บทที่ 10)}\par{\scriptsize กล้องจุลทรรศน์และน้ำมัน $100\times$} &
+\drawaruco[2.2cm]{10}\par\textbf{ID 10 (บทที่ 11)}\par{\scriptsize รังสี UV-C กฎกำลังสองผกผัน} &
+\drawaruco[2.2cm]{11}\par\textbf{ID 11 (บทที่ 12)}\par{\scriptsize การวัดค่า $\text{OD}_{600}$ และกราฟเติบโต} \\
+\bottomrule
+\end{tabularx}
+\end{table}
