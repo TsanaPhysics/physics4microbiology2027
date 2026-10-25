@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ห้องปฏิบัติการฟิสิกส์สำหรับจุลชีววิทยา 3 มิติเสมือนจริง | 4011111 Physics for Microbiology Virtual Lab</title>
+  <meta name="description" content="ระบบปฏิบัติการฟิสิกส์สำหรับจุลชีววิทยาเสมือนจริง 3 มิติ มหาวิทยาลัยราชภัฏรำไพพรรณี พร้อมระบบลงทะเบียน บันทึกผล ส่งรายงาน และวิเคราะห์ผลรายบุคคล">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              900: '#064e3b',
+              950: '#022c22'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- MathJax 3 for Formula Rendering -->
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/virtual_lab.css">
+</head>
+<body class="bg-[#060b18] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950 pb-24 md:pb-6">
+
+  <!-- 1. Header Navbar -->
+  <header class="sticky top-0 z-40 bg-[#0a1124]/90 backdrop-blur-xl border-b border-emerald-500/20 px-4 py-3 shadow-xl">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <!-- Brand & Course Details -->
+      <div class="flex items-center gap-3">
+        <a href="../index.html" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 p-0.5 shadow-lg shadow-emerald-950/60 flex items-center justify-center shrink-0 hover:scale-105 transition-transform" title="กลับหน้าพอร์ทัลหลัก">
+          <div class="w-full h-full bg-[#0a1124] rounded-[10px] flex items-center justify-center">
+            <i class="fa-solid fa-microscope text-emerald-400 text-lg"></i>
+          </div>
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-[10px] tracking-wider uppercase font-mono">
+              4011111 OBE Lab
+            </span>
+            <span class="text-xs text-slate-400 hidden sm:inline">มหาวิทยาลัยราชภัฏรำไพพรรณี</span>
+          </div>
+          <h1 class="text-sm sm:text-base font-bold text-white tracking-wide">
+            ห้องปฏิบัติการฟิสิกส์สำหรับจุลชีววิทยา 3 มิติ
+          </h1>
+        </div>
+      </div>
+
+      <!-- User Authentication & Action Buttons -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div id="activeUserPill"></div>
+
+        <button id="btnOpenAnalytics" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold shadow transition-all active:scale-95" title="ดูผลการวิเคราะห์คะแนนและความก้าวหน้ารายบุคคล">
+          <i class="fa-solid fa-chart-pie text-sky-400"></i>
+          <span>วิเคราะห์ผลรายบุคคล</span>
+        </button>
+
+        <button id="btnOpenAdmin" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold shadow transition-all active:scale-95" title="ระบบอาจารย์ผู้สอน / ผู้ดูแลระบบ">
+          <i class="fa-solid fa-user-shield text-amber-400"></i>
+          <span class="hidden md:inline">อาจารย์/Admin</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. Main Content Grid -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5">
+
+    <!-- Left Sidebar: 13 Labs Selector List (Cols 3) -->
+    <aside id="labsListSidebar" class="lg:col-span-3 space-y-3">
+      <div class="glass-panel-neon rounded-2xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-flask-vial text-emerald-400"></i>
+            <h2 class="text-sm font-bold text-white tracking-wide">คลัง 13 ปฏิบัติการ</h2>
+          </div>
+          <span class="text-[10px] bg-slate-800 px-2 py-0.5 rounded-full text-slate-400 font-mono">13 Labs</span>
+        </div>
+        <p class="text-[11px] text-slate-400 leading-relaxed">
+          เลือกปฏิบัติการเพื่อเข้าสู่แบบจำลอง 3 มิติ และทำการทดลองเสมือนจริง
+        </p>
+        <div id="labsListContainer" class="space-y-2 max-h-[720px] overflow-y-auto pr-1"></div>
+      </div>
+    </aside>
+
+    <!-- Center & Right: 3D Lab Simulation + Data Reporting (Cols 9) -->
+    <section class="lg:col-span-9 space-y-5">
+
+      <!-- Active Lab Header Banner -->
+      <div class="glass-panel rounded-2xl p-4 sm:p-5 border-l-4 border-l-emerald-500 shadow-xl space-y-2">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span id="labBadge" class="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold font-mono">Lab 01</span>
+            <span id="labCategory" class="text-xs text-sky-400 font-semibold">การวัดและเครื่องมือพื้นฐาน</span>
+          </div>
+          <div id="activeModeBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-slate-900 border border-slate-700 text-slate-300">
+            <i class="fa-solid fa-cube text-emerald-400"></i> โหมด 1: 3D Virtual Lab (360°)
+          </div>
+        </div>
+
+        <h2 id="labTitleTh" class="text-base sm:text-lg md:text-xl font-bold text-white">
+          การวัดพื้นฐานและการตรวจสอบความแม่นยำของไมโครปิเปต P1000
+        </h2>
+        <div id="labTitleEn" class="text-xs text-slate-400 italic">
+          Basic Measurement & P1000 Micropipette Gravimetric Calibration
+        </div>
+
+        <div class="pt-2 text-xs text-slate-300 flex items-center gap-2">
+          <span class="text-slate-400">เครื่องมือจำลอง:</span>
+          <span id="labInstrument" class="font-semibold text-emerald-300">Micropipette P1000 & Analytical Balance 0.0001 g</span>
+        </div>
+      </div>
+
+      <!-- 3D Interactive Viewport Container -->
+      <div class="glass-panel-neon rounded-2xl overflow-hidden relative shadow-2xl">
+        <!-- 3D Top Control Bar -->
+        <div class="absolute top-3 inset-x-3 z-20 flex items-center justify-between pointer-events-none">
+          <!-- Interaction Mode Switchers (Mode 1 / Mode 2 / Mode 3) -->
+          <div class="flex items-center gap-1 bg-slate-950/80 backdrop-blur-md p-1 rounded-xl border border-slate-700/80 pointer-events-auto shadow-lg">
+            <button id="btnMode3D" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow" title="โหมด 1: หมุนกล้อง 360 องศา PBR">
+              <i class="fa-solid fa-cube"></i> <span class="hidden sm:inline ml-1">3D Lab</span>
+            </button>
+            <button id="btnModeAR" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-slate-200" title="โหมด 2: AR จำลองส่องหน้าหนังสือ">
+              <i class="fa-solid fa-camera"></i> <span class="hidden sm:inline ml-1">AR Marker</span>
+            </button>
+            <button id="btnModeHand" class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-400 hover:text-slate-200" title="โหมด 3: ควบคุมด้วยมือไร้สัมผัส">
+              <i class="fa-solid fa-hand"></i> <span class="hidden sm:inline ml-1">AI Hand</span>
+            </button>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="flex items-center gap-2 pointer-events-auto">
+            <button id="btnResetCamera" class="w-8 h-8 rounded-lg bg-slate-950/80 backdrop-blur-md border border-slate-700/80 text-slate-300 hover:text-white flex items-center justify-center text-xs shadow hover:bg-slate-800 transition-colors" title="รีเซ็ตมุมมองกล้อง">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Three.js Canvas Container -->
+        <div id="sim3dCanvasContainer" class="w-full h-[380px] sm:h-[440px] md:h-[480px] cursor-grab active:cursor-grabbing"></div>
+
+        <!-- 3D Bottom Overlay: Mini-Oscilloscope Waveform Canvas -->
+        <div class="absolute bottom-3 right-3 z-20 pointer-events-none bg-slate-950/85 backdrop-blur-md border border-slate-700/80 rounded-xl p-2 shadow-2xl flex flex-col items-end">
+          <div class="text-[9px] font-mono text-emerald-400 font-bold mb-1 flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+            LIVE TELEMETRY WAVEFORM
+          </div>
+          <canvas id="oscCanvas" width="160" height="48" class="rounded border border-slate-800 bg-[#090d16]"></canvas>
+        </div>
+      </div>
+
+      <!-- Live Telemetry Readouts Grid -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs text-slate-400">
+          <span class="font-bold text-slate-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-microchip text-sky-400"></i> มาตรวัดและค่าฟิสิกส์แบบเรียลไทม์ (Live Sensor Telemetry)
+          </span>
+          <span class="text-[10px] font-mono text-emerald-400">Closed-Loop Precision</span>
+        </div>
+        <div id="telemetryGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+      </div>
+
+      <!-- Parameter Sliders & Capture Button -->
+      <div class="glass-panel rounded-2xl p-4 sm:p-5 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-emerald-400"></i> ปรับแต่งพารามิเตอร์การทดลอง 3 มิติ
+          </h3>
+          <button id="btnCaptureData" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-lg shadow-emerald-950/40 active:scale-95 transition-transform">
+            <i class="fa-solid fa-camera-retro"></i>
+            <span>บันทึกค่าลงตาราง (Capture 3D Data)</span>
+          </button>
+        </div>
+
+        <div id="paramsContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
+      </div>
+
+      <!-- Theory Formula & Description -->
+      <div class="glass-panel rounded-2xl p-4 sm:p-5 space-y-3">
+        <h3 class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-book-open text-sky-400"></i> หลักการทางฟิสิกส์และสมการที่เกี่ยวข้อง
+        </h3>
+        <p id="labDescription" class="text-xs text-slate-300 leading-relaxed"></p>
+
+        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 text-center overflow-x-auto shadow-inner">
+          <div id="labFormulaLatex" class="text-sm sm:text-base text-emerald-300 font-mono py-1"></div>
+          <div id="labFormulaDesc" class="text-[11px] text-slate-400 mt-2 font-sans"></div>
+        </div>
+      </div>
+
+      <!-- Data Recording Table -->
+      <div class="glass-panel rounded-2xl p-4 sm:p-5 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-table text-amber-400"></i> ตารางบันทึกผลการทดลอง (Data Recording Table)
+          </h3>
+          <span class="text-[11px] text-slate-400">บันทึกค่าได้ต่อเนื่องหลาย Trial</span>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
+          <table class="w-full text-left border-collapse">
+            <thead id="dataTableHead" class="bg-slate-900/90 text-xs"></thead>
+            <tbody id="dataTableBody" class="divide-y divide-slate-800/60 bg-slate-950/60"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Post-Lab Questions & Submission -->
+      <div class="glass-panel-neon rounded-2xl p-4 sm:p-5 space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-clipboard-question text-emerald-400"></i> คำถามท้ายปฏิบัติการและสรุปผล (Post-Lab Assessment)
+          </h3>
+          <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">
+            3 ข้อ • OBE Formative
+          </span>
+        </div>
+
+        <!-- 3 Quiz Questions -->
+        <div id="quizContainer" class="space-y-3"></div>
+
+        <!-- Conclusion & Discussion Inputs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+          <div class="space-y-1.5">
+            <label class="text-xs font-semibold text-slate-300 block">สรุปผลการทดลอง (Conclusion)</label>
+            <textarea id="reportConclusion" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-emerald-500" placeholder="ระบุผลสรุปที่สอดคล้องกับวัตถุประสงค์และข้อมูลในตาราง..."></textarea>
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-xs font-semibold text-slate-300 block">วิเคราะห์และอภิปรายผล (Discussion & Error Analysis)</label>
+            <textarea id="reportDiscussion" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-emerald-500" placeholder="อธิบายสาเหตุความคลาดเคลื่อนและแนวทางปรับปรุง..."></textarea>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-800">
+          <div class="text-[11px] text-slate-400 flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+            <span>ระบบตรวจคำนวณคะแนนความแม่นยำอัตโนมัติ พร้อมออกรหัสรับรองดิจิทัล</span>
+          </div>
+
+          <button id="btnSubmitReport" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/60 active:scale-95 transition-all">
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>ส่งรายงานผลปฏิบัติการ (Submit Lab Report)</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- 3. Mobile 3D Curved Scoop Bottom Navigation Dock (aiot-fullstack-latex-architect standard) -->
+  <nav id="mobileBottomNav" class="lg:hidden fixed bottom-0 left-0 right-0 z-50 pointer-events-auto select-none w-full max-w-[100vw] overflow-visible mobile-scoop-dock">
+    <!-- Solid Base Shield 100% to prevent content bleed-through -->
+    <div class="absolute bottom-0 inset-x-0 w-full h-[76px] pointer-events-none">
+      <div class="absolute inset-0 bg-[#0a1124] shadow-[0_-10px_35px_rgba(0,0,0,0.4)]"></div>
+      <svg class="absolute -top-3 w-full h-[90px] filter drop-shadow-[0_-6px_16px_rgba(0,0,0,0.3)]" viewBox="0 0 375 90" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="barGradient3D" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#0f172a" /><stop offset="100%" stop-color="#0a1124" />
+          </linearGradient>
+          <radialGradient id="scoopDish3D" cx="50%" cy="30%" r="65%">
+            <stop offset="0%" stop-color="#1e293b" stop-opacity="0.9" />
+            <stop offset="100%" stop-color="#0a1124" stop-opacity="0.4" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="187.5" cy="20" rx="42" ry="20" fill="url(#scoopDish3D)" />
+        <path d="M0,12 L134,12 C146,12 153,46 187.5,46 C222,46 229,12 241,12 L375,12 L375,90 L0,90 Z" fill="url(#barGradient3D)" stroke="#10b981" stroke-width="1.2" stroke-opacity="0.3" />
+      </svg>
+    </div>
+
+    <!-- 5 Tactile Claymorphic Buttons Grid -->
+    <div class="relative flex justify-between items-end px-3 sm:px-6 h-[74px] w-full max-w-md mx-auto z-20 pb-2">
+      <!-- 1. Home -->
+      <a href="../index.html" class="flex flex-col items-center justify-center w-14 group active:scale-90 transition-transform">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 p-0.5 shadow-lg border border-emerald-300/30 flex items-center justify-center">
+          <i class="fa-solid fa-house text-white text-sm"></i>
+        </div>
+        <span class="text-[10px] font-bold text-emerald-400 mt-1">หน้าหลัก</span>
+      </a>
+
+      <!-- 2. Labs List -->
+      <button onclick="document.getElementById('labsListSidebar').scrollIntoView({behavior: 'smooth'})" class="flex flex-col items-center justify-center w-14 group active:scale-90 transition-transform">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-700 p-0.5 shadow-lg border border-sky-300/30 flex items-center justify-center">
+          <i class="fa-solid fa-flask-vial text-white text-sm"></i>
+        </div>
+        <span class="text-[10px] font-bold text-sky-400 mt-1">13 แล็บ</span>
+      </button>
+
+      <!-- Center FAB: Capture 3D Data -->
+      <div class="relative flex flex-col items-center justify-center -top-3 z-30">
+        <button onclick="app.capture3DMeasurement()" class="group relative flex items-center justify-center rounded-full p-1 bg-gradient-to-b from-emerald-400 via-teal-500 to-slate-900 shadow-[0_10px_25px_rgba(16,185,129,0.5)] border border-emerald-300/60 hover:scale-105 active:scale-90 w-[58px] h-[58px] transition-transform">
+          <div class="w-full h-full rounded-full bg-gradient-to-tr from-emerald-600 via-teal-500 to-cyan-400 flex items-center justify-center">
+            <i class="fa-solid fa-camera-retro text-2xl text-slate-950"></i>
+          </div>
+        </button>
+        <span class="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-[9px] font-bold shadow mt-1">บันทึกค่า</span>
+      </div>
+
+      <!-- 4. Analytics -->
+      <button onclick="app.openAnalyticsModal()" class="flex flex-col items-center justify-center w-14 group active:scale-90 transition-transform">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-fuchsia-500 to-purple-800 p-0.5 shadow-lg border border-fuchsia-300/30 flex items-center justify-center">
+          <i class="fa-solid fa-chart-pie text-white text-sm"></i>
+        </div>
+        <span class="text-[10px] font-bold text-fuchsia-400 mt-1">วิเคราะห์ผล</span>
+      </button>
+
+      <!-- 5. Admin -->
+      <button onclick="app.openAdminModal()" class="flex flex-col items-center justify-center w-14 group active:scale-90 transition-transform">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-700 p-0.5 shadow-lg border border-amber-300/30 flex items-center justify-center">
+          <i class="fa-solid fa-user-shield text-white text-sm"></i>
+        </div>
+        <span class="text-[10px] font-bold text-amber-400 mt-1">Admin</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- 1. Student Registration & Login Modal -->
+  <div id="authModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
+    <div class="glass-panel-neon rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center">
+            <i class="fa-solid fa-id-card"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">ลงทะเบียนผู้เรียน / เข้าสู่ระบบ</h3>
+            <p class="text-[11px] text-slate-400">หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาจุลชีววิทยา</p>
+          </div>
+        </div>
+        <button onclick="app.closeModal('authModal')" class="text-slate-400 hover:text-white text-xs">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+      </div>
+
+      <form id="authForm" class="space-y-3">
+        <div>
+          <label class="text-xs font-semibold text-slate-300 block mb-1">รหัสนักศึกษา (Student ID) *</label>
+          <input type="text" id="inpStudentId" required placeholder="เช่น 6604101001" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-mono">
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="text-xs font-semibold text-slate-300 block mb-1">คำนำหน้า</label>
+            <select id="inpPrefix" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+              <option value="นาย">นาย</option>
+              <option value="นางสาว">นางสาว</option>
+              <option value="นาง">นาง</option>
+            </select>
+          </div>
+          <div class="col-span-2">
+            <label class="text-xs font-semibold text-slate-300 block mb-1">ชื่อ-นามสกุล *</label>
+            <input type="text" id="inpFullname" required placeholder="ชื่อ นามสกุลจริง" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-xs font-semibold text-slate-300 block mb-1">หมู่เรียน (Section)</label>
+            <select id="inpSection" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+              <option value="Sec 01">Sec 01 (จันทร์)</option>
+              <option value="Sec 02">Sec 02 (อังคาร)</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-slate-300 block mb-1">เบอร์โทรศัพท์</label>
+            <input type="tel" id="inpPhone" placeholder="08x-xxx-xxxx" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="text-xs font-semibold text-slate-300 block mb-1">อีเมลมหาวิทยาลัย</label>
+          <input type="email" id="inpEmail" placeholder="student@rbru.ac.th" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="pt-2">
+          <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/60 active:scale-95 transition-all">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>ยืนยันเข้าสู่ห้องปฏิบัติการ</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Lab Submission Receipt Modal -->
+  <div id="receiptModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4">
+    <div class="glass-panel-neon rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2 text-emerald-400">
+          <i class="fa-solid fa-circle-check text-xl"></i>
+          <h3 class="text-sm font-bold text-white">ใบรับรองผลการส่งรายงานปฏิบัติการดิจิทัล</h3>
+        </div>
+        <button onclick="app.closeModal('receiptModal')" class="text-slate-400 hover:text-white text-xs">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+      </div>
+
+      <div class="bg-slate-950/90 border border-emerald-500/30 rounded-xl p-4 space-y-2.5 font-mono text-xs">
+        <div class="flex justify-between border-b border-slate-800 pb-1.5">
+          <span class="text-slate-400">รหัสรายงาน (Report Code):</span>
+          <span id="receiptReportCode" class="text-emerald-400 font-bold"></span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1.5">
+          <span class="text-slate-400">ผู้ส่ง (Student):</span>
+          <span id="receiptStudentName" class="text-slate-200"></span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1.5">
+          <span class="text-slate-400">หัวข้อปฏิบัติการ:</span>
+          <span id="receiptLabTitle" class="text-sky-300"></span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1.5">
+          <span class="text-slate-400">คะแนนควิซท้ายแล็บ:</span>
+          <span id="receiptQuizScore" class="text-amber-400 font-bold"></span>
+        </div>
+        <div class="flex justify-between border-b border-slate-800 pb-1.5">
+          <span class="text-slate-400">คะแนนความแม่นยำ (Accuracy):</span>
+          <span id="receiptAccuracy" class="text-emerald-400 font-bold"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-400">เวลาส่งข้อมูล:</span>
+          <span id="receiptTimestamp" class="text-slate-300"></span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-3 pt-2">
+        <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-2">
+          <i class="fa-solid fa-print"></i> พิมพ์รายงาน PDF
+        </button>
+        <button onclick="app.closeModal('receiptModal')" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs">
+          เสร็จสิ้น
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Individual Student Analytics Portfolio Modal -->
+  <div id="analyticsModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-3 sm:p-5">
+    <div class="glass-panel-neon rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 shadow-2xl space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-fuchsia-600 to-indigo-500 p-0.5 flex items-center justify-center">
+            <i class="fa-solid fa-chart-pie text-white text-base"></i>
+          </div>
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-white">พอร์ตโฟลิโอและผลการวิเคราะห์ปฏิบัติการรายบุคคล</h3>
+            <p class="text-[11px] text-slate-400">Individual Student Competency & Progress Analytics</p>
+          </div>
+        </div>
+        <button onclick="app.closeModal('analyticsModal')" class="text-slate-400 hover:text-white text-xs">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+      </div>
+
+      <!-- Student Info & Overall Progress -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3">
+          <div class="text-[10px] text-slate-400 uppercase">นักศึกษา</div>
+          <div id="anaStudentName" class="text-xs font-bold text-white mt-0.5"></div>
+          <div id="anaStudentId" class="text-[10px] font-mono text-emerald-400 mt-0.5"></div>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 sm:col-span-2 space-y-2">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-400 font-semibold">ความก้าวหน้าการทำแล็บ:</span>
+            <span id="anaCompletedCount" class="font-bold text-emerald-400 font-mono"></span>
+          </div>
+          <div class="w-full bg-slate-950 rounded-full h-2.5 overflow-hidden border border-slate-800">
+            <div id="anaProgressBar" class="bg-gradient-to-r from-emerald-500 to-sky-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6-Axis Competency Radar Chart & Diagnostic Suggestions -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+        <div class="flex flex-col items-center bg-slate-950/80 border border-slate-800/80 rounded-2xl p-4 shadow-inner">
+          <div class="text-xs font-bold text-slate-300 mb-2">เรดาร์สมรรถนะ 6 ด้าน (Competency Radar)</div>
+          <canvas id="radarCanvas" width="280" height="260" class="max-w-full"></canvas>
+        </div>
+
+        <div class="space-y-3">
+          <div class="bg-slate-900/70 border border-slate-800 rounded-xl p-3.5 space-y-2">
+            <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> การประเมินและข้อแนะนำเชิงพัฒนา (AI Diagnostic)
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              ผู้เรียนมีทักษะความแม่นยำสูงในด้านการวัดปริมาตรไมโครปิเปตและสเปกโทรโฟโตเมทรี ควรเสริมความเข้าใจเชิงลึกในด้านอุณหพลศาสตร์ความดันไอของ Autoclave และการควบคุมความร้อนรอบวงจร PCR
+            </p>
+          </div>
+
+          <div class="bg-slate-900/70 border border-slate-800 rounded-xl p-3.5 space-y-2">
+            <div class="text-xs font-bold text-sky-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-award"></i> ระดับทักษะปัจจุบัน
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold font-mono">
+                Mastery Level: 4.8 / 5.0
+              </span>
+              <span class="text-[11px] text-slate-400">ผ่านเกณฑ์มาตรฐานสากล</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submitted Reports History -->
+      <div class="space-y-2">
+        <div class="text-xs font-bold text-slate-300">ประวัติการส่งรายงานปฏิบัติการทั้งหมด</div>
+        <div id="anaReportsList" class="space-y-2 max-h-56 overflow-y-auto pr-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Admin / Instructor Portal Modal -->
+  <div id="adminModal" class="hidden fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-3 sm:p-5">
+    <div class="glass-panel-neon rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 shadow-2xl space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 p-0.5 flex items-center justify-center">
+            <i class="fa-solid fa-user-shield text-slate-950 text-base"></i>
+          </div>
+          <div>
+            <h3 class="text-sm sm:text-base font-bold text-white">ระบบจัดการหลังบ้านสำหรับอาจารย์ผู้สอน (Instructor Console)</h3>
+            <p class="text-[11px] text-slate-400">ผู้ดูแลระบบ: ผศ.ดร.ชีวะ ทัศนา (ศูนย์ LEQs มรภ.รำไพพรรณี)</p>
+          </div>
+        </div>
+        <button onclick="app.closeModal('adminModal')" class="text-slate-400 hover:text-white text-xs">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+      </div>
+
+      <!-- Statistics KPI Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3">
+          <div class="text-[10px] text-slate-400 uppercase">นักศึกษาลงทะเบียน</div>
+          <div id="admTotalStudents" class="text-lg font-bold text-emerald-400 font-mono mt-1">0</div>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3">
+          <div class="text-[10px] text-slate-400 uppercase">รายงานที่ส่งแล้ว</div>
+          <div id="admTotalReports" class="text-lg font-bold text-sky-400 font-mono mt-1">0</div>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3">
+          <div class="text-[10px] text-slate-400 uppercase">จำนวนปฏิบัติการ</div>
+          <div class="text-lg font-bold text-amber-400 font-mono mt-1">13 Labs</div>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3">
+          <div class="text-[10px] text-slate-400 uppercase">ค่าเฉลี่ยความแม่นยำ</div>
+          <div class="text-lg font-bold text-purple-400 font-mono mt-1">97.8%</div>
+        </div>
+      </div>
+
+      <!-- Action Toolbar (Export CSV) -->
+      <div class="flex items-center justify-between">
+        <h4 class="text-xs font-bold text-slate-200">รายการส่งรายงานปฏิบัติการของนักศึกษา</h4>
+        <a href="api/api.php?action=export_csv" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-emerald-600 border border-slate-700 hover:border-emerald-500 text-slate-200 text-xs font-bold flex items-center gap-1.5 transition-colors">
+          <i class="fa-solid fa-file-csv text-emerald-400"></i>
+          <span>ส่งออกไฟล์ CSV (Excel ภาษาไทย)</span>
+        </a>
+      </div>
+
+      <!-- Reports Directory Table -->
+      <div class="overflow-x-auto rounded-xl border border-slate-800">
+        <table class="w-full text-left border-collapse">
+          <thead class="bg-slate-900/90 text-xs text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="px-3 py-2 font-bold">รหัสรายงาน</th>
+              <th class="px-3 py-2 font-bold">นักศึกษา</th>
+              <th class="px-3 py-2 font-bold">แล็บ</th>
+              <th class="px-3 py-2 font-bold">ความแม่นยำ</th>
+              <th class="px-3 py-2 font-bold">ควิซ</th>
+              <th class="px-3 py-2 font-bold">เวลาส่ง</th>
+              <th class="px-3 py-2 font-bold">การตรวจ</th>
+            </tr>
+          </thead>
+          <tbody id="admReportsTableBody" class="divide-y divide-slate-800/60 bg-slate-950/60 font-mono"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/labs_config.js"></script>
+  <script src="js/sim3d_engine.js"></script>
+  <script src="js/database_client.js"></script>
+  <script src="js/app_controller.js"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+/**
+ * Virtual Physics for Microbiology Laboratory Stylesheet
+ * Dark Space Neon Theme with Glassmorphism, 3D Curved Scoop Dock & Print Formatting
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg-deep: #060b18;
+  --bg-surface: #0a1124;
+  --bg-card: rgba(15, 23, 42, 0.75);
+  --border-neon: rgba(16, 185, 129, 0.25);
+  --emerald-main: #10b981;
+  --emerald-glow: rgba(16, 185, 129, 0.4);
+  --sky-main: #38bdf8;
+  --amber-main: #f59e0b;
+}
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  background-color: var(--bg-deep);
+  color: #f1f5f9;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, .brand-title {
+  font-family: 'Chakra Petch', sans-serif;
+}
+
+code, pre, .font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Glassmorphism Containers */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-neon {
+  background: rgba(10, 17, 36, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-neon);
+  box-shadow: 0 10px 30px rgba(6, 11, 24, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #090d16;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
+}
+
+/* 3D Curved Scoop Mobile Bottom Navigation Dock */
+.mobile-scoop-dock {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px);
+}
+
+/* Modal Backdrop Blur */
+.modal-backdrop {
+  background: rgba(4, 7, 16, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Print Formatting for Submitted Lab Reports */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  header, #labsListSidebar, #sim3dCanvasContainer, #btnCaptureData,
+  #btnSubmitReport, .mobile-scoop-dock, #paramsContainer, #oscCanvas,
+  .no-print {
+    display: none !important;
+  }
+  .glass-panel, .glass-panel-neon {
+    background: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+  }
+  table th {
+    background: #f1f5f9 !important;
+    color: #000000 !important;
+  }
+  table td {
+    color: #000000 !important;
+  }
+}
