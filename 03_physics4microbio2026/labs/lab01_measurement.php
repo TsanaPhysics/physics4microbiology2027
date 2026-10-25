@@ -90,6 +90,9 @@ include '../includes/header.php';
                 <button type="button" onclick="capture3dSimulator()" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-slate-950 shadow-lg shadow-emerald-950/40 transition flex items-center gap-2 active:scale-95">
                     <i class="fa-solid fa-camera-retro text-sm"></i> 📸 แคปหน้าจอ 3D เพื่อแนบเป็นหลักฐานการทดลอง
                 </button>
+                <button type="button" onclick="toggleSimContainer()" id="btnToggleSimContainer" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs border border-white/10 transition flex items-center gap-1.5" title="ย่อ/ขยายหน้าจอ 3D Simulator">
+                    <i class="fa-solid fa-compress text-xs"></i> <span id="simToggleLabel" class="hidden sm:inline">ย่อ 3D</span>
+                </button>
                 <button type="button" onclick="openSimulatorFullscreen()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs border border-white/10 transition" title="เปิดเต็มจอ">
                     <i class="fa-solid fa-expand"></i>
                 </button>
@@ -223,6 +226,23 @@ include '../includes/header.php';
         </div>
     </div>
 
+    <!-- Master Section Quick Action & Collapse/Expand Bar -->
+    <div id="masterLabToolbar" class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 border border-white/10 p-3.5 sm:p-4 rounded-3xl shadow-xl backdrop-blur-xl">
+        <div class="flex items-center gap-2 text-xs font-mono text-slate-300">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="font-bold text-white">แผงควบคุมการแสดงผลรายงาน:</span>
+            <span class="text-slate-400 hidden sm:inline">สามารถคลิกปุ่มย่อ/ขยายในแต่ละการ์ด หรือควบคุมทุกส่วนได้พร้อมกัน</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="expandAllReportSections()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 transition flex items-center gap-1.5 shadow-sm active:scale-95">
+                <i class="fa-solid fa-angles-down text-xs"></i> <span>ขยายทุกการ์ด</span>
+            </button>
+            <button type="button" onclick="collapseAllReportSections()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10 transition flex items-center gap-1.5 shadow-sm active:scale-95">
+                <i class="fa-solid fa-angles-up text-xs"></i> <span>ย่อทุกการ์ด</span>
+            </button>
+        </div>
+    </div>
+
     <!-- Interactive E-Report Submission Form -->
     <form id="labReportForm" onsubmit="validateAndSubmitReport(event)" class="space-y-6">
 
@@ -233,10 +253,15 @@ include '../includes/header.php';
                     <i class="fa-solid fa-id-card text-emerald-400"></i>
                     ข้อมูลนักศึกษาผู้ส่งรายงานผลปฏิบัติการ (Student Identification)
                 </h2>
-                <span class="text-xs text-rose-400 font-semibold">* จำเป็นต้องกรอกทุกช่อง</span>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-rose-400 font-semibold hidden sm:inline">* จำเป็นต้องกรอกทุกช่อง</span>
+                    <button type="button" onclick="toggleCardSection('secStudentId_body', this)" class="card-toggle-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10 transition flex items-center gap-1.5" title="ย่อ/ขยายการ์ด">
+                        <span class="btn-label hidden sm:inline">ย่อ</span> <i class="fa-solid fa-chevron-up text-[10px]"></i>
+                    </button>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div id="secStudentId_body" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 transition-all">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-300">
                         ชื่อ - นามสกุล (Full Name) <span class="text-rose-400">*</span>
@@ -274,10 +299,16 @@ include '../includes/header.php';
                     <i class="fa-solid fa-camera text-sky-400"></i>
                     ภาพถ่ายหรือแคปหน้าจอระหว่างทดลอง (Experiment Screenshot Proof)
                 </h2>
-                <div id="proofBadgeStatus" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
-                    <i class="fa-solid fa-circle-exclamation"></i> ยังไม่มีภาพหลักฐาน (จำเป็นก่อนส่ง)
+                <div class="flex items-center gap-2">
+                    <div id="proofBadgeStatus" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                        <i class="fa-solid fa-circle-exclamation"></i> ยังไม่มีภาพหลักฐาน (จำเป็นก่อนส่ง)
+                    </div>
+                    <button type="button" onclick="toggleCardSection('secEvidence_body', this)" class="card-toggle-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10 transition flex items-center gap-1.5" title="ย่อ/ขยายการ์ด">
+                        <span class="btn-label hidden sm:inline">ย่อ</span> <i class="fa-solid fa-chevron-up text-[10px]"></i>
+                    </button>
                 </div>
             </div>
+            <div id="secEvidence_body" class="space-y-4 transition-all">
 
             <p class="text-xs text-slate-300 leading-relaxed">
                 ตามข้อกำหนดของรายวิชา นักศึกษาจะต้องแนบภาพถ่ายหน้าจอระหว่างการทดลองบน 3D Virtual Bench (เช่น ขณะวัดขนาดจานเพาะเชื้อ, หมุนไมโครมิเตอร์, หรือชั่งน้ำหนักไมโครปิเปต) เพื่อยืนยันว่าได้ทำการทดลองจริง
@@ -314,6 +345,7 @@ include '../includes/header.php';
                     <input type="hidden" id="image_proof_base64" name="image_proof_base64" value="">
                 </div>
             </div>
+            </div>
         </div>
 
         <!-- 3. Blank Data Tables Section (Student Input Tables) -->
@@ -331,8 +363,12 @@ include '../includes/header.php';
                     <button type="button" onclick="calculateAllTables()" class="px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 text-xs font-bold transition flex items-center gap-1.5">
                         <i class="fa-solid fa-calculator"></i> คำนวณค่าเฉลี่ยและสถิติอัตโนมัติ
                     </button>
+                    <button type="button" onclick="toggleCardSection('secDataTables_body', this)" class="card-toggle-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10 transition flex items-center gap-1.5" title="ย่อ/ขยายการ์ด">
+                        <span class="btn-label hidden sm:inline">ย่อ</span> <i class="fa-solid fa-chevron-up text-[10px]"></i>
+                    </button>
                 </div>
             </div>
+            <div id="secDataTables_body" class="space-y-6 transition-all">
 
             <!-- Table 1.1: Mechanical Dimensions -->
             <div class="space-y-3">
@@ -629,11 +665,16 @@ include '../includes/header.php';
 
         <!-- 4. Calculations, Discussion & Conclusion Section -->
         <div class="bg-slate-900/90 border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl space-y-6">
-            <h2 class="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
-                ✍️ แสดงวิธีคำนวณ การสรุปและวิเคราะห์ผล (Calculations &amp; Discussion)
-            </h2>
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 class="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
+                    ✍️ แสดงวิธีคำนวณ การสรุปและวิเคราะห์ผล (Calculations &amp; Discussion)
+                </h2>
+                <button type="button" onclick="toggleCardSection('secCalculations_body', this)" class="card-toggle-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10 transition flex items-center gap-1.5" title="ย่อ/ขยายการ์ด">
+                    <span class="btn-label hidden sm:inline">ย่อ</span> <i class="fa-solid fa-chevron-up text-[10px]"></i>
+                </button>
+            </div>
 
-            <div class="space-y-4">
+            <div id="secCalculations_body" class="space-y-4 transition-all">
                 <!-- Calculations Area -->
                 <div class="space-y-2.5">
                     <label class="block text-xs font-bold text-slate-300">
@@ -692,15 +733,21 @@ include '../includes/header.php';
                     <textarea id="lab_conclusion" name="lab_conclusion" rows="2" placeholder="สรุปผลการทดลองให้สอดคล้องกับวัตถุประสงค์ทั้ง 3 ตอน..." required class="w-full bg-slate-950 border border-white/15 focus:border-amber-400 rounded-2xl p-4 text-xs text-white placeholder-slate-600 outline-none transition leading-relaxed"></textarea>
                 </div>
             </div>
+            </div>
         </div>
 
         <!-- 5. Post-Lab Questions Section -->
         <div class="bg-slate-900/90 border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl space-y-6">
-            <h2 class="text-base sm:text-lg font-bold text-purple-400 flex items-center gap-2">
-                ❓ คำถามท้ายการทดลอง (Post-Lab Questions)
-            </h2>
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 class="text-base sm:text-lg font-bold text-purple-400 flex items-center gap-2">
+                    ❓ คำถามท้ายการทดลอง (Post-Lab Questions)
+                </h2>
+                <button type="button" onclick="toggleCardSection('secQuestions_body', this)" class="card-toggle-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10 transition flex items-center gap-1.5" title="ย่อ/ขยายการ์ด">
+                    <span class="btn-label hidden sm:inline">ย่อ</span> <i class="fa-solid fa-chevron-up text-[10px]"></i>
+                </button>
+            </div>
 
-            <div class="space-y-4">
+            <div id="secQuestions_body" class="space-y-4 transition-all">
                 <div class="p-4 rounded-2xl bg-slate-950/80 border border-white/5 space-y-2">
                     <label class="block text-xs font-bold text-purple-300">
                         คำถามข้อที่ 1: ค่าความคลาดเคลื่อนศูนย์ (Zero Error) ของไมโครมิเตอร์เกิดขึ้นได้อย่างไร และหากเครื่องมือมี Positive Zero Error $+0.02\text{ mm}$ โดยไม่ได้ปรับแก้ ค่าที่วัดได้จะมีความผิดพลาดอย่างไร? <span class="text-rose-400">*</span>
@@ -1208,6 +1255,77 @@ function closeSubmitModal() {
     const modal = document.getElementById('submitModal');
     modal.classList.add('hidden');
     modal.classList.remove('flex');
+}
+
+
+// ==========================================
+// LAB CARD EXPAND / COLLAPSE CONTROLLERS
+// ==========================================
+function toggleSimContainer() {
+    const frame = document.getElementById('simFrameContainer');
+    const label = document.getElementById('simToggleLabel');
+    const btn = document.getElementById('btnToggleSimContainer');
+    if (!frame) return;
+    if (frame.classList.contains('hidden')) {
+        frame.classList.remove('hidden');
+        if (label) label.textContent = 'ย่อ 3D';
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-compress text-xs"></i> <span id="simToggleLabel" class="hidden sm:inline">ย่อ 3D</span>';
+    } else {
+        frame.classList.add('hidden');
+        if (label) label.textContent = 'เปิด 3D';
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-expand text-xs"></i> <span id="simToggleLabel" class="hidden sm:inline">เปิด 3D</span>';
+    }
+}
+
+function toggleCardSection(bodyId, btn) {
+    const body = document.getElementById(bodyId);
+    if (!body) return;
+    const isHidden = body.classList.contains('hidden');
+    if (isHidden) {
+        body.classList.remove('hidden');
+        if (btn) {
+            const label = btn.querySelector('.btn-label');
+            if (label) label.textContent = 'ย่อ';
+            const icon = btn.querySelector('i');
+            if (icon) { icon.classList.remove('fa-chevron-down'); icon.classList.add('fa-chevron-up'); }
+        }
+    } else {
+        body.classList.add('hidden');
+        if (btn) {
+            const label = btn.querySelector('.btn-label');
+            if (label) label.textContent = 'ขยาย';
+            const icon = btn.querySelector('i');
+            if (icon) { icon.classList.remove('fa-chevron-up'); icon.classList.add('fa-chevron-down'); }
+        }
+    }
+}
+
+function expandAllReportSections() {
+    const bodies = ['secStudentId_body', 'secEvidence_body', 'secDataTables_body', 'secCalculations_body', 'secQuestions_body', 'mathSuiteLab01'];
+    bodies.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('hidden');
+    });
+    document.querySelectorAll('.card-toggle-btn').forEach(btn => {
+        const label = btn.querySelector('.btn-label');
+        if (label) label.textContent = 'ย่อ';
+        const icon = btn.querySelector('i');
+        if (icon) { icon.classList.remove('fa-chevron-down'); icon.classList.add('fa-chevron-up'); }
+    });
+}
+
+function collapseAllReportSections() {
+    const bodies = ['secStudentId_body', 'secEvidence_body', 'secDataTables_body', 'secCalculations_body', 'secQuestions_body', 'mathSuiteLab01'];
+    bodies.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+    });
+    document.querySelectorAll('.card-toggle-btn').forEach(btn => {
+        const label = btn.querySelector('.btn-label');
+        if (label) label.textContent = 'ขยาย';
+        const icon = btn.querySelector('i');
+        if (icon) { icon.classList.remove('fa-chevron-up'); icon.classList.add('fa-chevron-down'); }
+    });
 }
 
 function toggleMathDetails(id) {

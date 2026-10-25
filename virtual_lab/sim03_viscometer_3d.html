@@ -143,15 +143,24 @@
       <div id="threeMount" class="w-full h-full"></div>
 
       <!-- Dual Photogate & High-Precision Chronometer (Top-Left HUD) -->
-      <div id="chronometerHUD" class="absolute top-3 left-3 bg-slate-900/95 backdrop-blur-md p-3 rounded-2xl border border-sky-500/30 shadow-2xl text-xs z-10 space-y-2 pointer-events-none w-64 sm:w-72">
-        <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+      <div id="chronometerHUD" class="absolute top-3 left-3 bg-slate-900/95 backdrop-blur-md p-3 rounded-2xl border border-sky-500/30 shadow-2xl text-xs z-10 space-y-2 pointer-events-auto w-64 sm:w-72 shadow-sky-950/20">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5 gap-2">
           <span class="font-bold text-sky-400 font-mono flex items-center gap-1.5">
             <i class="fa-solid fa-stopwatch text-sky-300"></i> DUAL LASER PHOTOGATE
           </span>
-          <span id="pgStatusBadge" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-800 text-slate-300 border border-white/10 font-mono">
-            ARMED
-          </span>
+          <div class="flex items-center gap-1.5">
+            <span id="pgStatusBadge" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-800 text-slate-300 border border-white/10 font-mono">
+              ARMED
+            </span>
+            <button onclick="toggleCardBody('chronometerHUD')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="chronometerHUD_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('chronometerHUD')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
         </div>
+        <div id="chronometerHUD_body" class="space-y-2 transition-all">
         
         <!-- Large 7-Segment LED Digits -->
         <div class="bg-black/90 p-2.5 rounded-xl border border-sky-500/30 text-center space-y-0.5 shadow-inner">
@@ -182,18 +191,28 @@
             <span id="hudEtaCalc" class="text-amber-400 font-bold">-- Pa·s</span>
           </div>
         </div>
+        </div>
       </div>
 
       <!-- Micro-Loupe 1000x Inset Lens (Top-Right HUD) -->
-      <div id="microLoupeHUD" class="absolute top-3 right-3 bg-slate-900/95 backdrop-blur-md p-3 rounded-2xl border border-amber-500/30 shadow-2xl text-xs z-10 space-y-2 pointer-events-none w-72">
-        <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+      <div id="microLoupeHUD" class="absolute top-3 right-3 bg-slate-900/95 backdrop-blur-md p-3 rounded-2xl border border-amber-500/30 shadow-2xl text-xs z-10 space-y-2 pointer-events-auto w-72 shadow-amber-950/20">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5 gap-2">
           <span class="font-bold text-amber-400 font-mono flex items-center gap-1.5">
             <i class="fa-solid fa-microscope text-amber-300"></i> OPTICAL LOUPE 1000x
           </span>
-          <span class="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30 font-bold">
-            ΣF = 0 (Terminal)
-          </span>
+          <div class="flex items-center gap-1.5">
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30 font-bold">
+              ΣF=0
+            </span>
+            <button onclick="toggleCardBody('microLoupeHUD')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="microLoupeHUD_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('microLoupeHUD')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
         </div>
+        <div id="microLoupeHUD_body" class="space-y-2 transition-all">
 
         <!-- Synchronized 2D Reticle Canvas with Force Vectors & Flow Streamlines -->
         <div class="relative flex justify-center">
@@ -221,6 +240,7 @@
             <span>แรงลัพธ์สุทธิ (&Sigma;<span class="vec text-amber-300 text-xs">F</span>):</span>
             <span id="valFnet" class="text-amber-300">0.000 mN (สมดุล)</span>
           </div>
+        </div>
         </div>
       </div>
 
@@ -274,10 +294,25 @@
         <i class="fa-solid fa-circle-info text-sky-400"></i>
         <span>คลิกค้างแล้วลากเพื่อหมุน 360° | ปล่อยลูกกลมแล้วจับเวลาผ่านระยะ 20 cm</span>
       </div>
+      <!-- Floating Viewport HUD Dock / Quick Bar -->
+      <div id="viewportDockBar" class="absolute bottom-3 right-3 flex flex-wrap items-center gap-1.5 z-20 pointer-events-auto">
+        <button id="dockBtnPhotogate" onclick="toggleCardShow('chronometerHUD', 'dockBtnPhotogate')" class="px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-slate-900/90 text-sky-300 border border-sky-500/30 hover:bg-sky-500/20 shadow-xl backdrop-blur-md transition flex items-center gap-1.5 ring-2 ring-sky-400">
+          <i class="fa-solid fa-stopwatch"></i> <span>Photogate</span>
+        </button>
+        <button id="dockBtnLoupe" onclick="toggleCardShow('microLoupeHUD', 'dockBtnLoupe')" class="px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-slate-900/90 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20 shadow-xl backdrop-blur-md transition flex items-center gap-1.5 ring-2 ring-amber-400">
+          <i class="fa-solid fa-microscope"></i> <span>Loupe 1000x</span>
+        </button>
+        <button id="dockBtnGraph" onclick="toggleGraphHUD()" class="px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-slate-900/90 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/20 shadow-xl backdrop-blur-md transition flex items-center gap-1.5">
+          <i class="fa-solid fa-chart-line"></i> <span>กราฟ v_t vs r²</span>
+        </button>
+        <button id="dockBtnSidebar" onclick="toggleSidebar()" class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-gradient-to-r from-slate-800 to-slate-900 text-slate-200 border border-white/20 hover:border-amber-400 shadow-xl backdrop-blur-md transition flex items-center gap-1.5">
+          <i class="fa-solid fa-sliders text-sky-400"></i> <span id="dockSidebarLabel">ซ่อนแถบควบคุม</span>
+        </button>
+      </div>
     </div>
 
     <!-- Right Control Panel -->
-    <div class="lg:col-span-4 bg-slate-900 border-t lg:border-t-0 lg:border-l border-white/10 p-4 sm:p-5 overflow-y-auto max-h-[460px] lg:max-h-none space-y-4 scrollbar-thin">
+    <div id="controlSidebar" class="lg:col-span-4 bg-slate-900 border-t lg:border-t-0 lg:border-l border-white/10 p-4 sm:p-5 overflow-y-auto max-h-[460px] lg:max-h-none space-y-4 scrollbar-thin transition-all duration-300">
 
       <!-- Sphere & Specimen Selector -->
       <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-sky-500/30 space-y-2.5">

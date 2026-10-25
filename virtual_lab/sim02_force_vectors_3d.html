@@ -140,35 +140,53 @@
       <div id="threeMount" class="w-full h-full"></div>
 
       <!-- Mode 1: 2D Vector Polar Overlay (Top-Right) -->
-      <div id="polarOverlayCard" class="absolute top-3 right-3 bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl border border-white/10 shadow-2xl text-xs z-10 space-y-2 pointer-events-none">
-        <div class="flex items-center justify-between gap-4 border-b border-white/10 pb-1.5">
+      <div id="polarOverlayCard" class="absolute top-3 right-3 bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl border border-white/10 shadow-2xl text-xs z-10 space-y-2 pointer-events-auto shadow-amber-950/20">
+        <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-1.5">
           <span class="font-bold text-amber-400 font-mono flex items-center gap-1">
             <i class="fa-solid fa-compass"></i> 2D POLAR VECTOR HUD
           </span>
-          <span id="equilibriumStatusPill" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
-            ● ระบบยังไม่สมดุล
-          </span>
+          <div class="flex items-center gap-1.5">
+            <span id="equilibriumStatusPill" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
+              ● ระบบยังไม่สมดุล
+            </span>
+            <button onclick="toggleCardBody('polarOverlayCard')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="polarOverlayCard_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('polarOverlayCard')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
         </div>
-        <canvas id="polarCanvas" width="170" height="170" class="rounded-xl bg-slate-950 border border-white/10 block"></canvas>
+        <div id="polarOverlayCard_body" class="space-y-2 transition-all">
+        <canvas id="polarCanvas"<canvas id="polarCanvas" width="170" height="170" class="rounded-xl bg-slate-950 border border-white/10 block"></canvas>
         <div id="polarReadout" class="font-mono text-[10px] space-y-1 text-slate-300">
           <div class="flex items-center gap-1.5">แรงลัพธ์ <span class="vec text-rose-400 text-xs">R</span>: <span id="hudRMag" class="text-rose-400 font-bold">0.00 N</span> @ <span id="hudRAng" class="text-rose-400 font-bold">0.0°</span></div>
           <div class="flex items-center gap-1.5">แรงสมดุล <span class="vec text-emerald-400 text-xs">E</span>: <span id="hudEMag" class="text-emerald-400 font-bold">0.00 N</span> @ <span id="hudEAng" class="text-emerald-400 font-bold">0.0°</span></div>
+        </div>
         </div>
       </div>
       </div>
 
       <!-- Mode 2: Stokes Optical Micro-Loupe & Force Vectors HUD (Top-Right) -->
-      <div id="stokesOverlayCard" class="absolute top-3 right-3 bg-slate-900/95 backdrop-blur-md p-3 rounded-2xl border border-sky-500/30 shadow-2xl text-xs z-10 hidden space-y-2.5 pointer-events-none w-72">
+      <div id="stokesOverlayCard" class="absolute top-3 right-3 bg-slate-900/95 backdrop-blur-md p-3 rounded-2xl border border-sky-500/30 shadow-2xl text-xs z-10 hidden space-y-2.5 pointer-events-auto w-72 shadow-sky-950/20">
         <div class="border-b border-white/10 pb-1.5 flex items-center justify-between">
           <span class="font-bold text-sky-400 font-mono flex items-center gap-1.5">
             <i class="fa-solid fa-microscope text-sky-300"></i> MICRO-LOUPE 1000x
           </span>
-          <span id="stkRegimeBadge" class="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30 font-bold">
-            Re &lt;&lt; 1 (Stokes)
-          </span>
+          <div class="flex items-center gap-1.5">
+            <span id="stkRegimeBadge" class="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30 font-bold">
+              Re &lt;&lt; 1
+            </span>
+            <button onclick="toggleCardBody('stokesOverlayCard')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="stokesOverlayCard_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('stokesOverlayCard')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
         </div>
-        
-        <!-- Synchronized Microscope Lens Canvas (Shows Cell + Streamlines + Fg, Fb, Fd vectors) -->
+        <div id="stokesOverlayCard_body" class="space-y-2.5 transition-all">
+        <!-- Synchronized Microscope Lens Canvas<!-- Synchronized Microscope Lens Canvas (Shows Cell + Streamlines + Fg, Fb, Fd vectors) -->
         <div class="relative flex justify-center">
           <canvas id="microLoupeCanvas" width="200" height="170" class="rounded-xl bg-slate-950 border border-sky-500/30 block shadow-inner"></canvas>
           <div class="absolute bottom-1 right-2 text-[9px] font-mono text-slate-400 bg-slate-900/80 px-1.5 py-0.5 rounded">
@@ -194,6 +212,7 @@
             <span>แรงลัพธ์ <span class="text-xs">&Sigma;<span class="vec text-amber-300">F</span></span>:</span>
             <span id="loupeFnet" class="text-amber-300">0.000 fN (สมดุล)</span>
           </div>
+        </div>
         </div>
       </div>
 
@@ -230,10 +249,22 @@
         <i class="fa-solid fa-circle-info text-amber-400"></i>
         <span>คลิกค้างแล้วลากเพื่อหมุน 360° | เลื่อนล้อเมาส์เพื่อซูมเข้า-ออก</span>
       </div>
+      <!-- Floating Viewport HUD Dock / Quick Bar -->
+      <div id="viewportDockBar" class="absolute bottom-3 right-3 flex flex-wrap items-center gap-1.5 z-20 pointer-events-auto">
+        <button id="dockBtnPolar" onclick="toggleCardShow('polarOverlayCard', 'dockBtnPolar')" class="px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-slate-900/90 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20 shadow-xl backdrop-blur-md transition flex items-center gap-1.5">
+          <i class="fa-solid fa-compass"></i> <span>Polar HUD</span>
+        </button>
+        <button id="dockBtnStokes" onclick="toggleCardShow('stokesOverlayCard', 'dockBtnStokes')" class="px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-slate-900/90 text-sky-300 border border-sky-500/30 hover:bg-sky-500/20 shadow-xl backdrop-blur-md transition flex items-center gap-1.5">
+          <i class="fa-solid fa-microscope"></i> <span>Loupe 1000x</span>
+        </button>
+        <button id="dockBtnSidebar" onclick="toggleSidebar()" class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-gradient-to-r from-slate-800 to-slate-900 text-slate-200 border border-white/20 hover:border-amber-400 shadow-xl backdrop-blur-md transition flex items-center gap-1.5">
+          <i class="fa-solid fa-sliders text-amber-400"></i> <span id="dockSidebarLabel">ซ่อนแถบควบคุม</span>
+        </button>
+      </div>
     </div>
 
     <!-- Right Control Panel -->
-    <div class="lg:col-span-4 bg-slate-900 border-t lg:border-t-0 lg:border-l border-white/10 p-4 sm:p-5 overflow-y-auto max-h-[460px] lg:max-h-none space-y-4 scrollbar-thin">
+    <div id="controlSidebar" class="lg:col-span-4 bg-slate-900 border-t lg:border-t-0 lg:border-l border-white/10 p-4 sm:p-5 overflow-y-auto max-h-[460px] lg:max-h-none space-y-4 scrollbar-thin transition-all duration-300">
 
       <!-- ========================================== -->
       <!-- PANEL 1: FORCE TABLE CONTROLS              -->
