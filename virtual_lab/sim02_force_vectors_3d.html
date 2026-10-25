@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Force Vectors & Microbial Sedimentation Simulator | จำลองเวกเตอร์ของแรงและสมดุลเซลล์จุลินทรีย์</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Prompt & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Three.js & OrbitControls CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: #060a12;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+
+  <!-- Header Bar -->
+  <header class="border-b border-white/10 bg-slate-900/90 backdrop-blur-md px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 sticky top-0 z-30">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-400 flex items-center justify-center text-slate-950 font-bold shadow-lg shadow-amber-500/30">
+        <i class="fa-solid fa-arrows-to-dot text-sm"></i>
+      </div>
+      <div>
+        <h1 class="text-sm font-bold text-white flex items-center gap-2">
+          3D Force Vectors &amp; Microbial Stokes' Drag Simulator
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono">LAB 02</span>
+        </h1>
+        <p class="text-[11px] text-slate-400">
+          จำลองโต๊ะแรง 3 มิติ สมดุลแรงเวกเตอร์ และแรงหนืดต้านการตกตะกอนของเซลล์จุลินทรีย์ (Stokes' Law)
+        </p>
+      </div>
+    </div>
+
+    <!-- Mode Switcher Tabs -->
+    <div class="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-white/10 text-xs">
+      <button id="btnModeForceTable" onclick="switchMode('forcetable')" class="px-3 py-1.5 rounded-lg font-bold bg-amber-500 text-slate-950 shadow transition flex items-center gap-1.5">
+        <i class="fa-solid fa-scale-balanced"></i> 1. โต๊ะแรงสมดุล 3 มิติ
+      </button>
+      <button id="btnModeStokes" onclick="switchMode('stokes')" class="px-3 py-1.5 rounded-lg font-medium text-slate-300 hover:text-white transition flex items-center gap-1.5">
+        <i class="fa-solid fa-bacteria"></i> 2. การตกตะกอนเซลล์ (Stokes' Drag)
+      </button>
+      <button onclick="resetCamera()" class="px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition" title="รีเซ็ตมุมมอง 3D">
+        <i class="fa-solid fa-rotate-left"></i>
+      </button>
+      <button onclick="captureSelf()" class="px-3 py-1.5 rounded-lg font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 shadow transition flex items-center gap-1">
+        <i class="fa-solid fa-camera"></i> แคปจอ
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Viewport Layout -->
+  <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-0 overflow-hidden relative">
+
+    <!-- 3D WebGL Canvas Area -->
+    <div id="canvasMount" class="lg:col-span-8 h-[420px] sm:h-[500px] lg:h-auto w-full relative bg-slate-950">
+      
+      <!-- 2D Vector Polar Overlay (Top-Right) -->
+      <div id="polarOverlayCard" class="absolute top-3 right-3 bg-slate-900/90 backdrop-blur-md p-3 rounded-2xl border border-white/10 shadow-2xl text-xs z-10 space-y-2 pointer-events-none">
+        <div class="flex items-center justify-between gap-4 border-b border-white/10 pb-1.5">
+          <span class="font-bold text-amber-400 font-mono flex items-center gap-1">
+            <i class="fa-solid fa-compass"></i> 2D POLAR VECTOR HUD
+          </span>
+          <span id="equilibriumStatusPill" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
+            ● ระบบยังไม่สมดุล
+          </span>
+        </div>
+        <canvas id="polarCanvas" width="180" height="180" class="rounded-xl bg-slate-950 border border-white/10 block"></canvas>
+        <div id="polarReadout" class="font-mono text-[10px] space-y-0.5 text-slate-300">
+          <div>แรงลัพธ์ $\vec{R}$: <span id="hudRMag" class="text-rose-400 font-bold">0.00 N</span> @ <span id="hudRAng" class="text-rose-400 font-bold">0.0°</span></div>
+          <div>แรงสมดุล $\vec{E}$: <span id="hudEMag" class="text-emerald-400 font-bold">0.00 N</span> @ <span id="hudEAng" class="text-emerald-400 font-bold">0.0°</span></div>
+        </div>
+      </div>
+
+      <!-- Stokes Telemetry Overlay (Mode 2) -->
+      <div id="stokesOverlayCard" class="absolute top-3 right-3 bg-slate-900/90 backdrop-blur-md p-3.5 rounded-2xl border border-white/10 shadow-2xl text-xs z-10 hidden space-y-2 pointer-events-none w-64">
+        <div class="border-b border-white/10 pb-1.5 flex items-center justify-between">
+          <span class="font-bold text-sky-400 font-mono">🦠 STOKES' TELEMETRY</span>
+          <span class="text-[10px] text-slate-400 font-mono">Re &lt;&lt; 1</span>
+        </div>
+        <div class="space-y-1 font-mono text-[11px] text-slate-300">
+          <div class="flex justify-between"><span>ชนิดเซลล์:</span><span id="stkCellName" class="text-white font-bold">S. aureus</span></div>
+          <div class="flex justify-between"><span>รัศมีเซลล์ ($r$):</span><span id="stkCellRadius" class="text-sky-300 font-bold">0.50 µm</span></div>
+          <div class="flex justify-between"><span>ความหนาแน่น ($\rho_c$):</span><span id="stkCellDensity" class="text-sky-300">1.10 g/cm³</span></div>
+          <div class="flex justify-between"><span>ความหนืดของไหล ($\eta$):</span><span id="stkFluidVisc" class="text-amber-300">1.00 mPa·s</span></div>
+          <div class="flex justify-between border-t border-white/10 pt-1">
+            <span>Terminal Velocity ($v_t$):</span>
+            <span id="stkTerminalVel" class="text-emerald-400 font-bold">0.054 µm/s</span>
+          </div>
+          <div class="flex justify-between"><span>เวลาทดลอง ($\Delta t$):</span><span id="stkTimer" class="text-white font-bold">0.0 s</span></div>
+          <div class="flex justify-between"><span>ระยะตกสะสม ($\Delta y$):</span><span id="stkDistance" class="text-emerald-300 font-bold">0.00 µm</span></div>
+        </div>
+      </div>
+
+      <!-- Quick Tips Floating Pill -->
+      <div class="absolute bottom-3 left-3 bg-slate-950/80 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-white/10 text-[11px] text-slate-400 pointer-events-none flex items-center gap-2">
+        <i class="fa-solid fa-circle-info text-amber-400"></i>
+        <span>คลิกค้างแล้วลากเพื่อหมุนสำรวจ 360° | เลื่อนสไลเดอร์เพื่อเปลี่ยนขนาดมุมและแรง</span>
+      </div>
+    </div>
+
+    <!-- Right Control Panel -->
+    <div class="lg:col-span-4 bg-slate-900 border-t lg:border-t-0 lg:border-l border-white/10 p-4 sm:p-5 overflow-y-auto max-h-[500px] lg:max-h-none space-y-4">
+
+      <!-- PANEL 1: FORCE TABLE CONTROLS -->
+      <div id="ctrlForceTable" class="space-y-4">
+        
+        <!-- Presets -->
+        <div class="bg-slate-950/80 p-3 rounded-2xl border border-white/5 space-y-2">
+          <div class="text-xs font-bold text-amber-400 font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> เลือกชุดการทดลองมาตรฐาน:
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="setPresetOrthogonal()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-left text-xs text-white border border-white/10 transition">
+              <div class="font-bold text-amber-300">1. ตั้งฉาก 90°</div>
+              <div class="text-[10px] text-slate-400">200g@0°, 150g@90°</div>
+            </button>
+            <button onclick="setPresetSymmetric()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-left text-xs text-white border border-white/10 transition">
+              <div class="font-bold text-emerald-400">2. สามเหลี่ยมสมมาตร</div>
+              <div class="text-[10px] text-slate-400">100g ที่ 0°, 120°, 240°</div>
+            </button>
+            <button onclick="setPresetBioCentrifuge()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-left text-xs text-white border border-white/10 transition">
+              <div class="font-bold text-sky-400">3. เครื่องปั่นเหวี่ยง</div>
+              <div class="text-[10px] text-slate-400">150g@30°, 200g@135°</div>
+            </button>
+            <button onclick="autoBalanceEquilibrant()" class="p-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-left text-xs text-slate-950 font-bold transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-bullseye"></i> ปรับสมดุล F₃ อัตโนมัติ
+            </button>
+          </div>
+        </div>
+
+        <!-- Pulley 1 (F1) -->
+        <div class="p-3.5 rounded-2xl bg-slate-950 border border-amber-500/30 space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-amber-400 font-mono flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> รอกตัวที่ 1 (Force $\vec{F}_1$)
+            </span>
+            <span id="dispF1" class="font-mono font-bold text-amber-300">200 g (1.96 N) @ 0°</span>
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between text-[11px] text-slate-400 font-mono">
+              <span>มวลแขวน ($m_1$):</span>
+              <span id="dispF1Mass">200 g</span>
+            </div>
+            <input type="range" id="sliderF1Mass" min="10" max="500" step="5" value="200" oninput="updateForceTable()" class="w-full accent-amber-400 h-1.5 bg-slate-800 rounded-lg">
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between text-[11px] text-slate-400 font-mono">
+              <span>มุมบนโต๊ะแรง ($\theta_1$):</span>
+              <span id="dispF1Ang">0°</span>
+            </div>
+            <input type="range" id="sliderF1Ang" min="0" max="360" step="1" value="0" oninput="updateForceTable()" class="w-full accent-amber-400 h-1.5 bg-slate-800 rounded-lg">
+          </div>
+        </div>
+
+        <!-- Pulley 2 (F2) -->
+        <div class="p-3.5 rounded-2xl bg-slate-950 border border-sky-500/30 space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-sky-400 font-mono flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span> รอกตัวที่ 2 (Force $\vec{F}_2$)
+            </span>
+            <span id="dispF2" class="font-mono font-bold text-sky-300">150 g (1.47 N) @ 90°</span>
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between text-[11px] text-slate-400 font-mono">
+              <span>มวลแขวน ($m_2$):</span>
+              <span id="dispF2Mass">150 g</span>
+            </div>
+            <input type="range" id="sliderF2Mass" min="10" max="500" step="5" value="150" oninput="updateForceTable()" class="w-full accent-sky-400 h-1.5 bg-slate-800 rounded-lg">
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between text-[11px] text-slate-400 font-mono">
+              <span>มุมบนโต๊ะแรง ($\theta_2$):</span>
+              <span id="dispF2Ang">90°</span>
+            </div>
+            <input type="range" id="sliderF2Ang" min="0" max="360" step="1" value="90" oninput="updateForceTable()" class="w-full accent-sky-400 h-1.5 bg-slate-800 rounded-lg">
+          </div>
+        </div>
+
+        <!-- Pulley 3 (F3 / Equilibrant E) -->
+        <div class="p-3.5 rounded-2xl bg-slate-950 border border-emerald-500/30 space-y-2">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-emerald-400 font-mono flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> รอกตัวที่ 3 (Equilibrant $\vec{F}_3$)
+            </span>
+            <span id="dispF3" class="font-mono font-bold text-emerald-300">250 g (2.45 N) @ 217°</span>
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between text-[11px] text-slate-400 font-mono">
+              <span>มวลแขวน ($m_3$):</span>
+              <span id="dispF3Mass">250 g</span>
+            </div>
+            <input type="range" id="sliderF3Mass" min="0" max="600" step="1" value="250" oninput="updateForceTable()" class="w-full accent-emerald-400 h-1.5 bg-slate-800 rounded-lg">
+          </div>
+          <div class="space-y-1">
+            <div class="flex justify-between text-[11px] text-slate-400 font-mono">
+              <span>มุมบนโต๊ะแรง ($\theta_3$):</span>
+              <span id="dispF3Ang">217°</span>
+            </div>
+            <input type="range" id="sliderF3Ang" min="0" max="360" step="1" value="217" oninput="updateForceTable()" class="w-full accent-emerald-400 h-1.5 bg-slate-800 rounded-lg">
+          </div>
+        </div>
+
+        <!-- Balance Analytics Box -->
+        <div id="balanceSummaryBox" class="p-3 rounded-2xl bg-slate-950/70 border border-white/10 text-xs font-mono space-y-1">
+          <div class="flex justify-between text-slate-300">
+            <span>แรงลัพธ์ในแนวแกน X ($\sum F_x$):</span>
+            <span id="sumFx" class="font-bold text-amber-300">+0.000 N</span>
+          </div>
+          <div class="flex justify-between text-slate-300">
+            <span>แรงลัพธ์ในแนวแกน Y ($\sum F_y$):</span>
+            <span id="sumFy" class="font-bold text-sky-300">+0.000 N</span>
+          </div>
+          <div class="flex justify-between text-slate-300">
+            <span>แรงลัพธ์สุทธิ ($|\vec{F}_{\text{net}}|$):</span>
+            <span id="sumFnet" class="font-bold text-emerald-400">0.000 N (สมดุล)</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PANEL 2: STOKES' MICROBIAL DRAG CONTROLS -->
+      <div id="ctrlStokes" class="space-y-4 hidden">
+        
+        <!-- Cell Type Selection -->
+        <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-sky-500/30 space-y-2">
+          <div class="text-xs font-bold text-sky-400 font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-virus"></i> เลือกเซลล์จุลินทรีย์ตัวอย่าง:
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <button onclick="selectCell('saureus')" id="btnCellSaureus" class="p-2 rounded-xl bg-sky-500 text-slate-950 font-bold border border-sky-400 transition text-left">
+              <div>S. aureus (Coccus)</div>
+              <div class="text-[10px] opacity-80">r = 0.50 µm | 1.10 g/cm³</div>
+            </button>
+            <button onclick="selectCell('ecoli')" id="btnCellEcoli" class="p-2 rounded-xl bg-slate-800 text-slate-300 font-medium border border-white/10 hover:text-white transition text-left">
+              <div>E. coli (Bacillus)</div>
+              <div class="text-[10px] text-slate-400">r = 0.80 µm | 1.08 g/cm³</div>
+            </button>
+            <button onclick="selectCell('bsubtilis')" id="btnCellBsubtilis" class="p-2 rounded-xl bg-slate-800 text-slate-300 font-medium border border-white/10 hover:text-white transition text-left">
+              <div>B. subtilis (Spore)</div>
+              <div class="text-[10px] text-slate-400">r = 0.60 µm | 1.25 g/cm³</div>
+            </button>
+            <button onclick="selectCell('yeast')" id="btnCellYeast" class="p-2 rounded-xl bg-slate-800 text-slate-300 font-medium border border-white/10 hover:text-white transition text-left">
+              <div>S. cerevisiae (Yeast)</div>
+              <div class="text-[10px] text-slate-400">r = 3.00 µm | 1.11 g/cm³</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Fluid Media Selection -->
+        <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-amber-500/30 space-y-2">
+          <div class="text-xs font-bold text-amber-400 font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-droplet"></i> สารแขวนลอย / ตัวกลางของไหล:
+          </div>
+          <div class="space-y-1.5 text-xs">
+            <button onclick="selectFluid('water')" id="btnFluidWater" class="w-full p-2 rounded-xl bg-amber-500 text-slate-950 font-bold border border-amber-400 text-left transition flex justify-between">
+              <span>น้ำกลั่นบริสุทธิ์ (Pure Water @ 20°C)</span>
+              <span class="font-mono">η = 1.00 mPa·s</span>
+            </button>
+            <button onclick="selectFluid('broth')" id="btnFluidBroth" class="w-full p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-medium border border-white/10 text-left transition flex justify-between">
+              <span>น้ำเลี้ยงเชื้อ (Nutrient Broth)</span>
+              <span class="font-mono">η = 1.15 mPa·s</span>
+            </button>
+            <button onclick="selectFluid('glycerol')" id="btnFluidGlycerol" class="w-full p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-medium border border-white/10 text-left transition flex justify-between">
+              <span>สารละลายกลีเซอรอล 20% (Glycerol)</span>
+              <span class="font-mono">η = 1.76 mPa·s</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Simulation Run Controls -->
+        <div class="p-4 rounded-2xl bg-slate-950 border border-white/10 space-y-3">
+          <div class="flex items-center justify-between text-xs font-mono">
+            <span class="text-slate-400">สถานะการตกตะกอน:</span>
+            <span id="stkSimState" class="font-bold text-emerald-400">● พร้อมเริ่มทดลอง</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button id="btnStartStokes" onclick="toggleStokesSim()" class="py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold text-xs shadow-lg transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-play"></i> เริ่มปล่อยเซลล์ตกตะกอน
+            </button>
+            <button onclick="resetStokesSim()" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs border border-white/10 transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-rotate-left"></i> รีเซ็ตตำแหน่ง
+            </button>
+          </div>
+        </div>
+
+        <!-- Stokes Physics Theory Snippet -->
+        <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 text-[11px] text-slate-400 font-mono space-y-1">
+          <div class="text-sky-300 font-bold">สมการกฎของสโตกส์ (Stokes' Law):</div>
+          <div>แรงหนืด $F_d = 6\pi \eta r v$</div>
+          <div>แรงลัพธ์ $(\rho_c - \rho_f) V g - 6\pi \eta r v = 0$</div>
+          <div class="text-emerald-400 font-bold">ความเร็วปลาย: $v_t = \frac{2 r^2 (\rho_c - \rho_f) g}{9 \eta}$</div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    // ============================================================
+    // Global State & Web Audio Synthesizer
+    // ============================================================
+    let activeMode = 'forcetable'; // 'forcetable' | 'stokes'
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playSoundClink() {
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(1200, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.08);
+      } catch (e) {}
+    }
+
+    function playSoundBalanceChime() {
+      try {
+        const ctx = getAudioContext();
+        const freqs = [523.25, 659.25, 783.99, 1046.50]; // C Major Chord
+        freqs.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.05);
+          gain.gain.setValueAtTime(0.08, ctx.currentTime + idx * 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + idx * 0.05 + 0.5);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.05);
+          osc.stop(ctx.currentTime + idx * 0.05 + 0.5);
+        });
+      } catch (e) {}
+    }
+
+    // ============================================================
+    // Three.js Scene Setup (Standard PBR with preserveDrawingBuffer)
+    // ============================================================
+    let scene, camera, renderer, controls;
+    let forceTableGroup, stokesGroup;
+    let centralRingMesh, centerPinMesh;
+    let string1, string2, string3;
+    let pulley1Group, pulley2Group, pulley3Group;
+    let weight1Group, weight2Group, weight3Group;
+
+    // Microbial Cells in Mode 2
+    let cellsArray = [];
+    let isStokesRunning = false;
+    let stokesStartTime = 0;
+    let stokesElapsedTime = 0;
+
+    const cellDatabase = {
+      saureus: { name: 'S. aureus', shape: 'coccus', radius: 0.50, density: 1.10, color: 0xf59e0b },
+      ecoli: { name: 'E. coli', shape: 'bacillus', radius: 0.80, density: 1.08, color: 0x10b981 },
+      bsubtilis: { name: 'B. subtilis', shape: 'spore', radius: 0.60, density: 1.25, color: 0x8b5cf6 },
+      yeast: { name: 'S. cerevisiae', shape: 'yeast', radius: 3.00, density: 1.11, color: 0xec4899 }
+    };
+    let currentCell = cellDatabase.saureus;
+
+    const fluidDatabase = {
+      water: { name: 'Pure Water', visc: 1.00, density: 1.00, color: 0xbae6fd },
+      broth: { name: 'Nutrient Broth', visc: 1.15, density: 1.015, color: 0xfef08a },
+      glycerol: { name: '20% Glycerol', visc: 1.76, density: 1.045, color: 0xa7f3d0 }
+    };
+    let currentFluid = fluidDatabase.water;
+
+    function initThree() {
+      const mount = document.getElementById('canvasMount');
+      scene = new THREE.Scene();
+
+      camera = new THREE.PerspectiveCamera(38, mount.clientWidth / mount.clientHeight, 0.1, 1000);
+      camera.position.set(0, 18, 22);
+
+      // สำคัญมาก: preserveDrawingBuffer: true เพื่อให้แคปหน้าจอได้คมชัด 100%
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
+      renderer.setSize(mount.clientWidth, mount.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      mount.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 + 0.05;
+      controls.target.set(0, 0, 0);
+
+      // Lights
+      scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+      const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+      keyLight.position.set(12, 25, 15);
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.width = 1024;
+      keyLight.shadow.mapSize.height = 1024;
+      scene.add(keyLight);
+
+      const fillLight = new THREE.DirectionalLight(0x38bdf8, 0.6);
+      fillLight.position.set(-15, 10, -10);
+      scene.add(fillLight);
+
+      // Floor Shadow Plane
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(50, 50),
+        new THREE.ShadowMaterial({ opacity: 0.35 })
+      );
+      floor.rotation.x = -Math.PI / 2;
+      floor.position.y = -6;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      // Build 3D Models
+      buildForceTable();
+      buildStokesChamber();
+
+      // Standard API hook for screenshot capture
+      window.captureSimulatorScreenshot = function() {
+        if (renderer && scene && camera) {
+          renderer.render(scene, camera);
+          return renderer.domElement.toDataURL('image/png');
+        }
+        return null;
+      };
+
+      animate();
+
+      window.addEventListener('resize', onWindowResize);
+      updateForceTable();
+    }
+
+    function onWindowResize() {
+      const mount = document.getElementById('canvasMount');
+      if (!mount || !renderer || !camera) return;
+      camera.aspect = mount.clientWidth / mount.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(mount.clientWidth, mount.clientHeight);
+    }
+
+    // ============================================================
+    // 3D Force Table Construction
+    // ============================================================
+    function generateForceTableTexture() {
+      const cv = document.createElement('canvas');
+      cv.width = 2048; cv.height = 2048;
+      const ctx = cv.getContext('2d');
+      const cx = 1024, cy = 1024;
+
+      // Base Brass Gradient
+      const grad = ctx.createRadialGradient(cx, cy, 100, cx, cy, 1024);
+      grad.addColorStop(0, '#e2e8f0');
+      grad.addColorStop(0.7, '#cbd5e1');
+      grad.addColorStop(1, '#94a3b8');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 2048, 2048);
+
+      // Rings
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.arc(cx, cy, 980, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy, 880, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy, 200, 0, Math.PI * 2); ctx.stroke();
+
+      // Degree Markings
+      ctx.font = 'bold 26px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      for (let deg = 0; deg < 360; deg++) {
+        const rad = (deg * Math.PI) / 180;
+        const cos = Math.cos(rad);
+        const sin = Math.sin(rad);
+
+        let tickLen = 25;
+        if (deg % 10 === 0) {
+          tickLen = 60;
+          ctx.lineWidth = 4;
+          const textR = 830;
+          const tx = cx + textR * cos;
+          const ty = cy + textR * sin;
+          ctx.fillStyle = '#0f172a';
+          ctx.fillText(deg.toString() + '°', tx, ty);
+        } else if (deg % 5 === 0) {
+          tickLen = 42;
+          ctx.lineWidth = 2.5;
+        } else {
+          tickLen = 20;
+          ctx.lineWidth = 1.5;
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(cx + (980 - tickLen) * cos, cy + (980 - tickLen) * sin);
+        ctx.lineTo(cx + 980 * cos, cy + 980 * sin);
+        ctx.stroke();
+      }
+
+      return new THREE.CanvasTexture(cv);
+    }
+
+    function buildForceTable() {
+      forceTableGroup = new THREE.Group();
+
+      const brassMat = new THREE.MeshStandardMaterial({
+        map: generateForceTableTexture(),
+        roughness: 0.28,
+        metalness: 0.85
+      });
+      const darkSteelMat = new THREE.MeshStandardMaterial({
+        color: 0x1e293b,
+        roughness: 0.4,
+        metalness: 0.7
+      });
+      const goldRingMat = new THREE.MeshStandardMaterial({
+        color: 0xf59e0b,
+        roughness: 0.2,
+        metalness: 0.9
+      });
+      const pinMat = new THREE.MeshStandardMaterial({
+        color: 0xef4444,
+        roughness: 0.3,
+        metalness: 0.6
+      });
+
+      // Circular Table Top
+      const tableDisc = new THREE.Mesh(new THREE.CylinderGeometry(8.5, 8.5, 0.4, 64), brassMat);
+      tableDisc.receiveShadow = true;
+      tableDisc.castShadow = true;
+      forceTableGroup.add(tableDisc);
+
+      // Heavy Tripod Base
+      const centralPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.2, 5.0, 32), darkSteelMat);
+      centralPillar.position.y = -2.7;
+      centralPillar.castShadow = true;
+      forceTableGroup.add(centralPillar);
+
+      for (let i = 0; i < 3; i++) {
+        const leg = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.5, 5.5), darkSteelMat);
+        leg.rotation.y = (i * Math.PI * 2) / 3;
+        leg.position.set(Math.sin((i * Math.PI * 2) / 3) * 2.5, -5.2, Math.cos((i * Math.PI * 2) / 3) * 2.5);
+        forceTableGroup.add(leg);
+      }
+
+      // Center Pin
+      centerPinMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 1.2, 16), pinMat);
+      centerPinMesh.position.y = 0.6;
+      forceTableGroup.add(centerPinMesh);
+
+      // Central Ring
+      centralRingMesh = new THREE.Mesh(new THREE.TorusGeometry(0.7, 0.08, 16, 32), goldRingMat);
+      centralRingMesh.rotation.x = Math.PI / 2;
+      centralRingMesh.position.y = 0.25;
+      forceTableGroup.add(centralRingMesh);
+
+      // Create 3 Pulley Assemblies
+      pulley1Group = createPulleyMesh(0xf59e0b);
+      pulley2Group = createPulleyMesh(0x38bdf8);
+      pulley3Group = createPulleyMesh(0x10b981);
+      forceTableGroup.add(pulley1Group);
+      forceTableGroup.add(pulley2Group);
+      forceTableGroup.add(pulley3Group);
+
+      // Hanging Weights
+      weight1Group = createHangingWeight(0xf59e0b);
+      weight2Group = createHangingWeight(0x38bdf8);
+      weight3Group = createHangingWeight(0x10b981);
+      forceTableGroup.add(weight1Group);
+      forceTableGroup.add(weight2Group);
+      forceTableGroup.add(weight3Group);
+
+      // Strings (Lines)
+      const lineMat = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 });
+      string1 = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), lineMat);
+      string2 = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), lineMat);
+      string3 = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), lineMat);
+      forceTableGroup.add(string1);
+      forceTableGroup.add(string2);
+      forceTableGroup.add(string3);
+
+      scene.add(forceTableGroup);
+    }
+
+    function createPulleyMesh(colorHex) {
+      const g = new THREE.Group();
+      const clampMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.3 });
+      const wheelMat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.2, metalness: 0.8 });
+
+      const clamp = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.2, 0.8), clampMat);
+      g.add(clamp);
+
+      const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.25, 24), wheelMat);
+      wheel.rotation.z = Math.PI / 2;
+      wheel.position.set(0, 0.6, 0.4);
+      g.add(wheel);
+
+      return g;
+    }
+
+    function createHangingWeight(colorHex) {
+      const g = new THREE.Group();
+      const hangerMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.2, metalness: 0.8 });
+      const discMat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.3, metalness: 0.7 });
+
+      const hanger = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 2.0, 12), hangerMat);
+      hanger.position.y = -1.0;
+      g.add(hanger);
+
+      const baseDisc = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 0.2, 24), discMat);
+      baseDisc.position.y = -2.0;
+      g.add(baseDisc);
+
+      const slotWeights = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.8, 24), discMat);
+      slotWeights.position.y = -1.5;
+      g.add(slotWeights);
+
+      return g;
+    }
+
+    // ============================================================
+    // 3D Stokes' Drag Chamber Construction (Mode 2)
+    // ============================================================
+    function buildStokesChamber() {
+      stokesGroup = new THREE.Group();
+      stokesGroup.position.set(0, 0, 0);
+
+      const glassMat = new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        roughness: 0.05,
+        transmission: 0.95,
+        transparent: true,
+        opacity: 0.55
+      });
+      const fluidMat = new THREE.MeshStandardMaterial({
+        color: 0xbae6fd,
+        roughness: 0.1,
+        transparent: true,
+        opacity: 0.65
+      });
+      const standMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.4 });
+
+      // Metal Stand
+      const standBase = new THREE.Mesh(new THREE.BoxGeometry(6.0, 0.6, 6.0), standMat);
+      standBase.position.y = -5.0;
+      stokesGroup.add(standBase);
+
+      const standRod = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 12.0, 16), standMat);
+      standRod.position.set(-2.2, 1.0, 0);
+      stokesGroup.add(standRod);
+
+      // Glass Cuvette Column (Height 10 units = 100 µm scaled)
+      const outerGlass = new THREE.Mesh(new THREE.BoxGeometry(3.2, 10.0, 3.2), glassMat);
+      outerGlass.position.y = 0.5;
+      stokesGroup.add(outerGlass);
+
+      // Liquid Core
+      const liquidMesh = new THREE.Mesh(new THREE.BoxGeometry(2.9, 9.6, 2.9), fluidMat);
+      liquidMesh.position.y = 0.5;
+      stokesGroup.add(liquidMesh);
+
+      // Graduated Ticks on Glass Wall
+      const tickMat = new THREE.LineBasicMaterial({ color: 0x0284c7 });
+      for (let y = -4.0; y <= 5.0; y += 1.0) {
+        const geom = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(1.61, y, -1.0),
+          new THREE.Vector3(1.61, y, 1.0)
+        ]);
+        stokesGroup.add(new THREE.Line(geom, tickMat));
+      }
+
+      // Generate 12 Microbial Cells
+      generateCellsInChamber();
+
+      stokesGroup.visible = false;
+      scene.add(stokesGroup);
+    }
+
+    function generateCellsInChamber() {
+      // Clear old cells
+      cellsArray.forEach(c => stokesGroup.remove(c.mesh));
+      cellsArray = [];
+
+      const cellMat = new THREE.MeshStandardMaterial({
+        color: currentCell.color,
+        roughness: 0.35
+      });
+
+      for (let i = 0; i < 16; i++) {
+        let geom;
+        if (currentCell.shape === 'coccus' || currentCell.shape === 'spore') {
+          geom = new THREE.SphereGeometry(0.18, 16, 16);
+        } else if (currentCell.shape === 'bacillus') {
+          geom = new THREE.CylinderGeometry(0.12, 0.12, 0.5, 16);
+        } else {
+          geom = new THREE.SphereGeometry(0.32, 16, 16);
+        }
+
+        const mesh = new THREE.Mesh(geom, cellMat);
+        const randX = (Math.random() - 0.5) * 2.0;
+        const randZ = (Math.random() - 0.5) * 2.0;
+        const startY = 3.5 + (Math.random() - 0.5) * 1.5;
+
+        mesh.position.set(randX, startY, randZ);
+        if (currentCell.shape === 'bacillus') {
+          mesh.rotation.z = Math.random() * Math.PI;
+          mesh.rotation.x = Math.random() * Math.PI;
+        }
+
+        stokesGroup.add(mesh);
+        cellsArray.push({
+          mesh: mesh,
+          initY: startY,
+          currY: startY,
+          speed: 1.0 + (Math.random() - 0.5) * 0.15
+        });
+      }
+    }
+
+    // ============================================================
+    // Physics & Simulation Calculations
+    // ============================================================
+    function updateForceTable() {
+      const m1 = parseFloat(document.getElementById('sliderF1Mass').value);
+      const a1 = parseFloat(document.getElementById('sliderF1Ang').value);
+      const m2 = parseFloat(document.getElementById('sliderF2Mass').value);
+      const a2 = parseFloat(document.getElementById('sliderF2Ang').value);
+      const m3 = parseFloat(document.getElementById('sliderF3Mass').value);
+      const a3 = parseFloat(document.getElementById('sliderF3Ang').value);
+
+      const g = 9.80665;
+      const f1 = (m1 / 1000.0) * g;
+      const f2 = (m2 / 1000.0) * g;
+      const f3 = (m3 / 1000.0) * g;
+
+      // Update text displays
+      document.getElementById('dispF1').textContent = `${m1} g (${f1.toFixed(2)} N) @ ${a1}°`;
+      document.getElementById('dispF1Mass').textContent = `${m1} g`;
+      document.getElementById('dispF1Ang').textContent = `${a1}°`;
+
+      document.getElementById('dispF2').textContent = `${m2} g (${f2.toFixed(2)} N) @ ${a2}°`;
+      document.getElementById('dispF2Mass').textContent = `${m2} g`;
+      document.getElementById('dispF2Ang').textContent = `${a2}°`;
+
+      document.getElementById('dispF3').textContent = `${m3} g (${f3.toFixed(2)} N) @ ${a3}°`;
+      document.getElementById('dispF3Mass').textContent = `${m3} g`;
+      document.getElementById('dispF3Ang').textContent = `${a3}°`;
+
+      // Components
+      const r1 = (a1 * Math.PI) / 180;
+      const r2 = (a2 * Math.PI) / 180;
+      const r3 = (a3 * Math.PI) / 180;
+
+      const f1x = f1 * Math.cos(r1), f1y = f1 * Math.sin(r1);
+      const f2x = f2 * Math.cos(r2), f2y = f2 * Math.sin(r2);
+      const f3x = f3 * Math.cos(r3), f3y = f3 * Math.sin(r3);
+
+      // Resultant of F1 + F2
+      const rx12 = f1x + f2x;
+      const ry12 = f1y + f2y;
+      const rMag12 = Math.sqrt(rx12 * rx12 + ry12 * ry12);
+      let rAng12 = (Math.atan2(ry12, rx12) * 180) / Math.PI;
+      if (rAng12 < 0) rAng12 += 360;
+
+      // Theoretical Equilibrant E = -R
+      const eMag = rMag12;
+      let eAng = rAng12 + 180;
+      if (eAng >= 360) eAng -= 360;
+
+      // Net Force vector of all 3
+      const netX = f1x + f2x + f3x;
+      const netY = f1y + f2y + f3y;
+      const netMag = Math.sqrt(netX * netX + netY * netY);
+
+      // Update 3D Pulleys Position on Table Rim (R = 8.5)
+      const tableR = 8.5;
+      updatePulleyTransform(pulley1Group, weight1Group, string1, a1, tableR);
+      updatePulleyTransform(pulley2Group, weight2Group, string2, a2, tableR);
+      updatePulleyTransform(pulley3Group, weight3Group, string3, a3, tableR);
+
+      // Ring Displacement from Center Pin (Physics constraint)
+      const isBalanced = netMag < 0.05; // 0.05 N threshold (~5 grams)
+      let ringShiftX = 0, ringShiftZ = 0;
+
+      if (!isBalanced) {
+        const netAng = Math.atan2(netY, netX);
+        const shiftAmount = Math.min(0.55, netMag * 0.18);
+        ringShiftX = shiftAmount * Math.cos(netAng);
+        ringShiftZ = -shiftAmount * Math.sin(netAng);
+      }
+
+      if (centralRingMesh) {
+        centralRingMesh.position.set(ringShiftX, 0.25, ringShiftZ);
+        if (isBalanced) {
+          centralRingMesh.material.color.setHex(0x10b981); // Emerald
+        } else {
+          centralRingMesh.material.color.setHex(0xf59e0b); // Amber
+        }
+      }
+
+      // Update HUD
+      document.getElementById('hudRMag').textContent = `${rMag12.toFixed(3)} N (${((rMag12/g)*1000).toFixed(1)} g)`;
+      document.getElementById('hudRAng').textContent = `${rAng12.toFixed(1)}°`;
+      document.getElementById('hudEMag').textContent = `${eMag.toFixed(3)} N (${((eMag/g)*1000).toFixed(1)} g)`;
+      document.getElementById('hudEAng').textContent = `${eAng.toFixed(1)}°`;
+
+      document.getElementById('sumFx').textContent = `${netX >= 0 ? '+' : ''}${netX.toFixed(3)} N`;
+      document.getElementById('sumFy').textContent = `${netY >= 0 ? '+' : ''}${netY.toFixed(3)} N`;
+
+      const pill = document.getElementById('equilibriumStatusPill');
+      const sumFnetElem = document.getElementById('sumFnet');
+
+      if (isBalanced) {
+        pill.className = "px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+        pill.innerHTML = '✓ ระบบสมดุลสมบูรณ์ (Ring Centered)';
+        sumFnetElem.className = 'font-bold text-emerald-400';
+        sumFnetElem.textContent = `${netMag.toFixed(3)} N (สมดุล)`;
+      } else {
+        pill.className = "px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40";
+        pill.innerHTML = '● ระบบยังไม่สมดุล (Ring Pushed)';
+        sumFnetElem.className = 'font-bold text-rose-400';
+        sumFnetElem.textContent = `${netMag.toFixed(3)} N (ไม่สมดุล)`;
+      }
+
+      drawPolarVectorHUD(f1, a1, f2, a2, f3, a3, rMag12, rAng12);
+    }
+
+    function updatePulleyTransform(pulleyGrp, weightGrp, stringLine, angDeg, radius) {
+      const rad = (angDeg * Math.PI) / 180;
+      const px = radius * Math.cos(rad);
+      const pz = -radius * Math.sin(rad);
+
+      pulleyGrp.position.set(px, 0.2, pz);
+      pulleyGrp.rotation.y = rad;
+
+      weightGrp.position.set(px * 1.08, -1.2, pz * 1.08);
+
+      // Update String Points: From Central Ring to Pulley Edge to Weight
+      if (stringLine) {
+        const ringPos = centralRingMesh ? centralRingMesh.position : new THREE.Vector3();
+        const p1 = new THREE.Vector3(ringPos.x, 0.25, ringPos.z);
+        const p2 = new THREE.Vector3(px, 0.45, pz);
+        const p3 = new THREE.Vector3(px * 1.08, -0.6, pz * 1.08);
+
+        stringLine.geometry.setFromPoints([p1, p2, p3]);
+      }
+    }
+
+    function drawPolarVectorHUD(f1, a1, f2, a2, f3, a3, rMag, rAng) {
+      const cv = document.getElementById('polarCanvas');
+      if (!cv) return;
+      const ctx = cv.getContext('2d');
+      const cx = 90, cy = 90;
+      const maxF = Math.max(f1, f2, f3, rMag, 3.0);
+      const scale = 75 / maxF;
+
+      ctx.clearRect(0, 0, cv.width, cv.height);
+
+      // Polar concentric circles
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.lineWidth = 1;
+      [25, 50, 75].forEach(r => {
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+      });
+
+      // Crosshairs
+      ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(cv.width, cy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, cv.height); ctx.stroke();
+
+      function drawVectorArrow(mag, deg, color, label) {
+        const rad = (deg * Math.PI) / 180;
+        const ex = cx + mag * scale * Math.cos(rad);
+        const ey = cy - mag * scale * Math.sin(rad);
+
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(ex, ey); ctx.stroke();
+
+        ctx.fillStyle = color;
+        ctx.beginPath(); ctx.arc(ex, ey, 3.5, 0, Math.PI * 2); ctx.fill();
+
+        ctx.font = 'bold 10px "JetBrains Mono"';
+        ctx.fillText(label, ex + 4, ey - 4);
+      }
+
+      drawVectorArrow(f1, a1, '#f59e0b', 'F1');
+      drawVectorArrow(f2, a2, '#38bdf8', 'F2');
+      drawVectorArrow(f3, a3, '#10b981', 'F3');
+      drawVectorArrow(rMag, rAng, '#f43f5e', 'R');
+    }
+
+    // ============================================================
+    // Presets & Automation
+    // ============================================================
+    function setPresetOrthogonal() {
+      playSoundClink();
+      document.getElementById('sliderF1Mass').value = 200;
+      document.getElementById('sliderF1Ang').value = 0;
+      document.getElementById('sliderF2Mass').value = 150;
+      document.getElementById('sliderF2Ang').value = 90;
+      document.getElementById('sliderF3Mass').value = 250;
+      document.getElementById('sliderF3Ang').value = 217;
+      updateForceTable();
+      playSoundBalanceChime();
+    }
+
+    function setPresetSymmetric() {
+      playSoundClink();
+      document.getElementById('sliderF1Mass').value = 100;
+      document.getElementById('sliderF1Ang').value = 0;
+      document.getElementById('sliderF2Mass').value = 100;
+      document.getElementById('sliderF2Ang').value = 120;
+      document.getElementById('sliderF3Mass').value = 100;
+      document.getElementById('sliderF3Ang').value = 240;
+      updateForceTable();
+      playSoundBalanceChime();
+    }
+
+    function setPresetBioCentrifuge() {
+      playSoundClink();
+      document.getElementById('sliderF1Mass').value = 150;
+      document.getElementById('sliderF1Ang').value = 30;
+      document.getElementById('sliderF2Mass').value = 200;
+      document.getElementById('sliderF2Ang').value = 135;
+      autoBalanceEquilibrant();
+    }
+
+    function autoBalanceEquilibrant() {
+      playSoundClink();
+      const m1 = parseFloat(document.getElementById('sliderF1Mass').value);
+      const a1 = parseFloat(document.getElementById('sliderF1Ang').value);
+      const m2 = parseFloat(document.getElementById('sliderF2Mass').value);
+      const a2 = parseFloat(document.getElementById('sliderF2Ang').value);
+
+      const r1 = (a1 * Math.PI) / 180;
+      const r2 = (a2 * Math.PI) / 180;
+      const rx = m1 * Math.cos(r1) + m2 * Math.cos(r2);
+      const ry = m1 * Math.sin(r1) + m2 * Math.sin(r2);
+
+      const reqMass = Math.round(Math.sqrt(rx * rx + ry * ry));
+      let reqAng = Math.round((Math.atan2(ry, rx) * 180) / Math.PI) + 180;
+      if (reqAng >= 360) reqAng -= 360;
+
+      document.getElementById('sliderF3Mass').value = reqMass;
+      document.getElementById('sliderF3Ang').value = reqAng;
+      updateForceTable();
+      playSoundBalanceChime();
+    }
+
+    // ============================================================
+    // Stokes' Microbial Sedimentation (Mode 2)
+    // ============================================================
+    function selectCell(type) {
+      if (!cellDatabase[type]) return;
+      currentCell = cellDatabase[type];
+
+      ['btnCellSaureus', 'btnCellEcoli', 'btnCellBsubtilis', 'btnCellYeast'].forEach(id => {
+        document.getElementById(id).className = 'p-2 rounded-xl bg-slate-800 text-slate-300 font-medium border border-white/10 hover:text-white transition text-left';
+      });
+
+      const activeBtnMap = { saureus: 'btnCellSaureus', ecoli: 'btnCellEcoli', bsubtilis: 'btnCellBsubtilis', yeast: 'btnCellYeast' };
+      document.getElementById(activeBtnMap[type]).className = 'p-2 rounded-xl bg-sky-500 text-slate-950 font-bold border border-sky-400 transition text-left';
+
+      generateCellsInChamber();
+      updateStokesTelemetry();
+    }
+
+    function selectFluid(type) {
+      if (!fluidDatabase[type]) return;
+      currentFluid = fluidDatabase[type];
+
+      ['btnFluidWater', 'btnFluidBroth', 'btnFluidGlycerol'].forEach(id => {
+        document.getElementById(id).className = 'w-full p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white font-medium border border-white/10 text-left transition flex justify-between';
+      });
+
+      const activeBtnMap = { water: 'btnFluidWater', broth: 'btnFluidBroth', glycerol: 'btnFluidGlycerol' };
+      document.getElementById(activeBtnMap[type]).className = 'w-full p-2 rounded-xl bg-amber-500 text-slate-950 font-bold border border-amber-400 text-left transition flex justify-between';
+
+      updateStokesTelemetry();
+    }
+
+    function calculateStokesTerminalVelocity() {
+      const g = 9.80665; // m/s^2
+      const rM = currentCell.radius * 1e-6; // meters
+      const rhoDiff = (currentCell.density - currentFluid.density) * 1e3; // kg/m^3
+      const eta = currentFluid.visc * 1e-3; // Pa·s
+
+      // Stokes terminal velocity: v_t = 2 * r^2 * (rho_c - rho_f) * g / (9 * eta)
+      const vt = (2.0 * Math.pow(rM, 2) * rhoDiff * g) / (9.0 * eta);
+      return vt; // m/s
+    }
+
+    function updateStokesTelemetry() {
+      const vt = calculateStokesTerminalVelocity(); // m/s
+      const vtMicronPerSec = vt * 1e6; // um/s
+
+      document.getElementById('stkCellName').textContent = currentCell.name;
+      document.getElementById('stkCellRadius').textContent = `${currentCell.radius.toFixed(2)} µm`;
+      document.getElementById('stkCellDensity').textContent = `${currentCell.density.toFixed(2)} g/cm³`;
+      document.getElementById('stkFluidVisc').textContent = `${currentFluid.visc.toFixed(2)} mPa·s`;
+      document.getElementById('stkTerminalVel').textContent = `${vtMicronPerSec.toFixed(3)} µm/s`;
+    }
+
+    function toggleStokesSim() {
+      const btn = document.getElementById('btnStartStokes');
+      const stateElem = document.getElementById('stkSimState');
+
+      if (!isStokesRunning) {
+        isStokesRunning = true;
+        stokesStartTime = performance.now() - stokesElapsedTime * 1000;
+        btn.innerHTML = '<i class="fa-solid fa-pause"></i> หยุดชั่วคราว';
+        btn.className = 'py-2.5 px-3 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs shadow-lg transition flex items-center justify-center gap-1.5';
+        stateElem.className = 'font-bold text-sky-400 animate-pulse';
+        stateElem.textContent = '● กำลังตกตะกอนตามกฎของสโตกส์...';
+      } else {
+        isStokesRunning = false;
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> ดำเนินการต่อ';
+        btn.className = 'py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-lg transition flex items-center justify-center gap-1.5';
+        stateElem.className = 'font-bold text-amber-400';
+        stateElem.textContent = '❚❚ หยุดชั่วคราว';
+      }
+    }
+
+    function resetStokesSim() {
+      isStokesRunning = false;
+      stokesElapsedTime = 0;
+      document.getElementById('stkTimer').textContent = '0.0 s';
+      document.getElementById('stkDistance').textContent = '0.00 µm';
+      document.getElementById('btnStartStokes').innerHTML = '<i class="fa-solid fa-play"></i> เริ่มปล่อยเซลล์ตกตะกอน';
+      document.getElementById('btnStartStokes').className = 'py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold text-xs shadow-lg transition flex items-center justify-center gap-1.5';
+      document.getElementById('stkSimState').className = 'font-bold text-emerald-400';
+      document.getElementById('stkSimState').textContent = '● พร้อมเริ่มทดลอง';
+      generateCellsInChamber();
+    }
+
+    // ============================================================
+    // Main Animation Loop
+    // ============================================================
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (activeMode === 'stokes' && isStokesRunning) {
+        stokesElapsedTime = (performance.now() - stokesStartTime) / 1000.0;
+        document.getElementById('stkTimer').textContent = `${stokesElapsedTime.toFixed(1)} s`;
+
+        const vt = calculateStokesTerminalVelocity(); // m/s
+        const vtUmPerSec = vt * 1e6; // um/s
+        const distUm = vtUmPerSec * stokesElapsedTime;
+        document.getElementById('stkDistance').textContent = `${distUm.toFixed(2)} µm`;
+
+        // Visual sinking animation in 3D (scaled for visible immersion)
+        const visualSpeed = vtUmPerSec * 0.12;
+        cellsArray.forEach(c => {
+          c.currY -= visualSpeed * 0.016 * c.speed;
+          if (c.currY < -4.2) {
+            c.currY = -4.2; // Hit bottom sediment layer
+          }
+          c.mesh.position.y = c.currY;
+        });
+      }
+
+      if (controls) controls.update();
+      if (renderer && scene && camera) renderer.render(scene, camera);
+    }
+
+    // ============================================================
+    // Mode Switcher
+    // ============================================================
+    function switchMode(mode) {
+      activeMode = mode;
+      const btnFt = document.getElementById('btnModeForceTable');
+      const btnStk = document.getElementById('btnModeStokes');
+      const ctrlFt = document.getElementById('ctrlForceTable');
+      const ctrlStk = document.getElementById('ctrlStokes');
+      const polarHUD = document.getElementById('polarOverlayCard');
+      const stokesHUD = document.getElementById('stokesOverlayCard');
+
+      if (mode === 'forcetable') {
+        btnFt.className = 'px-3 py-1.5 rounded-lg font-bold bg-amber-500 text-slate-950 shadow transition flex items-center gap-1.5';
+        btnStk.className = 'px-3 py-1.5 rounded-lg font-medium text-slate-300 hover:text-white transition flex items-center gap-1.5';
+        ctrlFt.classList.remove('hidden');
+        ctrlStk.classList.add('hidden');
+        polarHUD.classList.remove('hidden');
+        stokesHUD.classList.add('hidden');
+
+        if (forceTableGroup) forceTableGroup.visible = true;
+        if (stokesGroup) stokesGroup.visible = false;
+        camera.position.set(0, 18, 22);
+        controls.target.set(0, 0, 0);
+      } else {
+        btnStk.className = 'px-3 py-1.5 rounded-lg font-bold bg-sky-500 text-slate-950 shadow transition flex items-center gap-1.5';
+        btnFt.className = 'px-3 py-1.5 rounded-lg font-medium text-slate-300 hover:text-white transition flex items-center gap-1.5';
+        ctrlStk.classList.remove('hidden');
+        ctrlFt.classList.add('hidden');
+        stokesHUD.classList.remove('hidden');
+        polarHUD.classList.add('hidden');
+
+        if (forceTableGroup) forceTableGroup.visible = false;
+        if (stokesGroup) stokesGroup.visible = true;
+        camera.position.set(0, 3, 14);
+        controls.target.set(0, 0, 0);
+        updateStokesTelemetry();
+      }
+    }
+
+    function resetCamera() {
+      if (activeMode === 'forcetable') {
+        camera.position.set(0, 18, 22);
+      } else {
+        camera.position.set(0, 3, 14);
+      }
+      controls.target.set(0, 0, 0);
+    }
+
+    function captureSelf() {
+      const dataUrl = window.captureSimulatorScreenshot();
+      if (dataUrl) {
+        // If embedded in iframe, dispatch event to parent window
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'CAPTURED_PROOF', dataUrl: dataUrl }, '*');
+        }
+        alert('📸 บันทึกภาพหน้าจอ 3D เรียบร้อยแล้ว!');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', initThree);
+  </script>
+</body>
+</html>
