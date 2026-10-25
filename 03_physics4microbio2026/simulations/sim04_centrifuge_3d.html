@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องปฏิบัติการ 3D เครื่องหมุนเหวี่ยงแยกสาร (Centrifuge RCF & Sedimentation 3D Simulator)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js r128 & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- Google Fonts & Font Awesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #030712; color: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .font-digital { font-family: 'Orbitron', monospace; }
+    
+    /* Pure CSS Vector Typography Standard (Zero Tofu Box □) */
+    .vec {
+      display: inline-block;
+      position: relative;
+      font-family: 'Times New Roman', Cambria, serif;
+      font-style: italic;
+      font-weight: bold;
+      line-height: 1;
+      margin-top: 0.25em;
+    }
+    .vec::after {
+      content: '→';
+      position: absolute;
+      top: -0.45em;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0.85);
+      font-size: 0.72em;
+      font-style: normal;
+      font-weight: bold;
+      line-height: 1;
+      color: inherit;
+      pointer-events: none;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.6); }
+
+    /* Glassmorphism Classes */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Digital LED Segment Glow */
+    .led-glow-emerald {
+      text-shadow: 0 0 10px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+    .led-glow-sky {
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.7), 0 0 20px rgba(56, 189, 248, 0.4);
+    }
+    .led-glow-amber {
+      text-shadow: 0 0 10px rgba(245, 158, 11, 0.7), 0 0 20px rgba(245, 158, 11, 0.4);
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col select-none overflow-hidden bg-slate-950">
+
+  <!-- Main Simulator Grid Container -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 h-full overflow-hidden relative">
+
+    <!-- 3D Viewport Column -->
+    <div id="viewportContainer" class="lg:col-span-8 w-full h-[360px] sm:h-[440px] lg:h-full relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden transition-all duration-300">
+      
+      <!-- Three.js Canvas Mount Container -->
+      <div id="threeMount" class="w-full h-full block cursor-grab active:cursor-grabbing"></div>
+
+      <!-- Top-Left HUD: Digital Centrifuge Telemetry & Acceleration -->
+      <div id="telemetryHUD" class="absolute top-3 left-3 bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-sky-500/30 shadow-2xl text-xs z-10 space-y-2 pointer-events-auto w-64 sm:w-72 shadow-sky-950/20">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5 gap-2">
+          <span class="font-bold text-sky-400 font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-gauge-high text-sky-300"></i> CENTRIFUGE TELEMETRY
+          </span>
+          <div class="flex items-center gap-1.5">
+            <span id="spinStateBadge" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-800 text-slate-300 border border-white/10 font-mono">
+              STANDBY
+            </span>
+            <button onclick="toggleCardBody('telemetryHUD')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="telemetryHUD_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('telemetryHUD')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="telemetryHUD_body" class="space-y-2.5 transition-all">
+          <!-- 7-Segment Digital Readout Box -->
+          <div class="bg-black/90 p-2.5 rounded-xl border border-sky-500/30 text-center space-y-1 shadow-inner">
+            <div class="text-[10px] font-mono text-slate-400 flex justify-between px-1">
+              <span>RELATIVE CENTRIFUGAL FIELD</span>
+              <span id="hudLidStatus" class="text-amber-400 font-bold">LID: CLOSED</span>
+            </div>
+            <div id="hudRcfDisplay" class="text-3xl font-digital font-bold text-emerald-400 led-glow-emerald tracking-wider">
+              0 <span class="text-xs text-emerald-500 font-sans">&times;g</span>
+            </div>
+            <div class="flex justify-between items-center text-[10px] font-mono text-slate-400 px-1 pt-0.5 border-t border-white/10">
+              <span>SPEED: <span id="hudRpmDisplay" class="text-sky-300 font-bold">0 RPM</span></span>
+              <span>TIME: <span id="hudTimeDisplay" class="text-amber-300 font-bold">00:00</span></span>
+            </div>
+          </div>
+
+          <!-- Dynamic Mechanics Telemetry Details -->
+          <div class="space-y-1 font-mono text-[10px] text-slate-300 bg-slate-950/80 p-2.5 rounded-xl border border-white/5">
+            <div class="flex justify-between">
+              <span>ความเร็วเชิงมุม (&omega;):</span>
+              <span id="hudOmegaVal" class="text-sky-300 font-bold">0.0 rad/s</span>
+            </div>
+            <div class="flex justify-between">
+              <span>รัศมีโรเตอร์ (<span class="font-serif italic">r</span><sub>avg</sub>):</span>
+              <span id="hudRadiusVal" class="text-white font-bold">8.50 cm (0.085 m)</span>
+            </div>
+            <div class="flex justify-between">
+              <span>ความเร่งสู่ศูนย์กลาง (<span class="vec text-amber-300">a</span><sub>c</sub>):</span>
+              <span id="hudAcVal" class="text-amber-400 font-bold">0.00 m/s²</span>
+            </div>
+            <div class="flex justify-between border-t border-white/10 pt-1">
+              <span>แรงเหวี่ยงต่อมวล (<span class="font-serif italic">F</span><sub>c</sub>/<span class="font-serif italic">m</span>):</span>
+              <span id="hudGForceVal" class="text-emerald-400 font-bold">1.00 &times;g</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top-Right HUD: Synchronized 2D Micro-Loupe (Eppendorf Tube Pellet Formation) -->
+      <div id="microLoupeHUD" class="absolute top-3 right-3 bg-slate-900/95 backdrop-blur-md p-3.5 rounded-2xl border border-amber-500/30 shadow-2xl text-xs z-10 space-y-2 pointer-events-auto w-72 shadow-amber-950/20">
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5 gap-2">
+          <span class="font-bold text-amber-400 font-mono flex items-center gap-1.5">
+            <i class="fa-solid fa-microscope text-amber-300"></i> PELLET FORMATION LOUPE
+          </span>
+          <div class="flex items-center gap-1.5">
+            <span id="sampleBadge" class="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono border border-emerald-500/30 font-bold">
+              E. coli
+            </span>
+            <button onclick="toggleCardBody('microLoupeHUD')" class="w-5 h-5 rounded hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition" title="ย่อ/ขยายเนื้อหา">
+              <i id="microLoupeHUD_icon" class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('microLoupeHUD')" class="w-5 h-5 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 flex items-center justify-center transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[11px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="microLoupeHUD_body" class="space-y-2 transition-all">
+          <!-- 2D Canvas: Cross-Section of 1.5 mL Eppendorf Tube -->
+          <div class="relative flex justify-center bg-slate-950 rounded-xl p-1.5 border border-amber-500/20 shadow-inner">
+            <canvas id="pelletCanvas" width="220" height="150" class="rounded-lg block"></canvas>
+            <div class="absolute bottom-2 right-3 text-[9px] font-mono text-slate-400 bg-slate-900/80 px-1.5 py-0.5 rounded border border-white/10">
+              1.5 mL Tube Inset
+            </div>
+          </div>
+
+          <!-- Pellet Telemetry -->
+          <div class="space-y-1 font-mono text-[10px] text-slate-300 bg-slate-950/80 p-2 rounded-xl border border-white/5">
+            <div class="flex justify-between">
+              <span>สถานะการแยกชั้น:</span>
+              <span id="pelletStatusVal" class="text-amber-300 font-bold">สารแขวนลอยสม่ำเสมอ</span>
+            </div>
+            <div class="flex justify-between">
+              <span>ความสูงตะกอน (<span class="font-serif italic">h</span><sub>pellet</sub>):</span>
+              <span id="pelletHeightVal" class="text-emerald-400 font-bold">0.00 mm</span>
+            </div>
+            <div class="flex justify-between">
+              <span>ปริมาตรตะกอนเข้มข้น:</span>
+              <span id="pelletVolumeVal" class="text-white font-bold">0 &mu;L</span>
+            </div>
+            <div class="flex justify-between border-t border-white/10 pt-1">
+              <span>ความใสของ Supernatant:</span>
+              <span id="supernatantVal" class="text-sky-300 font-bold">ขุ่น (OD600 = 1.20)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Guidance Floating Pill -->
+      <div class="absolute bottom-3 left-3 bg-slate-950/85 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-white/10 text-[11px] text-slate-400 pointer-events-none flex items-center gap-2">
+        <i class="fa-solid fa-circle-info text-sky-400"></i>
+        <span>คลิกค้างแล้วลากเพื่อหมุน 360° | ปรับ RPM และเวลาก่อนกดเริ่มปั่นเหวี่ยง</span>
+      </div>
+
+      <!-- Floating Viewport HUD Dock / Quick Bar -->
+      <div id="viewportDockBar" class="absolute bottom-3 right-3 flex flex-wrap items-center gap-1.5 z-20 pointer-events-auto">
+        <button id="dockBtnTelemetry" onclick="toggleCardShow('telemetryHUD', 'dockBtnTelemetry')" class="px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-slate-900/90 text-sky-300 border border-sky-500/30 hover:bg-sky-500/20 shadow-xl backdrop-blur-md transition flex items-center gap-1.5 ring-2 ring-sky-400">
+          <i class="fa-solid fa-gauge-high"></i> <span>Telemetry</span>
+        </button>
+        <button id="dockBtnLoupe" onclick="toggleCardShow('microLoupeHUD', 'dockBtnLoupe')" class="px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-slate-900/90 text-amber-300 border border-amber-500/30 hover:bg-amber-500/20 shadow-xl backdrop-blur-md transition flex items-center gap-1.5 ring-2 ring-amber-400">
+          <i class="fa-solid fa-microscope"></i> <span>Pellet Loupe</span>
+        </button>
+        <button id="dockBtnSidebar" onclick="toggleSidebar()" class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold bg-gradient-to-r from-slate-800 to-slate-900 text-slate-200 border border-white/20 hover:border-sky-400 shadow-xl backdrop-blur-md transition flex items-center gap-1.5">
+          <i class="fa-solid fa-sliders text-sky-400"></i> <span id="dockSidebarLabel">ซ่อนแถบควบคุม</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Right Control Panel -->
+    <div id="controlSidebar" class="lg:col-span-4 bg-slate-900 border-t lg:border-t-0 lg:border-l border-white/10 p-4 sm:p-5 overflow-y-auto max-h-[460px] lg:max-h-none space-y-4 scrollbar-thin transition-all duration-300">
+
+      <!-- Specimen & Sample Selection Card -->
+      <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-sky-500/30 space-y-2.5">
+        <div class="text-xs font-bold text-sky-400 font-mono flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-vial-virus"></i> ชนิดตัวอย่างชีวภาพ (Biological Specimen)
+          </span>
+          <span class="text-[10px] text-slate-400 font-normal">24 Eppendorf Tubes</span>
+        </div>
+
+        <select id="specimenSelect" onchange="changeSpecimen()" class="w-full bg-slate-900 border border-white/15 rounded-xl p-2.5 text-xs text-white outline-none focus:border-sky-400 transition font-mono">
+          <option value="ecoli" selected>1. Escherichia coli (แบคทีเรีย แขวนลอยใน LB Broth, 1.08 g/cm³)</option>
+          <option value="yeast">2. Saccharomyces cerevisiae (เซลล์ยีสต์, 1.11 g/cm³)</option>
+          <option value="blood">3. Whole Blood &amp; Erythrocytes (เม็ดเลือดแดง, 1.09 g/cm³)</option>
+          <option value="mitochondria">4. Cell Lysate &amp; Mitochondria (ออร์แกเนลล์เซลล์, 1.18 g/cm³)</option>
+          <option value="ribosomes">5. Macromolecules &amp; Ribosomes (ไรโบโซมและชีวโมเลกุล, 1.35 g/cm³)</option>
+        </select>
+
+        <div id="specimenInfoBox" class="p-2.5 rounded-xl bg-slate-900/80 border border-white/5 text-[11px] text-slate-300 space-y-1">
+          <div class="flex justify-between">
+            <span class="text-slate-400">ขนาดอนุภาค (<span class="font-serif italic">d</span>):</span>
+            <span id="specimenSize" class="text-amber-300 font-mono">1.0 &times; 2.5 &mu;m</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">ความหนาแน่นอนุภาค (&rho;<sub>p</sub>):</span>
+            <span id="specimenDensity" class="text-emerald-300 font-mono">1,080 kg/m³</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-400">แรงเหวี่ยงที่แนะนำ (RCF):</span>
+            <span id="specimenRcfTarget" class="text-sky-300 font-mono">4,000 - 8,000 &times;g (5 min)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Centrifuge Controls (Speed & Time & Rotor) -->
+      <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-emerald-500/30 space-y-3">
+        <div class="text-xs font-bold text-emerald-400 font-mono flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-sliders"></i> พารามิเตอร์การปั่นเหวี่ยง (Spin Parameters)
+          </span>
+          <span class="text-[10px] text-slate-400">Brushless Motor</span>
+        </div>
+
+        <!-- Speed Slider (RPM) -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs font-mono">
+            <span class="text-slate-300">ความเร็วรอบ (Speed):</span>
+            <span id="rpmLabel" class="text-emerald-400 font-bold text-sm">6,000 RPM</span>
+          </div>
+          <input type="range" id="rpmSlider" min="1000" max="15000" step="500" value="6000" oninput="onSpeedChange()" class="w-full accent-emerald-400 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>1,000 RPM (Low)</span>
+            <span>8,000</span>
+            <span>15,000 RPM (Max)</span>
+          </div>
+        </div>
+
+        <!-- Rotor Radius Selector (cm) -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs font-mono">
+            <span class="text-slate-300">รัศมีประสิทธิผลโรเตอร์ (<span class="font-serif italic">r</span>):</span>
+            <span id="radiusLabel" class="text-sky-400 font-bold">8.5 cm (FA-24)</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="setRadius(6.5, this)" class="radius-btn py-1 px-2 rounded-lg text-xs font-mono bg-slate-900 border border-white/10 hover:border-sky-400 text-slate-300 transition">6.5 cm (Min)</button>
+            <button type="button" onclick="setRadius(8.5, this)" class="radius-btn py-1 px-2 rounded-lg text-xs font-mono bg-sky-500/20 border border-sky-400 text-sky-300 font-bold transition">8.5 cm (Avg)</button>
+            <button type="button" onclick="setRadius(10.5, this)" class="radius-btn py-1 px-2 rounded-lg text-xs font-mono bg-slate-900 border border-white/10 hover:border-sky-400 text-slate-300 transition">10.5 cm (Max)</button>
+          </div>
+        </div>
+
+        <!-- Spin Time Duration -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between text-xs font-mono">
+            <span class="text-slate-300">ระยะเวลาปั่น (Duration):</span>
+            <span id="timeLabel" class="text-amber-400 font-bold">03:00 นาที</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="adjustTime(-30)" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-white/10 text-slate-300 flex items-center justify-center transition active:scale-95"><i class="fa-solid fa-minus text-xs"></i></button>
+            <div class="flex-1 text-center font-digital text-lg text-amber-300 bg-slate-900/90 py-1 rounded-lg border border-white/10 shadow-inner" id="timerSettingBox">03:00</div>
+            <button type="button" onclick="adjustTime(30)" class="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 border border-white/10 text-slate-300 flex items-center justify-center transition active:scale-95"><i class="fa-solid fa-plus text-xs"></i></button>
+          </div>
+        </div>
+
+        <!-- Main Action Buttons -->
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <button id="btnStartSpin" type="button" onclick="toggleSpin()" class="py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40 transition active:scale-95">
+            <i class="fa-solid fa-play"></i> <span id="startBtnLabel">เริ่มปั่นเหวี่ยง (START)</span>
+          </button>
+          <button id="btnToggleLid" type="button" onclick="toggleLid()" class="py-3 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/15 font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+            <i class="fa-solid fa-door-open text-sky-400"></i> <span id="lidBtnLabel">เปิดฝาครอบ (OPEN)</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="quickPulseSpin()" class="flex-1 py-2 px-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+            <i class="fa-solid fa-bolt"></i> Quick Pulse (10s)
+          </button>
+          <button type="button" onclick="resetCentrifuge()" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10 font-bold text-xs flex items-center justify-center gap-1 transition">
+            <i class="fa-solid fa-rotate-right"></i> รีเซ็ต
+          </button>
+        </div>
+      </div>
+
+      <!-- Theory Guidance & Centrifugal Equations Card -->
+      <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-white/10 space-y-2 text-xs">
+        <div class="font-bold text-amber-400 font-mono flex items-center justify-between">
+          <span><i class="fa-solid fa-atom"></i> กฎการเคลื่อนที่และแรงเหวี่ยงหนีศูนย์กลาง</span>
+          <span class="text-[10px] text-slate-400">Formula</span>
+        </div>
+        <p class="text-[11px] text-slate-400 leading-relaxed">
+          ความสัมพันธ์ของแรงเหวี่ยงสัมพัทธ์ (Relative Centrifugal Field - RCF) กับความเร่งสู่ศูนย์กลาง (<span class="vec">a</span><sub>c</sub>):
+        </p>
+        <div class="p-2.5 rounded-xl bg-slate-900 border border-white/5 font-mono text-[11px] text-center text-amber-200 space-y-1 shadow-inner">
+          <div>RCF = 1.118 &times; 10⁻⁵ &times; <span class="text-sky-300">r</span><sub>cm</sub> &times; <span class="text-emerald-300">n</span>² &nbsp;[&times;g]</div>
+          <div class="text-[10px] text-slate-400"><span class="vec">a</span><sub>c</sub> = &omega;²<span class="font-serif italic">r</span> = (2&pi;<span class="font-serif italic">n</span>/60)² &times; <span class="font-serif italic">r</span> &nbsp;[m/s²]</div>
+        </div>
+        <p class="text-[11px] text-slate-400 leading-relaxed">
+          ความเร็วการตกตะกอนชีวภาพ (<span class="font-serif italic">v</span><sub>sed</sub>):
+        </p>
+        <div class="p-2 rounded-xl bg-slate-900 border border-white/5 font-mono text-[10px] text-center text-sky-200 shadow-inner">
+          <span class="font-serif italic">v</span><sub>sed</sub> = [2<span class="font-serif italic">r</span><sub>p</sub>² (&rho;<sub>p</sub> - &rho;<sub>m</sub>) &omega;²<span class="font-serif italic">r</span>] / 9&eta;
+        </div>
+      </div>
+
+      <!-- Audio Synthesizer Toggle -->
+      <div class="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-950/60 border border-white/5 text-xs text-slate-400 font-mono">
+        <span class="flex items-center gap-1.5">
+          <i class="fa-solid fa-volume-high text-sky-400"></i> สังเคราะห์เสียงมอเตอร์ (Web Audio):
+        </span>
+        <button id="btnSoundToggle" onclick="toggleSound()" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold transition">
+          เปิดเสียง (ON)
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // ==========================================
+    // AUDIO SYNTHESIZER (WEB AUDIO API)
+    // ==========================================
+    let audioCtx = null;
+    let motorOsc = null;
+    let motorSubOsc = null;
+    let motorGain = null;
+    let motorFilter = null;
+    let isSoundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleSound() {
+      isSoundEnabled = !isSoundEnabled;
+      const btn = document.getElementById('btnSoundToggle');
+      if (isSoundEnabled) {
+        btn.textContent = 'เปิดเสียง (ON)';
+        btn.className = 'px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold transition';
+      } else {
+        btn.textContent = 'ปิดเสียง (OFF)';
+        btn.className = 'px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 border border-white/10 font-bold transition';
+        if (motorGain) motorGain.gain.setValueAtTime(0, audioCtx.currentTime);
+      }
+    }
+
+    function playLidSound(isOpen) {
+      if (!isSoundEnabled) return;
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = isOpen ? 'triangle' : 'sine';
+      osc.frequency.setValueAtTime(isOpen ? 440 : 220, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(isOpen ? 880 : 110, audioCtx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.08);
+    }
+
+    function playBeepChime() {
+      if (!isSoundEnabled) return;
+      initAudio();
+      [659.25, 783.99, 1046.50].forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.12);
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime + i * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.12 + 0.25);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + i * 0.12);
+        osc.stop(audioCtx.currentTime + i * 0.12 + 0.25);
+      });
+    }
+
+    function updateMotorAudio(currentRpm) {
+      if (!isSoundEnabled || !audioCtx) return;
+      if (currentRpm > 50) {
+        if (!motorOsc) {
+          motorOsc = audioCtx.createOscillator();
+          motorSubOsc = audioCtx.createOscillator();
+          motorGain = audioCtx.createGain();
+          motorFilter = audioCtx.createBiquadFilter();
+
+          motorOsc.type = 'sawtooth';
+          motorSubOsc.type = 'sine';
+          motorFilter.type = 'lowpass';
+          motorFilter.frequency.value = 800;
+
+          motorOsc.connect(motorFilter);
+          motorSubOsc.connect(motorFilter);
+          motorFilter.connect(motorGain);
+          motorGain.connect(audioCtx.destination);
+
+          motorOsc.start();
+          motorSubOsc.start();
+        }
+        // Frequency proportional to RPM (from 70 Hz to 1200 Hz)
+        const pitch = 70 + (currentRpm / 15000) * 1100;
+        motorOsc.frequency.setValueAtTime(pitch, audioCtx.currentTime);
+        motorSubOsc.frequency.setValueAtTime(pitch * 0.5, audioCtx.currentTime);
+        motorFilter.frequency.setValueAtTime(300 + pitch * 1.2, audioCtx.currentTime);
+        const targetVol = Math.min(0.18, 0.02 + (currentRpm / 15000) * 0.16);
+        motorGain.gain.setValueAtTime(targetVol, audioCtx.currentTime);
+      } else {
+        if (motorGain) {
+          motorGain.gain.setValueAtTime(0, audioCtx.currentTime);
+        }
+      }
+    }
+
+    // ==========================================
+    // SPECIMEN BIOPHYSICS DATABASE
+    // ==========================================
+    const SPECIMENS = {
+      ecoli: {
+        name: 'Escherichia coli',
+        badge: 'E. coli',
+        color: '#facc15',
+        liquidColor: 0xeab308,
+        sizeText: '1.0 × 2.5 µm',
+        density: 1080, // kg/m³
+        densityText: '1,080 kg/m³',
+        targetRcf: '4,000 - 8,000 ×g (5 min)',
+        sedimentationRate: 1.0,
+        pelletDensityMax: 0.85
+      },
+      yeast: {
+        name: 'Saccharomyces cerevisiae',
+        badge: 'Yeast',
+        color: '#fb923c',
+        liquidColor: 0xf97316,
+        sizeText: '4.0 - 6.0 µm',
+        density: 1110,
+        densityText: '1,110 kg/m³',
+        targetRcf: '2,500 - 4,000 ×g (3 min)',
+        sedimentationRate: 2.2,
+        pelletDensityMax: 0.95
+      },
+      blood: {
+        name: 'Whole Blood & Erythrocytes',
+        badge: 'Erythrocytes',
+        color: '#f43f5e',
+        liquidColor: 0xbe123c,
+        sizeText: '6.0 - 8.0 µm',
+        density: 1095,
+        densityText: '1,095 kg/m³',
+        targetRcf: '1,000 - 2,000 ×g (10 min)',
+        sedimentationRate: 3.5,
+        pelletDensityMax: 1.0
+      },
+      mitochondria: {
+        name: 'Cell Lysate & Mitochondria',
+        badge: 'Mitochondria',
+        color: '#38bdf8',
+        liquidColor: 0x0284c7,
+        sizeText: '0.5 - 1.0 µm',
+        density: 1180,
+        densityText: '1,180 kg/m³',
+        targetRcf: '10,000 - 15,000 ×g (15 min)',
+        sedimentationRate: 0.35,
+        pelletDensityMax: 0.70
+      },
+      ribosomes: {
+        name: 'Macromolecules & Ribosomes',
+        badge: 'Ribosomes',
+        color: '#c084fc',
+        liquidColor: 0x7e22ce,
+        sizeText: '20 - 30 nm (70S/80S)',
+        density: 1350,
+        densityText: '1,350 kg/m³',
+        targetRcf: '100,000 ×g (Ultracentrifuge)',
+        sedimentationRate: 0.08,
+        pelletDensityMax: 0.40
+      }
+    };
+
+    let currentSpecimenKey = 'ecoli';
+
+    function changeSpecimen() {
+      const select = document.getElementById('specimenSelect');
+      currentSpecimenKey = select.value;
+      const sp = SPECIMENS[currentSpecimenKey];
+      document.getElementById('sampleBadge').textContent = sp.badge;
+      document.getElementById('sampleBadge').style.borderColor = sp.color;
+      document.getElementById('specimenSize').textContent = sp.sizeText;
+      document.getElementById('specimenDensity').textContent = sp.densityText;
+      document.getElementById('specimenRcfTarget').textContent = sp.targetRcf;
+      
+      // Update 3D Eppendorf Liquid Color
+      updateTubeLiquidColors(sp.liquidColor);
+      drawPelletLoupe();
+    }
+
+    // ==========================================
+    // CENTRIFUGE ENGINE STATE
+    // ==========================================
+    let targetRpm = 6000;
+    let currentRpm = 0;
+    let rotorRadiusCm = 8.5; // cm
+    let setDurationSeconds = 180; // 3 minutes
+    let elapsedSeconds = 0;
+    let isSpinning = false;
+    let isLidOpen = false;
+    let lidAngle = 0; // 0 = closed, 1.25 rad = open
+    let targetLidAngle = 0;
+
+    let pelletAccumulation = 0; // 0.0 to 1.0
+    let lastTimestamp = 0;
+
+    function onSpeedChange() {
+      targetRpm = parseInt(document.getElementById('rpmSlider').value);
+      document.getElementById('rpmLabel').textContent = targetRpm.toLocaleString() + ' RPM';
+      updateCalculatedTelemetry();
+    }
+
+    function setRadius(r, btn) {
+      rotorRadiusCm = r;
+      document.getElementById('radiusLabel').textContent = r.toFixed(1) + ' cm';
+      document.querySelectorAll('.radius-btn').forEach(b => {
+        b.className = 'radius-btn py-1 px-2 rounded-lg text-xs font-mono bg-slate-900 border border-white/10 hover:border-sky-400 text-slate-300 transition';
+      });
+      if (btn) {
+        btn.className = 'radius-btn py-1 px-2 rounded-lg text-xs font-mono bg-sky-500/20 border border-sky-400 text-sky-300 font-bold transition';
+      }
+      updateCalculatedTelemetry();
+    }
+
+    function adjustTime(deltaSeconds) {
+      setDurationSeconds = Math.max(30, Math.min(3600, setDurationSeconds + deltaSeconds));
+      const m = Math.floor(setDurationSeconds / 60);
+      const s = setDurationSeconds % 60;
+      const timeStr = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      document.getElementById('timeLabel').textContent = `${timeStr} นาที`;
+      document.getElementById('timerSettingBox').textContent = timeStr;
+    }
+
+    function toggleLid() {
+      if (isSpinning && currentRpm > 100) {
+        alert("⚠️ คำเตือนความปลอดภัย: ระบบล็อกฝานิรภัยทำงานอยู่ ไม่สามารถเปิดฝาขณะโรเตอร์กำลังหมุนความเร็วสูงได้");
+        return;
+      }
+      isLidOpen = !isLidOpen;
+      targetLidAngle = isLidOpen ? 1.35 : 0.0;
+      playLidSound(isLidOpen);
+
+      const lidBtn = document.getElementById('lidBtnLabel');
+      const lidStatus = document.getElementById('hudLidStatus');
+      if (isLidOpen) {
+        lidBtn.textContent = 'ปิดฝาครอบ (CLOSE)';
+        lidStatus.textContent = 'LID: OPEN';
+        lidStatus.className = 'text-rose-400 font-bold';
+      } else {
+        lidBtn.textContent = 'เปิดฝาครอบ (OPEN)';
+        lidStatus.textContent = 'LID: CLOSED';
+        lidStatus.className = 'text-emerald-400 font-bold';
+      }
+    }
+
+    function toggleSpin() {
+      initAudio();
+      if (isLidOpen) {
+        alert("⚠️ ข้อกำหนดความปลอดภัย: กรุณาปิดฝาครอบนิรภัย (Safety Lid) ให้สนิทก่อนเริ่มการหมุนเหวี่ยง");
+        return;
+      }
+
+      isSpinning = !isSpinning;
+      const btn = document.getElementById('btnStartSpin');
+      const label = document.getElementById('startBtnLabel');
+      const badge = document.getElementById('spinStateBadge');
+
+      if (isSpinning) {
+        btn.className = 'py-3 px-4 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-rose-950/40 transition active:scale-95';
+        label.textContent = 'หยุดปั่น (STOP)';
+        badge.textContent = 'ACCELERATING';
+        badge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono animate-pulse';
+      } else {
+        btn.className = 'py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40 transition active:scale-95';
+        label.textContent = 'เริ่มปั่นเหวี่ยง (START)';
+        badge.textContent = 'DECELERATING';
+        badge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30 font-mono';
+      }
+    }
+
+    function quickPulseSpin() {
+      if (isLidOpen) {
+        alert("⚠️ กรุณาปิดฝาครอบนิรภัยก่อนกด Quick Pulse");
+        return;
+      }
+      setDurationSeconds = 10;
+      elapsedSeconds = 0;
+      if (!isSpinning) toggleSpin();
+    }
+
+    function resetCentrifuge() {
+      isSpinning = false;
+      currentRpm = 0;
+      elapsedSeconds = 0;
+      pelletAccumulation = 0;
+      const btn = document.getElementById('btnStartSpin');
+      const label = document.getElementById('startBtnLabel');
+      const badge = document.getElementById('spinStateBadge');
+      btn.className = 'py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40 transition active:scale-95';
+      label.textContent = 'เริ่มปั่นเหวี่ยง (START)';
+      badge.textContent = 'STANDBY';
+      badge.className = 'px-2 py-0.5 rounded-full text-[9px] font-bold bg-slate-800 text-slate-300 border border-white/10 font-mono';
+      
+      updateCalculatedTelemetry();
+      drawPelletLoupe();
+    }
+
+    function updateCalculatedTelemetry() {
+      const activeRpm = isSpinning ? currentRpm : targetRpm;
+      const rMeters = rotorRadiusCm / 100;
+      const omega = (2 * Math.PI * activeRpm) / 60;
+      const rcf = 1.118e-5 * rotorRadiusCm * activeRpm * activeRpm;
+      const ac = omega * omega * rMeters;
+
+      document.getElementById('hudRcfDisplay').innerHTML = `${Math.round(isSpinning ? (1.118e-5 * rotorRadiusCm * currentRpm * currentRpm) : 0).toLocaleString()} <span class="text-xs text-emerald-500 font-sans">&times;g</span>`;
+      document.getElementById('hudRpmDisplay').textContent = `${Math.round(currentRpm)} RPM`;
+      
+      const remSeconds = Math.max(0, setDurationSeconds - elapsedSeconds);
+      const m = Math.floor(remSeconds / 60);
+      const s = Math.floor(remSeconds % 60);
+      document.getElementById('hudTimeDisplay').textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+      document.getElementById('hudOmegaVal').textContent = `${omega.toFixed(1)} rad/s`;
+      document.getElementById('hudRadiusVal').textContent = `${rotorRadiusCm.toFixed(2)} cm (${rMeters.toFixed(3)} m)`;
+      document.getElementById('hudAcVal').textContent = `${ac.toLocaleString(undefined, {maximumFractionDigits: 1})} m/s²`;
+      document.getElementById('hudGForceVal').textContent = `${rcf.toLocaleString(undefined, {maximumFractionDigits: 0})} ×g`;
+    }
+
+    // ==========================================
+    // SYNCHRONIZED 2D RETICLE PELLET LOUPE
+    // ==========================================
+    const pCanvas = document.getElementById('pelletCanvas');
+    const pCtx = pCanvas.getContext('2d');
+
+    function drawPelletLoupe() {
+      const w = pCanvas.width;
+      const h = pCanvas.height;
+      pCtx.clearRect(0, 0, w, h);
+
+      const sp = SPECIMENS[currentSpecimenKey];
+
+      // Dark background with millimeter grid
+      pCtx.fillStyle = '#020617';
+      pCtx.fillRect(0, 0, w, h);
+
+      pCtx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      pCtx.lineWidth = 1;
+      for (let x = 0; x < w; x += 15) {
+        pCtx.beginPath(); pCtx.moveTo(x, 0); pCtx.lineTo(x, h); pCtx.stroke();
+      }
+      for (let y = 0; y < h; y += 15) {
+        pCtx.beginPath(); pCtx.moveTo(0, y); pCtx.lineTo(w, y); pCtx.stroke();
+      }
+
+      // 1.5 mL Eppendorf Tube Profile
+      const cx = w / 2;
+      const topY = 15;
+      const straightBottomY = 95;
+      const coneTipY = 135;
+      const tubeR = 30;
+
+      // Draw Glass / Polypropylene Tube Outline
+      pCtx.save();
+      pCtx.beginPath();
+      pCtx.moveTo(cx - tubeR, topY);
+      pCtx.lineTo(cx - tubeR, straightBottomY);
+      pCtx.quadraticCurveTo(cx - tubeR, coneTipY - 10, cx - 4, coneTipY);
+      pCtx.quadraticCurveTo(cx, coneTipY + 3, cx + 4, coneTipY);
+      pCtx.quadraticCurveTo(cx + tubeR, coneTipY - 10, cx + tubeR, straightBottomY);
+      pCtx.lineTo(cx + tubeR, topY);
+      pCtx.closePath();
+
+      // Clip to tube interior
+      pCtx.save();
+      pCtx.clip();
+
+      // Liquid interior
+      const pelletHeight = pelletAccumulation * 35; // max 35 px
+      const pelletY = coneTipY - pelletHeight;
+
+      // Supernatant gradient (clarifies as pellet forms)
+      const gradSuper = pCtx.createLinearGradient(0, topY, 0, straightBottomY);
+      const clarityAlpha = Math.max(0.15, 0.85 - pelletAccumulation * 0.7);
+      gradSuper.addColorStop(0, `rgba(240, 249, 255, ${clarityAlpha * 0.4})`);
+      gradSuper.addColorStop(1, `rgba(56, 189, 248, ${clarityAlpha * 0.7})`);
+      pCtx.fillStyle = gradSuper;
+      pCtx.fillRect(cx - tubeR - 5, topY, tubeR * 2 + 10, straightBottomY - topY + 40);
+
+      // Supernatant floating particles (less dense as time progresses)
+      const particleCount = Math.floor((1 - pelletAccumulation) * 45);
+      pCtx.fillStyle = sp.color;
+      for (let i = 0; i < particleCount; i++) {
+        const px = cx - tubeR + 8 + ((i * 19) % (tubeR * 2 - 16));
+        const py = topY + 12 + ((i * 23) % (straightBottomY - topY + 15));
+        pCtx.beginPath();
+        pCtx.arc(px, py, 1.2, 0, Math.PI * 2);
+        pCtx.fill();
+      }
+
+      // Compact Sedimented Pellet at Tube Bottom
+      if (pelletAccumulation > 0.02) {
+        pCtx.fillStyle = sp.color;
+        pCtx.beginPath();
+        pCtx.moveTo(cx - tubeR + 10, straightBottomY + 5);
+        pCtx.quadraticCurveTo(cx - tubeR + 8, coneTipY - 5, cx, coneTipY + 2);
+        pCtx.quadraticCurveTo(cx + tubeR - 8, coneTipY - 5, cx + tubeR - 10, straightBottomY + 5);
+        pCtx.closePath();
+        pCtx.fill();
+
+        // High-density pellet zone line
+        pCtx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+        pCtx.fillRect(cx - tubeR + 5, straightBottomY + 12, tubeR * 2 - 10, 2);
+      }
+
+      // Meniscus Curve at Top
+      pCtx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+      pCtx.lineWidth = 1.5;
+      pCtx.beginPath();
+      pCtx.ellipse(cx, topY + 8, tubeR - 4, 4, 0, 0, Math.PI * 2);
+      pCtx.stroke();
+
+      pCtx.restore(); // unclip
+
+      // Tube Glass Outer Wall Highlight & Rim
+      pCtx.strokeStyle = 'rgba(148, 163, 184, 0.6)';
+      pCtx.lineWidth = 2.5;
+      pCtx.stroke();
+
+      // Flange Rim
+      pCtx.fillStyle = 'rgba(203, 213, 225, 0.8)';
+      pCtx.fillRect(cx - tubeR - 4, topY - 3, (tubeR + 4) * 2, 5);
+
+      // Volume Scale Ticks on Tube
+      pCtx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      pCtx.lineWidth = 1;
+      pCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      pCtx.font = '8px monospace';
+      const ticks = [
+        { label: '1.5', y: topY + 12 },
+        { label: '1.0', y: topY + 40 },
+        { label: '0.5', y: topY + 70 }
+      ];
+      ticks.forEach(t => {
+        pCtx.beginPath();
+        pCtx.moveTo(cx + tubeR - 8, t.y);
+        pCtx.lineTo(cx + tubeR - 1, t.y);
+        pCtx.stroke();
+        pCtx.fillText(t.label, cx + tubeR + 4, t.y + 3);
+      });
+
+      // Sedimentation Arrow & Centrifugal Force Direction
+      pCtx.strokeStyle = '#f59e0b';
+      pCtx.fillStyle = '#f59e0b';
+      pCtx.lineWidth = 1.5;
+      pCtx.beginPath();
+      pCtx.moveTo(cx - tubeR - 18, 40);
+      pCtx.lineTo(cx - tubeR - 18, 105);
+      pCtx.stroke();
+      pCtx.beginPath();
+      pCtx.moveTo(cx - tubeR - 22, 100);
+      pCtx.lineTo(cx - tubeR - 18, 110);
+      pCtx.lineTo(cx - tubeR - 14, 100);
+      pCtx.fill();
+      pCtx.font = 'bold 9px Times New Roman';
+      pCtx.fillText('RCF', cx - tubeR - 28, 75);
+
+      pCtx.restore();
+
+      // Update text telemetry
+      const pelletHeightMm = (pelletAccumulation * 4.8).toFixed(2);
+      const pelletUl = Math.round(pelletAccumulation * 180);
+      document.getElementById('pelletHeightVal').textContent = `${pelletHeightMm} mm`;
+      document.getElementById('pelletVolumeVal').textContent = `${pelletUl} µL`;
+
+      const statusVal = document.getElementById('pelletStatusVal');
+      const superVal = document.getElementById('supernatantVal');
+
+      if (pelletAccumulation < 0.15) {
+        statusVal.textContent = 'สารแขวนลอยสม่ำเสมอ';
+        statusVal.className = 'text-amber-300 font-bold';
+        superVal.textContent = 'ขุ่นเข้ม (OD600 = 1.25)';
+        superVal.className = 'text-amber-400 font-bold';
+      } else if (pelletAccumulation < 0.8) {
+        statusVal.textContent = 'กำลังแยกชั้น (Transition)';
+        statusVal.className = 'text-sky-300 font-bold';
+        superVal.textContent = `กึ่งใส (OD600 = ${(1.25 * (1 - pelletAccumulation)).toFixed(2)})`;
+        superVal.className = 'text-sky-300 font-bold';
+      } else {
+        statusVal.textContent = 'ตกตะกอนสมบูรณ์ (Pelleted)';
+        statusVal.className = 'text-emerald-400 font-bold';
+        superVal.textContent = 'ใสบริสุทธิ์ (OD600 < 0.05)';
+        superVal.className = 'text-emerald-400 font-bold';
+      }
+    }
+
+    // ==========================================
+    // THREE.JS 3D CENTRIFUGE MODEL & SCENE
+    // ==========================================
+    let scene, camera, renderer, controls;
+    let centrifugeGroup, rotorGroup, lidPivotGroup;
+    let tubeMeshes = [];
+    let liquidMeshes = [];
+
+    function initThree() {
+      const mount = document.getElementById('threeMount');
+      const width = mount.clientWidth || 800;
+      const height = mount.clientHeight || 550;
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+
+      camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
+      camera.position.set(0, 16, 24);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.2;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      mount.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 + 0.05;
+      controls.minDistance = 6;
+      controls.maxDistance = 45;
+      controls.target.set(0, 2, 0);
+
+      // Environment & Lights
+      const hemiLight = new THREE.HemisphereLight(0xffffff, 0x1e293b, 1.2);
+      scene.add(hemiLight);
+
+      const mainLight = new THREE.DirectionalLight(0xffffff, 1.8);
+      mainLight.position.set(12, 22, 14);
+      mainLight.castShadow = true;
+      mainLight.shadow.mapSize.width = 2048;
+      mainLight.shadow.mapSize.height = 2048;
+      mainLight.shadow.bias = -0.0001;
+      scene.add(mainLight);
+
+      const blueRimLight = new THREE.DirectionalLight(0x38bdf8, 1.4);
+      blueRimLight.position.set(-14, 10, -12);
+      scene.add(blueRimLight);
+
+      const amberFillLight = new THREE.DirectionalLight(0xf59e0b, 0.6);
+      amberFillLight.position.set(10, -5, -10);
+      scene.add(amberFillLight);
+
+      // Lab Slate Tabletop
+      const tableGeo = new THREE.BoxGeometry(40, 1, 30);
+      const tableMat = new THREE.MeshStandardMaterial({
+        color: 0x0f172a,
+        roughness: 0.6,
+        metalness: 0.2
+      });
+      const table = new THREE.Mesh(tableGeo, tableMat);
+      table.position.y = -0.5;
+      table.receiveShadow = true;
+      scene.add(table);
+
+      // Tabletop subtle grid
+      const gridHelper = new THREE.GridHelper(36, 36, 0x38bdf8, 0x1e293b);
+      gridHelper.position.y = 0.01;
+      scene.add(gridHelper);
+
+      // Build Centrifuge Instrument
+      buildCentrifuge3D();
+
+      window.addEventListener('resize', onWindowResize);
+      animate(0);
+    }
+
+    function buildCentrifuge3D() {
+      centrifugeGroup = new THREE.Group();
+      centrifugeGroup.position.set(0, 0, 0);
+      scene.add(centrifugeGroup);
+
+      // 1. Centrifuge Base Housing (Chamfered octagonal/rounded block)
+      const bodyMat = new THREE.MeshStandardMaterial({
+        color: 0x1e293b,
+        roughness: 0.35,
+        metalness: 0.25
+      });
+      const bodyAccentMat = new THREE.MeshStandardMaterial({
+        color: 0x0ea5e9,
+        roughness: 0.25,
+        metalness: 0.8
+      });
+      const chamberMat = new THREE.MeshStandardMaterial({
+        color: 0x64748b,
+        roughness: 0.15,
+        metalness: 0.95
+      });
+
+      // Lower Base
+      const baseGeo = new THREE.CylinderGeometry(8.2, 8.8, 4.2, 36);
+      const baseMesh = new THREE.Mesh(baseGeo, bodyMat);
+      baseMesh.position.y = 2.1;
+      baseMesh.castShadow = true;
+      baseMesh.receiveShadow = true;
+      centrifugeGroup.add(baseMesh);
+
+      // Front Slanted Control Panel Apron
+      const apronGeo = new THREE.BoxGeometry(7.5, 3.2, 5.0);
+      const apronMesh = new THREE.Mesh(apronGeo, bodyMat);
+      apronMesh.position.set(0, 1.8, 6.2);
+      apronMesh.rotation.x = -Math.PI / 10;
+      apronMesh.castShadow = true;
+      centrifugeGroup.add(apronMesh);
+
+      // Digital Glass Touch Screen on Front
+      const screenGeo = new THREE.PlaneGeometry(5.8, 2.2);
+      const screenMat = new THREE.MeshBasicMaterial({ color: 0x020617 });
+      const screenMesh = new THREE.Mesh(screenGeo, screenMat);
+      screenMesh.position.set(0, 2.3, 8.4);
+      screenMesh.rotation.x = -Math.PI / 10;
+      centrifugeGroup.add(screenMesh);
+
+      // Top Collar with Metallic Trim Ring
+      const trimGeo = new THREE.TorusGeometry(8.25, 0.25, 16, 64);
+      const trimMesh = new THREE.Mesh(trimGeo, bodyAccentMat);
+      trimMesh.rotation.x = Math.PI / 2;
+      trimMesh.position.y = 4.2;
+      centrifugeGroup.add(trimMesh);
+
+      // Stainless Steel Inner Bowl / Centrifuge Chamber
+      const bowlGeo = new THREE.CylinderGeometry(6.6, 6.2, 3.6, 36, 1, true);
+      const bowlMesh = new THREE.Mesh(bowlGeo, chamberMat);
+      bowlMesh.position.y = 2.8;
+      centrifugeGroup.add(bowlMesh);
+
+      const bowlFloorGeo = new THREE.CircleGeometry(6.2, 36);
+      const bowlFloor = new THREE.Mesh(bowlFloorGeo, chamberMat);
+      bowlFloor.rotation.x = -Math.PI / 2;
+      bowlFloor.position.y = 1.0;
+      centrifugeGroup.add(bowlFloor);
+
+      // Motor Central Spindle Axle
+      const spindleGeo = new THREE.CylinderGeometry(0.8, 0.9, 2.2, 24);
+      const spindleMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.9, roughness: 0.1 });
+      const spindle = new THREE.Mesh(spindleGeo, spindleMat);
+      spindle.position.y = 2.0;
+      centrifugeGroup.add(spindle);
+
+      // 2. High-Speed 24-Well Aluminum Angle Rotor Assembly
+      rotorGroup = new THREE.Group();
+      rotorGroup.position.set(0, 2.6, 0);
+      centrifugeGroup.add(rotorGroup);
+
+      const rotorAlumMat = new THREE.MeshStandardMaterial({
+        color: 0x475569,
+        roughness: 0.2,
+        metalness: 0.85
+      });
+      const knobMat = new THREE.MeshStandardMaterial({
+        color: 0x0284c7,
+        roughness: 0.25,
+        metalness: 0.8
+      });
+
+      // Conical Rotor Body (45-degree angle profile)
+      const rotorBaseGeo = new THREE.CylinderGeometry(5.2, 5.8, 1.8, 36);
+      const rotorBase = new THREE.Mesh(rotorBaseGeo, rotorAlumMat);
+      rotorBase.castShadow = true;
+      rotorGroup.add(rotorBase);
+
+      // Central Locking Rotor Knob
+      const knobGeo = new THREE.CylinderGeometry(1.4, 1.6, 1.2, 24);
+      const knob = new THREE.Mesh(knobGeo, knobMat);
+      knob.position.y = 1.2;
+      rotorGroup.add(knob);
+
+      // 24 Angled Eppendorf 1.5 mL Tube Wells
+      const numTubes = 24;
+      const wellRadius = 4.4;
+      tubeMeshes = [];
+      liquidMeshes = [];
+
+      const tubeGlassMat = new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        transmission: 0.85,
+        opacity: 1,
+        transparent: true,
+        roughness: 0.15,
+        ior: 1.48
+      });
+
+      const initialSpecimen = SPECIMENS[currentSpecimenKey];
+      const liquidMat = new THREE.MeshStandardMaterial({
+        color: initialSpecimen.liquidColor,
+        roughness: 0.3,
+        metalness: 0.1,
+        transparent: true,
+        opacity: 0.9
+      });
+
+      for (let i = 0; i < numTubes; i++) {
+        const theta = (i / numTubes) * Math.PI * 2;
+        const x = Math.cos(theta) * wellRadius;
+        const z = Math.sin(theta) * wellRadius;
+
+        const singleTubeGroup = new THREE.Group();
+        singleTubeGroup.position.set(x, 0.4, z);
+
+        // Angle tube 45 degrees outward away from center axis
+        singleTubeGroup.rotation.y = -theta + Math.PI / 2;
+        singleTubeGroup.rotation.z = -Math.PI / 4; // 45 deg tilt
+
+        // Tube Outer Shell
+        const tubeCylGeo = new THREE.CylinderGeometry(0.38, 0.36, 1.8, 16);
+        const tubeMesh = new THREE.Mesh(tubeCylGeo, tubeGlassMat);
+        singleTubeGroup.add(tubeMesh);
+
+        // Tube Cone Bottom
+        const coneGeo = new THREE.ConeGeometry(0.36, 0.7, 16);
+        const coneMesh = new THREE.Mesh(coneGeo, tubeGlassMat);
+        coneMesh.position.y = -1.15;
+        coneMesh.rotation.x = Math.PI;
+        singleTubeGroup.add(coneMesh);
+
+        // Liquid Column inside Tube
+        const liquidGeo = new THREE.CylinderGeometry(0.34, 0.32, 1.2, 16);
+        const liquidMesh = new THREE.Mesh(liquidGeo, liquidMat);
+        liquidMesh.position.y = -0.2;
+        singleTubeGroup.add(liquidMesh);
+
+        // Tube Cap
+        const capGeo = new THREE.CylinderGeometry(0.42, 0.42, 0.25, 16);
+        const capMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.4 });
+        const capMesh = new THREE.Mesh(capGeo, capMat);
+        capMesh.position.y = 1.0;
+        singleTubeGroup.add(capMesh);
+
+        rotorGroup.add(singleTubeGroup);
+        tubeMeshes.push(singleTubeGroup);
+        liquidMeshes.push(liquidMesh);
+      }
+
+      // 3. Transparent Hinged Safety Lid Assembly
+      lidPivotGroup = new THREE.Group();
+      lidPivotGroup.position.set(0, 4.3, -7.8); // hinge position at back
+      centrifugeGroup.add(lidPivotGroup);
+
+      const lidMat = new THREE.MeshPhysicalMaterial({
+        color: 0xe0f2fe,
+        transmission: 0.92,
+        roughness: 0.08,
+        ior: 1.5,
+        transparent: true,
+        opacity: 0.95
+      });
+      const lidFrameMat = new THREE.MeshStandardMaterial({
+        color: 0x334155,
+        roughness: 0.2,
+        metalness: 0.8
+      });
+
+      // Lid Glass Dome
+      const lidGeo = new THREE.CylinderGeometry(7.8, 8.1, 0.5, 36);
+      const lidMesh = new THREE.Mesh(lidGeo, lidMat);
+      lidMesh.position.set(0, 0.3, 7.8);
+      lidMesh.castShadow = true;
+      lidPivotGroup.add(lidMesh);
+
+      // Lid Frame Ring & Hinge Lug
+      const lidRingGeo = new THREE.TorusGeometry(8.0, 0.25, 16, 64);
+      const lidRing = new THREE.Mesh(lidRingGeo, lidFrameMat);
+      lidRing.rotation.x = Math.PI / 2;
+      lidRing.position.set(0, 0.3, 7.8);
+      lidPivotGroup.add(lidRing);
+
+      // Lid Handle on Front
+      const handleGeo = new THREE.BoxGeometry(2.4, 0.3, 0.7);
+      const handle = new THREE.Mesh(handleGeo, bodyAccentMat);
+      handle.position.set(0, 0.6, 15.6);
+      lidPivotGroup.add(handle);
+    }
+
+    function updateTubeLiquidColors(colorHex) {
+      liquidMeshes.forEach(m => {
+        m.material.color.setHex(colorHex);
+      });
+    }
+
+    function onWindowResize() {
+      const mount = document.getElementById('threeMount');
+      const width = mount.clientWidth;
+      const height = mount.clientHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+
+    // ==========================================
+    // ANIMATION & PHYSICS INTEGRATION LOOP
+    // ==========================================
+    function animate(timestamp) {
+      requestAnimationFrame(animate);
+
+      const dt = lastTimestamp ? Math.min((timestamp - lastTimestamp) / 1000, 0.1) : 0.016;
+      lastTimestamp = timestamp;
+
+      // 1. Smooth Lid Rotation Animation
+      lidAngle += (targetLidAngle - lidAngle) * 0.12;
+      if (lidPivotGroup) {
+        lidPivotGroup.rotation.x = -lidAngle;
+      }
+
+      // 2. Centrifuge Motor Speed Ramp (Angular Acceleration)
+      if (isSpinning) {
+        if (currentRpm < targetRpm) {
+          // Accelerate smoothly
+          currentRpm += (targetRpm - currentRpm) * (dt * 1.4);
+          if (targetRpm - currentRpm < 15) currentRpm = targetRpm;
+        } else if (currentRpm > targetRpm) {
+          currentRpm -= (currentRpm - targetRpm) * (dt * 2.0);
+        }
+
+        // Count elapsed spin time
+        elapsedSeconds += dt;
+        if (elapsedSeconds >= setDurationSeconds) {
+          toggleSpin();
+          playBeepChime();
+        }
+
+        // Pellet Sedimentation Rate calculation based on current RCF and specimen
+        const sp = SPECIMENS[currentSpecimenKey];
+        const currentRcf = 1.118e-5 * rotorRadiusCm * currentRpm * currentRpm;
+        if (currentRcf > 100) {
+          const deltaPellet = (currentRcf / 8000) * (sp.sedimentationRate * 0.015) * dt;
+          pelletAccumulation = Math.min(sp.pelletDensityMax, pelletAccumulation + deltaPellet);
+        }
+      } else {
+        // Motor braking deceleration
+        if (currentRpm > 0) {
+          currentRpm -= currentRpm * (dt * 1.2) + 25 * dt;
+          if (currentRpm < 5) currentRpm = 0;
+        }
+      }
+
+      // 3. Rotate 3D Rotor
+      if (rotorGroup && currentRpm > 0) {
+        const radPerSec = (2 * Math.PI * currentRpm) / 60;
+        rotorGroup.rotation.y += radPerSec * dt;
+      }
+
+      // 4. Update Audio Pitch & UI Readouts
+      updateMotorAudio(currentRpm);
+      updateCalculatedTelemetry();
+      drawPelletLoupe();
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    // ==========================================
+    // STANDARDIZED SCREENSHOT API (LAB EVIDENCE)
+    // ==========================================
+    window.captureSimulatorScreenshot = function() {
+      if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+        return renderer.domElement.toDataURL('image/png');
+      }
+      return null;
+    };
+
+    // ==========================================
+    // HUD CARDS & FLOATING DOCK CONTROLLERS
+    // ==========================================
+    let isSidebarVisible = true;
+    function toggleSidebar() {
+      isSidebarVisible = !isSidebarVisible;
+      const vp = document.getElementById('viewportContainer');
+      const sb = document.getElementById('controlSidebar');
+      const lbl = document.getElementById('dockSidebarLabel');
+      if (isSidebarVisible) {
+        if (sb) sb.classList.remove('hidden');
+        if (vp) { vp.classList.remove('lg:col-span-12'); vp.classList.add('lg:col-span-8'); }
+        if (lbl) lbl.textContent = 'ซ่อนแถบควบคุม';
+      } else {
+        if (sb) sb.classList.add('hidden');
+        if (vp) { vp.classList.remove('lg:col-span-8'); vp.classList.add('lg:col-span-12'); }
+        if (lbl) lbl.textContent = 'เปิดแถบควบคุม';
+      }
+      setTimeout(() => {
+        if (typeof onWindowResize === 'function') onWindowResize();
+      }, 60);
+    }
+
+    function toggleCardBody(cardId) {
+      const body = document.getElementById(cardId + '_body');
+      const icon = document.getElementById(cardId + '_icon');
+      if (!body) return;
+      if (body.classList.contains('hidden')) {
+        body.classList.remove('hidden');
+        if (icon) { icon.classList.remove('fa-chevron-down'); icon.classList.add('fa-minus'); }
+      } else {
+        body.classList.add('hidden');
+        if (icon) { icon.classList.remove('fa-minus'); icon.classList.add('fa-chevron-down'); }
+      }
+    }
+
+    function hideCard(cardId) {
+      const card = document.getElementById(cardId);
+      if (card) card.classList.add('hidden');
+      if (cardId === 'telemetryHUD') {
+        const b = document.getElementById('dockBtnTelemetry');
+        if (b) b.classList.remove('ring-2', 'ring-sky-400');
+      } else if (cardId === 'microLoupeHUD') {
+        const b = document.getElementById('dockBtnLoupe');
+        if (b) b.classList.remove('ring-2', 'ring-amber-400');
+      }
+    }
+
+    function toggleCardShow(cardId, dockBtnId) {
+      const card = document.getElementById(cardId);
+      const btn = document.getElementById(dockBtnId);
+      if (!card) return;
+      const ringClass = cardId === 'telemetryHUD' ? 'ring-sky-400' : 'ring-amber-400';
+      if (card.classList.contains('hidden')) {
+        card.classList.remove('hidden');
+        const body = document.getElementById(cardId + '_body');
+        if (body) body.classList.remove('hidden');
+        const icon = document.getElementById(cardId + '_icon');
+        if (icon) { icon.classList.remove('fa-chevron-down'); icon.classList.add('fa-minus'); }
+        if (btn) btn.classList.add('ring-2', ringClass);
+      } else {
+        card.classList.add('hidden');
+        if (btn) btn.classList.remove('ring-2', ringClass);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initThree();
+      changeSpecimen();
+      drawPelletLoupe();
+    });
+  </script>
+</body>
+</html>
