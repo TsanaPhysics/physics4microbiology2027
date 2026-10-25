@@ -402,4 +402,27 @@
     \end{minipage}
   \end{arucobox}
 }
+
+% ====================================================================
+% 11. 3D REALISTIC 8K DEEP-SKIN SECTION SHOWCASE MACRO
+% ====================================================================
+\newcommand{\deepskinfig}[2]{%
+  \begin{center}
+    \vspace{3pt}
+    \begin{tcolorbox}[
+      enhanced,
+      colback=softSmoke,
+      colframe=physRoyalBlue!85!physCyan,
+      boxrule=0.85pt,
+      arc=2.0mm,
+      left=3pt, right=3pt, top=3pt, bottom=3pt,
+      width=0.92\textwidth
+    ]
+      \centering
+      \includegraphics[width=0.96\linewidth, height=5.1cm, keepaspectratio]{#1}\\[2pt]
+      {\footnotesize\bfseries\color{physRoyalBlue}ภาพจำลอง 3 มิติ 8K Deep Skin\quad}{\footnotesize\color{charcoal}#2}
+    \end{tcolorbox}
+    \vspace{2pt}
+  \end{center}
+}
 \endinput
