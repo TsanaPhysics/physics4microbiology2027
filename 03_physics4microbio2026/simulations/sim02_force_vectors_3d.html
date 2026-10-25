@@ -39,6 +39,29 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
   <style>
+    .vec {
+      display: inline-block;
+      position: relative;
+      font-family: 'Times New Roman', Cambria, serif;
+      font-style: italic;
+      font-weight: bold;
+      line-height: 1;
+      margin-top: 0.25em;
+    }
+    .vec::after {
+      content: '→';
+      position: absolute;
+      top: -0.45em;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0.85);
+      font-size: 0.72em;
+      font-style: normal;
+      font-weight: bold;
+      line-height: 1;
+      color: inherit;
+      pointer-events: none;
+    }
+
     * { box-sizing: border-box; }
     html, body {
       height: 100%;
@@ -128,8 +151,8 @@
         </div>
         <canvas id="polarCanvas" width="170" height="170" class="rounded-xl bg-slate-950 border border-white/10 block"></canvas>
         <div id="polarReadout" class="font-mono text-[10px] space-y-1 text-slate-300">
-          <div class="flex items-center gap-1.5">แรงลัพธ์ <span class="font-serif italic font-bold text-rose-400 text-xs">R&#8407;</span>: <span id="hudRMag" class="text-rose-400 font-bold">0.00 N</span> @ <span id="hudRAng" class="text-rose-400 font-bold">0.0°</span></div>
-          <div class="flex items-center gap-1.5">แรงสมดุล <span class="font-serif italic font-bold text-emerald-400 text-xs">E&#8407;</span>: <span id="hudEMag" class="text-emerald-400 font-bold">0.00 N</span> @ <span id="hudEAng" class="text-emerald-400 font-bold">0.0°</span></div>
+          <div class="flex items-center gap-1.5">แรงลัพธ์ <span class="vec text-rose-400 text-xs">R</span>: <span id="hudRMag" class="text-rose-400 font-bold">0.00 N</span> @ <span id="hudRAng" class="text-rose-400 font-bold">0.0°</span></div>
+          <div class="flex items-center gap-1.5">แรงสมดุล <span class="vec text-emerald-400 text-xs">E</span>: <span id="hudEMag" class="text-emerald-400 font-bold">0.00 N</span> @ <span id="hudEAng" class="text-emerald-400 font-bold">0.0°</span></div>
         </div>
       </div>
       </div>
@@ -156,19 +179,19 @@
         <!-- Dynamic Force Balance Telemetry on Single Cell (MathType Clean Style) -->
         <div class="space-y-1 font-mono text-[10px] text-slate-300 bg-slate-950/80 p-2 rounded-xl border border-white/5">
           <div class="flex justify-between items-center text-rose-300">
-            <span>แรงโน้มถ่วง <span class="font-serif italic text-xs font-bold">F&#8407;<sub>g</sub></span>:</span>
+            <span>แรงโน้มถ่วง <span class="vec text-rose-300 text-xs font-bold">F</span><sub>g</sub>:</span>
             <span id="loupeFg" class="font-bold">0.000 fN</span>
           </div>
           <div class="flex justify-between items-center text-sky-300">
-            <span>แรงพยุง <span class="font-serif italic text-xs font-bold">F&#8407;<sub>b</sub></span>:</span>
+            <span>แรงพยุง <span class="vec text-sky-300 text-xs font-bold">F</span><sub>b</sub>:</span>
             <span id="loupeFb" class="font-bold">0.000 fN</span>
           </div>
           <div class="flex justify-between items-center text-emerald-300">
-            <span>แรงหนืด <span class="font-serif italic text-xs font-bold">F&#8407;<sub>d</sub> = 6&pi;&eta;rv</span>:</span>
+            <span>แรงหนืด <span class="vec text-emerald-300 text-xs font-bold">F</span><sub>d</sub> = 6&pi;&eta;&middot;r&middot;v:</span>
             <span id="loupeFd" class="font-bold">0.000 fN</span>
           </div>
           <div class="flex justify-between items-center border-t border-white/10 pt-1 text-white font-bold">
-            <span>แรงลัพธ์ <span class="font-serif italic text-xs">&Sigma;F&#8407;</span>:</span>
+            <span>แรงลัพธ์ <span class="text-xs">&Sigma;<span class="vec text-amber-300">F</span></span>:</span>
             <span id="loupeFnet" class="text-amber-300">0.000 fN (สมดุล)</span>
           </div>
         </div>
@@ -243,7 +266,7 @@
         <div class="p-3.5 rounded-2xl bg-slate-950 border border-amber-500/30 space-y-2">
           <div class="flex items-center justify-between text-xs">
             <span class="font-bold text-amber-400 font-mono flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> รอกตัวที่ 1 (Force <span class="font-serif italic font-bold text-amber-300">F&#8407;<sub>1</sub></span>)
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> รอกตัวที่ 1 (Force <span class="vec text-amber-300 font-bold">F</span><sub>1</sub>)
             </span>
             <span id="dispF1" class="font-mono font-bold text-amber-300">200 g (1.96 N) @ 0°</span>
           </div>
@@ -267,7 +290,7 @@
         <div class="p-3.5 rounded-2xl bg-slate-950 border border-sky-500/30 space-y-2">
           <div class="flex items-center justify-between text-xs">
             <span class="font-bold text-sky-400 font-mono flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span> รอกตัวที่ 2 (Force <span class="font-serif italic font-bold text-sky-300">F&#8407;<sub>2</sub></span>)
+              <span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span> รอกตัวที่ 2 (Force <span class="vec text-sky-300 font-bold">F</span><sub>2</sub>)
             </span>
             <span id="dispF2" class="font-mono font-bold text-sky-300">150 g (1.47 N) @ 90°</span>
           </div>
@@ -291,7 +314,7 @@
         <div class="p-3.5 rounded-2xl bg-slate-950 border border-emerald-500/30 space-y-2">
           <div class="flex items-center justify-between text-xs">
             <span class="font-bold text-emerald-400 font-mono flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> รอกตัวที่ 3 (Equilibrant <span class="font-serif italic font-bold text-emerald-300">E&#8407; / F&#8407;<sub>3</sub></span>)
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> รอกตัวที่ 3 (Equilibrant <span class="vec text-emerald-300 font-bold">E</span> / <span class="vec text-emerald-300 font-bold">F</span><sub>3</sub>)
             </span>
             <span id="dispF3" class="font-mono font-bold text-emerald-300">250 g (2.45 N) @ 217°</span>
           </div>
@@ -322,7 +345,7 @@
             <span id="sumFy" class="font-bold text-sky-300">+0.000 N</span>
           </div>
           <div class="flex justify-between text-slate-300">
-            <span>แรงลัพธ์สุทธิ (|&Sigma;<span class="font-serif italic">F&#8407;</span>|):</span>
+            <span>แรงลัพธ์สุทธิ (|&Sigma;<span class="vec text-emerald-400">F</span>|):</span>
             <span id="sumFnet" class="font-bold text-emerald-400">0.000 N (สมดุล)</span>
           </div>
         </div>

@@ -250,7 +250,6 @@ physics4microbioloy2027/
    - แสดงสถานะการซิงก์ Google Sheets ว่าสำเร็จ (Synced: 1)
    - ล็อกฟอร์มเพื่อป้องกันการส่งซ้ำซ้อน
 
-
 ---
 
 ## 6. มาตรฐานการจัดรูปแบบสมการและสัญลักษณ์ทางฟิสิกส์ (Academic MathType & Mathematical Typography Standards)
@@ -268,11 +267,17 @@ physics4microbioloy2027/
 
 ### 6.2 มาตรฐาน MathType-Style Semantic Typography สำหรับ 3D Simulator HUD
 1. **สัญลักษณ์เวกเตอร์ (Vectors)**:
-   - ใช้ Unicode Arrow `&#8407;` กำกับบนตัวอักษรเอียงหนา `font-serif italic font-bold` เช่น:
-     - `F&#8407;<sub>1</sub>` -> F⃗₁
-     - `R&#8407;` -> R⃗ (แรงลัพธ์)
-     - `E&#8407;` -> E⃗ (แรงสมดุล)
-     - `F&#8407;<sub>g</sub>`, `F&#8407;<sub>b</sub>`, `F&#8407;<sub>d</sub>` -> เวกเตอร์แรงโน้มถ่วง, แรงพยุง, แรงหนืด
+   - **ข้อควรระวัง**: ห้ามใช้ Combining Diacritical Character `&#8407;` (U+20D7) เด็ดขาด เนื่องจากฟอนต์ส่วนใหญ่ (Prompt, Sarabun, JetBrains Mono) ไม่รองรับ U+20D7 และจะแสดงผลเป็นกล่องสี่เหลี่ยมขาดหาย (Tofu Box `□`)
+   - **แนวทางปฏิบัติ**: ให้ใช้ CSS Class `.vec` ร่วมกับ `content: '→'` (Rightward Arrow U+2192) หรือ Bold Italic เช่น:
+     ```css
+     .vec { display: inline-block; position: relative; font-family: 'Times New Roman', Cambria, serif; font-style: italic; font-weight: bold; line-height: 1; margin-top: 0.25em; }
+     .vec::after { content: '→'; position: absolute; top: -0.45em; left: 50%; transform: translateX(-50%) scaleX(0.85); font-size: 0.72em; font-style: normal; font-weight: bold; line-height: 1; color: inherit; pointer-events: none; }
+     ```
+     - `<span class="vec">F</span><sub>1</sub>` -> $\vec{F}_1$
+     - `<span class="vec">R</span>` -> $\vec{R}$ (แรงลัพธ์)
+     - `<span class="vec">E</span>` -> $\vec{E}$ (แรงสมดุล)
+     - `<span class="vec">F</span><sub>g</sub>`, `<span class="vec">F</span><sub>b</sub>`, `<span class="vec">F</span><sub>d</sub>` -> เวกเตอร์แรงโน้มถ่วง, แรงพยุง, แรงหนืด
+     - `&Sigma;<span class="vec">F</span>` -> $\Sigma \vec{F}$ (แรงลัพธ์สุทธิ)
 2. **สัญลักษณ์อักษรกรีกและตัวแปร (Greek Symbols & Variables)**:
    - ใช้ HTML Entities มาตรฐานเสมอ:
      - `&theta;<sub>1</sub>` -> θ₁

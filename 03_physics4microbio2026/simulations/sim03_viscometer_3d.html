@@ -39,6 +39,29 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
   <style>
+    .vec {
+      display: inline-block;
+      position: relative;
+      font-family: 'Times New Roman', Cambria, serif;
+      font-style: italic;
+      font-weight: bold;
+      line-height: 1;
+      margin-top: 0.25em;
+    }
+    .vec::after {
+      content: '→';
+      position: absolute;
+      top: -0.45em;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0.85);
+      font-size: 0.72em;
+      font-style: normal;
+      font-weight: bold;
+      line-height: 1;
+      color: inherit;
+      pointer-events: none;
+    }
+
     * { box-sizing: border-box; }
     html, body {
       height: 100%;
@@ -183,19 +206,19 @@
         <!-- Free-Body Diagram Telemetry -->
         <div class="space-y-1 font-mono text-[10px] text-slate-300 bg-slate-950/80 p-2 rounded-xl border border-white/5">
           <div class="flex justify-between text-rose-300">
-            <span>แรงโน้มถ่วง <span class="font-serif italic text-xs font-bold">F&#8407;<sub>g</sub> = m&middot;g</span>:</span>
+            <span>แรงโน้มถ่วง <span class="vec text-rose-300 text-xs font-bold">F</span><sub>g</sub> = m&middot;g:</span>
             <span id="valFg" class="font-bold">-- mN</span>
           </div>
           <div class="flex justify-between text-sky-300">
-            <span>แรงพยุง <span class="font-serif italic text-xs font-bold">F&#8407;<sub>b</sub> = &rho;<sub>f</sub>&middot;V&middot;g</span>:</span>
+            <span>แรงพยุง <span class="vec text-sky-300 text-xs font-bold">F</span><sub>b</sub> = &rho;<sub>f</sub>&middot;V&middot;g:</span>
             <span id="valFb" class="font-bold">-- mN</span>
           </div>
           <div class="flex justify-between text-emerald-300">
-            <span>แรงหนืด <span class="font-serif italic text-xs font-bold">F&#8407;<sub>d</sub> = 6&pi;&eta;&middot;r&middot;v</span>:</span>
+            <span>แรงหนืด <span class="vec text-emerald-300 text-xs font-bold">F</span><sub>d</sub> = 6&pi;&eta;&middot;r&middot;v:</span>
             <span id="valFd" class="font-bold">-- mN</span>
           </div>
           <div class="flex justify-between border-t border-white/10 pt-1 text-white font-bold">
-            <span>แรงลัพธ์สุทธิ (<span class="font-serif italic text-xs">&Sigma;F&#8407;</span>):</span>
+            <span>แรงลัพธ์สุทธิ (&Sigma;<span class="vec text-amber-300 text-xs">F</span>):</span>
             <span id="valFnet" class="text-amber-300">0.000 mN (สมดุล)</span>
           </div>
         </div>
