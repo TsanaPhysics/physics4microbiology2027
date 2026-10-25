@@ -143,19 +143,19 @@
 
         <div class="space-y-0.5 font-mono text-[10px] text-slate-300 bg-slate-950/80 p-2 rounded-xl border border-white/5">
           <div class="flex justify-between">
-            <span>ระยะตกคงที่ ($\Delta y$):</span>
+            <span>ระยะตกคงที่ (<span class="font-serif italic">&Delta;y</span>):</span>
             <span class="text-white font-bold">200.0 mm (0.20 m)</span>
           </div>
           <div class="flex justify-between">
-            <span>อัตราเร็วทดลอง ($v_{	ext{exp}}$):</span>
+            <span>อัตราเร็วทดลอง (<span class="font-serif italic">v</span><sub>exp</sub>):</span>
             <span id="hudVexp" class="text-emerald-400 font-bold">-- m/s</span>
           </div>
           <div class="flex justify-between">
-            <span>อัตราเร็วทฤษฎี ($v_{	ext{th}}$):</span>
+            <span>อัตราเร็วทฤษฎี (<span class="font-serif italic">v</span><sub>theo</sub>):</span>
             <span id="hudVth" class="text-sky-300 font-bold">-- m/s</span>
           </div>
           <div class="flex justify-between border-t border-white/10 pt-1">
-            <span>ความหนืดคำนวณได้ ($\eta_{	ext{calc}}$):</span>
+            <span>ความหนืดคำนวณได้ (<span class="font-serif italic">&eta;</span><sub>calc</sub>):</span>
             <span id="hudEtaCalc" class="text-amber-400 font-bold">-- Pa·s</span>
           </div>
         </div>
@@ -183,19 +183,19 @@
         <!-- Free-Body Diagram Telemetry -->
         <div class="space-y-1 font-mono text-[10px] text-slate-300 bg-slate-950/80 p-2 rounded-xl border border-white/5">
           <div class="flex justify-between text-rose-300">
-            <span>แรงโน้มถ่วง $ec{F}_g = m g$:</span>
+            <span>แรงโน้มถ่วง <span class="font-serif italic text-xs font-bold">F&#8407;<sub>g</sub> = m&middot;g</span>:</span>
             <span id="valFg" class="font-bold">-- mN</span>
           </div>
           <div class="flex justify-between text-sky-300">
-            <span>แรงพยุง $ec{F}_b = ho_f V g$:</span>
+            <span>แรงพยุง <span class="font-serif italic text-xs font-bold">F&#8407;<sub>b</sub> = &rho;<sub>f</sub>&middot;V&middot;g</span>:</span>
             <span id="valFb" class="font-bold">-- mN</span>
           </div>
           <div class="flex justify-between text-emerald-300">
-            <span>แรงหนืด $ec{F}_d = 6\pi\eta r v$:</span>
+            <span>แรงหนืด <span class="font-serif italic text-xs font-bold">F&#8407;<sub>d</sub> = 6&pi;&eta;&middot;r&middot;v</span>:</span>
             <span id="valFd" class="font-bold">-- mN</span>
           </div>
           <div class="flex justify-between border-t border-white/10 pt-1 text-white font-bold">
-            <span>แรงลัพธ์สุทธิ ($\sum ec{F}$):</span>
+            <span>แรงลัพธ์สุทธิ (<span class="font-serif italic text-xs">&Sigma;F&#8407;</span>):</span>
             <span id="valFnet" class="text-amber-300">0.000 mN (สมดุล)</span>
           </div>
         </div>
@@ -206,7 +206,7 @@
         <div class="flex items-center justify-between border-b border-white/10 pb-2">
           <div class="flex items-center gap-2">
             <span class="text-emerald-400 font-bold font-mono text-sm flex items-center gap-2">
-              <i class="fa-solid fa-chart-line"></i> STOKES' LINEAR REGRESSION ($v_t$ vs $r^2$)
+              <i class="fa-solid fa-chart-line"></i> STOKES' LINEAR REGRESSION (<span class="font-serif italic">v</span><sub>t</sub> vs <span class="font-serif italic">r</span>²)
             </span>
             <span class="text-xs text-slate-400 font-mono">Slope = 2(ρ_p - ρ_f)g / 9η</span>
           </div>
@@ -227,7 +227,7 @@
                 <span id="graphSlopeVal" class="text-white font-bold">-- m⁻¹·s⁻¹</span>
               </div>
               <div class="flex justify-between text-slate-300">
-                <span>สัมประสิทธิ์ความหนืด ($\eta$):</span>
+                <span>สัมประสิทธิ์ความหนืด (<span class="font-serif italic">&eta;</span>):</span>
                 <span id="graphEtaVal" class="text-amber-400 font-bold">-- Pa·s</span>
               </div>
               <div class="flex justify-between text-slate-300">
@@ -240,7 +240,7 @@
               </div>
             </div>
             <div class="p-2.5 rounded-xl bg-slate-900 border border-white/5 text-[11px] text-slate-400">
-              *การพล็อตกราฟ $v_t$ กับ $r^2$ จะได้กราฟเส้นตรงผ่านจุดกำเนิด พิสูจน์ว่าอัตราเร็วตกแปรผันตรงกับกำลังสองของรัศมี
+              *การพล็อตกราฟ <span class="font-serif italic">v</span><sub>t</sub> กับ <span class="font-serif italic">r</span>² จะได้กราฟเส้นตรงผ่านจุดกำเนิด พิสูจน์ว่าอัตราเร็วตกแปรผันตรงกับกำลังสองของรัศมี
             </div>
           </div>
         </div>
@@ -355,37 +355,67 @@
           <span class="text-slate-400 text-[10px]">ISO / ASTM D445</span>
         </div>
         <div class="flex justify-between text-slate-300">
-          <span>เส้นผ่านศูนย์กลาง ($d$):</span>
+          <span>เส้นผ่านศูนย์กลาง (<span class="font-serif italic">d</span>):</span>
           <span id="paramD" class="text-white font-bold">2.00 mm</span>
         </div>
         <div class="flex justify-between text-slate-300">
-          <span>รัศมีกำลังสอง ($r^2$):</span>
+          <span>รัศมีกำลังสอง (<span class="font-serif italic">r</span>²):</span>
           <span id="paramRSq" class="text-sky-300 font-bold">1.00 mm²</span>
         </div>
         <div class="flex justify-between text-slate-300">
-          <span>ความหนาแน่นลูกกลม ($ho_p$):</span>
+          <span>ความหนาแน่นลูกกลม (<span class="font-serif italic">&rho;</span><sub>p</sub>):</span>
           <span id="paramRhoP" class="text-white font-bold">7,800 kg/m³</span>
         </div>
         <div class="flex justify-between text-slate-300">
-          <span>ความหนาแน่นของเหลว ($ho_f$):</span>
+          <span>ความหนาแน่นของเหลว (<span class="font-serif italic">&rho;</span><sub>f</sub>):</span>
           <span id="paramRhoF" class="text-white font-bold">1,260 kg/m³</span>
         </div>
         <div class="flex justify-between text-slate-300">
-          <span>ตัวคูณแก้ผนัง Faxén ($f_w$):</span>
+          <span>ตัวคูณแก้ผนัง Faxén (<span class="font-serif italic">f</span><sub>w</sub>):</span>
           <span id="paramFw" class="text-emerald-400 font-bold">0.864</span>
         </div>
         <div class="flex justify-between border-t border-white/10 pt-1 text-slate-300">
-          <span>เวลาตกที่คาดหมาย ($\Delta t$):</span>
+          <span>เวลาตกที่คาดหมาย (<span class="font-serif italic">&Delta;t</span>):</span>
           <span id="paramExpTime" class="text-amber-400 font-bold">2.45 วินาที</span>
         </div>
       </div>
 
-      <!-- Theory Snippet -->
-      <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 text-[11px] text-slate-400 font-mono space-y-1">
-        <div class="text-sky-300 font-bold">สมการการเคลื่อนที่ตามกฎของนิวตันและสโตกส์:</div>
-        <div>แรงลัพธ์: $\sum F = mg - ho_f V g - 6\pi\eta r v = 0$ (เมื่อความเร็วคงที่)</div>
-        <div>อัตราเร็วสุดท้าย: $v_t = rac{2r^2(ho_p - ho_f)g}{9\eta} 	imes f_w$</div>
-        <div class="text-emerald-400 font-bold">สัมประสิทธิ์ความหนืด: $\eta = rac{2r^2(ho_p - ho_f)g}{9v_t}$</div>
+      <!-- Theory Snippet (MathType Visual Equation Card) -->
+      <div class="p-3.5 rounded-2xl bg-slate-950 border border-sky-500/30 text-xs space-y-2.5 shadow-lg font-sans">
+        <div class="text-sky-300 font-bold flex items-center gap-1.5">
+          <i class="fa-solid fa-square-root-variable text-sky-400"></i> สมการการเคลื่อนที่และกฎของสโตกส์ (Stokes' Law)
+        </div>
+        
+        <!-- Eq 1: Equilibrium -->
+        <div class="p-2 rounded-xl bg-slate-900/90 border border-white/5 flex items-center justify-between font-serif text-[12px] text-slate-200">
+          <span class="text-slate-400 font-sans text-[11px]">1. แรงลัพธ์ (สมดุล):</span>
+          <span class="text-amber-300 font-bold">&Sigma;<i>F</i> = <i>F</i><sub>g</sub> &minus; <i>F</i><sub>b</sub> &minus; <i>F</i><sub>d</sub> = 0</span>
+        </div>
+
+        <!-- Eq 2: Terminal Velocity -->
+        <div class="p-2 rounded-xl bg-slate-900/90 border border-white/5 flex items-center justify-between font-serif text-[12px] text-slate-200">
+          <span class="text-slate-400 font-sans text-[11px]">2. อัตราเร็วสุดท้าย:</span>
+          <div class="inline-flex items-center gap-1 text-teal-300 font-bold">
+            <span><i>v</i><sub>t</sub> =</span>
+            <span class="inline-flex flex-col items-center justify-center leading-none text-center font-normal">
+              <span class="border-b border-teal-400/60 pb-0.5 px-1">2 <i>r</i>² (&rho;<sub>p</sub> &minus; &rho;<sub>f</sub>) <i>g</i></span>
+              <span class="pt-0.5">9 &eta;</span>
+            </span>
+            <span class="text-slate-400 text-xs font-normal">&times; <i>f</i><sub>w</sub></span>
+          </div>
+        </div>
+
+        <!-- Eq 3: Viscosity -->
+        <div class="p-2 rounded-xl bg-slate-900/90 border border-white/5 flex items-center justify-between font-serif text-[12px] text-slate-200">
+          <span class="text-slate-400 font-sans text-[11px]">3. สัมประสิทธิ์ความหนืด:</span>
+          <div class="inline-flex items-center gap-1 text-emerald-300 font-bold">
+            <span>&eta; =</span>
+            <span class="inline-flex flex-col items-center justify-center leading-none text-center font-normal">
+              <span class="border-b border-emerald-400/60 pb-0.5 px-1">2 <i>r</i>² (&rho;<sub>p</sub> &minus; &rho;<sub>f</sub>) <i>g</i></span>
+              <span class="pt-0.5">9 <i>v</i><sub>t</sub></span>
+            </span>
+          </div>
+        </div>
       </div>
 
     </div>

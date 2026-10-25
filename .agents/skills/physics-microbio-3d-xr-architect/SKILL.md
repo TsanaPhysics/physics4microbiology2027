@@ -249,3 +249,50 @@ physics4microbioloy2027/
    - แจ้งเตือนนักศึกษาด้วยหมายเลขบันทึกของระบบ (Submission ID)
    - แสดงสถานะการซิงก์ Google Sheets ว่าสำเร็จ (Synced: 1)
    - ล็อกฟอร์มเพื่อป้องกันการส่งซ้ำซ้อน
+
+
+---
+
+## 6. มาตรฐานการจัดรูปแบบสมการและสัญลักษณ์ทางฟิสิกส์ (Academic MathType & Mathematical Typography Standards)
+
+เพื่อให้นักศึกษาจุลชีววิทยาสามารถอ่านสมการ สัญลักษณ์เวกเตอร์ และตัวแปรทางฟิสิกส์ได้อย่างชัดเจน สวยงาม ไม่เกิดข้อผิดพลาดในการแสดงผลตัวอักษร:
+
+### 6.1 กฎเหล็กข้อห้ามสำหรับ 3D Simulator Viewport (iframe / Canvas / HUD)
+1. **ห้ามเขียน raw LaTeX (เช่น `$ \vec{F}_1 $`, `$ \rho_p $`, `$ \frac{...}{...} $`, `$ \theta $`, `$ \times $`) ใน HTML หรือ JavaScript ของ 3D Simulator เด็ดขาด**:
+   - **สาเหตุ**: เบราว์เซอร์และ JavaScript parser จะตีความ backslash escape sequence (`\v`, `\r`, `\f`, `\t`) เป็น ASCII Control Characters โดยอัตโนมัติ:
+     - `\v` -> Vertical Tab (`\x0b`) ทำให้คำว่า `\vec{F}` กลายเป็น ` ec{F}`
+     - `\r` -> Carriage Return (`\x0d`) ทำให้คำว่า `\rho` กลายเป็น ` ho`
+     - `\f` -> Form Feed (`\x0c`) ทำให้คำว่า `\frac` กลายเป็น ` rac`
+     - `\t` -> Horizontal Tab (`\x09`) ทำให้คำว่า `\theta` กลายเป็น ` heta` และ `\times` กลายเป็น ` imes`
+   - เมื่อไม่มี KaTeX/MathJax ฝังใน iframe สตริงจะหลุดเครื่องหมาย `$`, `{`, `_`, `}` และตัวอักษรแหว่ง ทำให้นักศึกษาอ่านไม่รู้เรื่อง
+
+### 6.2 มาตรฐาน MathType-Style Semantic Typography สำหรับ 3D Simulator HUD
+1. **สัญลักษณ์เวกเตอร์ (Vectors)**:
+   - ใช้ Unicode Arrow `&#8407;` กำกับบนตัวอักษรเอียงหนา `font-serif italic font-bold` เช่น:
+     - `F&#8407;<sub>1</sub>` -> F⃗₁
+     - `R&#8407;` -> R⃗ (แรงลัพธ์)
+     - `E&#8407;` -> E⃗ (แรงสมดุล)
+     - `F&#8407;<sub>g</sub>`, `F&#8407;<sub>b</sub>`, `F&#8407;<sub>d</sub>` -> เวกเตอร์แรงโน้มถ่วง, แรงพยุง, แรงหนืด
+2. **สัญลักษณ์อักษรกรีกและตัวแปร (Greek Symbols & Variables)**:
+   - ใช้ HTML Entities มาตรฐานเสมอ:
+     - `&theta;<sub>1</sub>` -> θ₁
+     - `&rho;<sub>p</sub>`, `&rho;<sub>f</sub>`, `&rho;<sub>c</sub>` -> ρ_p, ρ_f, ρ_c
+     - `&eta;` -> η (สัมประสิทธิ์ความหนืด)
+     - `&Delta;<i>t</i>`, `&Delta;<i>y</i>` -> Δt, Δy
+     - `<i>r</i>²` -> r²
+     - `&Sigma;<i>F</i>` -> ΣF
+3. **การแสดงสมการใน HUD (MathType Visual Card with Stacked Fractions)**:
+   - สำหรับสูตรที่มีเศษส่วน ให้จัดเลย์เอาต์ด้วย HTML/CSS Flexbox ที่มีเส้นคั่นเศษส่วน (`border-b`) ชัดเจน อ่านง่าย 100% บนทุกอุปกรณ์ โดยไม่ต้องพึ่งไลบรารีภายนอก
+
+### 6.3 มาตรฐานการแสดงสมการบนหน้าคู่มือปฏิบัติการ (Lab PHP Pages)
+1. **กล่องชุดสมการทฤษฎีหลัก (Theoretical Formulations Suite)**:
+   - ใช้ MathJax 3 Display Math `$$ ... \tag{X.Y} $$`
+   - จัดหมวดหมู่ใน Glassmorphism Cards ที่มีกรอบเรืองแสงตามธีมสีของแต่ละปฏิบัติการ
+   - มีปุ่ม Collapsible Toggle ย่อ/ขยายสูตรสมการ
+2. **กล่องโครงสร้างสูตรคำนวณ (Calculation Guidance Box)**:
+   - วางไว้เหนือกช่อง `textarea` บันทึกวิธีคำนวณ เพื่อแสดงขั้นตอนการคำนวณทีละสเต็ป (Step-by-Step) ให้นักศึกษาสามารถนำตัวเลขมาแทนค่าได้อย่างถูกต้องแม่นยำ
+
+### 6.4 การเชื่อมโยงกับ MCP Tools สำหรับแล็บเสมือนจริง
+- **Blender 3D MCP (`blender-3d`)**: ใช้สำหรับสร้าง แก้ไข และ Export เมช 3 มิติความละเอียดสูง (GLTF/GLB) สำหรับอุปกรณ์วิทยาศาสตร์ที่ซับซ้อน
+- **OpenSCAD MCP (`openscad-3d`)**: ใช้สำหรับคำนวณรูปทรงเรขาคณิตเชิงคณิตศาสตร์และโครงสร้างชิ้นส่วนเครื่องมือวัดแบบพาราเมตริก
+- **Filesystem & MySQL MCP (`filesystem-smartfarm`, `mysql-smartfarm`)**: ใช้สำหรับจัดการโครงสร้างแฟ้มข้อมูลแล็บและทดสอบการสืบค้นฐานข้อมูลทางวิทยาศาสตร์

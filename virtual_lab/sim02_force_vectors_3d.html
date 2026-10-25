@@ -127,10 +127,11 @@
           </span>
         </div>
         <canvas id="polarCanvas" width="170" height="170" class="rounded-xl bg-slate-950 border border-white/10 block"></canvas>
-        <div id="polarReadout" class="font-mono text-[10px] space-y-0.5 text-slate-300">
-          <div>แรงลัพธ์ $ec{R}$: <span id="hudRMag" class="text-rose-400 font-bold">0.00 N</span> @ <span id="hudRAng" class="text-rose-400 font-bold">0.0°</span></div>
-          <div>แรงสมดุล $ec{E}$: <span id="hudEMag" class="text-emerald-400 font-bold">0.00 N</span> @ <span id="hudEAng" class="text-emerald-400 font-bold">0.0°</span></div>
+        <div id="polarReadout" class="font-mono text-[10px] space-y-1 text-slate-300">
+          <div class="flex items-center gap-1.5">แรงลัพธ์ <span class="font-serif italic font-bold text-rose-400 text-xs">R&#8407;</span>: <span id="hudRMag" class="text-rose-400 font-bold">0.00 N</span> @ <span id="hudRAng" class="text-rose-400 font-bold">0.0°</span></div>
+          <div class="flex items-center gap-1.5">แรงสมดุล <span class="font-serif italic font-bold text-emerald-400 text-xs">E&#8407;</span>: <span id="hudEMag" class="text-emerald-400 font-bold">0.00 N</span> @ <span id="hudEAng" class="text-emerald-400 font-bold">0.0°</span></div>
         </div>
+      </div>
       </div>
 
       <!-- Mode 2: Stokes Optical Micro-Loupe & Force Vectors HUD (Top-Right) -->
@@ -152,22 +153,22 @@
           </div>
         </div>
 
-        <!-- Dynamic Force Balance Telemetry on Single Cell -->
+        <!-- Dynamic Force Balance Telemetry on Single Cell (MathType Clean Style) -->
         <div class="space-y-1 font-mono text-[10px] text-slate-300 bg-slate-950/80 p-2 rounded-xl border border-white/5">
           <div class="flex justify-between items-center text-rose-300">
-            <span>แรงโน้มถ่วง $ec{F}_g$:</span>
+            <span>แรงโน้มถ่วง <span class="font-serif italic text-xs font-bold">F&#8407;<sub>g</sub></span>:</span>
             <span id="loupeFg" class="font-bold">0.000 fN</span>
           </div>
           <div class="flex justify-between items-center text-sky-300">
-            <span>แรงพยุง $ec{F}_b$:</span>
+            <span>แรงพยุง <span class="font-serif italic text-xs font-bold">F&#8407;<sub>b</sub></span>:</span>
             <span id="loupeFb" class="font-bold">0.000 fN</span>
           </div>
           <div class="flex justify-between items-center text-emerald-300">
-            <span>แรงหนืด $ec{F}_d = 6\pi\eta r v$:</span>
+            <span>แรงหนืด <span class="font-serif italic text-xs font-bold">F&#8407;<sub>d</sub> = 6&pi;&eta;rv</span>:</span>
             <span id="loupeFd" class="font-bold">0.000 fN</span>
           </div>
           <div class="flex justify-between items-center border-t border-white/10 pt-1 text-white font-bold">
-            <span>แรงลัพธ์ $\sum ec{F}$:</span>
+            <span>แรงลัพธ์ <span class="font-serif italic text-xs">&Sigma;F&#8407;</span>:</span>
             <span id="loupeFnet" class="text-amber-300">0.000 fN (สมดุล)</span>
           </div>
         </div>
@@ -242,20 +243,20 @@
         <div class="p-3.5 rounded-2xl bg-slate-950 border border-amber-500/30 space-y-2">
           <div class="flex items-center justify-between text-xs">
             <span class="font-bold text-amber-400 font-mono flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> รอกตัวที่ 1 (Force $ec{F}_1$)
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span> รอกตัวที่ 1 (Force <span class="font-serif italic font-bold text-amber-300">F&#8407;<sub>1</sub></span>)
             </span>
             <span id="dispF1" class="font-mono font-bold text-amber-300">200 g (1.96 N) @ 0°</span>
           </div>
           <div class="space-y-1">
             <div class="flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>มวลแขวน ($m_1$):</span>
+              <span>มวลแขวน (<span class="font-serif italic">m</span><sub>1</sub>):</span>
               <span id="dispF1Mass">200 g</span>
             </div>
             <input type="range" id="sliderF1Mass" min="10" max="500" step="5" value="200" oninput="updateForceTable()" class="w-full accent-amber-400 h-1.5 bg-slate-800 rounded-lg">
           </div>
           <div class="space-y-1">
             <div class="flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>มุมบนโต๊ะแรง ($	heta_1$):</span>
+              <span>มุมบนโต๊ะแรง (<span class="font-serif italic">&theta;</span><sub>1</sub>):</span>
               <span id="dispF1Ang">0°</span>
             </div>
             <input type="range" id="sliderF1Ang" min="0" max="360" step="1" value="0" oninput="updateForceTable()" class="w-full accent-amber-400 h-1.5 bg-slate-800 rounded-lg">
@@ -266,20 +267,20 @@
         <div class="p-3.5 rounded-2xl bg-slate-950 border border-sky-500/30 space-y-2">
           <div class="flex items-center justify-between text-xs">
             <span class="font-bold text-sky-400 font-mono flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span> รอกตัวที่ 2 (Force $ec{F}_2$)
+              <span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block"></span> รอกตัวที่ 2 (Force <span class="font-serif italic font-bold text-sky-300">F&#8407;<sub>2</sub></span>)
             </span>
             <span id="dispF2" class="font-mono font-bold text-sky-300">150 g (1.47 N) @ 90°</span>
           </div>
           <div class="space-y-1">
             <div class="flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>มวลแขวน ($m_2$):</span>
+              <span>มวลแขวน (<span class="font-serif italic">m</span><sub>2</sub>):</span>
               <span id="dispF2Mass">150 g</span>
             </div>
             <input type="range" id="sliderF2Mass" min="10" max="500" step="5" value="150" oninput="updateForceTable()" class="w-full accent-sky-400 h-1.5 bg-slate-800 rounded-lg">
           </div>
           <div class="space-y-1">
             <div class="flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>มุมบนโต๊ะแรง ($	heta_2$):</span>
+              <span>มุมบนโต๊ะแรง (<span class="font-serif italic">&theta;</span><sub>2</sub>):</span>
               <span id="dispF2Ang">90°</span>
             </div>
             <input type="range" id="sliderF2Ang" min="0" max="360" step="1" value="90" oninput="updateForceTable()" class="w-full accent-sky-400 h-1.5 bg-slate-800 rounded-lg">
@@ -290,20 +291,20 @@
         <div class="p-3.5 rounded-2xl bg-slate-950 border border-emerald-500/30 space-y-2">
           <div class="flex items-center justify-between text-xs">
             <span class="font-bold text-emerald-400 font-mono flex items-center gap-1.5">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> รอกตัวที่ 3 (Equilibrant $ec{F}_3$)
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> รอกตัวที่ 3 (Equilibrant <span class="font-serif italic font-bold text-emerald-300">E&#8407; / F&#8407;<sub>3</sub></span>)
             </span>
             <span id="dispF3" class="font-mono font-bold text-emerald-300">250 g (2.45 N) @ 217°</span>
           </div>
           <div class="space-y-1">
             <div class="flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>มวลแขวน ($m_3$):</span>
+              <span>มวลแขวน (<span class="font-serif italic">m</span><sub>3</sub>):</span>
               <span id="dispF3Mass">250 g</span>
             </div>
             <input type="range" id="sliderF3Mass" min="0" max="600" step="1" value="250" oninput="updateForceTable()" class="w-full accent-emerald-400 h-1.5 bg-slate-800 rounded-lg">
           </div>
           <div class="space-y-1">
             <div class="flex justify-between text-[11px] text-slate-400 font-mono">
-              <span>มุมบนโต๊ะแรง ($	heta_3$):</span>
+              <span>มุมบนโต๊ะแรง (<span class="font-serif italic">&theta;</span><sub>3</sub>):</span>
               <span id="dispF3Ang">217°</span>
             </div>
             <input type="range" id="sliderF3Ang" min="0" max="360" step="1" value="217" oninput="updateForceTable()" class="w-full accent-emerald-400 h-1.5 bg-slate-800 rounded-lg">
@@ -313,15 +314,15 @@
         <!-- Balance Analytics Box -->
         <div id="balanceSummaryBox" class="p-3 rounded-2xl bg-slate-950/70 border border-white/10 text-xs font-mono space-y-1">
           <div class="flex justify-between text-slate-300">
-            <span>แรงลัพธ์ในแนวแกน X ($\sum F_x$):</span>
+            <span>แรงลัพธ์แนวแกน X (&Sigma;<span class="font-serif italic">F<sub>x</sub></span>):</span>
             <span id="sumFx" class="font-bold text-amber-300">+0.000 N</span>
           </div>
           <div class="flex justify-between text-slate-300">
-            <span>แรงลัพธ์ในแนวแกน Y ($\sum F_y$):</span>
+            <span>แรงลัพธ์แนวแกน Y (&Sigma;<span class="font-serif italic">F<sub>y</sub></span>):</span>
             <span id="sumFy" class="font-bold text-sky-300">+0.000 N</span>
           </div>
           <div class="flex justify-between text-slate-300">
-            <span>แรงลัพธ์สุทธิ ($|ec{F}_{	ext{net}}|$):</span>
+            <span>แรงลัพธ์สุทธิ (|&Sigma;<span class="font-serif italic">F&#8407;</span>|):</span>
             <span id="sumFnet" class="font-bold text-emerald-400">0.000 N (สมดุล)</span>
           </div>
         </div>
@@ -427,7 +428,7 @@
             <button onclick="setRCF(1000)" id="btnRCF1000" class="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition">1000× g</button>
           </div>
           <p class="text-[10px] text-slate-400 italic">
-            *เปรียบเทียบการตกตามธรรมชาติ ($1	imes g$) กับการปั่นเหวี่ยง (RCF) ที่จำเป็นในแล็บจุลชีววิทยา
+            *เปรียบเทียบการตกตามธรรมชาติ (1 &times; <span class="font-serif italic">g</span>) กับการปั่นเหวี่ยง (RCF) ที่จำเป็นในแล็บจุลชีววิทยา
           </p>
         </div>
 
@@ -447,13 +448,31 @@
           </div>
         </div>
 
-        <!-- Stokes Physics Theory Snippet -->
-        <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 text-[11px] text-slate-400 font-mono space-y-1">
-          <div class="text-sky-300 font-bold">สมการกฎของสโตกส์ (Stokes' Law):</div>
-          <div>แรงหนืดต้าน: $F_d = 6\pi \eta r v$</div>
-          <div>แรงลอยตัวสุทธิ: $F_{	ext{net}} = (ho_c - ho_f) V g - 6\pi \eta r v$</div>
-          <div class="text-emerald-400 font-bold">ความเร็วปลาย: $v_t = rac{2 r^2 (ho_c - ho_f) g}{9 \eta} 	imes f_w$</div>
-          <div class="text-[10px] text-slate-500">*คำนวณปรับแก้ผลกระทบผนังภาชนะ (Faxén's correction $f_w$)</div>
+        <!-- Stokes Physics Theory Snippet (MathType Visual Equation Card) -->
+        <div class="p-3.5 rounded-2xl bg-slate-950 border border-sky-500/30 text-xs space-y-2.5 shadow-lg font-sans">
+          <div class="text-sky-300 font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-square-root-variable text-sky-400"></i> สมการกฎของสโตกส์ (Stokes' Law on Microbial Cells)
+          </div>
+          <div class="p-2 rounded-xl bg-slate-900/90 border border-white/5 flex items-center justify-between font-serif text-[12px] text-slate-200">
+            <span class="text-slate-400 font-sans text-[11px]">1. แรงหนืดต้าน:</span>
+            <span class="text-sky-300"><i>F</i><sub>d</sub> = 6&pi; &eta; <i>r v</i></span>
+          </div>
+          <div class="p-2 rounded-xl bg-slate-900/90 border border-white/5 flex items-center justify-between font-serif text-[12px] text-slate-200">
+            <span class="text-slate-400 font-sans text-[11px]">2. แรงลอยตัวสุทธิ:</span>
+            <span class="text-amber-300"><i>F</i><sub>net</sub> = (&rho;<sub>c</sub> &minus; &rho;<sub>f</sub>) <i>V g</i> &minus; 6&pi;&eta;<i>r v</i></span>
+          </div>
+          <div class="p-2 rounded-xl bg-slate-900/90 border border-white/5 flex items-center justify-between font-serif text-[12px] text-slate-200">
+            <span class="text-slate-400 font-sans text-[11px]">3. ความเร็วตกสุดท้าย:</span>
+            <div class="inline-flex items-center gap-1.5 text-emerald-300 font-bold">
+              <span><i>v</i><sub>t</sub> =</span>
+              <span class="inline-flex flex-col items-center justify-center leading-none text-center font-normal">
+                <span class="border-b border-emerald-400/60 pb-0.5 px-1">2 <i>r</i>² (&rho;<sub>c</sub> &minus; &rho;<sub>f</sub>) <i>g</i></span>
+                <span class="pt-0.5">9 &eta;</span>
+              </span>
+              <span class="text-slate-400 text-xs font-normal">&times; <i>f</i><sub>w</sub></span>
+            </div>
+          </div>
+          <div class="text-[10px] text-slate-500 font-sans">*คำนวณปรับแก้ผลกระทบผนังภาชนะ (Faxén's wall correction <i>f</i><sub>w</sub>)</div>
         </div>
 
       </div>
