@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องปฏิบัติการ 3D ทัศนศาสตร์ กล้องจุลทรรศน์ และสเปกโทรโฟโตเมตรีชีวภาพ (Microscopy & Bio-Spectrophotometry 3D)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js r128 & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- Google Fonts & Font Awesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #030712; color: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .font-digital { font-family: 'Orbitron', monospace; }
+    
+    /* Pure CSS Vector Standard */
+    .vec {
+      display: inline-block;
+      position: relative;
+      font-family: 'Times New Roman', Cambria, serif;
+      font-style: italic;
+      font-weight: bold;
+      line-height: 1;
+      margin-top: 0.25em;
+    }
+    .vec::after {
+      content: '→';
+      position: absolute;
+      top: -0.45em;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0.85);
+      font-size: 0.72em;
+      font-style: normal;
+      font-weight: bold;
+      line-height: 1;
+      color: inherit;
+      pointer-events: none;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(14, 165, 233, 0.3); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(14, 165, 233, 0.6); }
+
+    /* Digital LED Glow */
+    .led-glow-cyan { text-shadow: 0 0 10px rgba(6, 182, 212, 0.7), 0 0 20px rgba(6, 182, 212, 0.4); }
+    .led-glow-amber { text-shadow: 0 0 10px rgba(245, 158, 11, 0.7), 0 0 20px rgba(245, 158, 11, 0.4); }
+    .led-glow-emerald { text-shadow: 0 0 10px rgba(16, 185, 129, 0.7), 0 0 20px rgba(16, 185, 129, 0.4); }
+    .led-glow-purple { text-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 25px rgba(168, 85, 247, 0.5); }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col select-none overflow-hidden bg-slate-950">
+
+  <!-- Main Simulator Layout Grid -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden relative">
+
+    <!-- 3D Canvas Area (Interactive WebGL Viewport) -->
+    <div id="canvasContainer" class="lg:col-span-8 h-full w-full relative bg-slate-950 overflow-hidden flex items-center justify-center">
+      <canvas id="threeCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+
+      <!-- Top Overlay: Status Badges -->
+      <div class="absolute top-3 left-3 z-10 flex flex-wrap items-center gap-2 pointer-events-none">
+        <div class="px-3 py-1.5 rounded-xl bg-slate-900/90 backdrop-blur-md border border-cyan-500/30 text-cyan-400 font-mono text-xs flex items-center gap-2 shadow-lg">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-pulse"></span>
+          <span class="font-bold">OPTICS &amp; SPECTROPHOTOMETRY 3D</span>
+        </div>
+        <div id="laserStatusBadge" class="hidden px-2.5 py-1 rounded-xl bg-emerald-950/80 backdrop-blur-md border border-emerald-500/40 text-emerald-300 font-mono text-[11px] items-center gap-1.5 shadow-lg">
+          <i class="fa-solid fa-bolt text-emerald-400 animate-pulse"></i> 488nm LASER ACTIVE
+        </div>
+        <div id="oilStatusBadge" class="hidden px-2.5 py-1 rounded-xl bg-amber-950/80 backdrop-blur-md border border-amber-500/40 text-amber-300 font-mono text-[11px] items-center gap-1.5 shadow-lg">
+          <i class="fa-solid fa-droplet text-amber-400"></i> OIL IMMERSION (n = 1.518)
+        </div>
+        <div id="modeStatusBadge" class="px-2.5 py-1 rounded-xl bg-slate-900/80 backdrop-blur-md border border-white/10 text-slate-300 font-mono text-[11px] flex items-center gap-1.5">
+          <i class="fa-solid fa-microscope text-cyan-400"></i> Mode: <span id="currentModeLabel" class="text-white font-semibold">Compound Microscope</span>
+        </div>
+      </div>
+
+      <!-- Top Right: Interactive Optics Telemetry HUD Card -->
+      <div id="opticsHUD" class="absolute top-3 right-3 z-10 w-72 bg-slate-900/85 backdrop-blur-md border border-cyan-500/20 rounded-2xl p-3 shadow-2xl space-y-2.5 transition-all duration-300">
+        <!-- HUD Header with Minimize/Expand/Close buttons -->
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+          <div class="flex items-center gap-1.5">
+            <i class="fa-solid fa-eye text-cyan-400 text-xs"></i>
+            <span class="text-xs font-bold text-slate-200 font-mono">OPTICAL TELEMETRY</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <button onclick="toggleCardContent('opticsHUD_content')" class="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded hover:bg-slate-800 transition" title="ย่อ/ขยายเนื้อหา">
+              <i class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('opticsHUD')" class="text-slate-400 hover:text-red-400 text-xs px-1.5 py-0.5 rounded hover:bg-slate-800 transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsible Content -->
+        <div id="opticsHUD_content" class="space-y-2 text-xs">
+          <!-- Magnification and Numerical Aperture -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono">Total Mag (<em>M</em>)</div>
+              <div class="text-base font-digital font-bold text-cyan-400 led-glow-cyan flex items-baseline justify-between">
+                <span id="hudMag">400x</span>
+                <span class="text-[10px] font-mono text-slate-400 font-normal">mag</span>
+              </div>
+            </div>
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono">Aperture (<em>NA</em>)</div>
+              <div class="text-base font-digital font-bold text-emerald-400 led-glow-emerald flex items-baseline justify-between">
+                <span id="hudNA">0.65</span>
+                <span class="text-[10px] font-mono text-slate-400 font-normal">n&middot;sin&alpha;</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Abbe Resolution Limit and Field of View -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono">Abbe Limit (<em>d</em>)</div>
+              <div class="text-sm font-digital font-bold text-amber-400 led-glow-amber flex items-baseline justify-between">
+                <span id="hudResolution">0.42</span>
+                <span class="text-[10px] font-mono text-slate-400 font-normal">&mu;m</span>
+              </div>
+            </div>
+            <div class="bg-slate-950/70 p-2 rounded-xl border border-white/5">
+              <div class="text-[10px] text-slate-400 font-mono">FOV Diameter</div>
+              <div class="text-sm font-digital font-bold text-purple-400 flex items-baseline justify-between">
+                <span id="hudFOV">450</span>
+                <span class="text-[10px] font-mono text-slate-400 font-normal">&mu;m</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spectrophotometer Absorption / Transmittance (When in Spec Mode) -->
+          <div id="hudSpecReadout" class="space-y-1.5 pt-1 border-t border-white/5">
+            <div class="grid grid-cols-2 gap-2">
+              <div class="bg-slate-950/70 p-1.5 rounded-xl border border-white/5">
+                <div class="text-[9px] text-slate-400 font-mono">Absorbance (<em>A</em>)</div>
+                <div class="text-xs font-mono font-bold text-rose-400" id="hudAbsorbance">0.428 AU</div>
+              </div>
+              <div class="bg-slate-950/70 p-1.5 rounded-xl border border-white/5">
+                <div class="text-[9px] text-slate-400 font-mono">Wavelength (&lambda;)</div>
+                <div class="text-xs font-mono font-bold text-cyan-300" id="hudWavelength">595 nm</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Right: Synchronized 2D Reticle Loupe & Spectrum Scanner -->
+      <div id="opticsLoupeCard" class="absolute bottom-16 right-3 z-10 w-80 bg-slate-900/90 backdrop-blur-md border border-cyan-500/20 rounded-2xl p-3 shadow-2xl space-y-2 transition-all duration-300">
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b border-white/10 pb-1.5">
+          <div class="flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-dot text-cyan-400 text-xs"></i>
+            <span class="text-xs font-bold text-slate-200 font-mono">SYNCHRONIZED OPTICAL RETICLE</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <button onclick="toggleCardContent('opticsLoupeCard_content')" class="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded hover:bg-slate-800 transition" title="ย่อ/ขยายเนื้อหา">
+              <i class="fa-solid fa-minus text-[10px]"></i>
+            </button>
+            <button onclick="hideCard('opticsLoupeCard')" class="text-slate-400 hover:text-red-400 text-xs px-1.5 py-0.5 rounded hover:bg-slate-800 transition" title="ปิดการ์ด">
+              <i class="fa-solid fa-xmark text-[10px]"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Loupe View Modes Tab Header -->
+        <div id="opticsLoupeCard_content" class="space-y-2">
+          <div class="grid grid-cols-3 gap-1 bg-slate-950/80 p-0.5 rounded-xl border border-white/5 text-[10px] font-mono">
+            <button onclick="setLoupeTab('fov')" id="tabBtn_fov" class="py-1 rounded-lg bg-cyan-600 text-white font-bold transition">
+              Eyepiece FOV
+            </button>
+            <button onclick="setLoupeTab('spectrum')" id="tabBtn_spectrum" class="py-1 rounded-lg text-slate-400 hover:text-slate-200 transition">
+              Spectrum A(&lambda;)
+            </button>
+            <button onclick="setLoupeTab('beer')" id="tabBtn_beer" class="py-1 rounded-lg text-slate-400 hover:text-slate-200 transition">
+              Beer-Lambert
+            </button>
+          </div>
+
+          <!-- 2D Canvas Loupe Viewport -->
+          <div class="relative w-full h-40 bg-slate-950 rounded-xl border border-white/10 overflow-hidden flex items-center justify-center">
+            <canvas id="loupeCanvas" width="320" height="160" class="w-full h-full block"></canvas>
+            <div id="loupeAnnotationOverlay" class="absolute bottom-1 right-2 text-[9px] font-mono text-cyan-400/80 pointer-events-none">
+              Diffraction Limited &bull; Airy Reticle
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center text-[10px] font-mono text-slate-400 px-1">
+            <span id="loupeStatusText" class="text-cyan-400 font-semibold">Bacillus subtilis &bull; 40x</span>
+            <span id="loupeMetricText" class="text-slate-500">d = 0.42 &mu;m</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Floating Dock Bar: Camera, Minimize/Restore, Fullscreen -->
+      <div id="viewportDockBar" class="absolute bottom-3 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-2xl z-20 flex items-center gap-2 text-xs">
+        <!-- Re-open Hidden Cards Dropdown / Buttons -->
+        <div id="dockRestoreButtons" class="flex items-center gap-1.5 empty:hidden"></div>
+
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- Camera Preset Angles -->
+        <button onclick="setCameraView('overview')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="มุมมองภาพรวม 3 มิติ">
+          <i class="fa-solid fa-cube text-[9px]"></i> 3D
+        </button>
+        <button onclick="setCameraView('eyepiece')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="มุมมองส่องผ่านลำกล้องตา">
+          <i class="fa-solid fa-eye text-[9px]"></i> Eyepiece
+        </button>
+        <button onclick="setCameraView('stage')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="เจาะจงแท่นวางสไลด์และเลนส์ใกล้วัตถุ">
+          <i class="fa-solid fa-microscope text-[9px]"></i> Stage
+        </button>
+        <button onclick="setCameraView('spectro')" class="px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[10px] flex items-center gap-1 transition" title="มุมมองช่องใส่หลอดคิวเวตต์สเปกโทรโฟโตมิเตอร์">
+          <i class="fa-solid fa-vial text-[9px]"></i> Spectro
+        </button>
+
+        <div class="h-4 w-px bg-white/20"></div>
+
+        <!-- Fullscreen / Sidebar Toggle -->
+        <button onclick="toggleSidebar()" id="btnToggleSidebar" class="px-2.5 py-1 rounded-full bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 font-medium text-[10px] flex items-center gap-1 transition" title="ขยายจอภาพ 3D เต็มความกว้าง">
+          <i class="fa-solid fa-expand text-[9px]"></i> <span id="toggleSidebarLabel">ขยายจอเต็ม</span>
+        </button>
+        <button onclick="captureSimulatorScreenshot()" class="px-2.5 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-medium text-[10px] flex items-center gap-1 transition" title="บันทึกภาพหน้าจอหลักฐาน">
+          <i class="fa-solid fa-camera text-[9px]"></i> แคปเจอร์
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Interactive Control Panel Sidebar -->
+    <div id="controlSidebar" class="lg:col-span-4 h-full bg-slate-900/95 border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col overflow-y-auto p-4 space-y-4">
+      
+      <!-- Panel Header -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div>
+          <h2 class="text-sm font-bold text-cyan-400 flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-cyan-400"></i> แผงควบคุมกล้องจุลทรรศน์และสเปกโทรโฟโตมิเตอร์
+          </h2>
+          <p class="text-[11px] text-slate-400">Optics, Abbe Resolution &amp; UV-Vis Spectrophotometry</p>
+        </div>
+        <button onclick="resetParameters()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition flex items-center gap-1">
+          <i class="fa-solid fa-rotate-right"></i> รีเซ็ต
+        </button>
+      </div>
+
+      <!-- Audio Synthesizer Status & Sound Toggle -->
+      <div class="flex items-center justify-between bg-slate-950/60 p-2.5 rounded-xl border border-white/5">
+        <span class="text-xs text-slate-300 flex items-center gap-2">
+          <i class="fa-solid fa-volume-high text-cyan-400"></i> ซาวด์สวิตช์หัวเลนส์ &amp; มอเตอร์โมโนโครเมเตอร์
+        </span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="soundToggle" class="sr-only peer" checked onchange="toggleSound(this.checked)">
+          <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+        </label>
+      </div>
+
+      <!-- Mode Selector: Microscope vs Spectrophotometer -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-arrows-split-up-and-left text-amber-400"></i> เครื่องมือทดลองชีวฟิสิกส์ (Instrument Setup)
+        </label>
+        <div class="grid grid-cols-2 gap-2">
+          <button onclick="switchExperimentMode('microscope')" id="modeBtn_microscope" class="py-2 px-3 rounded-xl bg-cyan-600/30 border border-cyan-500 text-cyan-300 font-bold text-xs flex items-center justify-center gap-2 transition">
+            <i class="fa-solid fa-microscope"></i> กล้องจุลทรรศน์
+          </button>
+          <button onclick="switchExperimentMode('spectro')" id="modeBtn_spectro" class="py-2 px-3 rounded-xl bg-slate-950/60 border border-white/10 text-slate-400 font-medium text-xs flex items-center justify-center gap-2 transition hover:text-white">
+            <i class="fa-solid fa-vial"></i> สเปกโทรโฟโตมิเตอร์
+          </button>
+        </div>
+      </div>
+
+      <!-- Section: Microscope Controls (Shown in Microscope Mode) -->
+      <div id="microscopeControlSection" class="space-y-3.5">
+        
+        <!-- Objective Lens Selector (4x, 10x, 40x, 100x Oil) -->
+        <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-300 font-medium flex items-center gap-1.5">
+              <i class="fa-solid fa-compact-disc text-cyan-400"></i> เลนส์ใกล้วัตถุ (Objective Revolving Nosepiece)
+            </span>
+            <span class="font-digital text-cyan-400 font-bold" id="labelObjective">40x (NA 0.65)</span>
+          </div>
+          <div class="grid grid-cols-4 gap-1.5 pt-1">
+            <button onclick="setObjective(4, 0.10, 4500)" id="objBtn_4" class="py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition">
+              4x (Scanning)
+            </button>
+            <button onclick="setObjective(10, 0.25, 1800)" id="objBtn_10" class="py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition">
+              10x (Low)
+            </button>
+            <button onclick="setObjective(40, 0.65, 450)" id="objBtn_40" class="py-1.5 px-1 rounded-lg bg-cyan-600 text-white text-[11px] font-mono font-bold border border-cyan-400 transition">
+              40x (High)
+            </button>
+            <button onclick="setObjective(100, 1.25, 180)" id="objBtn_100" class="py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition">
+              100x (Oil)
+            </button>
+          </div>
+        </div>
+
+        <!-- Specimen Biological Sample Selector -->
+        <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
+          <label class="text-xs text-slate-300 font-medium flex items-center gap-1.5">
+            <i class="fa-solid fa-disease text-emerald-400"></i> สไลด์ตัวอย่างจุลินทรีย์ (Specimen Slide)
+          </label>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="setSpecimen('bacillus')" id="specBtn_bacillus" class="py-1.5 px-2.5 rounded-xl bg-emerald-600/30 border border-emerald-500 text-emerald-300 font-mono text-xs font-bold transition text-left">
+              <em>B. subtilis</em> (สปอร์)
+            </button>
+            <button onclick="setSpecimen('staph')" id="specBtn_staph" class="py-1.5 px-2.5 rounded-xl bg-slate-800 text-slate-400 border border-white/5 font-mono text-xs transition hover:text-white text-left">
+              <em>S. aureus</em> (ค็อกไซ)
+            </button>
+            <button onclick="setSpecimen('yeast')" id="specBtn_yeast" class="py-1.5 px-2.5 rounded-xl bg-slate-800 text-slate-400 border border-white/5 font-mono text-xs transition hover:text-white text-left">
+              <em>S. cerevisiae</em> (ยีสต์)
+            </button>
+            <button onclick="setSpecimen('fluo')" id="specBtn_fluo" class="py-1.5 px-2.5 rounded-xl bg-slate-800 text-slate-400 border border-white/5 font-mono text-xs transition hover:text-white text-left">
+              GFP-<em>E. coli</em> (ฟลูออเรส)
+            </button>
+          </div>
+        </div>
+
+        <!-- Fine Focus Coaxial Knob -->
+        <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-300 font-medium flex items-center gap-1.5">
+              <i class="fa-solid fa-crosshairs text-amber-400"></i> ปุ่มปรับภาพละเอียด (Fine Focus Adjustment: <em>z</em>)
+            </span>
+            <span class="font-mono text-amber-400 font-bold" id="focusValText">50.0 &mu;m (In Focus)</span>
+          </div>
+          <input type="range" id="focusSlider" min="0" max="100" step="1" value="50" oninput="onFocusChange(this.value)" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500">
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>0 &mu;m (เบลอใต้โฟกัส)</span>
+            <span>50 &mu;m (คมชัดสูงสุด)</span>
+            <span>100 &mu;m (เบลอเหนือโฟกัส)</span>
+          </div>
+        </div>
+
+        <!-- Immersion Oil Droplet Toggle & Light Intensity -->
+        <div class="grid grid-cols-2 gap-2">
+          <div class="bg-slate-950/60 p-2.5 rounded-xl border border-white/5 flex flex-col justify-between">
+            <span class="text-xs text-slate-300 font-medium flex items-center gap-1.5">
+              <i class="fa-solid fa-droplet text-amber-400"></i> น้ำมันแช่เลนส์
+            </span>
+            <button onclick="toggleImmersionOil()" id="btnOilToggle" class="mt-2 py-1 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[11px] border border-white/5 transition">
+              หยด Oil (n=1.518)
+            </button>
+          </div>
+          <div class="bg-slate-950/60 p-2.5 rounded-xl border border-white/5 space-y-1">
+            <div class="flex justify-between text-xs text-slate-300">
+              <span>ความสว่างหลอดไฟ</span>
+              <span id="lightIntensityVal" class="text-cyan-400 font-bold">80%</span>
+            </div>
+            <input type="range" id="lightSlider" min="20" max="100" value="80" oninput="onLightChange(this.value)" class="w-full h-1 bg-slate-800 rounded appearance-none cursor-pointer accent-cyan-500">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Section: Spectrophotometer Controls (Shown in Spectro Mode) -->
+      <div id="spectroControlSection" class="hidden space-y-3.5">
+        
+        <!-- Wavelength Selector Slider (200 - 800 nm) -->
+        <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-300 font-medium flex items-center gap-1.5">
+              <i class="fa-solid fa-rainbow text-rose-400"></i> ความยาวคลื่นแสง (Monochromator Wavelength: &lambda;)
+            </span>
+            <span class="font-digital text-rose-400 font-bold" id="sliderWavelengthVal">595 nm</span>
+          </div>
+          <input type="range" id="waveSlider" min="200" max="800" step="5" value="595" oninput="onWavelengthChange(this.value)" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-rose-500">
+          
+          <!-- Preset Wavelength Quick Buttons -->
+          <div class="grid grid-cols-4 gap-1 pt-1">
+            <button onclick="setPresetWavelength(260)" class="py-1 px-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-mono">
+              260nm (DNA)
+            </button>
+            <button onclick="setPresetWavelength(280)" class="py-1 px-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-mono">
+              280nm (Prot)
+            </button>
+            <button onclick="setPresetWavelength(595)" class="py-1 px-1 rounded bg-rose-600 text-white font-bold text-[10px] font-mono">
+              595nm (Brad)
+            </button>
+            <button onclick="setPresetWavelength(600)" class="py-1 px-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-mono">
+              600nm (OD₆₀₀)
+            </button>
+          </div>
+        </div>
+
+        <!-- Sample Concentration Slider (BSA Protein 0 - 1.2 mg/mL or Bacterial Broth) -->
+        <div class="space-y-1.5 bg-slate-950/60 p-3 rounded-xl border border-white/5">
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-300 font-medium flex items-center gap-1.5">
+              <i class="fa-solid fa-flask text-amber-400"></i> ความเข้มข้นสารตัวอย่างในคิวเวตต์ (<em>c</em>)
+            </span>
+            <span class="font-digital text-amber-400 font-bold" id="sliderConcentrationVal">0.60 mg/mL</span>
+          </div>
+          <input type="range" id="concSlider" min="0" max="1.2" step="0.05" value="0.60" oninput="onConcentrationChange(this.value)" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500">
+          <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+            <span>0 mg/mL (Blank)</span>
+            <span>0.6 mg/mL (Std)</span>
+            <span>1.2 mg/mL (High)</span>
+          </div>
+        </div>
+
+        <!-- Spectrophotometer Blank Calibration Button -->
+        <div class="flex gap-2">
+          <button onclick="performBlankCalibration()" class="flex-1 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 font-mono text-xs font-bold border border-cyan-500/30 transition flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-scale-balanced"></i> Calibrate Zero Blank (A = 0.000)
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Quick Biophysical Formulas -->
+      <div class="mt-auto bg-slate-950/80 p-3 rounded-xl border border-white/5 text-[11px] text-slate-400 space-y-1.5 leading-relaxed">
+        <div class="font-bold text-slate-300 flex items-center gap-1">
+          <i class="fa-solid fa-book-open text-cyan-400"></i> กฎและสมการทัศนศาสตร์ชีววิทยา (Key Formulas)
+        </div>
+        <p>&bull; ขีดจำกัดแอบบี: <em>d</em> = &lambda; / (2 <em>NA</em>) = &lambda; / (2 <em>n</em> sin&alpha;)</p>
+        <p>&bull; กฎของเบียร์-แลมเบิร์ต: <em>A</em> = -&log₁₀(<em>I/I</em>₀) = &epsilon; <em>c l</em></p>
+        <p>&bull; กฎของสเนลล์: <em>n</em>₁ sin&theta;₁ = <em>n</em>₂ sin&theta;₂</p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- JavaScript Simulator Implementation -->
+  <script>
+    // --- Global Simulator State ---
+    const state = {
+      mode: 'microscope', // 'microscope' or 'spectro'
+      
+      // Microscope Optics Physics
+      magObjective: 40,
+      magEyepiece: 10,
+      numericalAperture: 0.65,
+      fieldOfView_um: 450,
+      specimen: 'bacillus',
+      focusLevel: 50, // 50 is perfectly in focus
+      oilApplied: false,
+      refractiveIndex: 1.0, // 1.0 for air, 1.518 for oil
+      wavelength_nm: 550, // Standard green illumination wavelength for resolution
+      lightIntensity: 0.8,
+      
+      // Spectrophotometer Physics (Beer-Lambert)
+      specWavelength: 595, // nm (Bradford Assay)
+      pathLength_cm: 1.0,
+      sampleConcentration_mg_ml: 0.60,
+      molarExtinction: 0.714, // AU / (mg/mL * cm)
+      blankOffset: 0.000,
+      measuredAbsorbance: 0.428,
+      measuredTransmittance: 37.3, // %
+      
+      // Audio & UI
+      soundEnabled: true,
+      activeLoupeTab: 'fov'
+    };
+
+    // --- Web Audio Synthesizer ---
+    let audioCtx = null;
+
+    function initAudio() {
+      if (audioCtx) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioCtx();
+      } catch (e) {}
+    }
+
+    function playBeep(freq = 600, duration = 0.08) {
+      if (!state.soundEnabled) return;
+      initAudio();
+      if (!audioCtx) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        g.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    // --- Three.js 3D Optics Viewport Setup ---
+    let scene, camera, renderer, controls;
+    let microscopeGroup, spectroGroup;
+    let objectiveNosepiece, stageMesh, slideMesh, lightConeMesh;
+    let cuvetteMesh, laserRayMesh;
+
+    function init3D() {
+      const container = document.getElementById('canvasContainer');
+      const canvas = document.getElementById('threeCanvas');
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x050b14);
+
+      camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+      camera.position.set(0, 14, 20);
+
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 - 0.02;
+      controls.target.set(0, 2, 0);
+
+      // Studio Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+      scene.add(ambientLight);
+
+      const mainLight = new THREE.DirectionalLight(0xffffff, 1.1);
+      mainLight.position.set(12, 24, 15);
+      scene.add(mainLight);
+
+      const fillLight = new THREE.DirectionalLight(0x38bdf8, 0.5);
+      fillLight.position.set(-15, 12, -10);
+      scene.add(fillLight);
+
+      // Floor grid
+      const grid = new THREE.GridHelper(50, 50, 0x1e293b, 0x0f172a);
+      grid.position.y = -4.5;
+      scene.add(grid);
+
+      // Build 3D Models
+      buildCompoundMicroscope();
+      buildSpectrophotometer();
+
+      window.addEventListener('resize', onWindowResize);
+      animate();
+    }
+
+    function buildCompoundMicroscope() {
+      microscopeGroup = new THREE.Group();
+
+      // Heavy Metal Cast Horseshoe Base
+      const baseGeo = new THREE.CylinderGeometry(4.2, 5.0, 1.2, 32);
+      const metalMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.35, metalness: 0.8 });
+      const baseMesh = new THREE.Mesh(baseGeo, metalMat);
+      baseMesh.position.y = -3.8;
+      microscopeGroup.add(baseMesh);
+
+      // Curved Microscope Arm (Limb)
+      const armGeo = new THREE.BoxGeometry(1.6, 8.5, 2.2);
+      const armMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.3, metalness: 0.7 });
+      const armMesh = new THREE.Mesh(armGeo, armMat);
+      armMesh.position.set(0, 0.8, -2.5);
+      microscopeGroup.add(armMesh);
+
+      // Illuminator Field Lamp at Base
+      const lampGeo = new THREE.CylinderGeometry(1.2, 1.4, 0.8, 24);
+      const lampMesh = new THREE.Mesh(lampGeo, metalMat);
+      lampMesh.position.set(0, -3.0, 0);
+      microscopeGroup.add(lampMesh);
+
+      // Substage Abbe Condenser
+      const condGeo = new THREE.CylinderGeometry(1.0, 0.8, 1.0, 24);
+      const chromeMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.1, metalness: 0.95 });
+      const condMesh = new THREE.Mesh(condGeo, chromeMat);
+      condMesh.position.set(0, -1.8, 0);
+      microscopeGroup.add(condMesh);
+
+      // Mechanical Stage with Slide Clip
+      const stageGeo = new THREE.BoxGeometry(6.5, 0.35, 6.0);
+      const stageMat = new THREE.MeshStandardMaterial({ color: 0x090d16, roughness: 0.4, metalness: 0.5 });
+      stageMesh = new THREE.Mesh(stageGeo, stageMat);
+      stageMesh.position.set(0, -0.8, 0);
+      microscopeGroup.add(stageMesh);
+
+      // Glass Slide (Soda-lime glass slide)
+      const slideGeo = new THREE.BoxGeometry(3.5, 0.08, 1.4);
+      const glassMat = new THREE.MeshStandardMaterial({
+        color: 0x93c5fd,
+        transparent: true,
+        opacity: 0.65,
+        roughness: 0.1,
+        metalness: 0.1
+      });
+      slideMesh = new THREE.Mesh(slideGeo, glassMat);
+      slideMesh.position.set(0, -0.58, 0);
+      microscopeGroup.add(slideMesh);
+
+      // Coverslip & Specimen Drop
+      const dropGeo = new THREE.CylinderGeometry(0.4, 0.4, 0.06, 16);
+      const dropMat = new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.2 });
+      const dropMesh = new THREE.Mesh(dropGeo, dropMat);
+      dropMesh.position.set(0, -0.52, 0);
+      microscopeGroup.add(dropMesh);
+
+      // Revolving Nosepiece Turret
+      const turretGeo = new THREE.CylinderGeometry(1.8, 1.4, 0.6, 24);
+      objectiveNosepiece = new THREE.Mesh(turretGeo, chromeMat);
+      objectiveNosepiece.position.set(0, 1.8, 0);
+      microscopeGroup.add(objectiveNosepiece);
+
+      // 4 Objective Lenses on Turret
+      const objConfigs = [
+        { color: 0xef4444, angle: 0,              label: '4x' },
+        { color: 0xf59e0b, angle: Math.PI / 2,     label: '10x' },
+        { color: 0x06b6d4, angle: Math.PI,         label: '40x' },
+        { color: 0xffffff, angle: Math.PI * 1.5,   label: '100x' }
+      ];
+
+      objConfigs.forEach(cfg => {
+        const objCylGeo = new THREE.CylinderGeometry(0.35, 0.28, 1.2, 16);
+        const objMat = new THREE.MeshStandardMaterial({ color: cfg.color, roughness: 0.25, metalness: 0.85 });
+        const objCyl = new THREE.Mesh(objCylGeo, objMat);
+        const r = 1.0;
+        objCyl.position.set(Math.cos(cfg.angle) * r, -0.7, Math.sin(cfg.angle) * r);
+        objectiveNosepiece.add(objCyl);
+      });
+
+      // Microscope Optical Tube & Binocular Head
+      const tubeGeo = new THREE.CylinderGeometry(1.0, 1.2, 2.2, 24);
+      const tubeMesh = new THREE.Mesh(tubeGeo, armMat);
+      tubeMesh.position.set(0, 3.2, -0.5);
+      microscopeGroup.add(tubeMesh);
+
+      // Binocular Eyepieces
+      const eyeGeo = new THREE.CylinderGeometry(0.4, 0.45, 1.8, 16);
+      const eyeL = new THREE.Mesh(eyeGeo, chromeMat);
+      eyeL.position.set(-0.8, 4.8, -0.2);
+      eyeL.rotation.x = -0.35;
+      microscopeGroup.add(eyeL);
+
+      const eyeR = new THREE.Mesh(eyeGeo, chromeMat);
+      eyeR.position.set(0.8, 4.8, -0.2);
+      eyeR.rotation.x = -0.35;
+      microscopeGroup.add(eyeR);
+
+      // Light Cone Ray (Substage illumination beam)
+      const rayGeo = new THREE.ConeGeometry(0.9, 2.6, 24, 1, true);
+      const rayMat = new THREE.MeshBasicMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.25,
+        side: THREE.DoubleSide
+      });
+      lightConeMesh = new THREE.Mesh(rayGeo, rayMat);
+      lightConeMesh.position.set(0, -1.8, 0);
+      microscopeGroup.add(lightConeMesh);
+
+      scene.add(microscopeGroup);
+    }
+
+    function buildSpectrophotometer() {
+      spectroGroup = new THREE.Group();
+
+      // Spectrophotometer Chassis Box
+      const specBoxGeo = new THREE.BoxGeometry(14, 5.5, 9);
+      const specBoxMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.4, metalness: 0.3 });
+      const specBox = new THREE.Mesh(specBoxGeo, specBoxMat);
+      specBox.position.set(0, -1.0, 0);
+      spectroGroup.add(specBox);
+
+      // Top Sample Compartment Lid (Opened)
+      const lidGeo = new THREE.BoxGeometry(5.0, 0.4, 4.0);
+      const lidMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.3 });
+      const lidMesh = new THREE.Mesh(lidGeo, lidMat);
+      lidMesh.position.set(-2.5, 2.0, 1.0);
+      lidMesh.rotation.z = 0.4;
+      spectroGroup.add(lidMesh);
+
+      // Cuvette Holder Bay
+      const bayGeo = new THREE.BoxGeometry(4.2, 3.0, 3.2);
+      const bayMat = new THREE.MeshStandardMaterial({ color: 0x020617, roughness: 0.8 });
+      const bayMesh = new THREE.Mesh(bayGeo, bayMat);
+      bayMesh.position.set(-2.5, 0.8, 1.0);
+      spectroGroup.add(bayMesh);
+
+      // Standard Optical Quartz Cuvette (10x10 mm path length)
+      const cuvGeo = new THREE.BoxGeometry(1.2, 3.5, 1.2);
+      const cuvMat = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.65,
+        roughness: 0.1,
+        metalness: 0.1
+      });
+      cuvetteMesh = new THREE.Mesh(cuvGeo, cuvMat);
+      cuvetteMesh.position.set(-2.5, 1.8, 1.0);
+      spectroGroup.add(cuvetteMesh);
+
+      // Liquid Solution inside Cuvette (Color updates with wavelength / assay)
+      const liqGeo = new THREE.BoxGeometry(1.0, 2.8, 1.0);
+      const liqMat = new THREE.MeshStandardMaterial({
+        color: 0x1d4ed8, // Bradford Blue default
+        transparent: true,
+        opacity: 0.85,
+        roughness: 0.2
+      });
+      const liqMesh = new THREE.Mesh(liqGeo, liqMat);
+      liqMesh.position.set(0, -0.2, 0);
+      cuvetteMesh.add(liqMesh);
+
+      // Digital Display Screen on Chassis
+      const screenGeo = new THREE.BoxGeometry(4.5, 2.5, 0.1);
+      const screenMat = new THREE.MeshBasicMaterial({ color: 0x0284c7 });
+      const screenMesh = new THREE.Mesh(screenGeo, screenMat);
+      screenMesh.position.set(3.2, 0.5, 4.55);
+      spectroGroup.add(screenMesh);
+
+      // Monochromator Laser Ray Passing through Cuvette
+      const rayLaserGeo = new THREE.CylinderGeometry(0.06, 0.06, 6.0, 16);
+      rayLaserGeo.rotateZ(Math.PI / 2);
+      const rayLaserMat = new THREE.MeshBasicMaterial({ color: 0xf43f5e });
+      laserRayMesh = new THREE.Mesh(rayLaserGeo, rayLaserMat);
+      laserRayMesh.position.set(-2.5, 1.2, 1.0);
+      spectroGroup.add(laserRayMesh);
+
+      spectroGroup.visible = false; // Hidden in microscope mode
+      scene.add(spectroGroup);
+    }
+
+    // --- Animation Loop ---
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+
+      // Render Synchronized 2D Reticle Loupe
+      render2DLoupe();
+
+      renderer.render(scene, camera);
+    }
+
+    // --- 2D Synchronized Loupe Rendering ---
+    function render2DLoupe() {
+      const canvas = document.getElementById('loupeCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      if (state.activeLoupeTab === 'fov') {
+        render2DEyepieceFOV(ctx, w, h);
+      } else if (state.activeLoupeTab === 'spectrum') {
+        render2DSpectrum(ctx, w, h);
+      } else {
+        render2DBeerLambert(ctx, w, h);
+      }
+    }
+
+    function render2DEyepieceFOV(ctx, w, h) {
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = 68;
+
+      // Dark background
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, w, h);
+
+      // Circular Eyepiece Field
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.clip();
+
+      // Background illumination color
+      const b = state.lightIntensity;
+      ctx.fillStyle = `rgb(${Math.round(230 * b)}, ${Math.round(242 * b)}, ${Math.round(255 * b)})`;
+      ctx.fillRect(cx - radius, cy - radius, radius * 2, radius * 2);
+
+      // Focus Blur Calculation
+      const focusDiff = Math.abs(state.focusLevel - 50);
+      const blurPx = (focusDiff / 50.0) * 8.0;
+
+      // Draw Biological Specimens
+      ctx.filter = `blur(${blurPx}px)`;
+
+      if (state.specimen === 'bacillus') {
+        // Bacillus subtilis chains (Rod-shaped with green endospores)
+        ctx.fillStyle = '#6b21a8'; // Gram-positive purple
+        for (let i = -3; i <= 3; i++) {
+          const bx = cx + i * 22;
+          const by = cy + Math.sin(i * 1.2) * 12;
+          ctx.beginPath();
+          ctx.ellipse(bx, by, 10, 4.5, 0.2, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Green oval endospore inside
+          ctx.fillStyle = '#10b981';
+          ctx.beginPath();
+          ctx.ellipse(bx - 3, by, 3, 2, 0.2, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#6b21a8';
+        }
+      } else if (state.specimen === 'staph') {
+        // Staphylococcus aureus (Grape-like clusters)
+        ctx.fillStyle = '#7e22ce';
+        for (let i = 0; i < 35; i++) {
+          const sx = cx + (Math.sin(i * 1.7) * 28);
+          const sy = cy + (Math.cos(i * 2.3) * 24);
+          ctx.beginPath();
+          ctx.arc(sx, sy, 4.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      } else if (state.specimen === 'yeast') {
+        // Saccharomyces cerevisiae (Ovoid budding yeast)
+        ctx.fillStyle = 'rgba(14, 165, 233, 0.6)';
+        ctx.strokeStyle = '#0284c7';
+        ctx.lineWidth = 1.5;
+        for (let i = 0; i < 7; i++) {
+          const yx = cx + Math.sin(i * 1.5) * 36;
+          const yy = cy + Math.cos(i * 1.9) * 28;
+          ctx.beginPath();
+          ctx.ellipse(yx, yy, 12, 9, 0.4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        }
+      } else {
+        // GFP E. coli under 488nm laser
+        ctx.fillStyle = '#22c55e';
+        ctx.shadowColor = '#4ade80';
+        ctx.shadowBlur = 10;
+        for (let i = 0; i < 15; i++) {
+          const gx = cx + Math.sin(i * 2.1) * 42;
+          const gy = cy + Math.cos(i * 2.5) * 35;
+          ctx.beginPath();
+          ctx.ellipse(gx, gy, 8, 3, i * 0.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      ctx.filter = 'none';
+      ctx.restore();
+
+      // Eyepiece Stage Micrometer Reticle (Crosshairs & 10um divisions)
+      ctx.strokeStyle = 'rgba(15, 23, 42, 0.7)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(cx - radius, cy); ctx.lineTo(cx + radius, cy);
+      ctx.moveTo(cx, cy - radius); ctx.lineTo(cx, cy + radius);
+      ctx.stroke();
+
+      for (let x = -50; x <= 50; x += 10) {
+        ctx.beginPath();
+        ctx.moveTo(cx + x, cy - 3);
+        ctx.lineTo(cx + x, cy + 3);
+        ctx.stroke();
+      }
+
+      // Outer Ring
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    function render2DSpectrum(ctx, w, h) {
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'bold 9px monospace';
+      ctx.fillText('UV-VIS SPECTRUM SCAN: A(λ)', 12, 16);
+
+      // Axes
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(35, 25);
+      ctx.lineTo(35, h - 20);
+      ctx.lineTo(w - 15, h - 20);
+      ctx.stroke();
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = '8px Prompt';
+      ctx.fillText('200nm', 35, h - 8);
+      ctx.fillText('400nm', 115, h - 8);
+      ctx.fillText('600nm', 195, h - 8);
+      ctx.fillText('800nm', 270, h - 8);
+      ctx.fillText('A (AU)', 4, 30);
+
+      // Draw BSA / Bradford Spectrum Curve
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let nm = 200; nm <= 800; nm += 5) {
+        const x = 35 + ((nm - 200) / 600.0) * (w - 50);
+        // Gaussian peak centered at 595 nm (Bradford peak) + UV peak at 280 nm
+        const peak595 = Math.exp(-Math.pow((nm - 595) / 45.0, 2)) * state.sampleConcentration_mg_ml * 0.72;
+        const peak280 = Math.exp(-Math.pow((nm - 280) / 30.0, 2)) * state.sampleConcentration_mg_ml * 0.45;
+        const baseline = 0.04;
+        const absVal = peak595 + peak280 + baseline;
+
+        const y = (h - 20) - (absVal / 1.2) * (h - 45);
+        if (nm === 200) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Current Monochromator Operating Line
+      const currentX = 35 + ((state.specWavelength - 200) / 600.0) * (w - 50);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(currentX, 25);
+      ctx.lineTo(currentX, h - 20);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText(`λ=${state.specWavelength}nm`, currentX - 16, 24);
+    }
+
+    function render2DBeerLambert(ctx, w, h) {
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = 'bold 9px monospace';
+      ctx.fillText('BEER-LAMBERT STANDARD CURVE: A vs c', 12, 16);
+
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(35, 25);
+      ctx.lineTo(35, h - 20);
+      ctx.lineTo(w - 15, h - 20);
+      ctx.stroke();
+
+      ctx.fillStyle = '#64748b';
+      ctx.font = '8px Prompt';
+      ctx.fillText('0.0', 35, h - 8);
+      ctx.fillText('0.4', 115, h - 8);
+      ctx.fillText('0.8', 195, h - 8);
+      ctx.fillText('1.2 mg/mL', 255, h - 8);
+      ctx.fillText('A₅₉₅', 6, 30);
+
+      // Linear Calibration Line A = ε * c * l
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(35, h - 20);
+      const endX = 35 + (1.2 / 1.2) * (w - 50);
+      const endY = (h - 20) - ((1.2 * state.molarExtinction) / 1.0) * (h - 45);
+      ctx.lineTo(endX, endY);
+      ctx.stroke();
+
+      // Data Points
+      [0.0, 0.2, 0.4, 0.6, 0.8, 1.0].forEach(c => {
+        const px = 35 + (c / 1.2) * (w - 50);
+        const py = (h - 20) - ((c * state.molarExtinction) / 1.0) * (h - 45);
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.arc(px, py, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Current Sample Operating Point
+      const curX = 35 + (state.sampleConcentration_mg_ml / 1.2) * (w - 50);
+      const curY = (h - 20) - (state.measuredAbsorbance / 1.0) * (h - 45);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.beginPath();
+      ctx.arc(curX, curY, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillText(`c=${state.sampleConcentration_mg_ml.toFixed(2)}, A=${state.measuredAbsorbance.toFixed(3)}`, curX - 45, curY - 8);
+    }
+
+    // --- Interactive Parameter Controls ---
+    function setObjective(mag, na, fov) {
+      state.magObjective = mag;
+      state.numericalAperture = state.oilApplied && mag === 100 ? 1.25 : (mag === 100 ? 0.90 : na);
+      state.fieldOfView_um = fov;
+
+      document.getElementById('labelObjective').textContent = `${mag}x (NA ${state.numericalAperture.toFixed(2)})`;
+      [4, 10, 40, 100].forEach(m => {
+        const btn = document.getElementById(`objBtn_${m}`);
+        if (m === mag) {
+          btn.className = 'py-1.5 px-1 rounded-lg bg-cyan-600 text-white text-[11px] font-mono font-bold border border-cyan-400 transition';
+        } else {
+          btn.className = 'py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-mono border border-white/5 transition';
+        }
+      });
+
+      if (objectiveNosepiece) {
+        const rotAngles = { 4: 0, 10: Math.PI / 2, 40: Math.PI, 100: Math.PI * 1.5 };
+        objectiveNosepiece.rotation.y = rotAngles[mag];
+      }
+
+      updateOpticsTelemetry();
+      playBeep(450, 0.08);
+    }
+
+    function setSpecimen(spec) {
+      state.specimen = spec;
+      ['bacillus', 'staph', 'yeast', 'fluo'].forEach(s => {
+        const btn = document.getElementById(`specBtn_${s}`);
+        if (s === spec) {
+          btn.className = 'py-1.5 px-2.5 rounded-xl bg-emerald-600/30 border border-emerald-500 text-emerald-300 font-mono text-xs font-bold transition text-left';
+        } else {
+          btn.className = 'py-1.5 px-2.5 rounded-xl bg-slate-800 text-slate-400 border border-white/5 font-mono text-xs transition hover:text-white text-left';
+        }
+      });
+
+      const badge = document.getElementById('laserStatusBadge');
+      if (spec === 'fluo') {
+        badge.classList.remove('hidden');
+        badge.classList.add('flex');
+      } else {
+        badge.classList.add('hidden');
+        badge.classList.remove('flex');
+      }
+
+      const specNames = {
+        'bacillus': 'Bacillus subtilis',
+        'staph': 'Staphylococcus aureus',
+        'yeast': 'Saccharomyces cerevisiae',
+        'fluo': 'GFP-E. coli'
+      };
+      document.getElementById('loupeStatusText').textContent = `${specNames[spec]} • ${state.magObjective}x`;
+
+      playBeep(520, 0.05);
+    }
+
+    function onFocusChange(val) {
+      state.focusLevel = parseInt(val);
+      const diff = Math.abs(state.focusLevel - 50);
+      const text = diff === 0 ? '50.0 μm (In Focus)' : `${(50 + (state.focusLevel - 50) * 0.4).toFixed(1)} μm (Blur)`;
+      document.getElementById('focusValText').textContent = text;
+    }
+
+    function toggleImmersionOil() {
+      state.oilApplied = !state.oilApplied;
+      const btn = document.getElementById('btnOilToggle');
+      const badge = document.getElementById('oilStatusBadge');
+
+      if (state.oilApplied) {
+        state.refractiveIndex = 1.518;
+        btn.textContent = 'ล้าง Oil ออก';
+        btn.className = 'mt-2 py-1 px-2 rounded-lg bg-amber-600 text-white font-mono text-[11px] font-bold shadow transition';
+        badge.classList.remove('hidden');
+        badge.classList.add('flex');
+      } else {
+        state.refractiveIndex = 1.0;
+        btn.textContent = 'หยด Oil (n=1.518)';
+        btn.className = 'mt-2 py-1 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-[11px] border border-white/5 transition';
+        badge.classList.add('hidden');
+        badge.classList.remove('flex');
+      }
+
+      if (state.magObjective === 100) {
+        state.numericalAperture = state.oilApplied ? 1.25 : 0.90;
+      }
+      updateOpticsTelemetry();
+      playBeep(state.oilApplied ? 700 : 350, 0.08);
+    }
+
+    function onLightChange(val) {
+      state.lightIntensity = parseInt(val) / 100.0;
+      document.getElementById('lightIntensityVal').textContent = `${val}%`;
+      if (lightConeMesh) {
+        lightConeMesh.material.opacity = 0.15 + state.lightIntensity * 0.25;
+      }
+    }
+
+    function onWavelengthChange(val) {
+      state.specWavelength = parseInt(val);
+      document.getElementById('sliderWavelengthVal').textContent = `${state.specWavelength} nm`;
+      updateSpectroAbsorbance();
+      playBeep(420, 0.04);
+    }
+
+    function setPresetWavelength(nm) {
+      document.getElementById('waveSlider').value = nm;
+      onWavelengthChange(nm);
+    }
+
+    function onConcentrationChange(val) {
+      state.sampleConcentration_mg_ml = parseFloat(val);
+      document.getElementById('sliderConcentrationVal').textContent = `${state.sampleConcentration_mg_ml.toFixed(2)} mg/mL`;
+      updateSpectroAbsorbance();
+    }
+
+    function performBlankCalibration() {
+      state.blankOffset = state.measuredAbsorbance;
+      updateSpectroAbsorbance();
+      playBeep(850, 0.15);
+      alert(`สอบเทียบ Calibrate Zero Blank สำเร็จที่ความยาวคลื่น ${state.specWavelength} nm (A = 0.000)`);
+    }
+
+    function updateSpectroAbsorbance() {
+      // Beer-Lambert calculation A = ε * c * l
+      const peak595Factor = Math.exp(-Math.pow((state.specWavelength - 595) / 45.0, 2));
+      const peak280Factor = Math.exp(-Math.pow((state.specWavelength - 280) / 30.0, 2));
+      const effExtinction = (peak595Factor * 0.714) + (peak280Factor * 0.45) + 0.04;
+
+      const rawA = effExtinction * state.sampleConcentration_mg_ml * state.pathLength_cm;
+      state.measuredAbsorbance = Math.max(0, rawA - state.blankOffset);
+      state.measuredTransmittance = Math.pow(10, -state.measuredAbsorbance) * 100.0;
+
+      document.getElementById('hudAbsorbance').textContent = `${state.measuredAbsorbance.toFixed(3)} AU`;
+      document.getElementById('hudWavelength').textContent = `${state.specWavelength} nm`;
+    }
+
+    function updateOpticsTelemetry() {
+      const totalMag = state.magObjective * state.magEyepiece;
+      document.getElementById('hudMag').textContent = `${totalMag}x`;
+      document.getElementById('hudNA').textContent = state.numericalAperture.toFixed(2);
+
+      // Abbe Diffraction limit: d = λ / (2 * NA)
+      const abbeLimit_um = (state.wavelength_nm / (2.0 * state.numericalAperture)) / 1000.0;
+      document.getElementById('hudResolution').textContent = abbeLimit_um.toFixed(2);
+      document.getElementById('hudFOV').textContent = `${state.fieldOfView_um}`;
+
+      document.getElementById('loupeMetricText').textContent = `d = ${abbeLimit_um.toFixed(2)} μm`;
+    }
+
+    function switchExperimentMode(mode) {
+      state.mode = mode;
+      const micSec = document.getElementById('microscopeControlSection');
+      const specSec = document.getElementById('spectroControlSection');
+      const label = document.getElementById('currentModeLabel');
+
+      if (mode === 'microscope') {
+        micSec.classList.remove('hidden');
+        specSec.classList.add('hidden');
+        document.getElementById('modeBtn_microscope').className = 'py-2 px-3 rounded-xl bg-cyan-600/30 border border-cyan-500 text-cyan-300 font-bold text-xs flex items-center justify-center gap-2 transition';
+        document.getElementById('modeBtn_spectro').className = 'py-2 px-3 rounded-xl bg-slate-950/60 border border-white/10 text-slate-400 font-medium text-xs flex items-center justify-center gap-2 transition hover:text-white';
+        label.textContent = 'Compound Microscope';
+        microscopeGroup.visible = true;
+        spectroGroup.visible = false;
+        setCameraView('overview');
+        setLoupeTab('fov');
+      } else {
+        micSec.classList.add('hidden');
+        specSec.classList.remove('hidden');
+        document.getElementById('modeBtn_spectro').className = 'py-2 px-3 rounded-xl bg-rose-600/30 border border-rose-500 text-rose-300 font-bold text-xs flex items-center justify-center gap-2 transition';
+        document.getElementById('modeBtn_microscope').className = 'py-2 px-3 rounded-xl bg-slate-950/60 border border-white/10 text-slate-400 font-medium text-xs flex items-center justify-center gap-2 transition hover:text-white';
+        label.textContent = 'Spectrophotometer';
+        microscopeGroup.visible = false;
+        spectroGroup.visible = true;
+        setCameraView('spectro');
+        setLoupeTab('spectrum');
+      }
+
+      playBeep(650, 0.08);
+    }
+
+    function setLoupeTab(tab) {
+      state.activeLoupeTab = tab;
+      ['fov', 'spectrum', 'beer'].forEach(t => {
+        const btn = document.getElementById(`tabBtn_${t}`);
+        if (t === tab) {
+          btn.className = 'py-1 rounded-lg bg-cyan-600 text-white font-bold transition';
+        } else {
+          btn.className = 'py-1 rounded-lg text-slate-400 hover:text-slate-200 transition';
+        }
+      });
+
+      const overlay = document.getElementById('loupeAnnotationOverlay');
+      if (tab === 'fov') overlay.textContent = 'Diffraction Limited • Airy Reticle';
+      else if (tab === 'spectrum') overlay.textContent = 'UV-Vis Dual-Beam Monochromator';
+      else overlay.textContent = 'Beer-Lambert Calibration Line';
+
+      playBeep(550, 0.05);
+    }
+
+    function setCameraView(view) {
+      if (!camera || !controls) return;
+      if (view === 'overview') {
+        camera.position.set(0, 14, 20);
+        controls.target.set(0, 2, 0);
+      } else if (view === 'eyepiece') {
+        camera.position.set(0, 7.5, 4.5);
+        controls.target.set(0, 4.2, 0);
+      } else if (view === 'stage') {
+        camera.position.set(0, 2.5, 7.5);
+        controls.target.set(0, -0.6, 0);
+      } else if (view === 'spectro') {
+        camera.position.set(2.0, 8.5, 12.0);
+        controls.target.set(0, 0, 0);
+      }
+      controls.update();
+      playBeep(750, 0.06);
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('controlSidebar');
+      const container = document.getElementById('canvasContainer');
+      const label = document.getElementById('toggleSidebarLabel');
+
+      if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden');
+        container.classList.remove('lg:col-span-12');
+        container.classList.add('lg:col-span-8');
+        label.textContent = 'ขยายจอเต็ม';
+      } else {
+        sidebar.classList.add('hidden');
+        container.classList.remove('lg:col-span-8');
+        container.classList.add('lg:col-span-12');
+        label.textContent = 'ย่อแถบข้าง';
+      }
+      setTimeout(onWindowResize, 100);
+      playBeep(650, 0.06);
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('canvasContainer');
+      if (!renderer || !camera) return;
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    function toggleCardContent(contentId) {
+      const content = document.getElementById(contentId);
+      if (!content) return;
+      content.classList.toggle('hidden');
+      playBeep(420, 0.05);
+    }
+
+    function hideCard(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      card.classList.add('hidden');
+
+      const dock = document.getElementById('dockRestoreButtons');
+      const cardNames = {
+        'opticsHUD': 'โทรมาตรออปติกส์',
+        'opticsLoupeCard': 'เลนส์ซูมเรติเคิล'
+      };
+
+      const btn = document.createElement('button');
+      btn.id = `restoreBtn_${cardId}`;
+      btn.className = 'px-2 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-cyan-400 font-mono text-[10px] flex items-center gap-1 transition';
+      btn.innerHTML = `<i class="fa-solid fa-window-restore text-[9px]"></i> ${cardNames[cardId] || cardId}`;
+      btn.onclick = function() {
+        card.classList.remove('hidden');
+        btn.remove();
+        playBeep(550, 0.08);
+      };
+      dock.appendChild(btn);
+      playBeep(350, 0.08);
+    }
+
+    function resetParameters() {
+      setObjective(40, 0.65, 450);
+      setSpecimen('bacillus');
+      document.getElementById('focusSlider').value = 50;
+      onFocusChange(50);
+      if (state.oilApplied) toggleImmersionOil();
+      document.getElementById('waveSlider').value = 595;
+      onWavelengthChange(595);
+      document.getElementById('concSlider').value = 0.60;
+      onConcentrationChange(0.60);
+      state.blankOffset = 0;
+      updateSpectroAbsorbance();
+    }
+
+    function toggleSound(enabled) {
+      state.soundEnabled = enabled;
+      if (enabled) playBeep(800, 0.08);
+    }
+
+    window.captureSimulatorScreenshot = function() {
+      if (!renderer) return null;
+      renderer.render(scene, camera);
+      const dataUrl = renderer.domElement.toDataURL('image/png');
+      
+      const link = document.createElement('a');
+      link.download = `optics_spectro_sim11_${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+
+      playBeep(950, 0.15);
+      return dataUrl;
+    };
+
+    window.onload = function() {
+      init3D();
+      updateOpticsTelemetry();
+      updateSpectroAbsorbance();
+    };
+  </script>
+</body>
+</html>
