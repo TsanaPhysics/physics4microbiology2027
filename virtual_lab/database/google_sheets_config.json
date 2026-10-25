@@ -1,0 +1,6 @@
+{
+  "webhook_url": "",
+  "description": "ระบุ Google Apps Script Web App URL เพื่อเปิดใช้งานการซิงค์ข้อมูลผลปฏิบัติการลง Google Sheets อัตโนมัติ",
+  "sync_enabled": true,
+  "backup_local_sqlite": true
+}

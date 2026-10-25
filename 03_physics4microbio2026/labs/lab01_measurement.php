@@ -10,7 +10,7 @@ include '../includes/header.php';
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 space-y-6">
 
-    <!-- Hero Header (Integrated Glassmorphism, No Overlap) -->
+    <!-- Hero Header -->
     <div class="bg-gradient-to-r from-slate-900 via-emerald-950/40 to-slate-900 border border-emerald-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden backdrop-blur-xl">
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative z-10">
             <div>
@@ -26,13 +26,10 @@ include '../includes/header.php';
                 </div>
                 <div class="flex flex-wrap gap-2 mt-3 text-xs">
                     <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-emerald-300 border border-emerald-500/30">
-                        🇹🇭 การวัดความยาว เครื่องมือละเอียด ไมโครมิเตอร์ และไมโครปิเปต
+                        🇹🇭 บันทึกผลจาก 3D Simulator • บันทึกลง SQLite • เชื่อมโยง Google Sheets
                     </span>
                     <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-sky-300 border border-sky-500/30">
-                        🇬🇧 Vernier Mechanics, Screw Micrometer &amp; ISO 8655 Pipette
-                    </span>
-                    <span class="px-3 py-1 rounded-lg bg-slate-800/80 text-amber-300 border border-amber-500/30">
-                        🇨🇳 精密测量、游标卡尺、千分尺与微量移液器重量校准
+                        🇬🇧 Interactive Student E-Report with Photo Proof &amp; Automated Evaluation
                     </span>
                 </div>
             </div>
@@ -40,8 +37,8 @@ include '../includes/header.php';
                 <a href="../../virtual_lab/index.html?lab=1" target="_blank" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-lg shadow-emerald-950/50 transition transform active:scale-95">
                     <i class="fa-solid fa-flask"></i> เข้าสู่ห้องแล็บ 3D เต็มรูปแบบ (13 Labs)
                 </a>
-                <a href="../simulations/sim01_unit_converter.php" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-white/10 font-bold text-xs flex items-center gap-2 transition">
-                    <i class="fa-solid fa-ruler-combined text-sky-400"></i> สเกลจำลอง 3D
+                <a href="../simulations/sim_vernier_caliper_3d.html" target="_blank" class="px-4 py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-bold text-xs flex items-center gap-2 transition">
+                    <i class="fa-solid fa-expand"></i> 3D Caliper Fullscreen (Loupe &amp; Quiz) ↗
                 </a>
             </div>
         </div>
@@ -58,7 +55,7 @@ include '../includes/header.php';
                     โต๊ะปฏิบัติการเสมือนจริง 3 มิติ (3D Virtual Bench &amp; Telemetry)
                 </h2>
                 <p class="text-xs text-slate-400 mt-0.5">
-                    จำลองเครื่องมือวัดฟิสิกส์สำหรับจุลชีววิทยา 3 ชนิด: เวอร์เนียร์คาลิเปอร์, ไมโครมิเตอร์สกรูเกจ (0.01 mm), และไมโครปิเปต P1000 พร้อมเครื่องชั่งวิเคราะห์
+                    หมุนสำรวจ 360° และทดลองวัดค่าจริงจากแบบจำลองเพื่อนำข้อมูลไปบันทึกลงในตารางผลการทดลองด้านล่าง
                 </p>
             </div>
 
@@ -92,12 +89,13 @@ include '../includes/header.php';
                     <i class="fa-solid fa-rotate-left"></i>
                 </button>
             </div>
-            <a href="../simulations/sim_vernier_caliper_3d.html" target="_blank" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition flex items-center gap-1.5 ml-auto" title="เปิดหน้าต่างจำลอง 3 มิติเต็มรูปแบบ พร้อมแว่นขยายและโหมดทดสอบความรู้">
-                <i class="fa-solid fa-expand"></i> 3D Caliper Fullscreen (Loupe &amp; Quiz) ↗
-            </a>
+            
+            <button onclick="capture3dSimulator()" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 shadow-lg shadow-emerald-950/40 transition flex items-center gap-2">
+                <i class="fa-solid fa-camera-retro text-sm"></i> 📸 แคปหน้าจอ 3D เพื่อแนบเป็นหลักฐานการทดลอง
+            </button>
         </div>
 
-        <!-- 3D Scene Viewport (Unobstructed View) -->
+        <!-- 3D Scene Viewport -->
         <div id="bench3dWrapper" class="relative w-full h-[380px] sm:h-[420px] bg-slate-950 rounded-2xl overflow-hidden border border-white/10 shadow-inner">
             <div id="instrument-3d-canvas" class="w-full h-full"></div>
 
@@ -123,14 +121,12 @@ include '../includes/header.php';
                     <i class="fa-solid fa-compass text-emerald-400"></i> PBR Vernier Caliper (0.05 mm)
                 </div>
                 <div id="hudInstrumentMeta" class="text-slate-400 text-[10px] font-mono">
-                    ความละเอียดสเกล: 0.05 mm • หมุนสำรวจอิสระ 360°
+                    ความละเอียดสเกล: 0.05 mm • ช่วงวัด: 0 - 150 mm • หมุนสำรวจ 360°
                 </div>
             </div>
         </div>
 
-        <!-- ------------------------------------------------------------------- -->
-        <!-- Telemetry Control Panel 1: VERNIER CALIPER (0.05 mm) -->
-        <!-- ------------------------------------------------------------------- -->
+        <!-- Telemetry Control Panel 1: VERNIER CALIPER -->
         <div id="panelCaliper" class="p-5 rounded-2xl bg-slate-950/80 border border-emerald-500/30 space-y-4">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/5 pb-3">
                 <div class="flex flex-wrap items-center gap-2">
@@ -140,7 +136,7 @@ include '../includes/header.php';
                     <button onclick="setCaliperSpecimen(12.50, 'คิวเวตต์วัดความขุ่น (Cuvette)')" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-white border border-white/10 transition">คิวเวตต์ (12.50 mm)</button>
                 </div>
                 <div class="text-left sm:text-right">
-                    <span class="text-[11px] text-slate-400">ค่าวัดสุทธิ (Total Measurement):</span>
+                    <span class="text-[11px] text-slate-400">ค่าวัดเวอร์เนียร์สุทธิ:</span>
                     <div id="caliperReadingDisplay" class="text-2xl font-mono font-bold text-emerald-300">88.60 mm</div>
                 </div>
             </div>
@@ -159,9 +155,7 @@ include '../includes/header.php';
             </div>
         </div>
 
-        <!-- ------------------------------------------------------------------- -->
-        <!-- Telemetry Control Panel 2: MICROMETER SCREW GAUGE (0.01 mm) -->
-        <!-- ------------------------------------------------------------------- -->
+        <!-- Telemetry Control Panel 2: MICROMETER SCREW GAUGE -->
         <div id="panelMicrometer" class="p-5 rounded-2xl bg-slate-950/80 border border-sky-500/30 space-y-4 hidden">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/5 pb-3">
                 <div class="flex flex-wrap items-center gap-2">
@@ -209,9 +203,7 @@ include '../includes/header.php';
             </div>
         </div>
 
-        <!-- ------------------------------------------------------------------- -->
-        <!-- Telemetry Control Panel 3: MICROPIPETTE P1000 & BALANCE (ISO 8655) -->
-        <!-- ------------------------------------------------------------------- -->
+        <!-- Telemetry Control Panel 3: MICROPIPETTE P1000 & BALANCE -->
         <div id="panelPipette" class="p-5 rounded-2xl bg-slate-950/80 border border-purple-500/30 space-y-4 hidden">
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/5 pb-3">
                 <div class="space-y-1">
@@ -241,11 +233,10 @@ include '../includes/header.php';
                 </div>
             </div>
 
-            <!-- Volume Slider & Operation Controls -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
                 <div class="lg:col-span-7 space-y-2">
                     <div class="flex justify-between text-xs font-mono text-slate-300">
-                        <span>หมุนปรับปริมาตรไมโครปิเปต (Micropipette Volume Dial):</span>
+                        <span>หมุนปรับปริมาตรไมโครปิเปต:</span>
                         <span id="pipetteVolLabel" class="text-purple-400 font-bold">1000 µL</span>
                     </div>
                     <input type="range" id="pipetteSlider" min="100" max="1000" step="5" value="1000" oninput="updatePipetteSlide(this.value)" class="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-purple-400">
@@ -302,394 +293,205 @@ include '../includes/header.php';
 
     </div>
 
-    <!-- Lab Content Body -->
-    <div class="space-y-6">
+    <!-- Interactive E-Report Submission Form -->
+    <form id="labReportForm" onsubmit="validateAndSubmitReport(event)" class="space-y-6">
 
-        <!-- Objectives Card -->
-        <div class="bg-slate-900/90 border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl">
-            <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2 mb-4">
-                🎯 <span class="lang-block" lang="th">วัตถุประสงค์การทดลอง</span>
-                <span class="lang-block" lang="en">Laboratory Objectives</span>
-                <span class="lang-block" lang="zh">实验目标</span>
-            </h2>
-            <ul class="space-y-2.5 text-sm text-slate-300">
-                <li class="flex items-start gap-2.5">
-                    <span class="text-emerald-400 mt-0.5">•</span>
-                    <span>ฝึกทักษะการใช้และอ่านค่าเครื่องมือวัดความแม่นยำสูง ได้แก่ ไม้บรรทัดเหล็ก, เวอร์เนียร์คาลิเปอร์ ($0.05\text{ mm}$), และไมโครมิเตอร์สกรูเกจ ($0.01\text{ mm}$) ได้อย่างถูกต้องตามหลักวิศวกรรมฟิสิกส์</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                    <span class="text-emerald-400 mt-0.5">•</span>
-                    <span>เรียนรู้วิธีตรวจสอบและชดเชยค่าความคลาดเคลื่อนศูนย์ (Zero Error: Positive / Negative Zero Bias) ของไมโครมิเตอร์ก่อนทำการวัดจริง</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                    <span class="text-emerald-400 mt-0.5">•</span>
-                    <span>ฝึกปฏิบัติการใช้งานไมโครปิเปต P1000 และทำการสอบเทียบความแม่นยำ (Micropipette Calibration) ด้วยวิธีชั่งน้ำหนัก (Gravimetric Method) ตามมาตรฐานสากล ISO 8655-6</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                    <span class="text-emerald-400 mt-0.5">•</span>
-                    <span>คำนวณและประเมินค่าความคลาดเคลื่อนเป็นระบบ (Systematic Error / Inaccuracy, $E\%$) และความคลาดเคลื่อนสุ่ม (Random Error / Imprecision, $\text{CV}\%$)</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                    <span class="text-emerald-400 mt-0.5">•</span>
-                    <span>รายงานผลการวัดพร้อมเลขนัยสำคัญ (Significant Figures) และค่าความไม่แน่นอน ($\pm \Delta x$) ตามมาตรฐานสากล IUPAC/ISO</span>
-                </li>
-                <li class="flex items-start gap-2.5">
-                    <span class="text-emerald-400 mt-0.5">•</span>
-                    <span>วัดและวิเคราะห์ขนาดเส้นผ่านศูนย์กลางโคโลนีจุลินทรีย์บนจานเพาะเชื้อ และวัดค่าความขุ่น (Turbidity: NTU) ของตัวอย่างน้ำธรรมชาติและน้ำเสีย</span>
-                </li>
-            </ul>
+        <!-- 1. Student Profile Card (Mandatory) -->
+        <div class="bg-slate-900/90 border border-emerald-500/30 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl space-y-4">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-id-card text-emerald-400"></i>
+                    ข้อมูลนักศึกษาผู้ส่งรายงานผลปฏิบัติการ (Student Identification)
+                </h2>
+                <span class="text-xs text-rose-400 font-semibold">* จำเป็นต้องกรอกทุกช่อง</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        ชื่อ - นามสกุล (Full Name) <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" id="student_fullname" name="student_fullname" placeholder="เช่น นายกิตติคุณ มั่นคง" required class="w-full bg-slate-950 border border-white/15 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        รหัสนักศึกษา (Student ID) <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" id="student_id" name="student_id" placeholder="เช่น 67144001" pattern="[0-9]{6,12}" required class="w-full bg-slate-950 border border-white/15 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition font-mono">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        สาขาวิชา (Program) <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" id="student_program" name="student_program" value="วิทยาศาสตร์และเทคโนโลยี จุลชีววิทยา" required class="w-full bg-slate-950 border border-white/15 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        กลุ่มเรียน / Section <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" id="student_section" name="student_section" value="Sec 01" required class="w-full bg-slate-950 border border-white/15 focus:border-emerald-400 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition font-mono">
+                </div>
+            </div>
         </div>
 
-        <!-- Theory & Gaussian Uncertainty Section -->
-        <div class="bg-slate-900/90 border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl space-y-6">
-            <h2 class="text-lg font-bold text-sky-400 flex items-center gap-2">
-                📖 <span class="lang-block" lang="th">ทฤษฎีที่เกี่ยวข้อง</span>
-                <span class="lang-block" lang="en">Relevant Theory</span>
-                <span class="lang-block" lang="zh">相关理论</span>
-            </h2>
+        <!-- 2. Snapshot & Experiment Evidence Card (Mandatory Proof) -->
+        <div class="bg-slate-900/90 border border-emerald-500/30 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
+                <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-camera text-sky-400"></i>
+                    ภาพถ่ายหรือแคปหน้าจอระหว่างทดลอง (Experiment Screenshot Proof)
+                </h2>
+                <div id="proofBadgeStatus" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
+                    <i class="fa-solid fa-circle-exclamation"></i> ยังไม่มีภาพหลักฐาน (จำเป็นก่อนส่ง)
+                </div>
+            </div>
 
-            <p class="text-sm text-slate-300 leading-relaxed text-justify">
-                การวัดทางฟิสิกส์สำหรับจุลชีววิทยาเป็นหัวใจสำคัญของการวิเคราะห์เชิงปริมาณ ในงานเพาะเลี้ยงเชื้อและการทดสอบทางชีวโมเลกุล เครื่องมือวัดแต่ละชนิดมีขีดจำกัดความละเอียด (Resolution) และความไม่แน่นอน (Uncertainty) ประจำตัว การเลือกใช้เครื่องมือที่เหมาะสม ตั้งแต่เวอร์เนียร์คาลิเปอร์สำหรับวัดขนาดภาชนะและโคโลนี ไมโครมิเตอร์สำหรับวัดความหนาของแผ่นสไลด์และฟิล์มเซลล์ จนถึงไมโครปิเปตสำหรับตวงปริมาตรระดับไมโครลิตร จะต้องได้รับการสอบเทียบ (Calibration) และรายงานผลตามหลักสถิติและเลขนัยสำคัญเสมอ
+            <p class="text-xs text-slate-300 leading-relaxed">
+                ตามข้อกำหนดของรายวิชา นักศึกษาจะต้องแนบภาพถ่ายหน้าจอระหว่างการทดลองบน 3D Virtual Bench (เช่น ขณะวัดขนาดจานเพาะเชื้อ, หมุนไมโครมิเตอร์, หรือชั่งน้ำหนักไมโครปิเปต) เพื่อยืนยันว่าได้ทำการทดลองจริง
             </p>
 
-            <!-- Three Metrology Pillar Cards (Vernier, Micrometer, Micropipette) -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="p-5 rounded-2xl bg-slate-950/70 border border-emerald-500/30 space-y-2">
-                    <div class="text-xs font-bold text-emerald-300 flex items-center gap-2">
-                        📏 1. เวอร์เนียร์คาลิเปอร์ ($0.05\text{ mm}$)
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <!-- Action Controls -->
+                <div class="md:col-span-5 space-y-3">
+                    <button type="button" onclick="capture3dSimulator()" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition active:scale-95">
+                        <i class="fa-solid fa-camera-retro text-base"></i> 📸 แคปหน้าจอ 3D Simulator ตอนนี้
+                    </button>
+                    
+                    <div class="text-center text-[11px] text-slate-500 font-mono">— หรือ —</div>
+
+                    <label class="w-full py-2.5 px-4 rounded-2xl bg-slate-950 hover:bg-slate-800 text-slate-300 border border-white/15 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition">
+                        <i class="fa-solid fa-upload"></i> อัปโหลดไฟล์ภาพ / ถ่ายภาพจากกล้อง
+                        <input type="file" id="imageFileInput" accept="image/*" capture="environment" onchange="handleImageFileUpload(event)" class="hidden">
+                    </label>
+
+                    <div class="text-[11px] text-slate-400">
+                        รองรับไฟล์ภาพ PNG, JPG, JPEG ขนาดไม่เกิน 5 MB
                     </div>
-                    <p class="text-xs text-slate-300 leading-relaxed">
-                        อาศัยหลักผลต่างระหว่างช่องสเกลหลัก ($1\text{ mm}$) กับช่องสเกลเวอร์เนียร์ ($0.95\text{ mm}$) โดยสเกลเวอร์เนียร์ 20 ช่องมีระยะรวม $19\text{ mm}$ ความละเอียดจึงเท่ากับ $1.00 - 0.95 = 0.05\text{ mm}$
-                    </p>
                 </div>
 
-                <div class="p-5 rounded-2xl bg-slate-950/70 border border-sky-500/30 space-y-2">
-                    <div class="text-xs font-bold text-sky-300 flex items-center gap-2">
-                        ⚙️ 2. ไมโครมิเตอร์สกรูเกจ ($0.01\text{ mm}$)
+                <!-- Preview Thumbnail Container -->
+                <div class="md:col-span-7 flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-950 border border-dashed border-white/20 min-h-[160px] relative overflow-hidden">
+                    <img id="proofPreviewImg" src="" alt="Experiment Proof Preview" class="max-h-[180px] w-auto rounded-xl object-contain hidden border border-white/10 shadow-lg">
+                    <div id="proofPlaceholder" class="text-center space-y-1 text-slate-500 py-6">
+                        <i class="fa-regular fa-image text-4xl mb-1"></i>
+                        <div class="text-xs font-semibold">ยังไม่มีภาพหลักฐานการทดลอง</div>
+                        <div class="text-[10px]">กดปุ่มแคปหน้าจอ 3D หรือเลือกไฟล์ภาพด้านซ้าย</div>
                     </div>
-                    <p class="text-xs text-slate-300 leading-relaxed">
-                        อาศัยกลไกพิตช์เกลียวละเอียด (Screw Pitch $0.5\text{ mm}$) เมื่อหมุนปลอก Thimble 1 รอบ แกนวัด Spindle เคลื่อนที่ $0.5\text{ mm}$ ปลอกหมุนแบ่ง 50 ขีด ขีดละ $\frac{0.5}{50} = 0.01\text{ mm}$ พร้อมหมุน Ratchet 2-3 คลิกเพื่อควบคุมแรงกดคงที่
-                    </p>
-                </div>
-
-                <div class="p-5 rounded-2xl bg-slate-950/70 border border-purple-500/30 space-y-2">
-                    <div class="text-xs font-bold text-purple-300 flex items-center gap-2">
-                        🧪 3. การสอบเทียบไมโครปิเปต (ISO 8655)
-                    </div>
-                    <p class="text-xs text-slate-300 leading-relaxed">
-                        ใช้วิธีชั่งน้ำหนักน้ำกลั่นบริสุทธิ์ (Gravimetric Method) ด้วยเครื่องชั่ง 4 ตำแหน่ง ($0.0001\text{ g}$) แปลงมวลเป็นปริมาตรด้วย $Z$-factor ที่อุณหภูมิทดสอบ ($V = m \times Z$) เพื่อหาความถูกต้อง $E\%$ และความเที่ยงตรง $\text{CV}\%$
-                    </p>
-                </div>
-            </div>
-
-            <!-- Zero Error & Correction Equation Box -->
-            <div class="p-5 rounded-2xl bg-slate-950/80 border border-amber-500/30 space-y-3">
-                <div class="flex items-center gap-2">
-                    <span class="text-amber-400 font-bold text-sm">⚠️ การปรับแก้ค่าความคลาดเคลื่อนศูนย์ของไมโครมิเตอร์ (Zero Error Correction)</span>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-300">
-                    <div class="p-3 rounded-xl bg-slate-900 border border-white/5 space-y-1">
-                        <strong class="text-amber-300">ความคลาดเคลื่อนศูนย์แบบบวก (Positive Zero Error):</strong>
-                        <p class="m-0 leading-relaxed">เมื่อปิดปากวัดสนิท ขีดศูนย์บน Thimble อยู่ต่ำกว่าเส้นแกน Sleeve ค่าที่อ่านได้จริงจะเกิน ต้องนำมา <strong class="text-white">"ลบออก"</strong></p>
-                    </div>
-                    <div class="p-3 rounded-xl bg-slate-900 border border-white/5 space-y-1">
-                        <strong class="text-amber-300">ความคลาดเคลื่อนศูนย์แบบลบ (Negative Zero Error):</strong>
-                        <p class="m-0 leading-relaxed">เมื่อปิดปากวัดสนิท ขีดศูนย์บน Thimble อยู่สูงกว่าเส้นแกน Sleeve ค่าที่อ่านได้จริงจะขาด ต้องนำมา <strong class="text-white">"บวกเพิ่ม"</strong></p>
-                    </div>
-                </div>
-                <div class="text-center font-mono text-xs text-amber-300 bg-slate-950 py-2 rounded-xl border border-white/10">
-                    $$x_{\text{corrected}} = x_{\text{measured}} - (\text{Zero Error})$$
-                </div>
-            </div>
-
-            <!-- Gaussian Uncertainty Chart -->
-            <div class="p-5 rounded-2xl bg-slate-950/90 border border-emerald-500/30 space-y-3">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-chart-area text-emerald-400 text-lg"></i>
-                    <h3 class="text-sm font-bold text-white">ฟังก์ชันการแจกแจงความน่าจะเป็นของความคลาดเคลื่อน (Gaussian Uncertainty Distribution)</h3>
-                </div>
-                <div class="rounded-xl overflow-hidden border border-white/10 bg-slate-950 p-2">
-                    <img src="../images/ch01/gaussian_uncertainty_chart.svg" alt="Gaussian Uncertainty Distribution Curve" class="w-full h-auto rounded-lg">
-                </div>
-                <p class="text-[11px] text-slate-400 leading-relaxed">
-                    รูปแสดงฟังก์ชันความหนาแน่นความน่าจะเป็นแบบเกาส์เซียนของการวัดซ้ำ ($\mu = 9.00\text{ cm}, \sigma = 0.04\text{ cm}$) ครอบคลุมช่วงความเชื่อมั่น $\pm 1\sigma$ ($68.3\%$) และ $\pm 2\sigma$ ($95.4\%$)
-                </p>
-            </div>
-
-            <!-- ISO 8655 Gravimetric Equations Grid (2-Column Responsive Cards) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="p-4 rounded-2xl bg-slate-950/80 border border-emerald-500/30 text-center space-y-1">
-                    <div class="text-xs text-slate-400 font-mono">ความคลาดเคลื่อนเป็นระบบ (Systematic Error / Inaccuracy, $E\%$)</div>
-                    <div class="text-sm font-mono text-emerald-400 font-bold overflow-x-auto py-1">
-                        $$E\% = \left(\frac{\bar{V} - V_0}{V_0}\right) \times 100\%$$
-                    </div>
-                    <div class="text-[10px] text-slate-400">เกณฑ์ ISO 8655 สำหรับ P1000 ที่ 1000 µL: $\le \pm 0.8\%$</div>
-                </div>
-                <div class="p-4 rounded-2xl bg-slate-950/80 border border-purple-500/30 text-center space-y-1">
-                    <div class="text-xs text-slate-400 font-mono">ความคลาดเคลื่อนสุ่ม (Random Error / Imprecision, $\text{CV}\%$)</div>
-                    <div class="text-sm font-mono text-purple-400 font-bold overflow-x-auto py-1">
-                        $$\text{CV}\% = \left(\frac{s}{\bar{V}}\right) \times 100\%$$
-                    </div>
-                    <div class="text-[10px] text-slate-400">เกณฑ์ ISO 8655 สำหรับ P1000 ที่ 1000 µL: $\le 0.3\%$</div>
+                    <!-- Hidden field to hold base64 image -->
+                    <input type="hidden" id="image_proof_base64" name="image_proof_base64" value="">
                 </div>
             </div>
         </div>
 
-        <!-- Materials Grid -->
-        <div class="bg-slate-900/90 border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl">
-            <h2 class="text-lg font-bold text-amber-400 flex items-center gap-2 mb-4">
-                🔧 <span class="lang-block" lang="th">วัสดุและอุปกรณ์</span>
-                <span class="lang-block" lang="en">Materials &amp; Equipment</span>
-                <span class="lang-block" lang="zh">材料与仪器</span>
-            </h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 flex items-center gap-2 text-xs text-slate-300">
-                    <span class="text-lg">📏</span> ไม้บรรทัดเหล็ก 30 cm (1 mm)
-                </div>
-                <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 flex items-center gap-2 text-xs text-slate-300">
-                    <span class="text-lg">🔧</span> เวอร์เนียร์คาลิเปอร์ (0.05 mm)
-                </div>
-                <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 flex items-center gap-2 text-xs text-slate-300">
-                    <span class="text-lg">⚙️</span> ไมโครมิเตอร์สกรูเกจ (0.01 mm)
-                </div>
-                <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 flex items-center gap-2 text-xs text-slate-300">
-                    <span class="text-lg">🧪</span> ไมโครปิเปต P1000 (100-1000 µL)
-                </div>
-                <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 flex items-center gap-2 text-xs text-slate-300">
-                    <span class="text-lg">🔵</span> ทิปสีฟ้าสำหรับ P1000 (Blue Tips)
-                </div>
-                <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 flex items-center gap-2 text-xs text-slate-300">
-                    <span class="text-lg">⚖️</span> เครื่องชั่งวิเคราะห์ 4 ตำแหน่ง (0.0001 g)
-                </div>
-                <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 flex items-center gap-2 text-xs text-slate-300">
-                    <span class="text-lg">💧</span> น้ำปราศจากไอออน (DI Water)
-                </div>
-                <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 flex items-center gap-2 text-xs text-slate-300">
-                    <span class="text-lg">🌡️</span> เทอร์โมมิเตอร์วัดอุณหภูมิน้ำ (0.1 °C)
-                </div>
-                <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 flex items-center gap-2 text-xs text-slate-300">
-                    <span class="text-lg">🧫</span> จานเพาะเชื้อพร้อมโคโลนีจุลินทรีย์
-                </div>
-                <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 flex items-center gap-2 text-xs text-slate-300">
-                    <span class="text-lg">🔬</span> สไลด์แก้วและกล้องสเตอริโอ
-                </div>
-                <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 flex items-center gap-2 text-xs text-slate-300">
-                    <span class="text-lg">🧪</span> หลอดทดลองและคิวเวตต์แก้ว
-                </div>
-                <div class="p-3 rounded-xl bg-slate-950/60 border border-white/5 flex items-center gap-2 text-xs text-slate-300">
-                    <span class="text-lg">🌊</span> Turbidimeter วัดความขุ่น (NTU)
-                </div>
-            </div>
-        </div>
-
-        <!-- Procedure Section (Independent Steps, Clean Spacing, Zero Badge Collisions) -->
+        <!-- 3. Blank Data Tables Section (Student Input Tables) -->
         <div class="bg-slate-900/90 border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl space-y-6">
-            <h2 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
-                📋 <span class="lang-block" lang="th">วิธีทำการทดลอง</span>
-                <span class="lang-block" lang="en">Procedure</span>
-                <span class="lang-block" lang="zh">实验步骤</span>
-            </h2>
-
-            <!-- Part 1 -->
-            <h3 class="text-sm font-bold text-white border-b border-white/10 pb-2">
-                ตอนที่ 1: การวัดมิติความแม่นยำสูงด้วยเวอร์เนียร์คาลิเปอร์และไมโครมิเตอร์
-            </h3>
-
-            <!-- Caliper Reading Guide Diagram -->
-            <div class="p-3 rounded-2xl bg-slate-950 border border-white/10">
-                <img src="../images/ch01/vernier_caliper.png" alt="Vernier Caliper Reading Guide" class="w-full h-auto rounded-xl">
-                <p class="text-xs text-slate-400 mt-2 text-center">
-                    รูปที่ L1.1 แผนผังการอ่านค่าเวอร์เนียร์คาลิเปอร์: สเกลหลัก (88 mm) + สเกลเวอร์เนียร์ตรงกันขีดที่ 12 ($12 \times 0.05 = 0.60\text{ mm}$) ได้ค่าวัดสุทธิ 88.60 mm
-                </p>
-            </div>
-
-            <!-- Part 1 Steps -->
-            <div class="space-y-4 pt-2">
-                <div class="p-5 pt-6 rounded-2xl bg-slate-950/70 border-l-4 border-emerald-400 border border-white/5 relative">
-                    <span class="absolute -top-3 left-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold font-mono text-[11px] px-3 py-0.5 rounded-full shadow-md">
-                        ขั้นตอนที่ 1
-                    </span>
-                    <p class="text-sm text-slate-300 m-0 leading-relaxed">
-                        ตรวจสอบค่าศูนย์ (Zero Error) ของไมโครมิเตอร์โดยหมุนปลอก Ratchet Stop เบาๆ จนกระทั่งปากวัด Anvil และ Spindle สัมผัสกันสนิท สังเกตว่าขีดเลข 0 บน Thimble ตรงกับเส้นแกนหลักบน Sleeve หรือไม่ บันทึกค่า Zero Error
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-4">
+                <div>
+                    <h2 class="text-base sm:text-lg font-bold text-sky-400 flex items-center gap-2">
+                        📊 แบบบันทึกผลการทดลอง (Data Recording Tables)
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">
+                        ช่องตารางเป็นช่องว่างเปล่า ให้นักศึกษาอ่านค่าจาก 3D Simulator แล้วพิมพ์บันทึกค่าลงในช่องตามลำดับ
                     </p>
                 </div>
-
-                <div class="p-5 pt-6 rounded-2xl bg-slate-950/70 border-l-4 border-emerald-400 border border-white/5 relative">
-                    <span class="absolute -top-3 left-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold font-mono text-[11px] px-3 py-0.5 rounded-full shadow-md">
-                        ขั้นตอนที่ 2
-                    </span>
-                    <p class="text-sm text-slate-300 m-0 leading-relaxed">
-                        ใช้ไม้บรรทัดเหล็กและเวอร์เนียร์คาลิเปอร์วัดเส้นผ่านศูนย์กลางภายนอกของจานเพาะเชื้อ และเส้นผ่านศูนย์กลางภายในของปากหลอดทดลอง ทำซ้ำจุดละ 3 ครั้งเพื่อหาค่าเฉลี่ย
-                    </p>
-                </div>
-
-                <div class="p-5 pt-6 rounded-2xl bg-slate-950/70 border-l-4 border-emerald-400 border border-white/5 relative">
-                    <span class="absolute -top-3 left-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold font-mono text-[11px] px-3 py-0.5 rounded-full shadow-md">
-                        ขั้นตอนที่ 3
-                    </span>
-                    <p class="text-sm text-slate-300 m-0 leading-relaxed">
-                        ใช้ไมโครมิเตอร์สกรูเกจวัดความหนาของแผ่นสไลด์แก้วกล้องจุลทรรศน์ และความหนาของขอบจานเพาะเชื้อพลาสติก โดยหมุน Ratchet จนได้ยินเสียงคลิก 2-3 ครั้ง บันทึกค่าวัดและคำนวณค่าจริงหลังชดเชย Zero Correction
-                    </p>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="calculateAllTables()" class="px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-calculator"></i> คำนวณค่าเฉลี่ยและสถิติอัตโนมัติ
+                    </button>
                 </div>
             </div>
-
-            <!-- Part 2 -->
-            <h3 class="text-sm font-bold text-white border-b border-white/10 pb-2 pt-4">
-                ตอนที่ 2: การสอบเทียบความแม่นยำของไมโครปิเปต P1000 ตามมาตรฐาน ISO 8655 (Gravimetric Method)
-            </h3>
-
-            <!-- Part 2 Steps -->
-            <div class="space-y-4 pt-2">
-                <div class="p-5 pt-6 rounded-2xl bg-slate-950/70 border-l-4 border-purple-400 border border-white/5 relative">
-                    <span class="absolute -top-3 left-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-slate-950 font-bold font-mono text-[11px] px-3 py-0.5 rounded-full shadow-md">
-                        ขั้นตอนที่ 1
-                    </span>
-                    <p class="text-sm text-slate-300 m-0 leading-relaxed">
-                        วัดและบันทึกอุณหภูมิของน้ำกลั่นบริสุทธิ์ (DI Water) ในบีกเกอร์ เพื่อกำหนดค่าสัมประสิทธิ์การแปลงมวล $Z$-factor (ที่ $22^\circ\text{C}$ ได้ค่า $Z = 1.0033\ \mu\text{L}/\text{mg}$)
-                    </p>
-                </div>
-
-                <div class="p-5 pt-6 rounded-2xl bg-slate-950/70 border-l-4 border-purple-400 border border-white/5 relative">
-                    <span class="absolute -top-3 left-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-slate-950 font-bold font-mono text-[11px] px-3 py-0.5 rounded-full shadow-md">
-                        ขั้นตอนที่ 2
-                    </span>
-                    <p class="text-sm text-slate-300 m-0 leading-relaxed">
-                        วางบีกเกอร์ขนาดเล็กหรือหลอดไมโครเซนตริฟิวจ์บนจานเครื่องชั่งวิเคราะห์ 4 ตำแหน่ง ปิดประตูกระจกกันลม แล้วกด Tare ให้หน้าปัดแสดง $0.0000\text{ g}$
-                    </p>
-                </div>
-
-                <div class="p-5 pt-6 rounded-2xl bg-slate-950/70 border-l-4 border-purple-400 border border-white/5 relative">
-                    <span class="absolute -top-3 left-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-slate-950 font-bold font-mono text-[11px] px-3 py-0.5 rounded-full shadow-md">
-                        ขั้นตอนที่ 3
-                    </span>
-                    <p class="text-sm text-slate-300 m-0 leading-relaxed">
-                        ตั้งค่าปริมาตรไมโครปิเปต P1000 ที่ 3 ระดับตามเกณฑ์ ISO 8655: $100\ \mu\text{L}$ (10% Nominal), $500\ \mu\text{L}$ (50% Nominal), และ $1000\ \mu\text{L}$ (100% Nominal) สวมทิปสีฟ้าและทำการ Pre-wetting 1 ครั้ง
-                    </p>
-                </div>
-
-                <div class="p-5 pt-6 rounded-2xl bg-slate-950/70 border-l-4 border-purple-400 border border-white/5 relative">
-                    <span class="absolute -top-3 left-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-slate-950 font-bold font-mono text-[11px] px-3 py-0.5 rounded-full shadow-md">
-                        ขั้นตอนที่ 4
-                    </span>
-                    <p class="text-sm text-slate-300 m-0 leading-relaxed">
-                        ดูดจ่ายน้ำกลั่นลงในภาชนะบนเครื่องชั่ง บันทึกค่าน้ำหนัก ($m_1$ ถึง $m_5$) จำนวน 5 ซ้ำต่อหนึ่งระดับปริมาตร แล้วคำนวณปริมาตรเฉลี่ย $\bar{V}$, ความคลาดเคลื่อน $E\%$ และ $\text{CV}\%$ เทียบเกณฑ์มาตรฐาน
-                    </p>
-                </div>
-            </div>
-
-            <!-- Part 3 -->
-            <h3 class="text-sm font-bold text-white border-b border-white/10 pb-2 pt-4">
-                ตอนที่ 3: การวัดขนาดโคโลนีจุลินทรีย์และความขุ่นของตัวอย่างน้ำ
-            </h3>
-
-            <!-- Part 3 Steps -->
-            <div class="space-y-4 pt-2">
-                <div class="p-5 pt-6 rounded-2xl bg-slate-950/70 border-l-4 border-sky-400 border border-white/5 relative">
-                    <span class="absolute -top-3 left-4 bg-gradient-to-r from-sky-500 to-blue-500 text-slate-950 font-bold font-mono text-[11px] px-3 py-0.5 rounded-full shadow-md">
-                        ขั้นตอนที่ 1
-                    </span>
-                    <p class="text-sm text-slate-300 m-0 leading-relaxed">
-                        นำจานเพาะเชื้อที่มีโคโลนีเดี่ยวของแบคทีเรียมาวางใต้กล้องสเตอริโอ ใช้เวอร์เนียร์คาลิเปอร์วัดเส้นผ่านศูนย์กลางโคโลนีจำนวน 5 โคโลนี บันทึกค่าพร้อมเลขนัยสำคัญ
-                    </p>
-                </div>
-
-                <div class="p-5 pt-6 rounded-2xl bg-slate-950/70 border-l-4 border-sky-400 border border-white/5 relative">
-                    <span class="absolute -top-3 left-4 bg-gradient-to-r from-sky-500 to-blue-500 text-slate-950 font-bold font-mono text-[11px] px-3 py-0.5 rounded-full shadow-md">
-                        ขั้นตอนที่ 2
-                    </span>
-                    <p class="text-sm text-slate-300 m-0 leading-relaxed">
-                        เติมตัวอย่างน้ำ 4 แหล่ง (น้ำประปาแล็บ, น้ำฝน, น้ำคลอง, น้ำเสียจำลอง) ลงในหลอดคิวเวตต์ เช็ดผิวกระจกให้แห้งสนิท ใส่ในช่องวัดของ Turbidimeter แล้วบันทึกค่า NTU
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Data Tables Section (Updated & Expanded for Micrometer & Micropipette) -->
-        <div class="bg-slate-900/90 border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl space-y-6">
-            <h2 class="text-lg font-bold text-sky-400 flex items-center gap-2">
-                📊 <span class="lang-block" lang="th">ตารางบันทึกผลการทดลอง</span>
-                <span class="lang-block" lang="en">Data Tables</span>
-                <span class="lang-block" lang="zh">实验数据记录表</span>
-            </h2>
 
             <!-- Table 1.1: Mechanical Dimensions -->
             <div class="space-y-3">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <h3 class="text-xs font-bold text-emerald-400 font-mono">
-                        ตารางที่ 1.1: การวัดมิติตัวอย่างละเอียดเปรียบเทียบเครื่องมือ 3 ชนิด (ไม้บรรทัด, เวอร์เนียร์, ไมโครมิเตอร์)
+                        ตารางที่ 1.1: ผลการวัดมิติตัวอย่างละเอียดเปรียบเทียบเครื่องมือ 3 ชนิด (ไม้บรรทัด, เวอร์เนียร์, ไมโครมิเตอร์)
                     </h3>
-                    <span class="text-[11px] text-slate-400">Zero Error ไมโครมิเตอร์ = <span class="text-amber-400 font-mono font-bold">+0.00 mm</span></span>
+                    <div class="flex items-center gap-2 text-xs">
+                        <span class="text-slate-300">Zero Error ไมโครมิเตอร์:</span>
+                        <input type="number" step="0.01" id="tbl1_zero_error" value="0.00" class="w-20 bg-slate-950 border border-white/20 focus:border-emerald-400 rounded-lg px-2 py-1 text-center font-mono text-xs text-amber-300 outline-none" required>
+                        <span class="text-slate-400 font-mono">mm</span>
+                    </div>
                 </div>
-                <div class="overflow-x-auto rounded-2xl border border-white/10">
+
+                <div class="overflow-x-auto rounded-2xl border border-white/10 bg-slate-950/70 p-1">
                     <table class="w-full text-xs text-center border-collapse">
                         <thead class="bg-slate-950 text-emerald-400 font-bold border-b border-white/10">
                             <tr>
-                                <th class="p-3 text-left">ชิ้นงานตัวอย่าง</th>
-                                <th class="p-3">เครื่องมือวัด</th>
+                                <th class="p-3 text-left min-w-[200px]">ชิ้นงานตัวอย่าง</th>
+                                <th class="p-3 min-w-[130px]">เครื่องมือวัด</th>
                                 <th class="p-3">ความละเอียด</th>
-                                <th class="p-3">ครั้งที่ 1 (mm)</th>
-                                <th class="p-3">ครั้งที่ 2 (mm)</th>
-                                <th class="p-3">ครั้งที่ 3 (mm)</th>
-                                <th class="p-3">ค่าเฉลี่ย $\bar{x}$ (mm)</th>
-                                <th class="p-3">รายงานผล ($x \pm \Delta x$)</th>
-                                <th class="p-3">เลขนัยสำคัญ</th>
+                                <th class="p-3 min-w-[90px]">ครั้งที่ 1 (mm)</th>
+                                <th class="p-3 min-w-[90px]">ครั้งที่ 2 (mm)</th>
+                                <th class="p-3 min-w-[90px]">ครั้งที่ 3 (mm)</th>
+                                <th class="p-3 min-w-[100px]">ค่าเฉลี่ย $\bar{x}$ (mm)</th>
+                                <th class="p-3 min-w-[120px]">รายงานผล ($x \pm \Delta x$)</th>
+                                <th class="p-3 min-w-[90px]">เลขนัยสำคัญ</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-white/5 text-slate-300">
+                        <tbody class="divide-y divide-white/5 text-slate-300 font-mono">
+                            <!-- Row 1 -->
                             <tr class="hover:bg-white/5 transition">
-                                <td class="p-3 text-left font-medium text-white">เส้นผ่านศูนย์กลางนอกจานเพาะเชื้อ</td>
-                                <td class="p-3">ไม้บรรทัดเหล็ก</td>
-                                <td class="p-3">1.0 mm</td>
-                                <td class="p-3 font-mono text-emerald-400">90.0</td>
-                                <td class="p-3 font-mono text-emerald-400">89.5</td>
-                                <td class="p-3 font-mono text-emerald-400">90.5</td>
-                                <td class="p-3 font-mono font-bold text-white">90.0</td>
-                                <td class="p-3 font-mono text-slate-300">$90.0 \pm 0.5$</td>
-                                <td class="p-3 font-mono font-bold text-sky-400">3 ตัว</td>
+                                <td class="p-3 text-left font-medium text-white font-sans">1. เส้นผ่านศูนย์กลางนอกจานเพาะเชื้อ</td>
+                                <td class="p-3 font-sans">ไม้บรรทัดเหล็ก</td>
+                                <td class="p-3 text-slate-400">1.0 mm</td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r1_c1" placeholder="90.0" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r1_c2" placeholder="89.5" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r1_c3" placeholder="90.5" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r1_avg" placeholder="90.0" required class="w-full bg-slate-950 border border-emerald-500/30 rounded-lg px-2 py-1.5 text-center text-xs text-white font-bold outline-none"></td>
+                                <td class="p-2"><input type="text" id="t1_r1_rep" placeholder="90.0 ± 0.5" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-slate-200 outline-none"></td>
+                                <td class="p-2"><input type="text" id="t1_r1_sig" placeholder="3 ตัว" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-sky-300 outline-none font-sans"></td>
                             </tr>
+                            <!-- Row 2 -->
                             <tr class="hover:bg-white/5 transition">
-                                <td class="p-3 text-left font-medium text-white">เส้นผ่านศูนย์กลางนอกจานเพาะเชื้อ</td>
-                                <td class="p-3">เวอร์เนียร์คาลิเปอร์</td>
-                                <td class="p-3">0.05 mm</td>
-                                <td class="p-3 font-mono text-emerald-400">90.15</td>
-                                <td class="p-3 font-mono text-emerald-400">90.10</td>
-                                <td class="p-3 font-mono text-emerald-400">90.20</td>
-                                <td class="p-3 font-mono font-bold text-white">90.15</td>
-                                <td class="p-3 font-mono text-slate-300">$90.15 \pm 0.05$</td>
-                                <td class="p-3 font-mono font-bold text-sky-400">4 ตัว</td>
+                                <td class="p-3 text-left font-medium text-white font-sans">2. เส้นผ่านศูนย์กลางนอกจานเพาะเชื้อ</td>
+                                <td class="p-3 font-sans">เวอร์เนียร์คาลิเปอร์</td>
+                                <td class="p-3 text-slate-400">0.05 mm</td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r2_c1" placeholder="90.15" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r2_c2" placeholder="90.10" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r2_c3" placeholder="90.20" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r2_avg" placeholder="90.15" required class="w-full bg-slate-950 border border-emerald-500/30 rounded-lg px-2 py-1.5 text-center text-xs text-white font-bold outline-none"></td>
+                                <td class="p-2"><input type="text" id="t1_r2_rep" placeholder="90.15 ± 0.05" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-slate-200 outline-none"></td>
+                                <td class="p-2"><input type="text" id="t1_r2_sig" placeholder="4 ตัว" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-sky-300 outline-none font-sans"></td>
                             </tr>
+                            <!-- Row 3 -->
                             <tr class="hover:bg-white/5 transition">
-                                <td class="p-3 text-left font-medium text-white">เส้นผ่านศูนย์กลางในปากหลอดทดลอง</td>
-                                <td class="p-3">เวอร์เนียร์คาลิเปอร์</td>
-                                <td class="p-3">0.05 mm</td>
-                                <td class="p-3 font-mono text-emerald-400">14.85</td>
-                                <td class="p-3 font-mono text-emerald-400">14.90</td>
-                                <td class="p-3 font-mono text-emerald-400">14.85</td>
-                                <td class="p-3 font-mono font-bold text-white">14.87</td>
-                                <td class="p-3 font-mono text-slate-300">$14.87 \pm 0.05$</td>
-                                <td class="p-3 font-mono font-bold text-sky-400">4 ตัว</td>
+                                <td class="p-3 text-left font-medium text-white font-sans">3. เส้นผ่านศูนย์กลางในปากหลอดทดลอง</td>
+                                <td class="p-3 font-sans">เวอร์เนียร์คาลิเปอร์</td>
+                                <td class="p-3 text-slate-400">0.05 mm</td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r3_c1" placeholder="14.85" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r3_c2" placeholder="14.90" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r3_c3" placeholder="14.85" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r3_avg" placeholder="14.87" required class="w-full bg-slate-950 border border-emerald-500/30 rounded-lg px-2 py-1.5 text-center text-xs text-white font-bold outline-none"></td>
+                                <td class="p-2"><input type="text" id="t1_r3_rep" placeholder="14.87 ± 0.05" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-slate-200 outline-none"></td>
+                                <td class="p-2"><input type="text" id="t1_r3_sig" placeholder="4 ตัว" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-sky-300 outline-none font-sans"></td>
                             </tr>
+                            <!-- Row 4 -->
                             <tr class="hover:bg-white/5 transition">
-                                <td class="p-3 text-left font-medium text-white">ความหนาของแผ่นสไลด์แก้ว</td>
-                                <td class="p-3 text-sky-300 font-bold">ไมโครมิเตอร์</td>
+                                <td class="p-3 text-left font-medium text-white font-sans">4. ความหนาของแผ่นสไลด์แก้ว</td>
+                                <td class="p-3 font-sans text-sky-300 font-bold">ไมโครมิเตอร์</td>
                                 <td class="p-3 text-sky-300">0.01 mm</td>
-                                <td class="p-3 font-mono text-sky-400">1.15</td>
-                                <td class="p-3 font-mono text-sky-400">1.14</td>
-                                <td class="p-3 font-mono text-sky-400">1.15</td>
-                                <td class="p-3 font-mono font-bold text-white">1.15</td>
-                                <td class="p-3 font-mono text-slate-300">$1.15 \pm 0.01$</td>
-                                <td class="p-3 font-mono font-bold text-sky-400">3 ตัว</td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r4_c1" placeholder="1.15" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-sky-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r4_c2" placeholder="1.14" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-sky-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r4_c3" placeholder="1.15" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-sky-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r4_avg" placeholder="1.15" required class="w-full bg-slate-950 border border-sky-500/30 rounded-lg px-2 py-1.5 text-center text-xs text-white font-bold outline-none"></td>
+                                <td class="p-2"><input type="text" id="t1_r4_rep" placeholder="1.15 ± 0.01" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-slate-200 outline-none"></td>
+                                <td class="p-2"><input type="text" id="t1_r4_sig" placeholder="3 ตัว" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-sky-300 outline-none font-sans"></td>
                             </tr>
+                            <!-- Row 5 -->
                             <tr class="hover:bg-white/5 transition">
-                                <td class="p-3 text-left font-medium text-white">ความหนาของขอบจานเพาะเชื้อ</td>
-                                <td class="p-3 text-sky-300 font-bold">ไมโครมิเตอร์</td>
+                                <td class="p-3 text-left font-medium text-white font-sans">5. ความหนาของขอบจานเพาะเชื้อ</td>
+                                <td class="p-3 font-sans text-sky-300 font-bold">ไมโครมิเตอร์</td>
                                 <td class="p-3 text-sky-300">0.01 mm</td>
-                                <td class="p-3 font-mono text-sky-400">1.42</td>
-                                <td class="p-3 font-mono text-sky-400">1.43</td>
-                                <td class="p-3 font-mono text-sky-400">1.42</td>
-                                <td class="p-3 font-mono font-bold text-white">1.42</td>
-                                <td class="p-3 font-mono text-slate-300">$1.42 \pm 0.01$</td>
-                                <td class="p-3 font-mono font-bold text-sky-400">3 ตัว</td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r5_c1" placeholder="1.42" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-sky-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r5_c2" placeholder="1.43" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-sky-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r5_c3" placeholder="1.42" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-sky-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t1_r5_avg" placeholder="1.42" required class="w-full bg-slate-950 border border-sky-500/30 rounded-lg px-2 py-1.5 text-center text-xs text-white font-bold outline-none"></td>
+                                <td class="p-2"><input type="text" id="t1_r5_rep" placeholder="1.42 ± 0.01" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-slate-200 outline-none"></td>
+                                <td class="p-2"><input type="text" id="t1_r5_sig" placeholder="3 ตัว" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-sky-300 outline-none font-sans"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -697,156 +499,195 @@ include '../includes/header.php';
             </div>
 
             <!-- Table 1.2: Micropipette Gravimetric Calibration (ISO 8655) -->
-            <div class="space-y-3 pt-2">
+            <div class="space-y-3 pt-3">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <h3 class="text-xs font-bold text-purple-400 font-mono">
                         ตารางที่ 1.2: การสอบเทียบไมโครปิเปต P1000 ด้วยวิธีชั่งน้ำหนัก (ISO 8655 Gravimetric Calibration)
                     </h3>
-                    <span class="text-[11px] text-slate-400">อุณหภูมิน้ำ $T = 22.0^\circ\text{C}$ • สัมประสิทธิ์ $Z = 1.0033\ \mu\text{L}/\text{mg}$</span>
+                    <div class="text-[11px] text-slate-400 flex items-center gap-2">
+                        <span>อุณหภูมิน้ำ:</span>
+                        <input type="number" step="0.1" id="tbl2_water_temp" value="22.0" class="w-16 bg-slate-950 border border-white/20 focus:border-purple-400 rounded-lg px-1.5 py-0.5 text-center font-mono text-xs text-purple-300 outline-none"> °C
+                        <span>($Z = 1.0033\ \mu\text{L}/\text{mg}$)</span>
+                    </div>
                 </div>
-                <div class="overflow-x-auto rounded-2xl border border-white/10">
+
+                <div class="overflow-x-auto rounded-2xl border border-white/10 bg-slate-950/70 p-1">
                     <table class="w-full text-xs text-center border-collapse">
                         <thead class="bg-slate-950 text-purple-400 font-bold border-b border-white/10">
                             <tr>
-                                <th class="p-3 text-left">ปริมาตรตั้งค่า $V_0$</th>
-                                <th class="p-3">$m_1$ (mg)</th>
-                                <th class="p-3">$m_2$ (mg)</th>
-                                <th class="p-3">$m_3$ (mg)</th>
-                                <th class="p-3">$m_4$ (mg)</th>
-                                <th class="p-3">$m_5$ (mg)</th>
-                                <th class="p-3">มวลเฉลี่ย $\bar{m}$ (mg)</th>
-                                <th class="p-3">ปริมาตรจริง $\bar{V}$ (µL)</th>
-                                <th class="p-3">Inaccuracy $E\%$</th>
-                                <th class="p-3">Imprecision $\text{CV}\%$</th>
-                                <th class="p-3">เกณฑ์ ISO 8655</th>
-                                <th class="p-3">สรุปผล</th>
+                                <th class="p-3 text-left min-w-[120px]">ปริมาตร $V_0$</th>
+                                <th class="p-3 min-w-[80px]">$m_1$ (mg)</th>
+                                <th class="p-3 min-w-[80px]">$m_2$ (mg)</th>
+                                <th class="p-3 min-w-[80px]">$m_3$ (mg)</th>
+                                <th class="p-3 min-w-[80px]">$m_4$ (mg)</th>
+                                <th class="p-3 min-w-[80px]">$m_5$ (mg)</th>
+                                <th class="p-3 min-w-[90px]">มวลเฉลี่ย $\bar{m}$</th>
+                                <th class="p-3 min-w-[95px]">ปริมาตรจริง $\bar{V}$ (µL)</th>
+                                <th class="p-3 min-w-[90px]">Inaccuracy $E\%$</th>
+                                <th class="p-3 min-w-[90px]">Imprecision $\text{CV}\%$</th>
+                                <th class="p-3 min-w-[140px]">ผลการประเมิน (ISO 8655)</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-white/5 text-slate-300 font-mono">
+                            <!-- Row 1: 100 uL -->
                             <tr class="hover:bg-white/5 transition">
-                                <td class="p-3 text-left font-bold text-white">100 µL (10%)</td>
-                                <td class="p-3 text-purple-300">99.2</td>
-                                <td class="p-3 text-purple-300">99.5</td>
-                                <td class="p-3 text-purple-300">98.9</td>
-                                <td class="p-3 text-purple-300">99.4</td>
-                                <td class="p-3 text-purple-300">99.1</td>
-                                <td class="p-3 font-bold text-white">99.22</td>
-                                <td class="p-3 font-bold text-emerald-300">99.55</td>
-                                <td class="p-3 text-sky-400">-0.45%</td>
-                                <td class="p-3 text-amber-300">0.24%</td>
-                                <td class="p-3 text-slate-400 font-sans">$E \le \pm 3.0\%, \text{CV} \le 0.6\%$</td>
-                                <td class="p-3 text-emerald-400 font-bold font-sans">✓ ผ่านเกณฑ์</td>
+                                <td class="p-3 text-left font-bold text-white font-sans">100 µL (10%)</td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r1_m1" placeholder="99.2" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r1_m2" placeholder="99.5" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r1_m3" placeholder="98.9" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r1_m4" placeholder="99.4" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r1_m5" placeholder="99.1" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t2_r1_mavg" placeholder="99.22" required class="w-full bg-slate-950 border border-purple-500/30 rounded-lg px-1.5 py-1.5 text-center text-xs text-white font-bold outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t2_r1_vact" placeholder="99.55" required class="w-full bg-slate-950 border border-emerald-500/30 rounded-lg px-1.5 py-1.5 text-center text-xs text-emerald-300 font-bold outline-none"></td>
+                                <td class="p-2"><input type="text" id="t2_r1_err" placeholder="-0.45%" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-1.5 py-1.5 text-center text-xs text-sky-400 outline-none"></td>
+                                <td class="p-2"><input type="text" id="t2_r1_cv" placeholder="0.24%" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-1.5 py-1.5 text-center text-xs text-amber-300 outline-none"></td>
+                                <td class="p-2">
+                                    <select id="t2_r1_eval" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-400 font-sans font-bold outline-none">
+                                        <option value="pass">✓ ผ่านเกณฑ์ (E≤±3.0%)</option>
+                                        <option value="fail">✗ เกินเกณฑ์มาตรฐาน</option>
+                                    </select>
+                                </td>
                             </tr>
+                            <!-- Row 2: 500 uL -->
                             <tr class="hover:bg-white/5 transition">
-                                <td class="p-3 text-left font-bold text-white">500 µL (50%)</td>
-                                <td class="p-3 text-purple-300">497.8</td>
-                                <td class="p-3 text-purple-300">498.2</td>
-                                <td class="p-3 text-purple-300">497.5</td>
-                                <td class="p-3 text-purple-300">498.0</td>
-                                <td class="p-3 text-purple-300">497.9</td>
-                                <td class="p-3 font-bold text-white">497.88</td>
-                                <td class="p-3 font-bold text-emerald-300">499.52</td>
-                                <td class="p-3 text-sky-400">-0.10%</td>
-                                <td class="p-3 text-amber-300">0.05%</td>
-                                <td class="p-3 text-slate-400 font-sans">$E \le \pm 1.2\%, \text{CV} \le 0.4\%$</td>
-                                <td class="p-3 text-emerald-400 font-bold font-sans">✓ ผ่านเกณฑ์</td>
+                                <td class="p-3 text-left font-bold text-white font-sans">500 µL (50%)</td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r2_m1" placeholder="497.8" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r2_m2" placeholder="498.2" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r2_m3" placeholder="497.5" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r2_m4" placeholder="498.0" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r2_m5" placeholder="497.9" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t2_r2_mavg" placeholder="497.88" required class="w-full bg-slate-950 border border-purple-500/30 rounded-lg px-1.5 py-1.5 text-center text-xs text-white font-bold outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t2_r2_vact" placeholder="499.52" required class="w-full bg-slate-950 border border-emerald-500/30 rounded-lg px-1.5 py-1.5 text-center text-xs text-emerald-300 font-bold outline-none"></td>
+                                <td class="p-2"><input type="text" id="t2_r2_err" placeholder="-0.10%" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-1.5 py-1.5 text-center text-xs text-sky-400 outline-none"></td>
+                                <td class="p-2"><input type="text" id="t2_r2_cv" placeholder="0.05%" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-1.5 py-1.5 text-center text-xs text-amber-300 outline-none"></td>
+                                <td class="p-2">
+                                    <select id="t2_r2_eval" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-400 font-sans font-bold outline-none">
+                                        <option value="pass">✓ ผ่านเกณฑ์ (E≤±1.2%)</option>
+                                        <option value="fail">✗ เกินเกณฑ์มาตรฐาน</option>
+                                    </select>
+                                </td>
                             </tr>
+                            <!-- Row 3: 1000 uL -->
                             <tr class="hover:bg-white/5 transition">
-                                <td class="p-3 text-left font-bold text-white">1000 µL (100%)</td>
-                                <td class="p-3 text-purple-300">996.5</td>
-                                <td class="p-3 text-purple-300">997.2</td>
-                                <td class="p-3 text-purple-300">996.0</td>
-                                <td class="p-3 text-purple-300">996.8</td>
-                                <td class="p-3 text-purple-300">997.0</td>
-                                <td class="p-3 font-bold text-white">996.70</td>
-                                <td class="p-3 font-bold text-emerald-300">999.99</td>
-                                <td class="p-3 text-sky-400">-0.001%</td>
-                                <td class="p-3 text-amber-300">0.05%</td>
-                                <td class="p-3 text-slate-400 font-sans">$E \le \pm 0.8\%, \text{CV} \le 0.3\%$</td>
-                                <td class="p-3 text-emerald-400 font-bold font-sans">✓ ผ่านเกณฑ์</td>
+                                <td class="p-3 text-left font-bold text-white font-sans">1000 µL (100%)</td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r3_m1" placeholder="996.5" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r3_m2" placeholder="997.2" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r3_m3" placeholder="996.0" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r3_m4" placeholder="996.8" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.1" id="t2_r3_m5" placeholder="997.0" required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-lg px-1.5 py-1.5 text-center text-xs text-purple-300 outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t2_r3_mavg" placeholder="996.70" required class="w-full bg-slate-950 border border-purple-500/30 rounded-lg px-1.5 py-1.5 text-center text-xs text-white font-bold outline-none"></td>
+                                <td class="p-2"><input type="number" step="0.01" id="t2_r3_vact" placeholder="999.99" required class="w-full bg-slate-950 border border-emerald-500/30 rounded-lg px-1.5 py-1.5 text-center text-xs text-emerald-300 font-bold outline-none"></td>
+                                <td class="p-2"><input type="text" id="t2_r3_err" placeholder="-0.001%" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-1.5 py-1.5 text-center text-xs text-sky-400 outline-none"></td>
+                                <td class="p-2"><input type="text" id="t2_r3_cv" placeholder="0.05%" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-1.5 py-1.5 text-center text-xs text-amber-300 outline-none"></td>
+                                <td class="p-2">
+                                    <select id="t2_r3_eval" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-400 font-sans font-bold outline-none">
+                                        <option value="pass">✓ ผ่านเกณฑ์ (E≤±0.8%)</option>
+                                        <option value="fail">✗ เกินเกณฑ์มาตรฐาน</option>
+                                    </select>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Table 1.3: Colony Sizing & Turbidity Assessment -->
-            <div class="space-y-3 pt-2">
+            <!-- Table 1.3: Colony Sizing & Turbidity -->
+            <div class="space-y-3 pt-3">
                 <h3 class="text-xs font-bold text-sky-400 font-mono">
                     ตารางที่ 1.3: การวัดขนาดโคโลนีจุลินทรีย์และการประเมินความขุ่นของตัวอย่างน้ำ (Colony Sizing &amp; Turbidity)
                 </h3>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <!-- Colony Sizing Table -->
-                    <div class="overflow-x-auto rounded-2xl border border-white/10">
+                    <div class="overflow-x-auto rounded-2xl border border-white/10 bg-slate-950/70 p-1">
                         <table class="w-full text-xs text-center border-collapse">
                             <thead class="bg-slate-950 text-emerald-400 font-bold border-b border-white/10">
                                 <tr>
                                     <th class="p-3 text-left">โคโลนีตัวอย่าง</th>
-                                    <th class="p-3">เส้นผ่านศูนย์กลาง (mm)</th>
-                                    <th class="p-3">สัณฐานวิทยา (Morphology)</th>
+                                    <th class="p-3 min-w-[120px]">เส้นผ่านศูนย์กลาง (mm)</th>
+                                    <th class="p-3 min-w-[140px]">สัณฐานวิทยา (Morphology)</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-white/5 text-slate-300 font-mono">
+                            <tbody class="divide-y divide-white/5 text-slate-300">
                                 <tr class="hover:bg-white/5 transition">
                                     <td class="p-3 text-left text-white font-bold">โคโลนีที่ 1</td>
-                                    <td class="p-3 text-emerald-400">2.45</td>
-                                    <td class="p-3 text-slate-400 font-sans">กลม ขอบเรียบ นูน ขาวขุ่น</td>
+                                    <td class="p-2"><input type="number" step="0.01" id="t3_c1_size" placeholder="2.45" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-300 outline-none font-mono"></td>
+                                    <td class="p-2"><input type="text" id="t3_c1_desc" placeholder="เช่น กลม นูน ขอบเรียบ สีขาวขุ่น" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none"></td>
                                 </tr>
                                 <tr class="hover:bg-white/5 transition">
                                     <td class="p-3 text-left text-white font-bold">โคโลนีที่ 2</td>
-                                    <td class="p-3 text-emerald-400">3.10</td>
-                                    <td class="p-3 text-slate-400 font-sans">กลม ขอบหยัก แบน สีครีม</td>
+                                    <td class="p-2"><input type="number" step="0.01" id="t3_c2_size" placeholder="3.10" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-300 outline-none font-mono"></td>
+                                    <td class="p-2"><input type="text" id="t3_c2_desc" placeholder="เช่น กลม แบน ขอบหยัก สีครีม" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none"></td>
                                 </tr>
                                 <tr class="hover:bg-white/5 transition">
                                     <td class="p-3 text-left text-white font-bold">โคโลนีที่ 3</td>
-                                    <td class="p-3 text-emerald-400">1.85</td>
-                                    <td class="p-3 text-slate-400 font-sans">จุดกลมเล็ก ผิวมันใส</td>
+                                    <td class="p-2"><input type="number" step="0.01" id="t3_c3_size" placeholder="1.85" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-300 outline-none font-mono"></td>
+                                    <td class="p-2"><input type="text" id="t3_c3_desc" placeholder="เช่น จุดกลมเล็ก ผิวมันใส" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none"></td>
                                 </tr>
                                 <tr class="hover:bg-white/5 transition">
                                     <td class="p-3 text-left text-white font-bold">โคโลนีที่ 4</td>
-                                    <td class="p-3 text-emerald-400">2.70</td>
-                                    <td class="p-3 text-slate-400 font-sans">รูปไข่ ขอบไม่เรียบ นูน</td>
+                                    <td class="p-2"><input type="number" step="0.01" id="t3_c4_size" placeholder="2.70" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-300 outline-none font-mono"></td>
+                                    <td class="p-2"><input type="text" id="t3_c4_desc" placeholder="เช่น รูปไข่ นูน ผิวด้าน" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none"></td>
                                 </tr>
                                 <tr class="hover:bg-white/5 transition">
                                     <td class="p-3 text-left text-white font-bold">โคโลนีที่ 5</td>
-                                    <td class="p-3 text-emerald-400">4.20</td>
-                                    <td class="p-3 text-slate-400 font-sans">แผ่กว้าง ขอบเส้นใย</td>
+                                    <td class="p-2"><input type="number" step="0.01" id="t3_c5_size" placeholder="4.20" required class="w-full bg-slate-900 border border-white/15 focus:border-emerald-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-300 outline-none font-mono"></td>
+                                    <td class="p-2"><input type="text" id="t3_c5_desc" placeholder="เช่น แผ่กว้าง ขอบเส้นใยรา" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-2 py-1.5 text-xs text-slate-200 outline-none"></td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
                     <!-- Water Turbidity Table -->
-                    <div class="overflow-x-auto rounded-2xl border border-white/10">
+                    <div class="overflow-x-auto rounded-2xl border border-white/10 bg-slate-950/70 p-1">
                         <table class="w-full text-xs text-center border-collapse">
                             <thead class="bg-slate-950 text-sky-400 font-bold border-b border-white/10">
                                 <tr>
                                     <th class="p-3 text-left">ตัวอย่างน้ำ</th>
-                                    <th class="p-3">ค่าเฉลี่ย NTU</th>
-                                    <th class="p-3">เกณฑ์ WHO (&lt;4 NTU)</th>
+                                    <th class="p-3 min-w-[120px]">ค่าเฉลี่ยความขุ่น (NTU)</th>
+                                    <th class="p-3 min-w-[140px]">เกณฑ์ WHO (&lt;4 NTU)</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-white/5 text-slate-300">
                                 <tr class="hover:bg-white/5 transition">
-                                    <td class="p-3 text-left font-medium text-white">น้ำประปาห้องปฏิบัติการ</td>
-                                    <td class="p-3 font-mono font-bold text-emerald-400">0.88</td>
-                                    <td class="p-3 text-emerald-400 font-bold">✓ ผ่านมาตรฐานน้ำดื่ม</td>
+                                    <td class="p-3 text-left font-medium text-white">น้ำประปาแล็บ</td>
+                                    <td class="p-2"><input type="number" step="0.01" id="t3_w1_ntu" placeholder="0.88" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-400 font-bold outline-none font-mono"></td>
+                                    <td class="p-2">
+                                        <select id="t3_w1_eval" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-400 font-bold outline-none">
+                                            <option value="pass">✓ ผ่านมาตรฐานน้ำดื่ม</option>
+                                            <option value="fail">✗ เกินเกณฑ์มาตรฐาน</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr class="hover:bg-white/5 transition">
                                     <td class="p-3 text-left font-medium text-white">น้ำฝนธรรมชาติ</td>
-                                    <td class="p-3 font-mono font-bold text-emerald-400">2.17</td>
-                                    <td class="p-3 text-emerald-400 font-bold">✓ ผ่านมาตรฐานน้ำดื่ม</td>
+                                    <td class="p-2"><input type="number" step="0.01" id="t3_w2_ntu" placeholder="2.17" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-400 font-bold outline-none font-mono"></td>
+                                    <td class="p-2">
+                                        <select id="t3_w2_eval" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-2 py-1.5 text-center text-xs text-emerald-400 font-bold outline-none">
+                                            <option value="pass">✓ ผ่านมาตรฐานน้ำดื่ม</option>
+                                            <option value="fail">✗ เกินเกณฑ์มาตรฐาน</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr class="hover:bg-white/5 transition">
-                                    <td class="p-3 text-left font-medium text-white">น้ำคลองรอบมหาวิทยาลัย</td>
-                                    <td class="p-3 font-mono font-bold text-amber-400">39.8</td>
-                                    <td class="p-3 text-amber-400 font-bold">✗ ต้องผ่านระบบบำบัด</td>
+                                    <td class="p-3 text-left font-medium text-white">น้ำคลองรอบ มรภ.</td>
+                                    <td class="p-2"><input type="number" step="0.01" id="t3_w3_ntu" placeholder="39.8" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-amber-400 font-bold outline-none font-mono"></td>
+                                    <td class="p-2">
+                                        <select id="t3_w3_eval" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-2 py-1.5 text-center text-xs text-amber-400 font-bold outline-none">
+                                            <option value="fail">✗ ต้องผ่านระบบบำบัด</option>
+                                            <option value="pass">✓ ผ่านมาตรฐาน</option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr class="hover:bg-white/5 transition">
                                     <td class="p-3 text-left font-medium text-white">น้ำเสียจุลินทรีย์จำลอง</td>
-                                    <td class="p-3 font-mono font-bold text-rose-400">420.0</td>
-                                    <td class="p-3 text-rose-400 font-bold">✗ ปริมาณตะกอนแขวนลอยสูง</td>
+                                    <td class="p-2"><input type="number" step="0.01" id="t3_w4_ntu" placeholder="420.0" required class="w-full bg-slate-900 border border-white/15 focus:border-sky-400 rounded-lg px-2 py-1.5 text-center text-xs text-rose-400 font-bold outline-none font-mono"></td>
+                                    <td class="p-2">
+                                        <select id="t3_w4_eval" required class="w-full bg-slate-900 border border-white/15 rounded-lg px-2 py-1.5 text-center text-xs text-rose-400 font-bold outline-none">
+                                            <option value="fail">✗ ปริมาณตะกอนสูงมาก</option>
+                                            <option value="pass">✓ ผ่านเกณฑ์</option>
+                                        </select>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -856,42 +697,154 @@ include '../includes/header.php';
 
         </div>
 
-        <!-- Biosafety Precautions Card (Clean Red Glass, No Repeated Icons) -->
-        <div class="p-6 rounded-3xl bg-rose-950/30 border border-rose-500/30 shadow-xl space-y-3">
-            <h3 class="text-sm font-bold text-rose-400 flex items-center gap-2 m-0">
-                ⚠️ ข้อควรระวังเพื่อความปลอดภัยทางชีวภาพ (Biosafety Precautions)
-            </h3>
-            <ul class="space-y-2 text-xs text-rose-200/90 pl-1">
-                <li class="flex items-start gap-2">
-                    <span class="text-rose-400 mt-0.5">•</span>
-                    <span>ห้ามคว่ำหรือเอียงไมโครปิเปตที่มีของเหลวอยู่ในทิป เพราะอาจทำให้สารละลายไหลย้อนเข้าสู่ลูกสูบภายในและเกิดการกัดกร่อนหรือปนเปื้อนข้าม (Cross-contamination)</span>
-                </li>
-                <li class="flex items-start gap-2">
-                    <span class="text-rose-400 mt-0.5">•</span>
-                    <span>ห้ามหมุนปรับสเกลไมโครปิเปตเกินช่วงปริมาตรสูงสุด ($1000\ \mu\text{L}$) หรือต่ำกว่าช่วงต่ำสุด ($100\ \mu\text{L}$) เพราะจะทำให้ชุดเกลียวภายในชำรุด</span>
-                </li>
-                <li class="flex items-start gap-2">
-                    <span class="text-rose-400 mt-0.5">•</span>
-                    <span>เมื่อใช้ไมโครมิเตอร์วัดความหนาของแผ่นสไลด์แก้ว ต้องหมุนด้วย Ratchet Stop เท่านั้น ห้ามหมุนปลอก Thimble โดยตรงเพื่อป้องกันแผ่นสไลด์แตกหัก</span>
-                </li>
-                <li class="flex items-start gap-2">
-                    <span class="text-rose-400 mt-0.5">•</span>
-                    <span>การวัดขนาดโคโลนีต้องทำผ่านฝาจานเพาะเชื้อที่ปิดสนิทหรือทำในตู้ชีวนิรภัย (Biosafety Cabinet) และสวมถุงมือไนไตรล์ตลอดเวลา</span>
-                </li>
-            </ul>
+        <!-- 4. Calculations, Discussion & Conclusion Section -->
+        <div class="bg-slate-900/90 border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl space-y-6">
+            <h2 class="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
+                ✍️ แสดงวิธีคำนวณ การสรุปและวิเคราะห์ผล (Calculations &amp; Discussion)
+            </h2>
+
+            <div class="space-y-4">
+                <!-- Calculations Area -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        1. แสดงวิธีคำนวณโดยละเอียด (Detailed Calculations) <span class="text-rose-400">*</span>
+                    </label>
+                    <p class="text-[11px] text-slate-400">
+                        แสดงวิธีคำนวณหาค่าเฉลี่ย ($\bar{x}$), ค่าความไม่แน่นอน ($\pm \Delta x$), การแปลงมวลเป็นปริมาตรด้วย $Z$-factor ($V = m \times Z$), และการคำนวณ Inaccuracy ($E\%$) หรือ Imprecision ($\text{CV}\%$)
+                    </p>
+                    <textarea id="lab_calculations" name="lab_calculations" rows="4" placeholder="ตัวอย่างการคำนวณ:
+- การคำนวณปริมาตรจริง P1000 ที่ 1000 µL: มวลเฉลี่ย m = 996.70 mg, Z = 1.0033 µL/mg -> V = 996.70 * 1.0033 = 999.99 µL
+- คำนวณ Systematic Error (E%): E% = [(999.99 - 1000) / 1000] * 100% = -0.001%
+- ส่วนเบี่ยงเบนมาตรฐาน s = 0.47 mg -> CV% = (0.47 / 996.70) * 100% = 0.05%" required class="w-full bg-slate-950 border border-white/15 focus:border-amber-400 rounded-2xl p-4 text-xs text-white placeholder-slate-600 outline-none transition font-mono leading-relaxed"></textarea>
+                </div>
+
+                <!-- Discussion Area -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        2. การอภิปรายผลการทดลอง (Discussion) <span class="text-rose-400">*</span>
+                    </label>
+                    <p class="text-[11px] text-slate-400">
+                        อภิปรายเปรียบเทียบความละเอียดของเครื่องมือวัด (ไม้บรรทัด vs เวอร์เนียร์ vs ไมโครมิเตอร์), ผลกระทบของ Zero Error, และความแม่นยำของไมโครปิเปตเทียบเกณฑ์มาตรฐาน ISO 8655
+                    </p>
+                    <textarea id="lab_discussion" name="lab_discussion" rows="3" placeholder="พิมพ์การอภิปรายผลการทดลองที่ได้จากการสังเกตและข้อมูลตัวเลข..." required class="w-full bg-slate-950 border border-white/15 focus:border-amber-400 rounded-2xl p-4 text-xs text-white placeholder-slate-600 outline-none transition leading-relaxed"></textarea>
+                </div>
+
+                <!-- Conclusion Area -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        3. สรุปผลการทดลอง (Conclusion) <span class="text-rose-400">*</span>
+                    </label>
+                    <textarea id="lab_conclusion" name="lab_conclusion" rows="2" placeholder="สรุปผลการทดลองให้สอดคล้องกับวัตถุประสงค์ทั้ง 3 ตอน..." required class="w-full bg-slate-950 border border-white/15 focus:border-amber-400 rounded-2xl p-4 text-xs text-white placeholder-slate-600 outline-none transition leading-relaxed"></textarea>
+                </div>
+            </div>
         </div>
 
-        <!-- Navigation Buttons -->
-        <div class="flex justify-between items-center pt-2">
-            <a href="../index.php" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-white/10 transition flex items-center gap-2">
-                ← กลับหน้าหลัก
-            </a>
-            <a href="lab02_vectors.php" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold shadow-lg shadow-emerald-950/40 transition flex items-center gap-2">
-                ไปปฏิบัติการที่ 2 →
-            </a>
+        <!-- 5. Post-Lab Questions Section -->
+        <div class="bg-slate-900/90 border border-white/10 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl space-y-6">
+            <h2 class="text-base sm:text-lg font-bold text-purple-400 flex items-center gap-2">
+                ❓ คำถามท้ายการทดลอง (Post-Lab Questions)
+            </h2>
+
+            <div class="space-y-4">
+                <div class="p-4 rounded-2xl bg-slate-950/80 border border-white/5 space-y-2">
+                    <label class="block text-xs font-bold text-purple-300">
+                        คำถามข้อที่ 1: ค่าความคลาดเคลื่อนศูนย์ (Zero Error) ของไมโครมิเตอร์เกิดขึ้นได้อย่างไร และหากเครื่องมือมี Positive Zero Error $+0.02\text{ mm}$ โดยไม่ได้ปรับแก้ ค่าที่วัดได้จะมีความผิดพลาดอย่างไร? <span class="text-rose-400">*</span>
+                    </label>
+                    <textarea id="quiz_ans_1" rows="2" placeholder="พิมพ์คำตอบของคุณ..." required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-xl p-3 text-xs text-white placeholder-slate-600 outline-none transition"></textarea>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-950/80 border border-white/5 space-y-2">
+                    <label class="block text-xs font-bold text-purple-300">
+                        คำถามข้อที่ 2: เหตุใดในการสอบเทียบไมโครปิเปตด้วยวิธีชั่งน้ำหนัก (Gravimetric Method) จึงต้องวัดอุณหภูมิของน้ำและนำค่า $Z$-factor มาคำนวณปริมาตรจริง? <span class="text-rose-400">*</span>
+                    </label>
+                    <textarea id="quiz_ans_2" rows="2" placeholder="พิมพ์คำตอบของคุณ..." required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-xl p-3 text-xs text-white placeholder-slate-600 outline-none transition"></textarea>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-950/80 border border-white/5 space-y-2">
+                    <label class="block text-xs font-bold text-purple-300">
+                        คำถามข้อที่ 3: การวัดเส้นผ่านศูนย์กลางของโคโลนีจุลินทรีย์บนจานเพาะเชื้อด้วยเวอร์เนียร์คาลิเปอร์ มีโอกาสเกิดความคลาดเคลื่อนจากปัจจัยใด และควรมีมาตรการความปลอดภัยทางชีวภาพ (Biosafety) อย่างไร? <span class="text-rose-400">*</span>
+                    </label>
+                    <textarea id="quiz_ans_3" rows="2" placeholder="พิมพ์คำตอบของคุณ..." required class="w-full bg-slate-900 border border-white/15 focus:border-purple-400 rounded-xl p-3 text-xs text-white placeholder-slate-600 outline-none transition"></textarea>
+                </div>
+            </div>
         </div>
 
+        <!-- Optional Google Sheets Webhook URL Override -->
+        <div class="bg-slate-900/60 border border-white/10 rounded-2xl p-4 text-xs space-y-2">
+            <div class="flex items-center justify-between">
+                <span class="text-slate-400 font-mono flex items-center gap-1.5">
+                    <i class="fa-solid fa-table-cells text-emerald-400"></i> Google Sheets Webhook URL (ค่าทางเลือก):
+                </span>
+                <span class="text-[10px] text-slate-500">หากเว้นว่างจะใช้การตั้งค่าส่วนกลางของระบบ</span>
+            </div>
+            <input type="url" id="google_sheet_webhook_url" name="google_sheet_webhook_url" placeholder="https://script.google.com/macros/s/AKfycbx.../exec (ถ้ามี)" class="w-full bg-slate-950 border border-white/15 rounded-xl px-3 py-2 text-xs text-sky-300 placeholder-slate-600 outline-none font-mono">
+        </div>
+
+        <!-- Submission Action Banner & Validation Notice -->
+        <div class="p-6 rounded-3xl bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-2 border-emerald-500/40 shadow-2xl space-y-4">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="space-y-1 text-center sm:text-left">
+                    <div class="text-sm font-bold text-white flex items-center justify-center sm:justify-start gap-2">
+                        <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                        การตรวจสอบความถูกต้องก่อนบันทึก (Pre-Submission Validation)
+                    </div>
+                    <div class="text-xs text-slate-400">
+                        ระบบจะตรวจสอบความครบถ้วนของข้อมูลระบุตัวตน, ภาพถ่ายหลักฐาน, ตารางบันทึกผล, การคำนวณ, และคำถามท้ายแล็บก่อนอนุญาตให้ส่ง
+                    </div>
+                </div>
+
+                <button type="submit" id="btnSubmitReport" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-bold text-sm shadow-xl shadow-emerald-950/60 transition transform active:scale-95 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> บันทึกและส่งรายงานผลปฏิบัติการ
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+    <!-- Submission Feedback Modal -->
+    <div id="submitModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-slate-900 border border-emerald-500/40 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-5 shadow-2xl relative">
+            <div class="text-center space-y-2">
+                <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto text-3xl border border-emerald-500/40 animate-bounce">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">ส่งรายงานผลปฏิบัติการสำเร็จ!</h3>
+                <p id="modalMsg" class="text-xs text-slate-300">
+                    ข้อมูลของท่านได้รับการบันทึกลงฐานข้อมูล SQLite และส่งต่อไปยัง Google Sheets เรียบร้อยแล้ว
+                </p>
+            </div>
+
+            <div class="bg-slate-950 p-4 rounded-2xl border border-white/10 space-y-2 text-xs font-mono">
+                <div class="flex justify-between text-slate-400">
+                    <span>รหัสรายงาน (Report Code):</span>
+                    <span id="modalReportCode" class="text-emerald-400 font-bold">REP-...</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>ผู้ส่งรายงาน:</span>
+                    <span id="modalStudentName" class="text-white">...</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>สถานะฐานข้อมูล SQLite:</span>
+                    <span class="text-emerald-400 font-bold">✓ บันทึกสำเร็จ (virtual_lab.db)</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>สถานะ Google Sheets:</span>
+                    <span id="modalSheetStatus" class="text-sky-300 font-bold">กำลังซิงค์...</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                    <span>เวลาที่บันทึก:</span>
+                    <span id="modalTimestamp" class="text-slate-300">...</span>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button type="button" onclick="closeSubmitModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-white/10 transition">
+                    ปิดหน้าต่าง
+                </button>
+            </div>
+        </div>
     </div>
+
 </div>
 
 <script>
@@ -916,7 +869,7 @@ let pipetteCurrentVol = 1000;
 let pipetteIsAspirated = false;
 let balanceCurrentMass = 0.0000;
 
-// --- Procedural Textures for Vernier Caliper ---
+// Procedural Textures for Vernier Caliper
 function generateRulerTexture() {
     const canvas = document.createElement('canvas');
     canvas.width = 2048; canvas.height = 256;
@@ -990,7 +943,6 @@ function generateVernierTexture() {
     return tex;
 }
 
-// --- Procedural Texture for Micrometer Sleeve (0-25 mm) ---
 function generateMicroSleeveTexture() {
     const canvas = document.createElement('canvas');
     canvas.width = 1024; canvas.height = 256;
@@ -1000,7 +952,6 @@ function generateMicroSleeveTexture() {
     grad.addColorStop(0, '#cbd5e1'); grad.addColorStop(0.5, '#f8fafc'); grad.addColorStop(1, '#94a3b8');
     ctx.fillStyle = grad; ctx.fillRect(0, 0, 1024, 256);
 
-    // Datum center line
     ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 4;
     ctx.beginPath(); ctx.moveTo(40, 128); ctx.lineTo(984, 128); ctx.stroke();
 
@@ -1009,13 +960,11 @@ function generateMicroSleeveTexture() {
 
     for (let mm = 0; mm <= 25; mm++) {
         const x = startX + mm * step;
-        // Upper 1 mm tick marks
         ctx.lineWidth = 2.5;
         ctx.beginPath(); ctx.moveTo(x, 128); ctx.lineTo(x, 75); ctx.stroke();
         if (mm % 5 === 0) {
             ctx.fillText(mm.toString(), x, 55);
         }
-        // Lower 0.5 mm tick marks (between mm ticks)
         if (mm < 25) {
             const halfX = x + step / 2;
             ctx.beginPath(); ctx.moveTo(halfX, 128); ctx.lineTo(halfX, 175); ctx.stroke();
@@ -1026,7 +975,6 @@ function generateMicroSleeveTexture() {
     return tex;
 }
 
-// --- Procedural Texture for Micrometer Thimble (0-49 ticks) ---
 function generateMicroThimbleTexture() {
     const canvas = document.createElement('canvas');
     canvas.width = 1024; canvas.height = 256;
@@ -1056,9 +1004,6 @@ function generateMicroThimbleTexture() {
     return tex;
 }
 
-// -------------------------------------------------------------
-// Initialize 3D Metrology Scene
-// -------------------------------------------------------------
 function initInstrument3D() {
     const container = document.getElementById('instrument-3d-canvas');
     if (!container) return;
@@ -1070,7 +1015,8 @@ function initInstrument3D() {
     instCamera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
     instCamera.position.set(0, 3.5, 11);
 
-    instRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    // Set preserveDrawingBuffer to true to enable clean screenshot capture
+    instRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
     instRenderer.setSize(w, h);
     instRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     instRenderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -1086,7 +1032,6 @@ function initInstrument3D() {
         instControls.minDistance = 3;
     }
 
-    // 3-Point Lighting
     const ambLight = new THREE.AmbientLight(0xffffff, 0.95);
     instScene.add(ambLight);
 
@@ -1102,22 +1047,17 @@ function initInstrument3D() {
     amberFill.position.set(10, -8, 8);
     instScene.add(amberFill);
 
-    // Bench Grid
     const grid = new THREE.GridHelper(20, 32, 0x10b981, 0x1e293b);
     grid.position.y = -2.2;
     instScene.add(grid);
 
-    // Shared Materials
     const steelPBR = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.90, roughness: 0.20 });
     const brassMat = new THREE.MeshStandardMaterial({ color: 0xd97706, metalness: 0.85, roughness: 0.25 });
     const glassPBR = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0.05, roughness: 0.03, transmission: 0.95, transparent: true, opacity: 0.88, ior: 1.52 });
 
-    // =========================================================
-    // 1. VERNIER CALIPER 3D MODEL
-    // =========================================================
+    // 1. Caliper
     caliperRoot = new THREE.Group();
     fixedBodyGroup = new THREE.Group();
-
     const rulerMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.85, roughness: 0.22, map: generateRulerTexture() });
     const mainBeam = new THREE.Mesh(new THREE.BoxGeometry(11.5, 0.82, 0.18), rulerMat);
     mainBeam.position.set(1.5, 0, 0);
@@ -1146,7 +1086,6 @@ function initInstrument3D() {
     fixedBodyGroup.add(fixedUpperHorn);
     caliperRoot.add(fixedBodyGroup);
 
-    // Sliding Vernier Assembly
     slidingAssemblyGroup = new THREE.Group();
     const vernierPlateMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.85, roughness: 0.25, map: generateVernierTexture() });
     const sliderCollar = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.15, 0.28), steelPBR);
@@ -1177,7 +1116,6 @@ function initInstrument3D() {
     slidingAssemblyGroup.add(depthGaugeRod);
     caliperRoot.add(slidingAssemblyGroup);
 
-    // Specimens
     petriSpecimen = new THREE.Group();
     const dishMesh = new THREE.Mesh(new THREE.CylinderGeometry(1.35, 1.35, 0.4, 36), glassPBR);
     dishMesh.rotation.x = Math.PI / 2;
@@ -1208,16 +1146,10 @@ function initInstrument3D() {
     colonySpecimen.add(plaqueMesh, singleColony);
     colonySpecimen.visible = false;
     caliperRoot.add(colonySpecimen);
-
     instScene.add(caliperRoot);
 
-    // =========================================================
-    // 2. MICROMETER SCREW GAUGE 3D MODEL (0.01 mm)
-    // =========================================================
+    // 2. Micrometer
     micrometerRoot = new THREE.Group();
-    micrometerRoot.position.set(0, 0, 0);
-
-    // Blue Powder-Coated Cast Iron C-Frame
     const cFrameShape = new THREE.Shape();
     cFrameShape.moveTo(-3.5, 0.5);
     cFrameShape.lineTo(-3.5, -2.4);
@@ -1231,75 +1163,50 @@ function initInstrument3D() {
     cFrameShape.lineTo(-2.4, 0.5);
     cFrameShape.closePath();
 
-    const cFrameMat = new THREE.MeshStandardMaterial({
-        color: 0x1d4ed8, // Lab Metallic Navy Blue
-        metalness: 0.45,
-        roughness: 0.35
-    });
+    const cFrameMat = new THREE.MeshStandardMaterial({ color: 0x1d4ed8, metalness: 0.45, roughness: 0.35 });
     microFrameMesh = new THREE.Mesh(new THREE.ExtrudeGeometry(cFrameShape, { depth: 0.45, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.03, bevelThickness: 0.03 }), cFrameMat);
     microFrameMesh.position.z = -0.225;
     micrometerRoot.add(microFrameMesh);
 
-    // Carbide Anvil (Fixed, left tip)
     const anvilMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.9, 24), steelPBR);
     anvilMesh.rotation.z = Math.PI / 2;
     anvilMesh.position.set(-2.0, 0.5, 0);
     micrometerRoot.add(anvilMesh);
 
-    // Fixed Barrel / Sleeve with 0-25 mm scale texture
-    const sleeveMat = new THREE.MeshStandardMaterial({
-        color: 0xffffff,
-        metalness: 0.85,
-        roughness: 0.20,
-        map: generateMicroSleeveTexture()
-    });
+    const sleeveMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.85, roughness: 0.20, map: generateMicroSleeveTexture() });
     const sleeveMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.48, 3.2, 32), sleeveMat);
     sleeveMesh.rotation.z = -Math.PI / 2;
     sleeveMesh.position.set(4.0, 0.5, 0);
     micrometerRoot.add(sleeveMesh);
 
-    // Moving Spindle (Stainless cylinder)
     microSpindleMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 3.8, 24), steelPBR);
     microSpindleMesh.rotation.z = Math.PI / 2;
     microSpindleMesh.position.set(0.5, 0.5, 0);
     micrometerRoot.add(microSpindleMesh);
 
-    // Rotating & Sliding Thimble Group
     microThimbleGroup = new THREE.Group();
-    const thimbleMat = new THREE.MeshStandardMaterial({
-        color: 0xffffff,
-        metalness: 0.80,
-        roughness: 0.25,
-        map: generateMicroThimbleTexture()
-    });
+    const thimbleMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.80, roughness: 0.25, map: generateMicroThimbleTexture() });
     const thimbleMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.58, 2.4, 32), thimbleMat);
     thimbleMesh.rotation.z = -Math.PI / 2;
     microThimbleGroup.add(thimbleMesh);
 
-    // Ratchet Stop Cap (End)
     const ratchetMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 1.2, 24), brassMat);
     ratchetMesh.rotation.z = -Math.PI / 2;
     ratchetMesh.position.x = 1.8;
     microThimbleGroup.add(ratchetMesh);
-
     micrometerRoot.add(microThimbleGroup);
 
-    // Micrometer Clamped Specimens
     microSpecimenGroup = new THREE.Group();
     const glassSlideSpecimen = new THREE.Mesh(new THREE.BoxGeometry(0.12, 1.8, 1.2), glassPBR);
     microSpecimenGroup.add(glassSlideSpecimen);
     micrometerRoot.add(microSpecimenGroup);
-
     micrometerRoot.visible = false;
     instScene.add(micrometerRoot);
 
-    // =========================================================
-    // 3. MICROPIPETTE P1000 & BALANCE 3D MODEL
-    // =========================================================
+    // 3. Pipette
     pipetteRoot = new THREE.Group();
     pipetteRoot.position.set(0, 0.5, 0);
 
-    // Pipette Handle (Ergonomic Polymer)
     const handleMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.35, metalness: 0.1 });
     const p1000Blue = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.3, metalness: 0.2 });
     const darkShaftMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.5, metalness: 0.1 });
@@ -1308,65 +1215,53 @@ function initInstrument3D() {
     handleBody.position.y = 1.2;
     pipetteRoot.add(handleBody);
 
-    // Finger Hook (Ergonomic curve on top back)
     const hookMesh = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.8, 0.5), handleMat);
     hookMesh.position.set(-0.35, 3.0, 0);
     pipetteRoot.add(hookMesh);
 
-    // Volume Adjustment Ring / Dial
     const dialRing = new THREE.Mesh(new THREE.CylinderGeometry(0.44, 0.44, 0.4, 24), darkShaftMat);
     dialRing.position.y = 3.3;
     pipetteRoot.add(dialRing);
 
-    // Plunger Stroke Button (Top)
     pipettePlungerMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.7, 24), p1000Blue);
     pipettePlungerMesh.position.y = 3.8;
     pipetteRoot.add(pipettePlungerMesh);
 
-    // Tip Ejector Button
     const ejectorBtn = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.35, 0.2), new THREE.MeshStandardMaterial({ color: 0xe2e8f0 }));
     ejectorBtn.position.set(0.32, 3.3, 0);
     pipetteRoot.add(ejectorBtn);
 
-    // Digital Volumeter Recessed Window
     const counterWindow = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.8, 0.48), new THREE.MeshStandardMaterial({ color: 0x020617, roughness: 0.8 }));
     counterWindow.position.set(0.3, 1.8, 0);
     pipetteRoot.add(counterWindow);
 
-    // Lower Nose Cone / Shaft
     const lowerShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.14, 3.2, 24), darkShaftMat);
     lowerShaft.position.y = -2.2;
     pipetteRoot.add(lowerShaft);
 
-    // Disposable Blue Tip (P1000 standard polypropylene)
     const tipMat = new THREE.MeshPhysicalMaterial({ color: 0x38bdf8, roughness: 0.2, transmission: 0.75, transparent: true, opacity: 0.85 });
     const blueTip = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.04, 2.2, 24), tipMat);
     blueTip.position.y = -4.5;
     pipetteRoot.add(blueTip);
 
-    // Liquid meniscus inside tip
     pipetteLiquidMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.05, 1.4, 20), new THREE.MeshPhysicalMaterial({ color: 0x06b6d4, roughness: 0.05, transmission: 0.9, transparent: true, opacity: 0.9 }));
     pipetteLiquidMesh.position.y = -4.7;
     pipetteLiquidMesh.visible = false;
     pipetteRoot.add(pipetteLiquidMesh);
 
-    // Analytical Balance Stage (Beside Pipette)
     const balanceGroup = new THREE.Group();
     balanceGroup.position.set(3.8, -1.8, 0);
     const balanceBase = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.7, 3.2), handleMat);
     balanceGroup.add(balanceBase);
 
-    // Draft shield (glass cube)
     balanceDraftShield = new THREE.Mesh(new THREE.BoxGeometry(2.6, 2.4, 2.6), new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.05, transmission: 0.95, transparent: true, opacity: 0.5 }));
     balanceDraftShield.position.y = 1.35;
     balanceGroup.add(balanceDraftShield);
 
-    // Stainless steel weighing pan
     balancePan = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.08, 32), steelPBR);
     balancePan.position.y = 0.45;
     balanceGroup.add(balancePan);
 
-    // Glass weighing beaker on pan
     const miniBeaker = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.45, 1.0, 24), glassPBR);
     miniBeaker.position.y = 0.95;
     balanceGroup.add(miniBeaker);
@@ -1375,12 +1270,10 @@ function initInstrument3D() {
     pipetteRoot.visible = false;
     instScene.add(pipetteRoot);
 
-    // Initial state setup
     updateCaliperSlide(88.60);
     updateMicrometerSlide(6.82);
     updatePipetteSlide(1000);
 
-    // Animation Loop
     function animate() {
         requestAnimationFrame(animate);
         if (activeInstrument === 'caliper' && caliperRoot) caliperRoot.rotation.y += 0.0015;
@@ -1408,9 +1301,6 @@ function resetBenchCamera() {
     }
 }
 
-// -------------------------------------------------------------
-// Instrument Selection Switcher (Caliper, Micrometer, Pipette)
-// -------------------------------------------------------------
 function selectInstrument(type) {
     activeInstrument = type;
     const tabCaliper = document.getElementById('tabInstCaliper');
@@ -1458,9 +1348,6 @@ function selectInstrument(type) {
     resetBenchCamera();
 }
 
-// -------------------------------------------------------------
-// Caliper Telemetry Functions
-// -------------------------------------------------------------
 function updateCaliperSlide(val) {
     const mm = parseFloat(val);
     const mainScale = Math.floor(mm);
@@ -1505,32 +1392,23 @@ function setCaliperSpecimen(sizeMm, name) {
     updateCaliperSlide(sizeMm);
 }
 
-// -------------------------------------------------------------
-// Micrometer Telemetry Functions (0.01 mm)
-// -------------------------------------------------------------
 function updateMicrometerSlide(val) {
     microCurrentSlide = parseFloat(val);
     const mm = microCurrentSlide;
-    const sleeveMm = Math.floor(mm * 2) / 2; // increments of 0.5 mm
+    const sleeveMm = Math.floor(mm * 2) / 2;
     const thimbleFraction = mm - sleeveMm;
     const thimbleTicks = Math.round(thimbleFraction / 0.01);
-
     const corrected = mm - microZeroBias;
 
     document.getElementById('microReadingDisplay').textContent = `${mm.toFixed(2)} mm`;
     document.getElementById('microFormula').innerHTML = `สเกลหลักบน Sleeve <span class="text-white font-bold">${sleeveMm.toFixed(1)} mm</span> + สเกลหมุน Thimble ขีดที่ ${thimbleTicks} (<span class="text-sky-300 font-bold">${(thimbleTicks * 0.01).toFixed(2)} mm</span>) = <span class="text-emerald-400 font-bold">${mm.toFixed(2)} mm</span>`;
     document.getElementById('microCorrectedDisplay').innerHTML = `ค่าวัดจริงหลังปรับศูนย์ ($x_{\\text{corrected}} = ${mm.toFixed(2)} - (${microZeroBias >= 0 ? '+' : ''}${microZeroBias.toFixed(2)})$): <span class="text-white font-bold">${corrected.toFixed(2)} mm</span>`;
 
-    // 3D Rigging for Micrometer Spindle and Thimble
     if (microSpindleMesh && microThimbleGroup) {
-        // Closed position: anvil at x = -2.0. Max gap 25 mm -> mapped to 2.4 units
         const gapUnits = (mm / 25.0) * 2.4;
         const spindleFrontX = -2.0 + gapUnits;
-        microSpindleMesh.position.x = spindleFrontX + 1.9; // spindle length 3.8
-
-        // Thimble position slides back with spindle
+        microSpindleMesh.position.x = spindleFrontX + 1.9;
         microThimbleGroup.position.x = 4.2 + (mm / 25.0) * 1.8;
-        // Thimble rotates as it slides (50 ticks per 0.5 mm -> continuous rotation)
         microThimbleGroup.rotation.x = -(mm / 0.5) * Math.PI * 2;
 
         if (microSpecimenGroup) {
@@ -1551,17 +1429,12 @@ function setMicrometerSpecimen(sizeMm, name) {
     updateMicrometerSlide(sizeMm);
 }
 
-// -------------------------------------------------------------
-// Micropipette Telemetry Functions (ISO 8655 Gravimetric)
-// -------------------------------------------------------------
 function updatePipetteSlide(val) {
     pipetteCurrentVol = parseInt(val, 10);
     document.getElementById('pipetteVolLabel').textContent = `${pipetteCurrentVol} µL`;
     document.getElementById('statNominalVol').textContent = `${pipetteCurrentVol} µL`;
 
-    // Update 3-digit counter display
     const str = pipetteCurrentVol.toString().padStart(4, '0');
-    // For P1000: 1000 µL shows [1][0][0], 500 µL shows [0][5][0], 100 µL shows [0][1][0]
     document.getElementById('pipDigit1').textContent = str[0] === '1' ? '1' : '0';
     document.getElementById('pipDigit2').textContent = str[1];
     document.getElementById('pipDigit3').textContent = str[2];
@@ -1590,28 +1463,24 @@ function dispenseAndWeigh() {
     pipetteIsAspirated = false;
     if (pipetteLiquidMesh) pipetteLiquidMesh.visible = false;
 
-    // Plunger depression animation
     if (pipettePlungerMesh) pipettePlungerMesh.position.y = 3.4;
     setTimeout(() => { if (pipettePlungerMesh) pipettePlungerMesh.position.y = 3.8; }, 600);
 
-    // Realistic gravimetric simulation with random noise (s ~ 0.15%)
-    const zFactor = 1.0033; // mg to µL conversion at 22°C
+    const zFactor = 1.0033;
     const theoreticalMg = pipetteCurrentVol / zFactor;
-    const randomVariation = (Math.random() - 0.48) * (pipetteCurrentVol * 0.003); // +/- 0.15%
+    const randomVariation = (Math.random() - 0.48) * (pipetteCurrentVol * 0.003);
     const measuredMg = theoreticalMg + randomVariation;
     const measuredGrams = measuredMg / 1000.0;
 
     balanceCurrentMass = measuredGrams;
     document.getElementById('balanceMassDisplay').textContent = `${measuredGrams.toFixed(4)} g`;
 
-    // ISO 8655 Calculations
     const actualVol = measuredMg * zFactor;
     const sysErrorPercent = ((actualVol - pipetteCurrentVol) / pipetteCurrentVol) * 100.0;
 
     document.getElementById('statActualVol').textContent = `${actualVol.toFixed(2)} µL`;
     document.getElementById('statSysError').textContent = `${sysErrorPercent >= 0 ? '+' : ''}${sysErrorPercent.toFixed(2)} %`;
 
-    // Limit criteria check
     let passLimit = 0.8;
     if (pipetteCurrentVol <= 100) passLimit = 3.0;
     else if (pipetteCurrentVol <= 500) passLimit = 1.2;
@@ -1636,9 +1505,6 @@ function tareBalance() {
     document.getElementById('balanceMassDisplay').textContent = '0.0000 g';
 }
 
-// -------------------------------------------------------------
-// Multi-Mode Switcher (3D 360°, WebAR, Slider)
-// -------------------------------------------------------------
 function switchBenchMode(mode) {
     const btn3d = document.getElementById('benchMode3d');
     const btnAr = document.getElementById('benchModeAr');
@@ -1692,6 +1558,307 @@ function stopBenchAr() {
         benchArStream = null;
     }
     if (video) video.classList.add('hidden');
+}
+
+// ============================================================
+// Snapshot & Proof Capture Logic
+// ============================================================
+function capture3dSimulator() {
+    if (!instRenderer) return;
+    try {
+        // Re-render once to ensure buffer is hot
+        instRenderer.render(instScene, instCamera);
+        const dataUrl = instRenderer.domElement.toDataURL('image/png');
+        setProofImage(dataUrl);
+    } catch (e) {
+        console.error("Capture failed:", e);
+        alert("ไม่สามารถแคปหน้าจออัตโนมัติได้ กรุณาใช้ปุ่มอัปโหลดไฟล์ภาพแทนครับ");
+    }
+}
+
+function handleImageFileUpload(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+        alert("ไฟล์ภาพมีขนาดใหญ่เกิน 5 MB กรุณาเลือกไฟล์ที่มีขนาดเล็กลง");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        setProofImage(evt.target.result);
+    };
+    reader.readAsDataURL(file);
+}
+
+function setProofImage(dataUrl) {
+    document.getElementById('image_proof_base64').value = dataUrl;
+    const preview = document.getElementById('proofPreviewImg');
+    const placeholder = document.getElementById('proofPlaceholder');
+    const badge = document.getElementById('proofBadgeStatus');
+
+    preview.src = dataUrl;
+    preview.classList.remove('hidden');
+    placeholder.classList.add('hidden');
+
+    badge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+    badge.innerHTML = '<i class="fa-solid fa-check"></i> บันทึกภาพหลักฐานเรียบร้อยแล้ว';
+}
+
+// ============================================================
+// Automated Calculations for All Tables
+// ============================================================
+function calculateAllTables() {
+    // Table 1.1 Calculation
+    for (let r = 1; r <= 5; r++) {
+        const c1 = parseFloat(document.getElementById(`t1_r${r}_c1`).value) || 0;
+        const c2 = parseFloat(document.getElementById(`t1_r${r}_c2`).value) || 0;
+        const c3 = parseFloat(document.getElementById(`t1_r${r}_c3`).value) || 0;
+        if (c1 > 0 || c2 > 0 || c3 > 0) {
+            const avg = (c1 + c2 + c3) / 3.0;
+            const decimals = (r === 1) ? 1 : 2;
+            document.getElementById(`t1_r${r}_avg`).value = avg.toFixed(decimals);
+            const unc = (r === 1) ? "0.5" : (r <= 3 ? "0.05" : "0.01");
+            document.getElementById(`t1_r${r}_rep`).value = `${avg.toFixed(decimals)} ± ${unc}`;
+            document.getElementById(`t1_r${r}_sig`).value = (r === 1 || r >= 4) ? "3 ตัว" : "4 ตัว";
+        }
+    }
+
+    // Table 1.2 Calculation (ISO 8655 Gravimetric)
+    const zFactor = 1.0033;
+    const nominals = [100, 500, 1000];
+    const limits = [3.0, 1.2, 0.8];
+
+    for (let r = 1; r <= 3; r++) {
+        const m1 = parseFloat(document.getElementById(`t2_r${r}_m1`).value) || 0;
+        const m2 = parseFloat(document.getElementById(`t2_r${r}_m2`).value) || 0;
+        const m3 = parseFloat(document.getElementById(`t2_r${r}_m3`).value) || 0;
+        const m4 = parseFloat(document.getElementById(`t2_r${r}_m4`).value) || 0;
+        const m5 = parseFloat(document.getElementById(`t2_r${r}_m5`).value) || 0;
+
+        const masses = [m1, m2, m3, m4, m5].filter(m => m > 0);
+        if (masses.length >= 3) {
+            const mAvg = masses.reduce((a, b) => a + b, 0) / masses.length;
+            const vAct = mAvg * zFactor;
+            const vNom = nominals[r - 1];
+            const sysErr = ((vAct - vNom) / vNom) * 100.0;
+
+            // standard deviation
+            const variance = masses.reduce((acc, m) => acc + Math.pow(m - mAvg, 2), 0) / (masses.length - 1);
+            const s = Math.sqrt(variance);
+            const cv = (s / mAvg) * 100.0;
+
+            document.getElementById(`t2_r${r}_mavg`).value = mAvg.toFixed(2);
+            document.getElementById(`t2_r${r}_vact`).value = vAct.toFixed(2);
+            document.getElementById(`t2_r${r}_err`).value = `${sysErr >= 0 ? '+' : ''}${sysErr.toFixed(2)}%`;
+            document.getElementById(`t2_r${r}_cv`).value = `${cv.toFixed(2)}%`;
+
+            const evalSelect = document.getElementById(`t2_r${r}_eval`);
+            if (Math.abs(sysErr) <= limits[r - 1]) {
+                evalSelect.value = "pass";
+            } else {
+                evalSelect.value = "fail";
+            }
+        }
+    }
+}
+
+// ============================================================
+// Strict Pre-Submission Validation & Backend Sync
+// ============================================================
+async function validateAndSubmitReport(e) {
+    e.preventDefault();
+
+    const fullname = document.getElementById('student_fullname').value.trim();
+    const studentId = document.getElementById('student_id').value.trim();
+    const program = document.getElementById('student_program').value.trim();
+    const section = document.getElementById('student_section').value.trim();
+    const proofBase64 = document.getElementById('image_proof_base64').value.trim();
+
+    const calculations = document.getElementById('lab_calculations').value.trim();
+    const discussion = document.getElementById('lab_discussion').value.trim();
+    const conclusion = document.getElementById('lab_conclusion').value.trim();
+
+    const q1 = document.getElementById('quiz_ans_1').value.trim();
+    const q2 = document.getElementById('quiz_ans_2').value.trim();
+    const q3 = document.getElementById('quiz_ans_3').value.trim();
+
+    // 1. Check Identity
+    if (!fullname || !studentId) {
+        alert("⚠️ กรุณากรอกชื่อ-นามสกุล และรหัสนักศึกษาให้ครบถ้วนก่อนส่งรายงานครับ");
+        document.getElementById('student_fullname').focus();
+        return;
+    }
+
+    // 2. Check Screenshot Proof (Mandatory)
+    if (!proofBase64) {
+        alert("⚠️ ต้องมีภาพถ่ายหรือแคปหน้าจอระหว่างทดลองด้วยเสมอ!\n\nกรุณากดปุ่ม '📸 แคปหน้าจอ 3D Simulator' หรือ 'อัปโหลดไฟล์ภาพ' ในส่วนหลักฐานการทดลองด้านบนครับ");
+        document.getElementById('proofBadgeStatus').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+    }
+
+    // 3. Check Table 1.1 Inputs
+    for (let r = 1; r <= 5; r++) {
+        for (let c = 1; c <= 3; c++) {
+            const input = document.getElementById(`t1_r${r}_c${c}`);
+            if (!input.value.trim()) {
+                alert(`⚠️ ตารางที่ 1.1: แถวที่ ${r} ครั้งที่ ${c} ยังไม่ได้กรอกข้อมูล กรุณากรอกให้ครบถ้วนก่อนส่งครับ`);
+                input.focus();
+                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+        }
+    }
+
+    // 4. Check Table 1.2 Inputs
+    for (let r = 1; r <= 3; r++) {
+        for (let m = 1; m <= 5; m++) {
+            const input = document.getElementById(`t2_r${r}_m${m}`);
+            if (!input.value.trim()) {
+                alert(`⚠️ ตารางที่ 1.2: ระดับที่ ${r} ค่าน้ำหนัก m${m} ยังไม่ได้กรอกข้อมูล กรุณากรอกให้ครบถ้วนก่อนส่งครับ`);
+                input.focus();
+                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+        }
+    }
+
+    // 5. Check Table 1.3 Inputs
+    for (let c = 1; c <= 5; c++) {
+        const input = document.getElementById(`t3_c${c}_size`);
+        if (!input.value.trim()) {
+            alert(`⚠️ ตารางที่ 1.3: โคโลนีที่ ${c} ยังไม่ได้กรอกเส้นผ่านศูนย์กลาง`);
+            input.focus();
+            return;
+        }
+    }
+    for (let w = 1; w <= 4; w++) {
+        const input = document.getElementById(`t3_w${w}_ntu`);
+        if (!input.value.trim()) {
+            alert(`⚠️ ตารางที่ 1.3: แหล่งน้ำที่ ${w} ยังไม่ได้กรอกค่า NTU`);
+            input.focus();
+            return;
+        }
+    }
+
+    // 6. Check Calculations & Written Questions
+    if (!calculations || !discussion || !conclusion) {
+        alert("⚠️ กรุณาพิมพ์วิธีคำนวณ การอภิปรายผล และการสรุปผลให้ครบถ้วนก่อนส่งครับ");
+        document.getElementById('lab_calculations').focus();
+        return;
+    }
+
+    if (!q1 || !q2 || !q3) {
+        alert("⚠️ กรุณาตอบคำถามท้ายการทดลองให้ครบทั้ง 3 ข้อก่อนส่งครับ");
+        document.getElementById('quiz_ans_1').focus();
+        return;
+    }
+
+    // Run auto-calculation before packing JSON
+    calculateAllTables();
+
+    // Pack complete report payload
+    const tableDataPayload = {
+        table_1_1_dimensions: {
+            zero_error: document.getElementById('tbl1_zero_error').value,
+            rows: [1,2,3,4,5].map(r => ({
+                row: r,
+                m1: document.getElementById(`t1_r${r}_c1`).value,
+                m2: document.getElementById(`t1_r${r}_c2`).value,
+                m3: document.getElementById(`t1_r${r}_c3`).value,
+                avg: document.getElementById(`t1_r${r}_avg`).value,
+                report: document.getElementById(`t1_r${r}_rep`).value,
+                sig_figs: document.getElementById(`t1_r${r}_sig`).value
+            }))
+        },
+        table_1_2_pipette: {
+            water_temp: document.getElementById('tbl2_water_temp').value,
+            z_factor: 1.0033,
+            rows: [1,2,3].map(r => ({
+                nominal: r === 1 ? 100 : (r === 2 ? 500 : 1000),
+                m1: document.getElementById(`t2_r${r}_m1`).value,
+                m2: document.getElementById(`t2_r${r}_m2`).value,
+                m3: document.getElementById(`t2_r${r}_m3`).value,
+                m4: document.getElementById(`t2_r${r}_m4`).value,
+                m5: document.getElementById(`t2_r${r}_m5`).value,
+                m_avg: document.getElementById(`t2_r${r}_mavg`).value,
+                v_actual: document.getElementById(`t2_r${r}_vact`).value,
+                err_pct: document.getElementById(`t2_r${r}_err`).value,
+                cv_pct: document.getElementById(`t2_r${r}_cv`).value,
+                evaluation: document.getElementById(`t2_r${r}_eval`).value
+            }))
+        },
+        table_1_3_colonies_and_water: {
+            colonies: [1,2,3,4,5].map(c => ({
+                colony: c,
+                size_mm: document.getElementById(`t3_c${c}_size`).value,
+                morphology: document.getElementById(`t3_c${c}_desc`).value
+            })),
+            water: [1,2,3,4].map(w => ({
+                source_index: w,
+                ntu: document.getElementById(`t3_w${w}_ntu`).value,
+                evaluation: document.getElementById(`t3_w${w}_eval`).value
+            }))
+        }
+    };
+
+    const payload = {
+        action: 'submit_report',
+        student_id: studentId,
+        fullname: fullname,
+        program: program,
+        section: section,
+        lab_id: 'lab01',
+        table_data: tableDataPayload,
+        calculations: calculations,
+        discussion: discussion,
+        conclusion: conclusion,
+        quiz_answers: { q1: q1, q2: q2, q3: q3 },
+        image_proof_base64: proofBase64,
+        google_sheet_webhook_url: document.getElementById('google_sheet_webhook_url').value.trim()
+    };
+
+    const submitBtn = document.getElementById('btnSubmitReport');
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกลง SQLite และ Google Sheets...';
+
+    try {
+        const res = await fetch('../../virtual_lab/api/api.php?action=submit_report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+
+        if (result.success) {
+            document.getElementById('modalReportCode').textContent = result.report_code || 'REP-OK';
+            document.getElementById('modalStudentName').textContent = `${fullname} (${studentId})`;
+            document.getElementById('modalTimestamp').textContent = result.timestamp || new Date().toLocaleString('th-TH');
+            document.getElementById('modalSheetStatus').textContent = result.google_sheets_status || '✓ บันทึกสำเร็จ';
+
+            const modal = document.getElementById('submitModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        } else {
+            alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล: " + (result.error || "โปรดลองใหม่อีกครั้ง"));
+        }
+    } catch (err) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+        console.error("Submit error:", err);
+        alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาตรวจสอบว่า XAMPP Apache ทำงานอยู่ครับ");
+    }
+}
+
+function closeSubmitModal() {
+    const modal = document.getElementById('submitModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
