@@ -1,0 +1,164 @@
+\chapter{การสะท้อน การหักเหของแสง และการวัดค่าบริกซ์ของกระบวนการหมักด้วยเครื่อง Refractometer}
+
+\begin{planbox}[สัปดาห์ที่ 10 — เวลาปฏิบัติการ 3 ชั่วโมง (สอดคล้องกับ CLO1, CLO3 และ CLO4)]
+\textbf{1. วัตถุประสงค์การทดลอง}
+\begin{itemize}
+    \item ทดสอบกฎการสะท้อนของแสงและกฎการหักเหของสเนลล์ ($n_1\sin\theta_1 = n_2\sin\theta_2$) เพื่อหาค่าดัชนีหักเหของแท่งอะคริลิกใสและสารละลายน้ำตาล
+    \item ใช้เครื่องวัดดัชนีหักเหแบบพกพา (Hand Refractometer) วัดค่าองศาบริกซ์ ($^\circ\text{Brix}$) ของสารละลายน้ำตาลมาตรฐานและน้ำหมักยีสต์ที่เวลาการหมักต่างๆ
+    \item สร้างกราฟความสัมพันธ์ระหว่างความเข้มข้นของน้ำตาล ($^\circ\text{Brix}$) กับค่าดัชนีหักเห ($n$) เพื่อประเมินอัตราการใช้น้ำตาลของเชื้อยีสต์ \textit{Saccharomyces cerevisiae}
+\end{itemize}
+\textbf{2. ความเชื่อมโยงกับผลลัพธ์การเรียนรู้ของรายวิชา (CLOs) และหลักสูตร (PLOs)}
+\begin{itemize}
+    \item \textbf{CLO1 (PLO2)}\quad อธิบายกฎของสเนลล์ ดัชนีหักเหของแสง และหลักการมุมวิกฤตในเครื่อง Refractometer ได้
+    \item \textbf{CLO3 (PLO1)}\quad ปฏิบัติการด้วยเลเซอร์อย่างปลอดภัยและดูแลรักษาผิวปริซึมของเครื่อง Refractometer อย่างถูกวิธี
+    \item \textbf{CLO4 (PLO5, PLO6)}\quad บันทึกข้อมูล วาดกราฟแนวโน้มการหมัก และสื่อสารผลในรายงานกลุ่มได้ชัดเจน
+\end{itemize}
+\end{planbox}
+
+\section{หลักการทฤษฎีและการเชื่อมโยงสู่งานจุลชีววิทยา}
+
+เมื่อลำแสงเดินทางจากตัวกลางที่ 1 ที่มีดัชนีหักเห $n_1$ เข้าสู่ตัวกลางที่ 2 ที่มีดัชนีหักเห $n_2$ ด้วยมุมตกกระทบ $\theta_1$ ลำแสงจะเบนทิศทางเกิดเป็นมุมหักเห $\theta_2$ ตาม\textbf{กฎของสเนลล์} (\textbf{Snell's Law})\index{กฎของสเนลล์ (Snell's Law)} ดังสมการที่ \eqref{eq:lab09_snell}
+
+\begin{equation}
+    n_1 \sin\theta_1 = n_2 \sin\theta_2 \qquad \text{โดยที่} \qquad n = \frac{c}{v}
+    \label{eq:lab09_snell}
+\end{equation}
+
+ในงานจุลชีววิทยาอุตสาหกรรมและเทคโนโลยีการหมัก (เช่น การหมักไวน์ เบียร์ หรือเอทานอลด้วยเชื้อยีสต์) ความเข้มข้นของน้ำตาลที่ละลายอยู่ในน้ำหมักจะแปรผันตรงกับค่าดัชนีหักเหของแสง $n$ เครื่อง \textbf{Hand Refractometer}\index{รีแฟรกโตมิเตอร์ (Refractometer)} ใช้หลักการหามุมวิกฤตของการสะท้อนกลับหมดที่ผิวรอยต่อระหว่างปริซึมแก้วกับหยดสารละลายตัวอย่าง แล้วแสดงผลออกมาเป็นเส้นแบ่งเขตมืด--สว่างบนสเกลหน่วย\textbf{องศาบริกซ์} ($^\circ\text{Brix}$ ซึ่งหมายถึงกรัมของน้ำตาลซูโครสในสารละลาย $100\text{ g}$) เมื่อยีสต์ย่อยสลายน้ำตาลไปเป็นแอลกอฮอล์และแก๊สคาร์บอนไดออกไซด์ ค่า $^\circ\text{Brix}$ และดัชนีหักเห $n$ ของน้ำหมักจะลดลงตามเวลาอย่างต่อเนื่อง
+
+\begin{conceptbox}[สรุปสูตรคำนวณฉบับเข้าใจง่ายสำหรับปฏิบัติการที่ 9]
+\begin{itemize}
+    \item \textbf{การหาค่าดัชนีหักเหของตัวกลางจากมุมตกกระทบในอากาศ ($n_1 = 1.000$)}
+    \begin{equation*}
+        n_2 = \frac{\sin\theta_1}{\sin\theta_2}
+    \end{equation*}
+    \item \textbf{ความสัมพันธ์เชิงเส้นโดยประมาณระหว่างดัชนีหักเห $n$ กับค่าบริกซ์ $B$ ($^\circ\text{Brix}$) ที่ $20\,^\circ\text{C}$}
+    \begin{equation*}
+        n \approx 1.3330 + (0.00143 \times B)
+    \end{equation*}
+\end{itemize}
+\end{conceptbox}
+
+\begin{worked}[การคำนวณดัชนีหักเหของอาหารเลี้ยงเชื้อเหลวด้วยกฎของสเนลล์]
+\textbf{โจทย์} เมื่อฉายลำแสงเลเซอร์จากอากาศ ($n_1 = 1.000$) ตกกระทบผิวสารละลายน้ำตาลเข้มข้น $20\,^\circ\text{Brix}$ ด้วยมุมตกกระทบ $\theta_1 = 45^\circ$ ($\sin 45^\circ = 0.7071$) วัดมุมหักเหในสารละลายได้ $\theta_2 = 31.3^\circ$ ($\sin 31.3^\circ = 0.5195$) จงคำนวณค่าดัชนีหักเห $n_2$ ของสารละลายน้ำตาลนี้
+
+\textbf{วิธีทำทีละขั้นตอน}
+\begin{enumerate}
+    \item แทนค่า $\sin\theta_1 = 0.7071$ และ $\sin\theta_2 = 0.5195$ ลงในสูตรกฎของสเนลล์
+    \begin{equation*}
+        n_2 = \frac{\sin\theta_1}{\sin\theta_2} = \frac{0.7071}{0.5195} = 1.361
+    \end{equation*}
+\end{enumerate}
+\textbf{คำตอบ} สารละลายน้ำตาลมีค่าดัชนีหักเหเท่ากับ $1.361$ (สอดคล้องกับค่าจากตารางมาตรฐานที่ $20\,^\circ\text{Brix}$ ซึ่งมีค่า $n \approx 1.3616$)
+\end{worked}
+
+\begin{figure}[H]
+\centering
+\resizebox{0.86\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, font=\small]
+    % Left: Snell's law
+    \draw[fill=boxBlueBg, draw=physRoyalBlue, line width=1pt] (0,0) rectangle (6.2,2.1);
+    \draw[fill=white, draw=physRoyalBlue, line width=1pt] (0,2.1) rectangle (6.2,4.2);
+    \draw[dashed, line width=1pt, charcoal] (3.1,0.2) -- (3.1,4.0) node[above, font=\scriptsize\bfseries] {เส้นแนวฉาก};
+    \draw[->, line width=1.6pt, crimsonAlert] (1.1,3.9) -- (3.1,2.1);
+    \draw[->, line width=1.6pt, crimsonAlert] (3.1,2.1) -- (4.3,0.3);
+    \node[font=\footnotesize\bfseries] at (1.3,2.5) {อากาศ $n_1=1.00$};
+    \node[font=\footnotesize\bfseries\color{physRoyalBlue}] at (1.6,0.5) {น้ำหมักน้ำตาล $n_2$};
+    \node[font=\footnotesize\bfseries] at (2.65,3.1) {$\theta_1$};
+    \node[font=\footnotesize\bfseries] at (3.45,1.1) {$\theta_2$};
+
+    % Right: Hand Refractometer & Brix scale
+    \draw[fill=softSmoke, draw=charcoal, line width=1.1pt, rounded corners=4pt] (7.2,1.5) rectangle (10.6,2.5);
+    \draw[fill=boxBlueBg, draw=physRoyalBlue, line width=1.1pt] (10.6,1.6) -- (11.7,2.4) -- (11.7,1.5) -- cycle;
+    \node[font=\footnotesize\bfseries] at (8.9,2.0) {Hand Refractometer};
+    \node[font=\scriptsize\bfseries\color{physRoyalBlue}, above] at (11.2,2.45) {หยดน้ำหมัก $2$ หยด};
+
+    % Circular Brix field of view
+    \begin{scope}[shift={(13.4,2.1)}]
+        \clip (0,0) circle (1.45cm);
+        \fill[white] (-1.5,-1.5) rectangle (1.5,0.2);
+        \fill[physRoyalBlue!75] (-1.5,0.2) rectangle (1.5,1.5);
+        \draw[line width=1.2pt, crimsonAlert] (-1.5,0.2) -- (1.5,0.2);
+    \end{scope}
+    \draw[line width=1.3pt, charcoal] (13.4,2.1) circle (1.45cm);
+    \draw[line width=0.8pt] (13.4,0.85) -- (13.4,3.35);
+    \foreach \y/\val in {1.1/0, 1.6/10, 2.1/16, 2.6/20, 3.1/30} {
+        \draw (13.25,\y) -- (13.55,\y);
+        \node[right, font=\scriptsize\bfseries] at (13.55,\y) {\val};
+    }
+    \node[font=\scriptsize\bfseries\color{crimsonAlert}, below] at (13.4,0.55) {อ่านค่าได้ $16.0\,^\circ\text{Brix}$};
+\end{tikzpicture}%
+}
+\caption{การหักเหของลำแสงเลเซอร์ตามกฎของสเนลล์ (ซ้าย) และการอ่านเส้นแบ่งเขตมืด--สว่างในเครื่อง Hand Refractometer (ขวา)}
+\label{fig:lab09_setup}
+\end{figure}
+
+\section{วัสดุอุปกรณ์และขั้นตอนการปฏิบัติการ}
+
+\begin{equipbox}
+\begin{enumerate}
+    \item ชุดกล่องแสงเลเซอร์พร้อมจานวัดมุม $360^\circ$ และถ้วยครึ่งวงกลมใส จำนวน $1$ ชุด
+    \item เครื่องวัดความหวานแบบส่องกล้อง (Hand Refractometer ช่วง $0\text{--}32\,^\circ\text{Brix}$) จำนวน $1$ เครื่อง
+    \item สารละลายน้ำตาลซูโครสมาตรฐานความเข้มข้น $0\%$, $10\%$ และ $20\%$ (w/w)
+    \item ตัวอย่างน้ำหมักยีสต์ (\textit{Saccharomyces cerevisiae}) ที่ระยะเวลาการหมัก $0$, $24$, $48$ และ $72$ ชั่วโมง
+\end{enumerate}
+\end{equipbox}
+
+\begin{warningbox}
+ห้ามฉายลำแสงเลเซอร์เข้าสู่ดวงตาของตนเองหรือผู้อื่นโดยเด็ดขาด และในการทำความสะอาดหน้าปริซึมของเครื่อง Refractometer ให้ใช้น้ำกลั่นหยดและซับด้วยกระดาษเช็ดเลนส์เบาๆ เท่านั้น ห้ามใช้เล็บหรือวัสดุแข็งขูดผิวปริซึม
+\end{warningbox}
+
+\subsection{ขั้นตอนการทดลอง}
+\begin{enumerate}
+    \item \textbf{ตอนที่ 1 การหาดัชนีหักเหด้วยกฎของสเนลล์}\quad เทน้ำกลั่นและสารละลายน้ำตาล $20\%$ ลงในถ้วยครึ่งวงกลม ฉายแสงเลเซอร์ด้วยมุมตกกระทบ $\theta_1 = 30^\circ$ และ $45^\circ$ อ่านค่ามุมหักเห $\theta_2$ และคำนวณค่าดัชนีหักเห $n_2$ บันทึกใน\mbox{ตารางที่} 9.1
+    \item \textbf{ตอนที่ 2 การติดตามกระบวนการหมักของยีสต์ด้วยเครื่อง Hand Refractometer}\quad ปรับเทียบศูนย์ (Zero Calibration) ของเครื่อง Refractometer ด้วยน้ำกลั่น ($0.0\,^\circ\text{Brix}$) จากนั้นวัดค่าองศาบริกซ์ของตัวอย่างน้ำหมักยีสต์ที่เวลา $0, 24, 48$ และ $72$ ชั่วโมง คำนวณค่าดัชนีหักเห $n$ และอัตราการลดลงของน้ำตาล บันทึกใน\mbox{ตารางที่} 9.2
+\end{enumerate}
+
+\section{ใบบันทึกผลการทดลองและคำถามท้ายปฏิบัติการ}
+
+\begin{worksheetbox}[ใบบันทึกผลการทดลองที่ 9\quad การหักเหของแสงและการวัดค่าบริกซ์ของน้ำหมักจุลินทรีย์]
+\textbf{กลุ่มปฏิบัติการที่} \dotfill \textbf{วันที่ทำการทดลอง} \dotfill\\[4pt]
+\textbf{รายชื่อสมาชิกกลุ่ม} 1. \dotfill 2. \dotfill 3. \dotfill
+
+\vspace{4pt}
+\textbf{ตารางที่ 9.1\quad ผลการวัดมุมหักเหและคำนวณค่าดัชนีหักเหตามกฎของสเนลล์}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X c c c c c}
+\toprule
+\textbf{ชนิดของตัวกลางที่ 2} & \textbf{มุม $\theta_1$} & \textbf{ค่า $\sin\theta_1$} & \textbf{มุมหักเห $\theta_2$} & \textbf{ค่า $\sin\theta_2$} & \textbf{ดัชนีหักเห $n_2 = \sin\theta_1/\sin\theta_2$} \\
+\midrule
+1. น้ำกลั่นบริสุทธิ์ & $30^\circ$ & $0.5000$ & \dotfill & \dotfill & \dotfill \\[6pt]
+2. น้ำกลั่นบริสุทธิ์ & $45^\circ$ & $0.7071$ & \dotfill & \dotfill & \dotfill \\[6pt]
+3. สารละลายน้ำตาล $20\%$ & $45^\circ$ & $0.7071$ & \dotfill & \dotfill & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\textbf{ตารางที่ 9.2\quad ผลการวัดค่าองศาบริกซ์ ($^\circ\text{Brix}$) ของน้ำหมักยีสต์ด้วยเครื่อง Hand Refractometer}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X c c c c}
+\toprule
+\textbf{ระยะเวลาการหมักยีสต์ (ชั่วโมง)} & \textbf{ครั้งที่ 1 ($^\circ\text{Brix}$)} & \textbf{ครั้งที่ 2 ($^\circ\text{Brix}$)} & \textbf{ค่าเฉลี่ย $B$ ($^\circ\text{Brix}$)} & \textbf{ค่าดัชนีหักเหคำนวณ $n$} \\
+\midrule
+ชั่วโมงที่ $0$ (เริ่มต้นหมัก) & \dotfill & \dotfill & \dotfill & \dotfill \\[6pt]
+ชั่วโมงที่ $24$ (หมักวันที่ 1) & \dotfill & \dotfill & \dotfill & \dotfill \\[6pt]
+ชั่วโมงที่ $48$ (หมักวันที่ 2) & \dotfill & \dotfill & \dotfill & \dotfill \\[6pt]
+ชั่วโมงที่ $72$ (หมักวันที่ 3) & \dotfill & \dotfill & \dotfill & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\textbf{สรุปและอภิปรายผลการทดลอง}\\[4pt]
+\dotfill\\[6pt]
+\dotfill
+\end{worksheetbox}
+
+\subsection{คำถามท้ายปฏิบัติการ}
+\begin{enumerate}
+    \item เพราะเหตุใดเมื่อระยะเวลาการหมักของยีสต์เพิ่มขึ้นจาก $0$ ชั่วโมงไปเป็น $72$ ชั่วโมง ค่าองศาบริกซ์และดัชนีหักเหของน้ำหมักจึงลดลงอย่างต่อเนื่อง
+    \item เหตุใดจึงต้องทำการหยดน้ำกลั่นเพื่อปรับตั้งค่าศูนย์ ($0.0\,^\circ\text{Brix}$) ของเครื่อง Hand Refractometer ทุกครั้งก่อนเริ่มวัดตัวอย่างจริง
+\end{enumerate}

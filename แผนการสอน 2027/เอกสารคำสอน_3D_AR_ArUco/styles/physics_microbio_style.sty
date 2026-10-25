@@ -404,11 +404,11 @@
 }
 
 % ====================================================================
-% 11. 3D REALISTIC 8K DEEP-SKIN SECTION SHOWCASE MACRO
+% 11. 3D SECTION FIGURE MACRO (SEQUENTIAL NUMBERING)
 % ====================================================================
 \newcommand{\deepskinfig}[2]{%
-  \begin{center}
-    \vspace{3pt}
+  \begin{figure}[H]
+    \centering
     \begin{tcolorbox}[
       enhanced,
       colback=softSmoke,
@@ -419,10 +419,10 @@
       width=0.92\textwidth
     ]
       \centering
-      \includegraphics[width=0.96\linewidth, height=5.1cm, keepaspectratio]{#1}\\[2pt]
-      {\footnotesize\bfseries\color{physRoyalBlue}ภาพจำลอง 3 มิติ 8K Deep Skin\quad}{\footnotesize\color{charcoal}#2}
+      \includegraphics[width=0.96\linewidth, height=4.95cm, keepaspectratio]{#1}
     \end{tcolorbox}
-    \vspace{2pt}
-  \end{center}
+    \vspace{-4pt}
+    \caption{#2}
+  \end{figure}
 }
 \endinput

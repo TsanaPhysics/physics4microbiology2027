@@ -1,0 +1,103 @@
+{
+    "ui": {
+        "chapters": {
+            "th": "บทเรียน",
+            "en": "Chapters",
+            "zh": "章节"
+        },
+        "contact": {
+            "th": "ติดต่อ",
+            "en": "Contact",
+            "zh": "联系"
+        },
+        "start_learning": {
+            "th": "เริ่มเรียนรู้ตอนนี้",
+            "en": "Start Learning",
+            "zh": "开始学习"
+        },
+        "learning_outcomes": {
+            "th": "วัตถุประสงค์การเรียนรู้",
+            "en": "Learning Outcomes",
+            "zh": "学习成果"
+        },
+        "exercises": {
+            "th": "แบบฝึกหัดท้ายบท",
+            "en": "Chapter Exercises",
+            "zh": "课后练习"
+        },
+        "references": {
+            "th": "รายการอ้างอิง",
+            "en": "References",
+            "zh": "参考文献"
+        },
+        "previous": {
+            "th": "ย้อนกลับ",
+            "en": "Previous",
+            "zh": "上一页"
+        },
+        "next": {
+            "th": "ถัดไป",
+            "en": "Next",
+            "zh": "下一页"
+        },
+        "teaching_plan": {
+            "th": "แผนบริหารการสอนประจำบท",
+            "en": "Teaching Management Plan",
+            "zh": "教学管理计划"
+        },
+        "summary": {
+            "th": "สรุปท้ายบท",
+            "en": "Chapter Summary",
+            "zh": "章节总结"
+        }
+    },
+    "chapters": {
+        "01": { "th": "ระบบหน่วยและการวัด", "en": "Unit Systems & Measurement", "zh": "单位系统与测量" },
+        "02": { "th": "เวกเตอร์", "en": "Vectors", "zh": "矢量" },
+        "03": { "th": "การเคลื่อนที่", "en": "Motion", "zh": "运动" },
+        "04": { "th": "กฎนิวตัน", "en": "Newton's Laws", "zh": "牛顿定律" },
+        "05": { "th": "โมเมนตัม", "en": "Momentum", "zh": "动量" },
+        "06": { "th": "สมดุล", "en": "Equilibrium", "zh": "平衡" },
+        "07": { "th": "งานและพลังงาน", "en": "Work & Energy", "zh": "功与能量" },
+        "08": { "th": "เครื่องกลอย่างง่าย", "en": "Simple Machines", "zh": "简单机械" },
+        "09": { "th": "อุณหพลศาสตร์", "en": "Thermodynamics", "zh": "热力学" },
+        "10": { "th": "ไฟฟ้า", "en": "Electricity", "zh": "电学" },
+        "11": { "th": "ทัศนศาสตร์", "en": "Optics", "zh": "光学" },
+        "12": { "th": "กัมมันตภาพรังสี", "en": "Radioactivity", "zh": "放射性" }
+    },
+    "sections": {
+        "บทนำ": { "th": "บทนำ", "en": "Introduction", "zh": "引言" },
+        "จลนศาสตร์": { "th": "จลนศาสตร์: ภาษาดิจิทัลแห่งการเคลื่อนที่", "en": "Kinematics: Digital Language of Motion", "zh": "运动学：运动的数字语言" },
+        "ความเร่งคงที่": { "th": "การเคลื่อนที่ด้วยความเร่งคงที่", "en": "Constant Acceleration Motion", "zh": "等加速运动" },
+        "โพรเจกไทล์": { "th": "การเคลื่อนที่แบบโพรเจกไทล์", "en": "Projectile Motion", "zh": "抛体运动" },
+        "วงกลม": { "th": "การเคลื่อนที่แบบวงกลม", "en": "Circular Motion", "zh": "圆周运动" },
+        "กฎนิวตัน": { "th": "กฎการเคลื่อนที่ของนิวตัน", "en": "Newton's Laws of Motion", "zh": "牛顿运动定律" },
+        "แรง": { "th": "แรงและมวล", "en": "Force and Mass", "zh": "力和质量" },
+        "โมเมนตัม": { "th": "โมเมนตัมและการดล", "en": "Momentum and Impulse", "zh": "动量与冲量" },
+        "งานและพลังงาน": { "th": "งานและพลังงาน", "en": "Work and Energy", "zh": "功与能量" },
+        "สมดุล": { "th": "สมดุลกล", "en": "Mechanical Equilibrium", "zh": "机械平衡" },
+        "สถาปัตยกรรมแห่งความนิ่ง": { "th": "สถาปัตยกรรมแห่งความนิ่ง", "en": "Architecture of Stillness", "zh": "静止的建筑" },
+        "อุณหพลศาสตร์": { "th": "อุณหพลศาสตร์", "en": "Thermodynamics", "zh": "热力学" },
+        "ไฟฟ้า": { "th": "ไฟฟ้าและแม่เหล็ก", "en": "Electricity and Magnetism", "zh": "电学与磁学" },
+        "ทัศนศาสตร์": { "th": "ทัศนศาสตร์และแสง", "en": "Optics and Light", "zh": "光学与光学" },
+        "กัมมันตภาพรังสี": { "th": "กัมมันตภาพรังสีและฟิสิกส์นิวเคลียร์", "en": "Radioactivity & Nuclear Physics", "zh": "放射性与核物理" },
+        "ครึ่งชีวิต": { "th": "ครึ่งชีวิตและกฎการสลายตัว", "en": "Half-life and Decay Law", "zh": "半衰期与衰变定律" },
+        "ความปลอดภัยทางรังสี": { "th": "ความปลอดภัยทางรังสี", "en": "Radiation Safety", "zh": "辐射安全" },
+        "ห้องปฏิบัติการอัจฉริยะ": { "th": "ห้องปฏิบัติการอัจฉริยะ: IoT และระบบอัตโนมัติ", "en": "Smart Lab: IoT & Automation", "zh": "智能实验室：物联网与自动化" },
+        "ปัญญาประดิษฐ์": { "th": "ปัญญาประดิษฐ์ (AI)", "en": "Artificial Intelligence (AI)", "zh": "人工智能 (AI)" },
+        "ปัญญาประดิษฐ์กับการจำลองพลศาสตร์โมเลกุล": { "th": "ปัญญาประดิษฐ์กับการจำลองพลศาสตร์โมเลกุล", "en": "AI and Molecular Dynamics Simulation", "zh": "人工智能与分子动力学模拟" },
+        "แรงในของไหล": { "th": "แรงในของไหลและการคัดแยกเซลล์ด้วย Microfluidics", "en": "Fluid Forces & Cell Sorting with Microfluidics", "zh": "流体力与微流控细胞分选" },
+        "การวัดและควบคุมแรงยึดเกาะ": { "th": "การวัดและควบคุมแรงยึดเกาะของแบคทีเรีย", "en": "Measuring & Controlling Bacterial Adhesion", "zh": "细菌粘附力的测量与控制" },
+        "พีชคณิตของเวกเตอร์": { "th": "พีชคณิตของเวกเตอร์และการประยุกต์ใช้ใน Machine Learning", "en": "Vector Algebra & AI/ML Applications", "zh": "矢量代数与机器学习应用" },
+        "สเกลาร์": { "th": "ปริมาณสเกลาร์และปริมาณเวกเตอร์", "en": "Scalar & Vector Quantities", "zh": "标量和矢量" },
+        "ไบโอเซนเซอร์": { "th": "ไบโอเซนเซอร์ (Biosensors)", "en": "Biosensors", "zh": "生物传感器" },
+        "กล้องจุลทรรศน์": { "th": "กล้องจุลทรรศน์ (Microscopes)", "en": "Microscopes", "zh": "显微镜" },
+        "เทคโนโลยีการถ่ายภาพสมัยใหม่": { "th": "เทคโนโลยีการถ่ายภาพสมัยใหม่", "en": "Advanced Bioimaging", "zh": "先进生物成像" },
+        "การสะท้อนและการหักเห": { "th": "การสะท้อนและการหักเห", "en": "Reflection and Refraction", "zh": "反射与折射" },
+        "การถ่ายเทความร้อน": { "th": "การถ่ายเทความร้อน", "en": "Heat Transfer", "zh": "热传递" },
+        "อุณหภูมิและความร้อน": { "th": "อุณหภูมิและความร้อน", "en": "Temperature and Heat", "zh": "温度与热量" },
+        "กำลัง": { "th": "กำลัง (Power): อัตราการทำงาน", "en": "Power: Rate of Work", "zh": "功率：工作速率" },
+        "เครื่องกลอย่างง่าย": { "th": "เครื่องกลอย่างง่าย (Simple Machines)", "en": "Simple Machines", "zh": "简单机械" },
+        "ทอร์ก": { "th": "ทอร์ก: พลังแห่งการบิด", "en": "Torque: Power of Rotation", "zh": "扭矩：旋转的力量" }
+    }
+}

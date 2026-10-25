@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>กฎการเคลื่อนที่ของนิวตัน - ฟิสิกส์ ม.ปลาย</title>
+    <!-- MathJax v3 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            },
+            options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+            startup: { typeset: false }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/slide-core.css">
+</head>
+<body>
+
+    <div class="presentation-wrapper">
+        <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+            <a href="../index.html" style="color:#38bdf8; text-decoration:none; font-size:15px; font-weight:600;">🏠 เมนูหลัก</a>
+            <span style="color:#8a94b0; font-size:14px;">บทที่ 3 / 7</span>
+        </div>
+
+        <div class="slide-container" id="slideContainer">
+<div class="slide-container" id="slideContainer">
+
+            <!-- ========== SLIDE 1 ========== -->
+            <div class="slide active" data-index="0">
+                <span class="slide-number">1 / 20</span>
+                <div class="slide-title">
+                    กฎการเคลื่อนที่ของนิวตัน
+                    <span class="sub">พลศาสตร์ (Dynamics) – สาเหตุของการเคลื่อนที่</span>
+                </div>
+                <div class="slide-body" style="margin-top:28px;">
+                    <p style="font-size:22px; font-weight:500; color:#2d3a5e;">
+                        🔭 แรงคือสาเหตุที่ทำให้วัตถุเปลี่ยนแปลงการเคลื่อนที่
+                    </p>
+                    <div style="display:flex; flex-wrap:wrap; gap:18px; margin-top:24px;">
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ กฎข้อที่ 1 (ความเฉื่อย)</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ กฎข้อที่ 2 (F = ma)</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ กฎข้อที่ 3 (กิริยา-ปฏิกิริยา)</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ แรงเสียดทาน &amp; การประยุกต์</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:28px; background:#f0f7ff; border-radius:18px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:18px; color:#1f2a44;">
+                            <strong>🎯 เป้าหมาย:</strong> วิเคราะห์แรงที่กระทำต่อวัตถุโดยใช้ <strong>แผนภาพวัตถุอิสระ (FBD)</strong>
+                            และนำกฎของนิวตันไปใช้แก้โจทย์ได้อย่างถูกต้อง
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 2 ========== -->
+            
+
+<div class="slide" data-index="1">
+                <span class="slide-number">2 / 20</span>
+                <div class="slide-title">
+                    สารบัญ
+                    <span class="sub">หัวข้อที่จะเรียนในบทนี้</span>
+                </div>
+                <div class="slide-body">
+                    <ul style="font-size:20px; list-style:none; padding-left:0; display:flex; flex-direction:column; gap:10px;">
+                        <li>🔹 <strong>1.</strong> แรง (Force) และหน่วยนิวตัน</li>
+                        <li>🔹 <strong>2.</strong> ประเภทของแรงที่พบบ่อย</li>
+                        <li>🔹 <strong>3.</strong> กฎข้อที่ 1 (กฎความเฉื่อย)</li>
+                        <li>🔹 <strong>4.</strong> กฎข้อที่ 2 (F = ma)</li>
+                        <li>🔹 <strong>5.</strong> กฎข้อที่ 3 (กิริยา-ปฏิกิริยา)</li>
+                        <li>🔹 <strong>6.</strong> แรงเสียดทาน (สถิตและจลน์)</li>
+                        <li>🔹 <strong>7.</strong> การเคลื่อนที่บนพื้นราบ</li>
+                        <li>🔹 <strong>8.</strong> การเคลื่อนที่บนพื้นเอียง</li>
+                        <li>🔹 <strong>9.</strong> ระบบรอก (เครื่องกลอย่างง่าย)</li>
+                        <li>🔹 <strong>10.</strong> สรุปและเทคนิคการทำโจทย์</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 3 ========== -->
+            
+
+<div class="slide" data-index="2">
+                <span class="slide-number">3 / 20</span>
+                <div class="slide-title">
+                    แรง (Force)
+                    <span class="sub">คืออะไร? หน่วยวัด?</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li><strong>แรง</strong> คือ ปฏิสัมพันธ์ระหว่างวัตถุที่ทำให้วัตถุเปลี่ยนสภาพการเคลื่อนที่</li>
+                        <li>เป็น <strong>ปริมาณเวกเตอร์</strong> (มีขนาดและทิศทาง)</li>
+                        <li>หน่วย SI: <strong>นิวตัน (N)</strong> ซึ่ง \( 1 \, N = 1 \, kg \cdot m/s^2 \)</li>
+                    </ul>
+                    <div class="highlight-box blue" style="margin-top:12px;">
+                        💡 <strong>แรงลัพธ์ (Net Force)</strong> คือ ผลรวมเวกเตอร์ของแรงทั้งหมดที่กระทำต่อวัตถุ
+                        (\( \sum \vec{F} \)) เป็นตัวกำหนดความเร่งตามกฎข้อที่ 2
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 4 ========== -->
+            
+
+<div class="slide" data-index="3">
+                <span class="slide-number">4 / 20</span>
+                <div class="slide-title">
+                    ประเภทของแรงที่พบบ่อย
+                    <span class="sub">จำให้ขึ้นใจสำหรับการทำ FBD</span>
+                </div>
+                <div class="slide-body">
+                    <div class="slide-two-col">
+                        <div class="text-col">
+                            <div class="grid-2col">
+                        <div class="col">
+                            <h4>🌍 แรงโน้มถ่วง (W)</h4>
+                            <p>\( W = mg \) (ทิศลงสู่ศูนย์กลางโลก)</p>
+                            <h4 style="margin-top:12px;">📐 แรงตั้งฉาก (N)</h4>
+                            <p>แรงจากพื้นผิวในแนวตั้งฉาก</p>
+                        </div>
+                        <div class="col">
+                            <h4>🧵 แรงตึงเชือก (T)</h4>
+                            <p>แรงที่ส่งผ่านเส้นเชือก (ทิศตามแนวเชือก)</p>
+                            <h4 style="margin-top:12px;">⚡ แรงเสียดทาน (f)</h4>
+                            <p>ต้านการเคลื่อนที่หรือแนวโน้มเคลื่อนที่</p>
+                        </div>
+                    </div>
+                    <div class="highlight-box orange">
+                        ⚠️ <strong>สำคัญ:</strong> การเขียนแผนภาพวัตถุอิสระ (FBD) คือ <u>ขั้นตอนแรก</u> ของทุกโจทย์พลศาสตร์
+                    </div>
+                </div>
+                        </div>
+                        <div class="img-col">
+                            <svg width="245" height="230" viewBox="0 0 245 230" xmlns="http://www.w3.org/2000/svg" style="border-radius:14px;background:#f8faff;border:1px solid #dde6ff;"><polygon points="20,190 220,190 220,90" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/><rect x="90" y="115" width="45" height="35" transform="rotate(-26, 112, 132)" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1.5"/><line x1="112" y1="132" x2="90" y2="85" stroke="#059669" stroke-width="2"/><text x="82" y="80" font-family="Sarabun" font-size="12" font-weight="700" fill="#059669">N</text><line x1="112" y1="132" x2="112" y2="185" stroke="#ef4444" stroke-width="2"/><text x="117" y="182" font-family="Sarabun" font-size="12" font-weight="700" fill="#ef4444">W = mg</text><line x1="112" y1="132" x2="65" y2="108" stroke="#d97706" stroke-width="2"/><text x="50" y="105" font-family="Sarabun" font-size="12" font-weight="700" fill="#d97706">f</text></svg>
+                            <p class="img-caption">ภาพประกอบที่ 1</p>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- ========== SLIDE 5 ========== -->
+            
+
+<div class="slide" data-index="4">
+                <span class="slide-number">5 / 20</span>
+                <div class="slide-title">
+                    กฎข้อที่ 1 ของนิวตัน
+                    <span class="sub">กฎความเฉื่อย (Law of Inertia)</span>
+                </div>
+                <div class="slide-body">
+                    <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        “วัตถุจะหยุดนิ่ง หรือเคลื่อนที่ด้วยความเร็วคงที่ (แนวตรง)
+                        <br> ถ้าแรงลัพธ์ที่กระทำต่อวัตถุเป็นศูนย์”
+                     \]</div>
+                    <p>นั่นคือ: \( \sum \vec{F} = 0 \quad \Rightarrow \quad \vec{v} = \text{constant} \)</p>
+                    <div class="highlight-box green" style="margin-top:12px;">
+                        ✅ <strong>ตัวอย่าง:</strong> หนังสือวางนิ่งอยู่บนโต๊ะ (แรงโน้มถ่วงสมดุลกับแรงตั้งฉาก)
+                        หรือรถแล่นด้วยความเร็วคงที่บนถนนตรง (แรงขับสมดุลกับแรงต้าน)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 6 ========== -->
+            
+
+<div class="slide" data-index="5">
+                <span class="slide-number">6 / 20</span>
+                <div class="slide-title">
+                    กฎข้อที่ 1: ความเฉื่อย
+                    <span class="sub">มวลคือตัววัดความเฉื่อย</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li><strong>ความเฉื่อย</strong> คือสมบัติของวัตถุที่ต้านทานการเปลี่ยนแปลงสภาพการเคลื่อนที่</li>
+                        <li>วัตถุที่มี <strong>มวลมาก</strong> จะมีความเฉื่อย <strong>มาก</strong> (เปลี่ยนความเร็วได้ยาก)</li>
+                        <li>แรงลัพธ์เป็นศูนย์ หมายถึงวัตถุอยู่ใน <strong>ดุลยภาพ</strong> (Equilibrium)</li>
+                    </ul>
+                    <div class="highlight-box purple">
+                        🧠 <strong>จำไว้:</strong> ไม่มีแรงลัพธ์ ≠ ไม่มีแรงกระทำ (แต่อาจมีหลายแรงสมดุลกัน)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 7 ========== -->
+            
+
+<div class="slide" data-index="6">
+                <span class="slide-number">7 / 20</span>
+                <div class="slide-title">
+                    กฎข้อที่ 2 ของนิวตัน
+                    <span class="sub">F = ma (หัวใจของพลศาสตร์)</span>
+                </div>
+                <div class="slide-body">
+                    <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        \( \sum \vec{F} = m\vec{a} \)
+                     \]</div>
+                    <ul>
+                        <li>ความเร่ง (\(a\)) มีทิศทาง <strong>เดียวกับ</strong> แรงลัพธ์</li>
+                        <li>มวล (\(m\)) เป็นปริมาณสเกลาร์ (ไม่เปลี่ยนตามตำแหน่ง)</li>
+                        <li>ใช้ได้เฉพาะใน <strong>กรอบอ้างอิงเฉื่อย</strong> (ไม่มีความเร่ง)</li>
+                    </ul>
+                    <div class="highlight-box green">
+                        ✅ <strong>ตัวอย่าง:</strong> กล่องมวล 2 kg ถ้าแรงลัพธ์ 10 N → \( a = 10/2 = 5 \, m/s² \)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 8 ========== -->
+            
+
+<div class="slide" data-index="7">
+                <span class="slide-number">8 / 20</span>
+                <div class="slide-title">
+                    กฎข้อที่ 2: ตัวอย่าง
+                    <span class="sub">การหาแรงลัพธ์และความเร่ง</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">วัตถุมวล 5 kg ถูกแรง 20 N ในแนวราบ (ไม่มีแรงเสียดทาน) จงหาความเร่ง</p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>วิธีทำ:</strong> ใช้ \( \sum F = ma \)</p>
+                        <ul>
+                            <li>แรงลัพธ์ = 20 N (ทิศไปทางแรงที่กระทำ)</li>
+                            <li>\( 20 = 5 \cdot a \) → \( a = \mathbf{4 \, m/s^2} \)</li>
+                        </ul>
+                        <div class="highlight-box blue" style="margin-top:8px;">
+                            💡 ถ้ามีแรงต้าน 5 N: \( \sum F = 20 - 5 = 15 \, N \) → \( a = 15/5 = 3 \, m/s² \)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 9 ========== -->
+            
+
+<div class="slide" data-index="8">
+                <span class="slide-number">9 / 20</span>
+                <div class="slide-title">
+                    กฎข้อที่ 3 ของนิวตัน
+                    <span class="sub">แรงกิริยา – แรงปฏิกิริยา</span>
+                </div>
+                <div class="slide-body">
+                    <div class="slide-two-col">
+                        <div class="text-col">
+                            <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        “เมื่อวัตถุ A ออกแรงต่อวัตถุ B <br>
+                        วัตถุ B จะออกแรงต่อวัตถุ A <br>
+                        <strong>ขนาดเท่ากัน ทิศทางตรงข้าม</strong>”
+                     \]</div>
+                    <p>เขียนแทน: \( \vec{F}_{AB} = -\vec{F}_{BA} \)</p>
+                    <div class="highlight-box orange">
+                        ⚠️ <strong>ข้อสังเกต:</strong> แรงทั้งสอง <u>กระทำต่อคนละวัตถุ</u>
+                        จึง <strong>ไม่สามารถนำมาบวกกันเป็นศูนย์</strong> ได้ (ต่างจากแรงสมดุล)
+                    </div>
+                </div>
+                        </div>
+                        <div class="img-col">
+                            <svg width="245" height="230" viewBox="0 0 245 230" xmlns="http://www.w3.org/2000/svg" style="border-radius:14px;background:#f8faff;border:1px solid #dde6ff;"><line x1="35" y1="190" x2="220" y2="190" stroke="#333" stroke-width="1.5"/><line x1="35" y1="190" x2="35" y2="25" stroke="#333" stroke-width="1.5"/><path d="M 35,190 L 120,60 L 135,100 L 210,100" fill="none" stroke="#ef4444" stroke-width="2.5"/><circle cx="120" cy="60" r="4" fill="#dc2626"/><text x="95" y="48" font-family="Sarabun" font-size="11" font-weight="700" fill="#dc2626">f_s (max)</text><text x="145" y="90" font-family="Sarabun" font-size="11" font-weight="700" fill="#2563eb">f_k (แรงเสียดทานจลน์)</text><text x="120" y="212" text-anchor="middle" font-family="Sarabun" font-size="11" fill="#555">แรงพยายาม F</text></svg>
+                            <p class="img-caption">ภาพประกอบที่ 2</p>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- ========== SLIDE 10 ========== -->
+            
+
+<div class="slide" data-index="9">
+                <span class="slide-number">10 / 20</span>
+                <div class="slide-title">
+                    กฎข้อที่ 2 vs กฎข้อที่ 3
+                    <span class="sub">ความแตกต่างที่ต้องเข้าใจ</span>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2col">
+                        <div class="col" style="background:#f0faff; border-color:#2d7aff;">
+                            <h4 style="color:#2d7aff;">⚖️ กฎข้อที่ 2 (F=ma)</h4>
+                            <ul style="font-size:17px;">
+                                <li>พิจารณาแรงที่กระทำต่อ <strong>วัตถุเดียว</strong></li>
+                                <li>นำมารวมเป็น <strong>แรงลัพธ์</strong> แล้วหา \(a\)</li>
+                                <li>ใช้กับวัตถุใดวัตถุหนึ่ง</li>
+                            </ul>
+                        </div>
+                        <div class="col" style="background:#fff5f7; border-color:#e76f51;">
+                            <h4 style="color:#e76f51;">🤝 กฎข้อที่ 3</h4>
+                            <ul style="font-size:17px;">
+                                <li>พิจารณา <strong>สองวัตถุ</strong> ที่มีปฏิสัมพันธ์กัน</li>
+                                <li>เป็นคนละแรงกระทำบน <strong>คนละวัตถุ</strong></li>
+                                <li>เช่น แรงที่มือกระทำต่อกำแพง และแรงที่กำแพงกระทำต่อมือ</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="highlight-box purple">
+                        🧠 จำง่าย: <strong>ข้อ 2</strong> = ผลรวมแรงบนวัตถุ, <strong>ข้อ 3</strong> = คู่แรงระหว่างวัตถุ
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 11 ========== -->
+            
+
+<div class="slide" data-index="10">
+                <span class="slide-number">11 / 20</span>
+                <div class="slide-title">
+                    แรงเสียดทาน (Friction)
+                    <span class="sub">สถิต (Static) และ จลน์ (Kinetic)</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li><strong>แรงเสียดทานสถิต (\(f_s\)):</strong> ต้านการเคลื่อนที่เริ่มต้น
+                            <br> \( f_s \le \mu_s N \) (แรงจะแปรผันตามแรงดึงจนถึงค่าสูงสุด)</li>
+                        <li><strong>แรงเสียดทานจลน์ (\(f_k\)):</strong> ต้านการเคลื่อนที่
+                            <br> \( f_k = \mu_k N \) (ค่าคงที่ ขนาดไม่ขึ้นกับความเร็ว)</li>
+                    </ul>
+                    <div class="highlight-box blue">
+                        💡 <strong>ค่า \(\mu\)</strong> คือสัมประสิทธิ์ความเสียดทาน (ไม่มีหน่วย)
+                        โดยทั่วไป \( \mu_s > \mu_k \)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 12 ========== -->
+            
+
+<div class="slide" data-index="11">
+                <span class="slide-number">12 / 20</span>
+                <div class="slide-title">
+                    แรงเสียดทาน: ตัวอย่าง
+                    <span class="sub">การคำนวณด้วย \( f_k = \mu_k N \)</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">กล่องมวล 10 kg วางบนพื้นราบ (\(\mu_k = 0.2\)) ถูกดึงด้วยแรง 30 N ในแนวราบ จงหาความเร่ง (\(g=10\))</p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>วิธีทำ:</strong> \( N = mg = 100 \, N \)</p>
+                        <ul>
+                            <li>\( f_k = \mu_k N = 0.2 \times 100 = 20 \, N \)</li>
+                            <li>\( \sum F = 30 - 20 = 10 \, N \)</li>
+                            <li>\( a = \frac{10}{10} = \mathbf{1 \, m/s^2} \)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 13 ========== -->
+            
+
+<div class="slide" data-index="12">
+                <span class="slide-number">13 / 20</span>
+                <div class="slide-title">
+                    พื้นราบ (ไม่มีแรงเสียดทาน)
+                    <span class="sub">แนวทางการวิเคราะห์</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li>แรงในแนวตั้งสมดุล: \( N = mg \)</li>
+                        <li>แรงในแนวราบทำให้เกิดการเคลื่อนที่: \( \sum F_x = ma \)</li>
+                    </ul>
+                    <div style="background:#f0f7ff; border-radius:14px; padding:14px 20px; margin:12px 0;">
+                        <p style="font-size:18px;"><strong>📌 ถ้าดึงด้วยแรง \(F\) ทำมุม \(\theta\) กับแนวราบ:</strong></p>
+                        <p>\( F_x = F\cos\theta \) → \( a = \frac{F\cos\theta}{m} \)</p>
+                        <p>\( N = mg - F\sin\theta \) (ถ้าดึงขึ้น) หรือ \( N = mg + F\sin\theta \) (ถ้าดันลง)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 14 ========== -->
+            
+
+<div class="slide" data-index="13">
+                <span class="slide-number">14 / 20</span>
+                <div class="slide-title">
+                    พื้นราบ (มีแรงเสียดทาน)
+                    <span class="sub">ขั้นตอนการคำนวณ</span>
+                </div>
+                <div class="slide-body">
+                    <ol>
+                        <li>หา \(N\) จากสมดุลในแนวตั้ง (ระวังแรง \(F\) ที่มีส่วนประกอบในแนวแกน Y)</li>
+                        <li>หา \(f_k = \mu_k N\) (หรือ \(f_s\) ถ้ายังอยู่นิ่ง)</li>
+                        <li>หาแรงลัพธ์ในแนวราบ: \( \sum F_x = F_x - f_k \)</li>
+                        <li>ใช้ \( \sum F_x = ma \) หา \(a\)</li>
+                    </ol>
+                    <div class="highlight-box orange">
+                        ⚠️ <strong>เงื่อนไขการเคลื่อนที่:</strong> ต้อง \( F_x > f_{s,max} \) จึงจะเคลื่อนที่
+                        (\( f_{s,max} = \mu_s N \))
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 15 ========== -->
+            
+
+<div class="slide" data-index="14">
+                <span class="slide-number">15 / 20</span>
+                <div class="slide-title">
+                    พื้นเอียง (Inclined Plane)
+                    <span class="sub">การแตกแรง \( mg \)</span>
+                </div>
+                <div class="slide-body">
+                    <div class="slide-two-col">
+                        <div class="text-col">
+                            <p>สำหรับวัตถุบนพื้นเอียงทำมุม \(\theta\) กับแนวราบ:</p>
+                    <ul>
+                        <li><strong>แรงที่ทำให้ไถลลง:</strong> \( mg\sin\theta \) (ขนานพื้น)</li>
+                        <li><strong>แรงตั้งฉาก:</strong> \( N = mg\cos\theta \) (สมดุลกับส่วนประกอบของน้ำหนัก)</li>
+                    </ul>
+                    <div style="background:#eef2fa; border-radius:14px; padding:14px 20px; margin:12px 0;">
+                        <p style="font-size:18px;"><strong>📌 ความเร่งลงพื้น (ไม่มีเสียดทาน):</strong></p>
+                        <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ \( a = g\sin\theta \) \]</div>
+                    </div>
+                    <div class="highlight-box green">
+                        ✅ ถ้ามีเสียดทาน: \( a = g(\sin\theta - \mu_k \cos\theta) \) (ไถลลง)
+                    </div>
+                </div>
+                        </div>
+                        <div class="img-col">
+                            <svg width="245" height="230" viewBox="0 0 245 230" xmlns="http://www.w3.org/2000/svg" style="border-radius:14px;background:#fdf8ff;border:1px solid #e8d5ff;"><rect x="20" y="20" width="205" height="55" rx="10" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/><text x="30" y="42" font-family="Sarabun" font-size="12" font-weight="700" fill="#1e40af">กฎข้อ 1: ΣF = 0</text><text x="30" y="62" font-family="Sarabun" font-size="11" fill="#3b82f6">วัตถุรักษาสภาพนิ่ง/ความเร็วคงที่</text><rect x="20" y="85" width="205" height="55" rx="10" fill="#f0faf5" stroke="#a7f3d0" stroke-width="1.2"/><text x="30" y="107" font-family="Sarabun" font-size="12" font-weight="700" fill="#065f46">กฎข้อ 2: ΣF = ma</text><text x="30" y="127" font-family="Sarabun" font-size="11" fill="#10b981">วัตถุมีความเร่งในทิศทางแรงลัพธ์</text><rect x="20" y="150" width="205" height="55" rx="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.2"/><text x="30" y="172" font-family="Sarabun" font-size="12" font-weight="700" fill="#9a3412">กฎข้อ 3: Action = Reaction</text><text x="30" y="192" font-family="Sarabun" font-size="11" fill="#f97316">แรงกิริยาเท่ากับแรงปฏิกิริยา</text></svg>
+                            <p class="img-caption">ภาพประกอบที่ 3</p>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- ========== SLIDE 16 ========== -->
+            
+
+<div class="slide" data-index="15">
+                <span class="slide-number">16 / 20</span>
+                <div class="slide-title">
+                    พื้นเอียง: ตัวอย่าง
+                    <span class="sub">คำนวณความเร่งบนพื้นเอียง</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">วัตถุมวล 5 kg วางบนพื้นเอียง 30° (\(g=10\)) ไม่มีเสียดทาน จงหาความเร่งของวัตถุ</p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>วิธีทำ:</strong> ใช้ \( a = g\sin\theta \)</p>
+                        <ul>
+                            <li>\( a = 10 \times \sin30° = 10 \times 0.5 = \mathbf{5 \, m/s^2} \)</li>
+                            <li>ทิศทาง: ไถลลงตามแนวพื้นเอียง</li>
+                        </ul>
+                        <div class="highlight-box blue" style="margin-top:8px;">
+                            💡 ถ้ามี \(\mu_k = 0.2\): \( a = 10(\sin30 - 0.2\cos30) = 10(0.5 - 0.173) \approx 3.27 \, m/s² \)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 17 ========== -->
+            
+
+<div class="slide" data-index="16">
+                <span class="slide-number">17 / 20</span>
+                <div class="slide-title">
+                    ระบบรอก (เครื่องกลอย่างง่าย)
+                    <span class="sub">การเคลื่อนที่เชื่อมโยงกัน</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li>รอกเปลี่ยนทิศทางของแรงตึงเชือก (\(T\))</li>
+                        <li>ในระบบที่มวลเชื่อมต่อกันด้วยเชือกเส้นเดียวกัน <br>
+                        <strong>ความเร่ง (\(a\))</strong> และ <strong>แรงตึง (\(T\))</strong> มีค่าเท่ากันตลอดเส้นเชือก (สมมติเชือกไม่ยืด)</li>
+                    </ul>
+                    <div class="highlight-box purple" style="margin-top:10px;">
+                        🧠 <strong>เทคนิค:</strong> เขียน FBD สำหรับ <u>แต่ละก้อน</u> แล้วใช้ \( \sum F = ma \) แยกกัน
+                        จากนั้นแก้ระบบสมการหาค่า \(a\) และ \(T\)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 18 ========== -->
+            
+
+<div class="slide" data-index="17">
+                <span class="slide-number">18 / 20</span>
+                <div class="slide-title">
+                    ระบบรอก: ตัวอย่าง
+                    <span class="sub">เครื่องกล Atwood อย่างง่าย</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">มวล \( m_1 = 3 \, kg \) และ \( m_2 = 5 \, kg \) ผูกผ่านรอก (g=10) จงหาความเร่งและแรงตึง</p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>สมการ (มวล 5kg เคลื่อนลง, 3kg เคลื่อนขึ้น):</strong></p>
+                        <ul>
+                            <li>\( m_2 g - T = m_2 a \) → \( 50 - T = 5a \)</li>
+                            <li>\( T - m_1 g = m_1 a \) → \( T - 30 = 3a \)</li>
+                            <li>บวก: \( 20 = 8a \) → \( a = 2.5 \, m/s² \)</li>
+                            <li>\( T = 30 + 3(2.5) = \mathbf{37.5 \, N} \)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 19 ========== -->
+            
+
+<div class="slide" data-index="18">
+                <span class="slide-number">19 / 20</span>
+                <div class="slide-title">
+                    สรุปสูตรสำคัญ
+                    <span class="sub">พกไว้ติดตัว</span>
+                </div>
+                <div class="slide-body">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px;">
+                            <h4 style="color:#0f1b3d;">⚖️ กฎข้อ 1 & 2</h4>
+                            <p style="font-size:17px;">\( \sum F = 0 \) (สมดุล)</p>
+                            <p style="font-size:17px;">\( \sum F = ma \) (ไม่สมดุล)</p>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px;">
+                            <h4 style="color:#0f1b3d;">🤝 กฎข้อ 3</h4>
+                            <p style="font-size:17px;">\( \vec{F}_{AB} = -\vec{F}_{BA} \)</p>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px; grid-column: span 2;">
+                            <h4 style="color:#0f1b3d;">📐 แรงเสียดทาน & พื้นเอียง</h4>
+                            <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between;">
+                                <span>\( f_k = \mu_k N \)</span>
+                                <span>\( f_s \le \mu_s N \)</span>
+                                <span>\( a = g(\sin\theta - \mu\cos\theta) \)</span>
+                            </div>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px; grid-column: span 2;">
+                            <h4 style="color:#0f1b3d;">🪢 ระบบรอก (Atwood)</h4>
+                            <span>\( a = \frac{(m_2 - m_1)g}{m_1 + m_2} \)</span>
+                            <span style="margin-left:16px;">\( T = \frac{2m_1 m_2 g}{m_1 + m_2} \)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 20 ========== -->
+            
+
+<div class="slide" data-index="19">
+                <span class="slide-number">20 / 20</span>
+                <div class="slide-title">
+                    สรุป &amp; เทคนิคการทำโจทย์
+                    <span class="sub">เคล็ดลับสู่ความสำเร็จ</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f0f7ff; border-radius:18px; padding:18px 24px; border:1px solid #d6e4ff;">
+                        <p style="font-size:20px; font-weight:600;">📌 ใจความสำคัญ</p>
+                        <ul style="font-size:18px; line-height:1.9;">
+                            <li>✅ <strong>FBD คือหัวใจ</strong> – วาดทุกแรงที่กระทำต่อวัตถุให้ครบ</li>
+                            <li>✅ เลือก <strong>ทิศทางบวก</strong> ให้ชัดเจน และยึดตามนั้นตลอดการแก้สมการ</li>
+                            <li>✅ แยกแกน X และ Y โดยใช้ \( \sum F_x = ma_x \) และ \( \sum F_y = ma_y \)</li>
+                            <li>✅ ระบบรอก: เชือกเส้นเดียวกันมี \(T\) และ \(a\) เท่ากันทั้งระบบ</li>
+                            <li>✅ พื้นเอียง: แตก \(mg\) เป็น \(mg\sin\theta\) (ขนาน) และ \(mg\cos\theta\) (ตั้งฉาก)</li>
+                        </ul>
+                    </div>
+                    <div style="margin-top:18px; background:#eef2fa; border-radius:16px; padding:14px 22px;">
+                        <p style="font-size:19px;">
+                            <strong>🌟 คำแนะนำ:</strong> ฝึกเขียน FBD ให้คล่อง และตรวจสอบ <u>หน่วย</u> ทุกครั้ง
+                            กฎของนิวตันเป็นพื้นฐานของกลศาสตร์ทั้งหมด ต้องแม่นยำ!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end slide-container -->
+
+        <!-- ========== NAVIGATION ========== -->
+        <div class="nav-bar">
+            <button class="nav-btn" id="prevBtn" disabled>
+                ◀ ย้อนกลับ
+            </button>
+
+            <div class="dot-indicators" id="dotContainer"></div>
+
+            <button class="nav-btn primary" id="nextBtn">
+                ถัดไป ▶
+            </button>
+        </div>
+
+        <div class="nav-footer">
+            <a href="ch2.html" style="color:#8a94b0; font-size:14px; text-decoration:none;">◀ บทก่อนหน้า</a>
+            <span id="slideCounterDisplay">1 / 19</span>
+            <a href="ch4.html" style="color:#8a94b0; font-size:14px; text-decoration:none;">บทถัดไป ▶</a>
+        </div>
+    </div>
+
+    <script src="../js/slide-core.js"></script>
+</body>
+</html>

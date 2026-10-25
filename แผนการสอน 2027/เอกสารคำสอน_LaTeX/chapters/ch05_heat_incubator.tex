@@ -1,0 +1,165 @@
+\cleardoublepage
+\phantomsection
+\begin{planbox}[แผนบริหารการสอนประจำบทที่ 5\quad ความร้อนและการควบคุมอุณหภูมิชีวภาพ (สัปดาห์ที่ 5)]
+\noindent\textbf{1. หัวข้อเนื้อหาประจำบท (บรรยาย 2 ชั่วโมง และปฏิบัติการ 3 ชั่วโมง)}
+\begin{itemize}
+    \item 5.1 อุณหภูมิและการแปลงหน่วยอุณหภูมิระหว่างเซลเซียส เคลวิน และฟาเรนไฮต์
+    \item 5.2 ความจุความร้อนจำเพาะของน้ำและความร้อนแฝงในการเปลี่ยนสถานะของสสาร
+    \item 5.3 กลไกการถ่ายโอนความร้อน (การนำ การพา และการแผ่รังสี) ในตู้อบเลี้ยงเชื้อ (Incubator) และอ่างน้ำควบคุมอุณหภูมิ (Water Bath)
+    \item 5.4 ปฏิบัติการที่ 5 การวัดความร้อนจำเพาะและการตรวจสอบเสถียรภาพการกระจายอุณหภูมิในตู้อบเลี้ยงเชื้อ
+\end{itemize}
+
+\noindent\textbf{2. วัตถุประสงค์เชิงพฤติกรรมและผลลัพธ์การเรียนรู้รายวิชา (CLOs ที่เชื่อมโยง PLOs)}
+\begin{enumerate}
+    \item คำนวณปริมาณความร้อนที่ทำให้อุณหภูมิของอาหารเลี้ยงเชื้อเปลี่ยนแปลงโดยใช้สมการ $Q = mc\Delta T$ และความร้อนแฝง $Q = mL$ ได้ \textbf{(CLO1 เชื่อมโยง PLO2)}
+    \item อธิบายเหตุผลทางฟิสิกส์ว่าทำไมการอุ่นละลายอาหารเลี้ยงเชื้อในอ่างน้ำควบคุมอุณหภูมิ (Water Bath) จึงถ่ายโอนความร้อนได้เร็วและสม่ำเสมอกว่าตู้อบลมร้อน (Air Incubator) \textbf{(CLO1, CLO2 เชื่อมโยง PLO2, PLO3)}
+    \item ปฏิบัติการวัดอุณหภูมิและตรวจสอบความสม่ำเสมอของความร้อนอย่างปลอดภัยและบันทึกผลตามจริง \textbf{(CLO3, CLO4 เชื่อมโยง PLO1, PLO5, PLO6)}
+\end{enumerate}
+
+\noindent\textbf{3. กิจกรรมการจัดการเรียนรู้เชิงรุก (Active Learning \& OBE)}
+\begin{itemize}
+    \item \textbf{Active Group Discussion}\quad เปรียบเทียบกราฟการให้ความร้อนแก่วุ้นอาหารเลี้ยงเชื้อ (Nutrient Agar) ที่หลอมเหลวที่ $95\text{--}100\,^\circ\text{C}$ แต่แข็งตัวที่ $42\,^\circ\text{C}$ (ปรากฏการณ์ Hysteresis ของวุ้น)
+    \item \textbf{ปฏิบัติการทดลอง}\quad ทดลองผสมน้ำร้อนกับน้ำเย็นในแคลอริมิเตอร์และวัดการกระจายอุณหภูมิในตู้อบ Incubator ที่ตั้งค่าไว้ที่ $37\,^\circ\text{C}$
+\end{itemize}
+
+\noindent\textbf{4. สื่อการเรียนรู้และแหล่งเรียนรู้}
+\begin{itemize}
+    \item เอกสารคำสอนบทที่ 5 ชุดแคลอริมิเตอร์ เทอร์โมมิเตอร์ดิจิทัล และตู้อบเลี้ยงเชื้อจุลินทรีย์
+\end{itemize}
+
+\noindent\textbf{5. การวัดและประเมินผลประจำบท}
+\begin{itemize}
+    \item แบบฝึกหัดการคำนวณความร้อน $Q = mc\Delta T$ \textbf{(CLO1)}
+    \item รายงานปฏิบัติการที่ 5 และการสังเกตความปลอดภัยในการใช้อุปกรณ์ความร้อน \textbf{(CLO3, CLO4)}
+\end{itemize}
+\end{planbox}
+\clearpage
+
+\chapter{ความร้อนและการควบคุมอุณหภูมิชีวภาพ}
+\index{ความร้อนจำเพาะ}\index{ความร้อนแฝง}\index{การถ่ายโอนความร้อน}\index{ตู้อบเลี้ยงเชื้อ Incubator}
+
+\section{อุณหภูมิ ความจุความร้อนจำเพาะ และความร้อนแฝง}
+
+จุลินทรีย์แต่ละกลุ่มมีช่วงอุณหภูมิที่เหมาะสมต่อการเจริญเติบโตแตกต่างกัน เช่น แบคทีเรียก่อโรคในมนุษย์กลุ่ม \textbf{Mesophiles} เจริญได้ดีที่สุดที่อุณหภูมิประมาณ $37\,^\circ\text{C}$ ในขณะที่แบคทีเรียทนร้อนกลุ่ม \textbf{Thermophiles} เจริญได้ดีที่ $55\text{--}80\,^\circ\text{C}$ การแปลงหน่วยระหว่างองศาเซลเซียส ($T_{\text{C}}$) กับเคลวิน ($T_{\text{K}}$) ใช้ความสัมพันธ์อย่างง่ายคือ
+
+\begin{equation}
+    T_{\text{K}} = T_{\text{C}} + 273.15
+\end{equation}
+
+เมื่อเราให้ความร้อนแก่อาหารเลี้ยงเชื้อเหลวมวล $m$ จนมีอุณหภูมิเปลี่ยนไป $\Delta T = T_{\text{final}} - T_{\text{initial}}$ ปริมาณความร้อน ($Q$) ที่ต้องใช้จะขึ้นอยู่กับ\textbf{ความจุความร้อนจำเพาะ} (\textbf{Specific Heat Capacity}, $c$) ของสารนั้น ตามสมการที่ (5.2)
+
+\begin{equation}
+    Q = m c \Delta T \qquad \text{(เปลี่ยนอุณหภูมิโดยไม่เปลี่ยนสถานะ)}
+\end{equation}
+
+ส่วนในกรณีที่สารเกิดการเปลี่ยนสถานะ เช่น น้ำเดือดกลายเป็นไอน้ำที่อุณหภูมิคงที่ ปริมาณความร้อนที่ใช้จะเรียกว่า \textbf{ความร้อนแฝง} (\textbf{Latent Heat}, $L$) ตามสมการที่ (5.3)
+
+\begin{equation}
+    Q = m L \qquad \text{(เปลี่ยนสถานะที่อุณหภูมิคงที่)}
+\end{equation}
+
+น้ำเป็นตัวกลางหลักของเซลล์สิ่งมีชีวิตและอาหารเลี้ยงเชื้อ โดยน้ำมีความจุความร้อนจำเพาะสูงมาก คือ $c_{\text{water}} = 4.184\text{ J/(g}\cdot^\circ\text{C)}$ (หรือ $4{,}184\text{ J/(kg}\cdot\text{K)}$) และมีความร้อนแฝงของการกลายเป็นไอสูงถึง $L_v = 2{,}260\text{ J/g}$ สมบัติทางฟิสิกส์ข้อนี้ช่วยให้อุณหภูมิของอาหารเลี้ยงเชื้อและไซโทพลาซึมของเซลล์ไม่แกว่งตัวเปลี่ยนแปลงเร็วเกินไปเมื่อสภาพแวดล้อมภายนอกเปลี่ยนอุณหภูมิ
+
+\section{กลไกการถ่ายโอนความร้อนในห้องปฏิบัติการจุลชีววิทยา}
+
+การถ่ายโอนความร้อนในอุปกรณ์ห้องปฏิบัติการจุลชีววิทยาเกิดขึ้นได้ 3 รูปแบบหลัก ดังแสดงใน\mbox{ภาพที่} 5.1 ได้แก่
+\begin{enumerate}
+    \item \textbf{การนำความร้อน} (\textbf{Conduction})\quad เป็นการส่งผ่านความร้อนผ่านเนื้อวัสดุโดยตรง เช่น ความร้อนจากน้ำอุ่นในอ่าง \textbf{Water Bath} ไหลผ่านผนังขวดแก้วเข้าสู่อาหารวุ้นที่อยู่ด้านใน หรือการใช้ห่วงเขี่ยเชื้อ (\textbf{Inoculating Loop}) แตะลงบนผิววุ้นเพื่อให้เย็นตัวลงก่อนตักโคโลนีเชื้อ
+    \item \textbf{การพาความร้อน} (\textbf{Convection})\quad เป็นการเคลื่อนที่ของตัวกลางของไหล (อากาศหรือน้ำ) พาความร้อนไปทั่วบริเวณ เช่น พัดลมหมุนเวียนอากาศร้อนภายใน\textbf{ตู้อบเลี้ยงเชื้อ} (\textbf{Incubator}) และ\textbf{ตู้อบลมร้อน} (\textbf{Hot Air Oven}) เพื่อให้ทุกชั้นวางมีอุณหภูมิ $37.0\,^\circ\text{C}$ เท่ากันทั้งหมด
+    \item \textbf{การแผ่รังสีความร้อน} (\textbf{Radiation})\quad เป็นการส่งผ่านพลังงานในรูปคลื่นแม่เหล็กไฟฟ้าโดยไม่อาศัยตัวกลาง เช่น เปลวไฟจากตะเกียงบุนเสน (\textbf{Bunsen Burner}) ที่แผ่รังสีความร้อนรอบปากหลอดทดลองขณะเทคนิคปลอดเชื้อ (\textbf{Aseptic Technique})
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\resizebox{0.88\textwidth}{!}{%
+\begin{tikzpicture}[font=\sffamily, >=Stealth]
+    % Box 1: Conduction (Water Bath)
+    \draw[fill=boxBlueBg, draw=physRoyalBlue, line width=1.2pt, rounded corners=4pt] (0,0) rectangle (4.6,4.2);
+    \node[font=\bfseries\color{physRoyalBlue}] at (2.3,3.75) {1. การนำความร้อน};
+    \fill[physCyan!30] (0.6,0.9) rectangle (4.0,2.5);
+    \draw[physRoyalBlue, line width=1.2pt] (0.6,2.9) -- (0.6,0.9) -- (4.0,0.9) -- (4.0,2.9);
+    \draw[fill=physAmber!35, draw=physAmber, line width=1.1pt] (1.7,1.1) rectangle (2.9,3.1);
+    \node[font=\footnotesize, align=center] at (2.3,0.45) {อ่างน้ำอุ่น Water Bath\\น้ำนำความร้อนผ่านแก้วเร็วกว่าอากาศ};
+
+    % Box 2: Convection (Incubator)
+    \draw[fill=boxGreenBg, draw=bioEmerald, line width=1.2pt, rounded corners=4pt] (5.1,0) rectangle (9.7,4.2);
+    \node[font=\bfseries\color{bioEmerald!90!black}] at (7.4,3.75) {2. การพาความร้อน};
+    \draw[bioEmerald, line width=1.2pt] (5.8,1.0) rectangle (9.0,3.1);
+    \draw[->, crimsonAlert, line width=1.3pt] (6.4,1.3) to[bend left=40] (6.4,2.8);
+    \draw[->, physCyan, line width=1.3pt] (8.4,2.8) to[bend left=40] (8.4,1.3);
+    \node[font=\footnotesize\bfseries, color=charcoal] at (7.4,2.05) {$37.0\,^\circ\text{C}$};
+    \node[font=\footnotesize, align=center] at (7.4,0.45) {ตู้อบเลี้ยงเชื้อ Incubator\\การหมุนเวียนอากาศอุ่นให้สม่ำเสมอ};
+
+    % Box 3: Radiation (Bunsen Burner)
+    \draw[fill=boxAmberBg, draw=physAmber, line width=1.2pt, rounded corners=4pt] (10.2,0) rectangle (14.8,4.2);
+    \node[font=\bfseries\color{physAmber!90!black}] at (12.5,3.75) {3. การแผ่รังสีความร้อน};
+    \fill[charcoal] (12.2,1.0) rectangle (12.8,1.8);
+    \fill[physAmber!85] (12.5,2.4) ellipse (0.35cm and 0.65cm);
+    \fill[physCyan!80] (12.5,2.15) ellipse (0.18cm and 0.35cm);
+    \draw[->, crimsonAlert, decorate, decoration={snake, amplitude=0.6mm, segment length=3mm}, line width=1.0pt] (12.9,2.5) -- (14.1,2.8);
+    \draw[->, crimsonAlert, decorate, decoration={snake, amplitude=0.6mm, segment length=3mm}, line width=1.0pt] (12.1,2.5) -- (10.9,2.8);
+    \node[font=\footnotesize, align=center] at (12.5,0.45) {ตะเกียงไฟ Bunsen Burner\\แผ่รังสีอินฟราเรดฆ่าเชื้อปากหลอด};
+\end{tikzpicture}%
+}
+\caption{รูปแบบการถ่ายโอนความร้อนทั้งสามชนิดที่พบในเครื่องมือและเทคนิคปลอดเชื้อทางจุลชีววิทยา}
+\end{figure}
+
+\begin{worked}[การคำนวณความร้อนในการต้มเตรียมอาหารเลี้ยงเชื้อเหลว]
+\textbf{โจทย์ปัญหา}\quad นักศึกษาเตรียมอาหารเลี้ยงเชื้อ Nutrient Broth ปริมาตร $500\text{ mL}$ (คิดเป็นมวล $m = 500\text{ g}$) ซึ่งมีอุณหภูมิเริ่มต้น $25\,^\circ\text{C}$ หากต้องการให้ความร้อนจนมีอุณหภูมิสูงขึ้นเป็น $95\,^\circ\text{C}$ เพื่อละลายผงอาหารให้หมด จะต้องใช้พลังงานความร้อนกี่จูล ($\text{J}$) และกี่กิโลจูล ($\text{kJ}$) กำหนดให้ความจุความร้อนจำเพาะของอาหารเหลวใกล้เคียงกับน้ำ คือ $c = 4.2\text{ J/(g}\cdot^\circ\text{C)}$
+
+\textbf{วิธีทำทีละขั้นตอนฉบับเข้าใจง่าย}
+\begin{enumerate}
+    \item \textbf{ขั้นที่ 1 หาผลต่างอุณหภูมิ $\Delta T = T_{\text{final}} - T_{\text{initial}}$}
+    \[
+        \Delta T = 95\,^\circ\text{C} - 25\,^\circ\text{C} = 70\,^\circ\text{C}
+    \]
+    \item \textbf{ขั้นที่ 2 แทนค่าลงในสูตร $Q = m c \Delta T$}
+    \[
+        Q = 500\text{ g} \times 4.2\text{ J/(g}\cdot^\circ\text{C)} \times 70\,^\circ\text{C} = 147{,}000\text{ J}
+    \]
+    \item \textbf{ขั้นที่ 3 แปลงหน่วยจูล ($\text{J}$) เป็นกิโลจูล ($\text{kJ}$) โดยหารด้วย $1{,}000$}
+    \[
+        Q = \frac{147{,}000}{1{,}000} = 147\text{ kJ}
+    \]
+\end{enumerate}
+\textbf{คำตอบ}\quad ต้องใช้พลังงานความร้อนเท่ากับ $147{,}000\text{ J}$ หรือ $147\text{ kJ}$
+\end{worked}
+
+\section{ปฏิบัติการประจำสัปดาห์ที่ 5}
+
+\begin{labbox}[ปฏิบัติการที่ 5\quad ความร้อนจำเพาะและเสถียรภาพอุณหภูมิตู้อบ Incubator (3 ชั่วโมง)]
+\noindent\textbf{ผลลัพธ์การเรียนรู้ที่ประเมิน}\quad CLO1 (การคำนวณความร้อน), CLO2 (วิเคราะห์เสถียรภาพตู้ Incubator), CLO3 (ความปลอดภัยและวินัย), CLO4 (รายงานกลุ่ม)
+
+\vspace{4pt}
+\noindent\textbf{1. วัสดุและอุปกรณ์}
+\begin{itemize}
+    \item กระป๋องแคลอริมิเตอร์พร้อมฉนวนหุ้ม, บีกเกอร์, เตาให้ความร้อนไฟฟ้า และเทอร์โมมิเตอร์ดิจิทัล 3 ชุด
+    \item ตู้อบเลี้ยงเชื้อ (Incubator) ที่ตั้งอุณหภูมิไว้ที่ $37.0\,^\circ\text{C}$ และอ่างน้ำควบคุมอุณหภูมิ (Water Bath) ที่ตั้งไว้ที่ $50.0\,^\circ\text{C}$
+\end{itemize}
+
+\noindent\textbf{2. ขั้นตอนการทดลอง}
+\begin{enumerate}
+    \item \textbf{ตอนที่ 1 สมดุลความร้อนของการผสมน้ำ}\quad ตวงน้ำอุณหภูมิห้องมวล $m_1 = 100\text{ g}$ ใส่ในแคลอริมิเตอร์ วัดอุณหภูมิ $T_1$ จากนั้นตวงน้ำอุ่นมวล $m_2 = 100\text{ g}$ อุณหภูมิประมาณ $T_2 = 60\,^\circ\text{C}$ เทผสมลงไป คนเบาๆ แล้วอ่านอุณหภูมิผสมสุดท้าย $T_{\text{mix}}$ เปรียบเทียบกับค่าทฤษฎี $(T_1 + T_2)/2$
+    \item \textbf{ตอนที่ 2 การตรวจสอบการกระจายอุณหภูมิในตู้อบ Incubator}\quad วางหัววัดเทอร์โมมิเตอร์ดิจิทัลไว้ที่ 3 ตำแหน่งในตู้อบ ได้แก่ ชั้นบนสุด ชั้นกลาง และชั้นล่างใกล้ประตู อ่านค่าอุณหภูมิจริงและคำนวณส่วนเบี่ยงเบนไปจากค่าที่ตั้งไว้ ($37.0\,^\circ\text{C}$)
+\end{enumerate}
+
+\noindent\textbf{3. ตารางบันทึกผลการทดลอง}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X c c c c}
+\toprule
+\textbf{ตำแหน่งวัดในตู้ Incubator ($37.0\,^\circ\text{C}$)} & \textbf{ครั้งที่ 1 ($^\circ\text{C}$)} & \textbf{ครั้งที่ 2 ($^\circ\text{C}$)} & \textbf{ค่าเฉลี่ย ($^\circ\text{C}$)} & \textbf{ผลต่างจาก $37.0\,^\circ\text{C}$} \\
+\midrule
+ชั้นบนสุด (ด้านใน) & ............ & ............ & ............ & ............ \\
+ชั้นกลาง (จุดอ้างอิง) & ............ & ............ & ............ & ............ \\
+ชั้นล่าง (ใกล้ขอบประตู) & ............ & ............ & ............ & ............ \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{labbox}
+
+\section*{คำถามท้ายบทที่ 5 (ทบทวนแนวคิดและการคำนวณเบื้องต้น)}
+\begin{enumerate}
+    \item เพราะเหตุใดเมื่อเราต้องการรักษาอาหารวุ้นหลอมเหลวไม่ให้แข็งตัวที่อุณหภูมิ $48\,^\circ\text{C}$ ก่อนเทลงจานเพาะเชื้อ การแช่ขวดวุ้นในอ่างน้ำอุ่น (Water Bath) จึงรักษาอุณหภูมิได้ดีกว่าการวางในตู้อบลมร้อน
+    \item จงคำนวณปริมาณความร้อน (ในหน่วยกิโลจูล) ที่ต้องใช้ในการอุ่นน้ำกลั่นมวล $200\text{ g}$ จากอุณหภูมิ $20\,^\circ\text{C}$ ให้เป็น $80\,^\circ\text{C}$ กำหนดให้ $c = 4.2\text{ J/(g}\cdot^\circ\text{C)}$
+\end{enumerate}

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>การเคลื่อนที่ของวัตถุ - ฟิสิกส์ ม.ปลาย</title>
+    <style>
+        /* ---------- RESET & BASE ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Sarabun', 'Segoe UI', sans-serif;
+            background: #0d1b2a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ---------- SLIDE CONTAINER ---------- */
+        .presentation-wrapper {
+            max-width: 1100px;
+            width: 100%;
+            background: #1b263b;
+            border-radius: 32px;
+            padding: 24px 28px 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .slide-container {
+            position: relative;
+            background: #ffffff;
+            border-radius: 24px;
+            min-height: 480px;
+            padding: 36px 44px;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: background 0.2s;
+            overflow: hidden;
+        }
+
+        /* ---------- SLIDE CONTENT ---------- */
+        .slide {
+            display: none;
+            animation: fadeSlide 0.35s ease;
+        }
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 16px;
+            right: 28px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #8a8fa8;
+            background: #f0f2f7;
+            padding: 2px 16px;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+        }
+
+        .slide-title {
+            font-size: 30px;
+            font-weight: 700;
+            color: #0f1b3d;
+            margin-bottom: 18px;
+            border-left: 6px solid #e63946;
+            padding-left: 18px;
+            line-height: 1.2;
+        }
+
+        .slide-title .sub {
+            font-weight: 400;
+            font-size: 20px;
+            color: #4a5070;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .slide-body {
+            font-size: 20px;
+            line-height: 1.7;
+            color: #1f2a44;
+            margin-top: 8px;
+        }
+
+        .slide-body p {
+            margin-bottom: 14px;
+        }
+
+        .slide-body ul,
+        .slide-body ol {
+            padding-left: 28px;
+            margin-bottom: 16px;
+        }
+        .slide-body li {
+            margin-bottom: 6px;
+        }
+
+        .highlight-box {
+            background: #f0f7ff;
+            border-radius: 16px;
+            padding: 18px 24px;
+            margin: 16px 0 10px;
+            border-left: 5px solid #e63946;
+        }
+
+        .highlight-box.green {
+            border-left-color: #0fb86a;
+            background: #f0faf5;
+        }
+        .highlight-box.orange {
+            border-left-color: #f5a623;
+            background: #fff8ed;
+        }
+        .highlight-box.purple {
+            border-left-color: #7c4dff;
+            background: #f5f0ff;
+        }
+        .highlight-box.blue {
+            border-left-color: #2d7aff;
+            background: #f0f7ff;
+        }
+
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: 600;
+            color: #0f1b3d;
+            background: #eef2fa;
+            padding: 12px 22px;
+            border-radius: 14px;
+            display: inline-block;
+            margin: 6px 0 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .formula-block {
+            font-family: 'Courier New', monospace;
+            font-size: 22px;
+            font-weight: 600;
+            color: #0f1b3d;
+            background: #eef2fa;
+            padding: 16px 24px;
+            border-radius: 14px;
+            margin: 8px 0 14px;
+            display: block;
+            letter-spacing: 0.3px;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin: 12px 0 6px;
+        }
+        .grid-2col .col {
+            background: #f8faff;
+            border-radius: 16px;
+            padding: 18px 22px;
+            border: 1px solid #e8edf9;
+        }
+        .grid-2col .col h4 {
+            color: #1f2a44;
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e63946;
+            color: #fff;
+            padding: 0 14px;
+            border-radius: 40px;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            margin-right: 6px;
+        }
+
+        .badge.green {
+            background: #0fb86a;
+        }
+        .badge.orange {
+            background: #f5a623;
+        }
+        .badge.purple {
+            background: #7c4dff;
+        }
+
+        /* ---------- NAVIGATION ---------- */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: #2d3a5e;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: inherit;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #3d4e7a;
+            transform: scale(1.02);
+        }
+        .nav-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .nav-btn.primary {
+            background: #e63946;
+        }
+        .nav-btn.primary:hover:not(:disabled) {
+            background: #c62839;
+        }
+
+        .dot-indicators {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4b5777;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 0;
+        }
+        .dot.active-dot {
+            background: #e63946;
+            transform: scale(1.25);
+            box-shadow: 0 0 10px rgba(230, 57, 70, 0.5);
+        }
+        .dot:hover {
+            background: #6a7aa0;
+        }
+
+        .slide-counter {
+            color: #b0b8d0;
+            font-size: 16px;
+            font-weight: 500;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 720px) {
+            .presentation-wrapper {
+                padding: 12px 12px 16px;
+            }
+            .slide-container {
+                padding: 22px 18px;
+                min-height: 400px;
+            }
+            .slide-title {
+                font-size: 24px;
+                padding-left: 12px;
+            }
+            .slide-body {
+                font-size: 17px;
+            }
+            .grid-2col {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .formula {
+                font-size: 20px;
+                padding: 8px 16px;
+            }
+            .formula-block {
+                font-size: 18px;
+                padding: 12px 16px;
+            }
+            .nav-btn {
+                font-size: 15px;
+                padding: 10px 18px;
+            }
+            .dot {
+                width: 10px;
+                height: 10px;
+            }
+            .slide-number {
+                font-size: 12px;
+                top: 12px;
+                right: 16px;
+                padding: 0 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slide-container {
+                padding: 18px 14px;
+                min-height: 360px;
+            }
+            .slide-title {
+                font-size: 20px;
+            }
+            .slide-body {
+                font-size: 15px;
+            }
+            .nav-btn {
+                font-size: 13px;
+                padding: 8px 14px;
+            }
+            .highlight-box {
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-wrapper">
+        <div class="slide-container" id="slideContainer">
+
+            <!-- ========== SLIDE 1 ========== -->
+            <div class="slide active" data-index="0">
+                <span class="slide-number">1 / 20</span>
+                <div class="slide-title">
+                    การเคลื่อนที่ของวัตถุ
+                    <span class="sub">ฟิสิกส์ มัธยมศึกษาตอนปลาย</span>
+                </div>
+                <div class="slide-body" style="margin-top:28px;">
+                    <p style="font-size:22px; font-weight:500; color:#2d3a5e;">
+                        🚀 จลนศาสตร์ (Kinematics) – โดยไม่คำนึงถึงสาเหตุของแรง
+                    </p>
+                    <div style="display:flex; flex-wrap:wrap; gap:18px; margin-top:24px;">
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ การเคลื่อนที่แนวตรง</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ กราฟการเคลื่อนที่</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ ตกอย่างเสรี</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ โพรเจกไทล์</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ การเคลื่อนที่วงกลม</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:28px; background:#f0f7ff; border-radius:18px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:18px; color:#1f2a44;">
+                            <strong>🎯 เป้าหมาย:</strong> เข้าใจความสัมพันธ์ของ <strong>การกระจัด</strong> <strong>ความเร็ว</strong> และ <strong>ความเร่ง</strong>
+                            พร้อมนำสูตรไปใช้แก้โจทย์ได้อย่างคล่องแคล่ว
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 2 ========== -->
+            <div class="slide" data-index="1">
+                <span class="slide-number">2 / 20</span>
+                <div class="slide-title">
+                    สารบัญ
+                    <span class="sub">หัวข้อที่จะเรียนในบทนี้</span>
+                </div>
+                <div class="slide-body">
+                    <ul style="font-size:20px; list-style:none; padding-left:0; display:flex; flex-direction:column; gap:10px;">
+                        <li>🔹 <strong>1.</strong> ปริมาณพื้นฐาน (การกระจัด, ความเร็ว, ความเร่ง)</li>
+                        <li>🔹 <strong>2.</strong> สูตรการเคลื่อนที่แนวตรง (3 สูตรหลัก)</li>
+                        <li>🔹 <strong>3.</strong> กราฟการเคลื่อนที่ (s-t, v-t, a-t)</li>
+                        <li>🔹 <strong>4.</strong> การตกอย่างเสรี (Free Fall)</li>
+                        <li>🔹 <strong>5.</strong> ตัวอย่างการเคลื่อนที่แนวตรง</li>
+                        <li>🔹 <strong>6.</strong> การเคลื่อนที่แบบโพรเจกไทล์ (แนวราบ/แนวดิ่ง)</li>
+                        <li>🔹 <strong>7.</strong> สูตร Range, Height, Time of flight</li>
+                        <li>🔹 <strong>8.</strong> ตัวอย่างโพรเจกไทล์</li>
+                        <li>🔹 <strong>9.</strong> การเคลื่อนที่แบบวงกลม (เบื้องต้น)</li>
+                        <li>🔹 <strong>10.</strong> สรุป &amp; ข้อควรจำ</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 3 ========== -->
+            <div class="slide" data-index="2">
+                <span class="slide-number">3 / 20</span>
+                <div class="slide-title">
+                    ปริมาณพื้นฐาน
+                    <span class="sub">สัญลักษณ์และความหมาย</span>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2col">
+                        <div class="col"><h4>📌 ปริมาณ</h4>
+                            <ul style="font-size:18px; padding-left:18px;">
+                                <li><strong>การกระจัด (s)</strong> – ตำแหน่งที่เปลี่ยนไป (m)</li>
+                                <li><strong>ความเร็วต้น (u)</strong> – ความเร็วขณะเริ่มต้น (m/s)</li>
+                                <li><strong>ความเร็วปลาย (v)</strong> – ความเร็วขณะสุดท้าย (m/s)</li>
+                                <li><strong>ความเร่ง (a)</strong> – อัตราการเปลี่ยนความเร็ว (m/s²)</li>
+                                <li><strong>เวลา (t)</strong> – ช่วงเวลาที่ใช้ (s)</li>
+                            </ul>
+                        </div>
+                        <div class="col" style="background:#fff5f7; border-color:#e63946;">
+                            <h4 style="color:#e63946;">⚠️ ข้อควรรู้</h4>
+                            <ul style="font-size:18px; padding-left:18px;">
+                                <li><strong>การกระจัด</strong> ≠ ระยะทาง (scalar)</li>
+                                <li><strong>ความเร็ว</strong> = เวกเตอร์, <strong>อัตราเร็ว</strong> = สเกลาร์</li>
+                                <li>ความเร่งมีทิศทางเดียวกับ <strong>แรงลัพธ์</strong></li>
+                                <li>สูตรเหล่านี้ใช้เมื่อ <strong>a คงที่</strong> เท่านั้น</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 4 ========== -->
+            <div class="slide" data-index="3">
+                <span class="slide-number">4 / 20</span>
+                <div class="slide-title">
+                    สูตรที่ 1
+                    <span class="sub">\( v = u + at \)</span>
+                </div>
+                <div class="slide-body">
+                    <div class="formula-block" style="font-size:28px; text-align:center;">
+                        \( v = u + at \)
+                    </div>
+                    <ul>
+                        <li><strong>ใช้เมื่อ:</strong> ต้องการหาความเร็วปลาย (\(v\)) โดยไม่ต้องรู้ระยะทาง</li>
+                        <li>ความเร่ง (\(a\)) ต้องคงที่</li>
+                    </ul>
+                    <div class="highlight-box blue" style="margin-top:12px;">
+                        💡 <strong>ตัวอย่าง:</strong> รถเริ่มต้นจากหยุดนิ่ง (\(u=0\)) เร่งด้วย \(a=2 \, m/s²\) นาน 5 วินาที
+                        → \(v = 0 + (2)(5) = 10 \, m/s\)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 5 ========== -->
+            <div class="slide" data-index="4">
+                <span class="slide-number">5 / 20</span>
+                <div class="slide-title">
+                    สูตรที่ 2
+                    <span class="sub">\( s = ut + \frac{1}{2}at^2 \)</span>
+                </div>
+                <div class="slide-body">
+                    <div class="formula-block" style="font-size:28px; text-align:center;">
+                        \( s = ut + \frac{1}{2}at^2 \)
+                    </div>
+                    <ul>
+                        <li><strong>ใช้เมื่อ:</strong> ต้องการหาระยะทางการกระจัด (\(s\)) โดยไม่ต้องรู้ความเร็วปลาย</li>
+                        <li>ต้องระวังเรื่อง <strong>เครื่องหมาย</strong> ของ \(a\) และ \(s\)</li>
+                    </ul>
+                    <div class="highlight-box green" style="margin-top:12px;">
+                        ✅ <strong>ตัวอย่าง:</strong> วัตถุเคลื่อนที่ด้วย \(u=4 \, m/s\), \(a=2 \, m/s²\) นาน 3 วินาที
+                        → \(s = (4)(3) + \frac{1}{2}(2)(3^2) = 12 + 9 = 21 \, m\)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 6 ========== -->
+            <div class="slide" data-index="5">
+                <span class="slide-number">6 / 20</span>
+                <div class="slide-title">
+                    สูตรที่ 3
+                    <span class="sub">\( v^2 = u^2 + 2as \)</span>
+                </div>
+                <div class="slide-body">
+                    <div class="formula-block" style="font-size:28px; text-align:center;">
+                        \( v^2 = u^2 + 2as \)
+                    </div>
+                    <ul>
+                        <li><strong>ใช้เมื่อ:</strong> ไม่เกี่ยวข้องกับเวลา (\(t\))</li>
+                        <li>เหมาะสำหรับโจทย์ที่ให้ระยะทาง (\(s\)) มาหรือให้หา \(s\)</li>
+                    </ul>
+                    <div class="highlight-box orange" style="margin-top:12px;">
+                        ⚡ <strong>ตัวอย่าง:</strong> รถความเร็ว 20 m/s เบรก (\(a=-4 \, m/s²\))
+                        ระยะทางที่หยุด: \(0 = 20^2 + 2(-4)s\) → \(s = 50 \, m\)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 7 ========== -->
+            <div class="slide" data-index="6">
+                <span class="slide-number">7 / 20</span>
+                <div class="slide-title">
+                    กราฟการเคลื่อนที่
+                    <span class="sub">ความสัมพันธ์ของ s, v, a</span>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2col">
+                        <div class="col">
+                            <h4>📈 กราฟ s-t</h4>
+                            <ul style="font-size:17px;">
+                                <li><strong>ความชัน (Slope)</strong> = ความเร็ว ณ ขณะนั้น</li>
+                                <li>เส้นตรง → ความเร็วคงที่</li>
+                                <li>เส้นโค้ง → ความเร็วเปลี่ยนแปลง</li>
+                            </ul>
+                        </div>
+                        <div class="col">
+                            <h4>📈 กราฟ v-t</h4>
+                            <ul style="font-size:17px;">
+                                <li><strong>ความชัน</strong> = ความเร่ง (\(a\))</li>
+                                <li><strong>พื้นที่ใต้กราฟ</strong> = การกระจัด (\(s\))</li>
+                                <li>เส้นตรงแนวนอน → a=0</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="highlight-box purple" style="margin-top:8px;">
+                        🧠 <strong>จำง่าย:</strong> ความชันของ \(v\) คือ \(a\), พื้นที่ใต้ \(v\) คือ \(s\)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 8 ========== -->
+            <div class="slide" data-index="7">
+                <span class="slide-number">8 / 20</span>
+                <div class="slide-title">
+                    การตกอย่างเสรี (Free Fall)
+                    <span class="sub">แนวคิดและสูตร</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li>วัตถุตกภายใต้แรงโน้มถ่วง <strong>เพียงอย่างเดียว</strong></li>
+                        <li>ความเร่ง \(a = g \approx 9.8 \, m/s² \approx 10 \, m/s²\) (ทิศลง)</li>
+                        <li>ใช้สูตร kinematic โดยแทน \(a = g\) และกำหนดทิศขึ้นเป็น <strong>บวก</strong> หรือ <strong>ลบ</strong> ให้สอดคล้อง</li>
+                    </ul>
+                    <div style="background:#f0f7ff; border-radius:14px; padding:14px 20px; margin:12px 0;">
+                        <p style="font-size:18px;"><strong>📌 ถ้าปล่อยจากหยุดนิ่ง (\(u=0\))</strong></p>
+                        <p>\(v = gt\) , \(h = \frac{1}{2}gt^2\) , \(v^2 = 2gh\)</p>
+                    </div>
+                    <div class="highlight-box green">
+                        ✅ <strong>ตัวอย่าง:</strong> ปล่อยก้อนหินจากหน้าผาสูง 80 m (ใช้ g=10)
+                        \(80 = \frac{1}{2}(10)t^2\) → \(t = 4\) วินาที
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 9 ========== -->
+            <div class="slide" data-index="8">
+                <span class="slide-number">9 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่างที่ 1
+                    <span class="sub">การเคลื่อนที่แนวตรง</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">
+                            รถยนต์คันหนึ่งเคลื่อนที่ด้วยความเร็ว 30 m/s
+                            แล้วเหยียบเบรกทำให้มีความเร่ง \(-5 \, m/s²\)
+                            จงหาระยะทางที่รถเคลื่อนที่ไปจนกว่าจะหยุดนิ่ง
+                        </p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>วิธีทำ:</strong> ใช้สูตร \(v^2 = u^2 + 2as\)</p>
+                        <ul>
+                            <li>\(u = 30 \, m/s\), \(v = 0\), \(a = -5 \, m/s²\)</li>
+                            <li>\(0 = 30^2 + 2(-5)s\)</li>
+                            <li>\(0 = 900 - 10s\) → \(s = \mathbf{90 \, m}\)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 10 ========== -->
+            <div class="slide" data-index="9">
+                <span class="slide-number">10 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่างที่ 2
+                    <span class="sub">การตกอย่างเสรี</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">
+                            โยนวัตถุขึ้นไปในแนวดิ่งด้วยความเร็ว 40 m/s
+                            (กำหนด \(g = 10 \, m/s²\))
+                            จงหาความสูงสูงสุดที่วัตถุจะขึ้นไปได้
+                        </p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>วิธีทำ:</strong> ที่จุดสูงสุด \(v=0\), ใช้ \(v^2 = u^2 + 2as\)</p>
+                        <ul>
+                            <li>\(u = 40 \, m/s\), \(v = 0\), \(a = -10 \, m/s²\)</li>
+                            <li>\(0 = 40^2 + 2(-10)h\)</li>
+                            <li>\(0 = 1600 - 20h\) → \(h = \mathbf{80 \, m}\)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 11 ========== -->
+            <div class="slide" data-index="10">
+                <span class="slide-number">11 / 20</span>
+                <div class="slide-title">
+                    การเคลื่อนที่แบบโพรเจกไทล์
+                    <span class="sub">รู้จักกับวิถีโค้ง (Projectile Motion)</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li>วัตถุที่ถูก <strong>ยิง</strong> หรือ <strong>โยน</strong> ทำมุมกับแนวนอน</li>
+                        <li>แรงโน้มถ่วงเป็นแรงเดียวที่กระทำ (ละทิ้งแรงต้านอากาศ)</li>
+                        <li><strong>หลักการสำคัญ:</strong> แยกการเคลื่อนที่ในแนว <strong>X</strong> และ <strong>Y</strong> ออกจากกัน</li>
+                    </ul>
+                    <div class="grid-2col" style="margin-top:12px;">
+                        <div class="col" style="background:#f0faff;">
+                            <h4 style="color:#2d7aff;">➡️ แกน X</h4>
+                            <p><strong>ความเร็วคงที่</strong> (\(a_x = 0\))</p>
+                            <p style="font-size:18px;">\(v_x = u_x = u\cos\theta\)</p>
+                            <p style="font-size:18px;">\(x = (u\cos\theta)t\)</p>
+                        </div>
+                        <div class="col" style="background:#fff5f7;">
+                            <h4 style="color:#e63946;">⬆️ แกน Y</h4>
+                            <p><strong>ความเร่งคงที่</strong> (\(a_y = -g\))</p>
+                            <p style="font-size:18px;">\(v_y = u\sin\theta - gt\)</p>
+                            <p style="font-size:18px;">\(y = (u\sin\theta)t - \frac{1}{2}gt^2\)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 12 ========== -->
+            <div class="slide" data-index="11">
+                <span class="slide-number">12 / 20</span>
+                <div class="slide-title">
+                    โพรเจกไทล์: แกน X
+                    <span class="sub">การเคลื่อนที่แนวนอน</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li>ไม่มีความเร่งในแนวราบ (\(a_x = 0\))</li>
+                        <li>ความเร็วในแนวราบ <strong>คงที่</strong> ตลอดการเคลื่อนที่</li>
+                    </ul>
+                    <div class="formula-block" style="text-align:center;">
+                        \( v_x = u_x = u\cos\theta \) <br>
+                        \( x = (u\cos\theta) \, t \)
+                    </div>
+                    <div class="highlight-box blue">
+                        💡 จำไว้ว่า <strong>เวลา (\(t\))</strong> ในแกน X และ Y คือ <strong>เวลาเดียวกัน</strong>
+                        (เป็นตัวเชื่อมระหว่างสองแกน)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 13 ========== -->
+            <div class="slide" data-index="12">
+                <span class="slide-number">13 / 20</span>
+                <div class="slide-title">
+                    โพรเจกไทล์: แกน Y
+                    <span class="sub">การเคลื่อนที่แนวดิ่ง</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li>มีความเร่ง \(a_y = -g\) (ทิศลง) ตลอดเวลา</li>
+                        <li>เหมือนการเคลื่อนที่แนวตรงภายใต้แรงโน้มถ่วง</li>
+                    </ul>
+                    <div class="formula-block" style="text-align:center;">
+                        \( v_y = u\sin\theta - gt \) <br>
+                        \( y = (u\sin\theta)t - \frac{1}{2}gt^2 \) <br>
+                        \( v_y^2 = (u\sin\theta)^2 - 2gy \)
+                    </div>
+                    <div class="highlight-box orange">
+                        ⚠️ ที่จุดสูงสุด: \(v_y = 0\) → ใช้หาครึ่งเวลาได้
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 14 ========== -->
+            <div class="slide" data-index="13">
+                <span class="slide-number">14 / 20</span>
+                <div class="slide-title">
+                    โพรเจกไทล์: เวลาในอากาศ
+                    <span class="sub">Time of flight (\(t\))</span>
+                </div>
+                <div class="slide-body">
+                    <p>เวลาทั้งหมดที่วัตถุอยู่บนอากาศ (จากจุดเริ่มต้นถึงพื้นราบ)</p>
+                    <div class="formula-block" style="text-align:center; font-size:26px;">
+                        \( t = \frac{2u\sin\theta}{g} \)
+                    </div>
+                    <ul>
+                        <li>ได้จากตั้ง \(y = 0\) ในสมการ \(y = (u\sin\theta)t - \frac{1}{2}gt^2\)</li>
+                        <li>ขึ้นอยู่กับ <strong>ความเร็วต้น</strong> และ <strong>มุมยิง</strong></li>
+                    </ul>
+                    <div class="highlight-box green" style="margin-top:10px;">
+                        ✅ ถ้าวัตถุยิงจากที่สูง \(h\) เหนือพื้น: \( -h = (u\sin\theta)t - \frac{1}{2}gt^2\) (แก้สมการกำลังสอง)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 15 ========== -->
+            <div class="slide" data-index="14">
+                <span class="slide-number">15 / 20</span>
+                <div class="slide-title">
+                    โพรเจกไทล์: ระยะไกลสูงสุด
+                    <span class="sub">Range (\(R\))</span>
+                </div>
+                <div class="slide-body">
+                    <p>ระยะทางในแนวราบที่วัตถุเคลื่อนที่ได้ (เมื่อตกถึงพื้นระดับเดียวกัน)</p>
+                    <div class="formula-block" style="text-align:center; font-size:26px;">
+                        \( R = \frac{u^2 \sin 2\theta}{g} \)
+                    </div>
+                    <ul>
+                        <li>ได้จาก \(R = (u\cos\theta) \times t\) แทนค่า \(t = \frac{2u\sin\theta}{g}\)</li>
+                        <li>มุมที่ให้ระยะไกลที่สุดคือ <strong>45°</strong> (\(\sin 90° = 1\))</li>
+                    </ul>
+                    <div class="highlight-box purple">
+                        🧠 <strong>จำ:</strong> \( \sin 2\theta = 2\sin\theta\cos\theta \)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 16 ========== -->
+            <div class="slide" data-index="15">
+                <span class="slide-number">16 / 20</span>
+                <div class="slide-title">
+                    โพรเจกไทล์: ความสูงสูงสุด
+                    <span class="sub">Maximum Height (\(H\))</span>
+                </div>
+                <div class="slide-body">
+                    <p>ความสูงมากที่สุดในแนวตั้งที่วัตถุขึ้นไปถึง</p>
+                    <div class="formula-block" style="text-align:center; font-size:26px;">
+                        \( H = \frac{u^2 \sin^2\theta}{2g} \)
+                    </div>
+                    <ul>
+                        <li>ได้จาก \(v_y^2 = (u\sin\theta)^2 - 2gH\) โดยที่ \(v_y=0\)</li>
+                        <li>ใช้ครึ่งเวลาของการเคลื่อนที่ (\(t_{ขึ้น} = \frac{u\sin\theta}{g}\))</li>
+                    </ul>
+                    <div class="highlight-box blue" style="margin-top:10px;">
+                        💡 <strong>สัมพันธ์:</strong> \( H = \frac{g}{2} \left(\frac{u\sin\theta}{g}\right)^2 \)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 17 ========== -->
+            <div class="slide" data-index="16">
+                <span class="slide-number">17 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่างที่ 3
+                    <span class="sub">โพรเจกไทล์</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">
+                            ยิงวัตถุด้วยความเร็ว 50 m/s มุม 37° กับพื้น (\( \sin37°=0.6, \cos37°=0.8, g=10 \))
+                            จงหาระยะไกล (\(R\)) และความสูงสูงสุด (\(H\))
+                        </p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>วิธีทำ:</strong></p>
+                        <ul>
+                            <li>\(R = \frac{50^2 \cdot \sin(2\cdot37°)}{10} = \frac{2500 \cdot \sin74°}{10} \approx \frac{2500 \cdot 0.96}{10} = \mathbf{240 \, m}\)</li>
+                            <li>\(H = \frac{50^2 \cdot (0.6)^2}{2\cdot10} = \frac{2500 \cdot 0.36}{20} = \frac{900}{20} = \mathbf{45 \, m}\)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 18 ========== -->
+            <div class="slide" data-index="17">
+                <span class="slide-number">18 / 20</span>
+                <div class="slide-title">
+                    การเคลื่อนที่แบบวงกลม
+                    <span class="sub">วงกลมและความเร่งสู่ศูนย์กลาง</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li>วัตถุเคลื่อนที่บนเส้นทางวงกลมด้วย <strong>อัตราเร็วคงที่</strong></li>
+                        <li>ความเร็วเปลี่ยนทิศทางตลอดเวลา → มีความเร่ง</li>
+                    </ul>
+                    <div class="formula-block" style="text-align:center;">
+                        ความเร่งสู่ศูนย์กลาง: \( a_c = \frac{v^2}{r} = \omega^2 r \)
+                    </div>
+                    <ul>
+                        <li>\(v\) = อัตราเร็วเชิงเส้น (m/s), \(r\) = รัศมี (m)</li>
+                        <li>\(\omega\) = ความเร็วเชิงมุม (rad/s)</li>
+                        <li>ทิศของ \(a_c\) ชี้เข้าสู่ <strong>จุดศูนย์กลาง</strong> เสมอ</li>
+                    </ul>
+                    <div class="highlight-box orange">
+                        ⚠️ <strong>สำคัญ:</strong> แรงที่ทำให้เกิดความเร่งนี้คือ <strong>แรงสู่ศูนย์กลาง</strong> (ไม่ใช่แรงใหม่)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 19 ========== -->
+            <div class="slide" data-index="18">
+                <span class="slide-number">19 / 20</span>
+                <div class="slide-title">
+                    สรุปสูตรสำคัญ
+                    <span class="sub">พกไว้ติดตัว</span>
+                </div>
+                <div class="slide-body">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px;">
+                            <h4 style="color:#0f1b3d;">📐 แนวตรง</h4>
+                            <p style="font-size:17px;">\(v = u + at\)</p>
+                            <p style="font-size:17px;">\(s = ut + \frac{1}{2}at^2\)</p>
+                            <p style="font-size:17px;">\(v^2 = u^2 + 2as\)</p>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px;">
+                            <h4 style="color:#0f1b3d;">🪶 ตกเสรี</h4>
+                            <p style="font-size:17px;">\(v = gt\)</p>
+                            <p style="font-size:17px;">\(h = \frac{1}{2}gt^2\)</p>
+                            <p style="font-size:17px;">\(v^2 = 2gh\)</p>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px; grid-column: span 2;">
+                            <h4 style="color:#0f1b3d;">🚀 โพรเจกไทล์</h4>
+                            <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between;">
+                                <span>\(t = \frac{2u\sin\theta}{g}\)</span>
+                                <span>\(R = \frac{u^2\sin2\theta}{g}\)</span>
+                                <span>\(H = \frac{u^2\sin^2\theta}{2g}\)</span>
+                            </div>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px; grid-column: span 2;">
+                            <h4 style="color:#0f1b3d;">⭕ วงกลม</h4>
+                            <span>\(a_c = \frac{v^2}{r}\)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 20 ========== -->
+            <div class="slide" data-index="19">
+                <span class="slide-number">20 / 20</span>
+                <div class="slide-title">
+                    สรุป &amp; คำแนะนำ
+                    <span class="sub">เคล็ดลับในการทำโจทย์</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f0f7ff; border-radius:18px; padding:18px 24px; border:1px solid #d6e4ff;">
+                        <p style="font-size:20px; font-weight:600;">📌 ใจความสำคัญ</p>
+                        <ul style="font-size:18px; line-height:1.9;">
+                            <li>✅ เขียน <strong>ตัวแปรที่รู้</strong> และ <strong>ตัวแปรที่ต้องการ</strong> ก่อนเลือกสูตร</li>
+                            <li>✅ กำหนด <strong>ทิศทางบวก</strong> ให้ชัดเจน (ขึ้น/ลง, ขวา/ซ้าย)</li>
+                            <li>✅ <strong>โพรเจกไทล์</strong>: แยก X-Y แล้วใช้ <strong>เวลา</strong> เชื่อมสองแกน</li>
+                            <li>✅ กราฟ \(v-t\): ความชันคือ \(a\), พื้นที่คือ \(s\)</li>
+                            <li>✅ วงกลม: ความเร็วมีขนาดคงที่ แต่ทิศทางเปลี่ยน มี \(a_c\)</li>
+                        </ul>
+                    </div>
+                    <div style="margin-top:18px; background:#eef2fa; border-radius:16px; padding:14px 22px;">
+                        <p style="font-size:19px;">
+                            <strong>🌟 คำแนะนำ:</strong> ฝึกทำโจทย์หลากหลาย และ <u>วาดรูป</u> ทุกครั้ง
+                            ฟิสิกส์คือการ <strong>วิเคราะห์</strong> มากกว่าการท่องจำ!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end slide-container -->
+
+        <!-- ========== NAVIGATION ========== -->
+        <div class="nav-bar">
+            <button class="nav-btn" id="prevBtn" disabled>
+                ◀ ย้อนกลับ
+            </button>
+
+            <div class="dot-indicators" id="dotContainer"></div>
+
+            <button class="nav-btn primary" id="nextBtn">
+                ถัดไป ▶
+            </button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding:0 4px;">
+            <span style="color:#8a94b0; font-size:15px;">📖 หัวข้อที่ 2 : การเคลื่อนที่ของวัตถุ</span>
+            <span style="color:#8a94b0; font-size:15px;" id="slideCounterDisplay">1 / 20</span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const slides = document.querySelectorAll('.slide');
+            const total = slides.length;
+            let current = 0;
+
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const dotContainer = document.getElementById('dotContainer');
+            const counterDisplay = document.getElementById('slideCounterDisplay');
+
+            // --- build dots ---
+            for (let i = 0; i < total; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'dot' + (i === 0 ? ' active-dot' : '');
+                dot.dataset.index = i;
+                dot.addEventListener('click', function() {
+                    goTo(parseInt(this.dataset.index));
+                });
+                dotContainer.appendChild(dot);
+            }
+            const dots = dotContainer.querySelectorAll('.dot');
+
+            // --- functions ---
+            function goTo(index) {
+                if (index < 0 || index >= total) return;
+                slides.forEach((el, i) => {
+                    el.classList.toggle('active', i === index);
+                });
+                dots.forEach((d, i) => {
+                    d.classList.toggle('active-dot', i === index);
+                });
+                current = index;
+                prevBtn.disabled = (current === 0);
+                nextBtn.disabled = (current === total - 1);
+                counterDisplay.textContent = (current + 1) + ' / ' + total;
+                document.getElementById('slideContainer').scrollTop = 0;
+            }
+
+            function next() {
+                if (current < total - 1) goTo(current + 1);
+            }
+
+            function prev() {
+                if (current > 0) goTo(current - 1);
+            }
+
+            prevBtn.addEventListener('click', prev);
+            nextBtn.addEventListener('click', next);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    next();
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    prev();
+                }
+            });
+
+            let touchStartX = 0;
+            const container = document.getElementById('slideContainer');
+            container.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+            container.addEventListener('touchend', function(e) {
+                const diff = touchStartX - e.changedTouches[0].screenX;
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) next();
+                    else prev();
+                }
+            }, { passive: true });
+
+            goTo(0);
+        })();
+    </script>
+
+</body>
+</html>

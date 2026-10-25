@@ -1,0 +1,161 @@
+\chapter{กฎของโอห์มและแบบจำลองการแยกโมเลกุลด้วย Gel Electrophoresis}
+
+\begin{planbox}[สัปดาห์ที่ 9 — เวลาปฏิบัติการ 3 ชั่วโมง (สอดคล้องกับ CLO1, CLO2 และ CLO3)]
+\textbf{1. วัตถุประสงค์การทดลอง}
+\begin{itemize}
+    \item วัดค่าความต่างศักย์ไฟฟ้า ($V$) กระแสไฟฟ้า ($I$) และความต้านทานไฟฟ้า ($R$) ของสารละลายบัฟเฟอร์ที่ความเข้มข้นต่างกันเพื่อพิสูจน์กฎของโอห์ม ($V = IR$)
+    \item คำนวณกำลังไฟฟ้าความร้อนจูล ($P = IV = V^2/R$) และอธิบายสาเหตุของการเกิดความร้อนสูงเกินไปในอ่างรันเจลเมื่อเตรียมบัฟเฟอร์เข้มข้นผิดพลาด
+    \item ปฏิบัติการแยกโมเลกุลสีย้อมมาตรฐานที่มีประจุและขนาดโมเลกุลต่างกันในเจลอะกาโรสภายใต้สนามไฟฟ้ากระแสตรง (หลักการ Run to Red)
+\end{itemize}
+\textbf{2. ความเชื่อมโยงกับผลลัพธ์การเรียนรู้ของรายวิชา (CLOs) และหลักสูตร (PLOs)}
+\begin{itemize}
+    \item \textbf{CLO1 (PLO2)}\quad อธิบายกฎของโอห์ม กำลังไฟฟ้า และแรงที่สนามไฟฟ้ากระทำต่อโมเลกุลที่มีประจุได้
+    \item \textbf{CLO2 (PLO2, PLO3)}\quad ประยุกต์ใช้หลักการทางไฟฟ้าวิเคราะห์และแก้ไขปัญหาแถบดีเอ็นเอเบี้ยวหรือเจลละลายในเครื่อง Gel Electrophoresis ได้
+    \item \textbf{CLO3 (PLO1)}\quad ปฏิบัติตามกฎความปลอดภัยด้านไฟฟ้ากระแสตรงแรงดันสูงอย่างเคร่งครัด
+\end{itemize}
+\end{planbox}
+
+\section{หลักการทฤษฎีและการเชื่อมโยงสู่งานจุลชีววิทยา}
+
+เมื่อป้อนความต่างศักย์ไฟฟ้ากระแสตรง $V$ (หน่วยโวลต์, $\text{V}$) คร่อมขั้วอิเล็กโทรดทั้งสองของอ่างรันเจลที่มีสารละลายบัฟเฟอร์ (เช่น $1\times\text{ TAE}$ หรือ $1\times\text{ TBE}$) กระแสไฟฟ้า $I$ (หน่วยแอมแปร์, $\text{A}$) ที่ไหลผ่านบัฟเฟอร์จะแปรผันตรงกับความต่างศักย์และแปรผกผันกับความต้านทานไฟฟ้า $R$ (หน่วยโอห์ม, $\Omega$) ตาม\textbf{กฎของโอห์ม} (\textbf{Ohm's Law})\index{กฎของโอห์ม (Ohm's Law)} ดังสมการที่ \eqref{eq:lab08_ohm} และเกิดความร้อนจูลในอ่างเจลตามสมการกำลังไฟฟ้า $P$
+
+\begin{equation}
+    V = I R \qquad \text{และ} \qquad P = I V = I^2 R = \frac{V^2}{R}
+    \label{eq:lab08_ohm}
+\end{equation}
+
+ในเทคนิค \textbf{Gel Electrophoresis}\index{เจลอิเล็กโทรโฟรีซิส (Gel Electrophoresis)} โครงสร้างสายดีเอ็นเอ (DNA) มีหมู่ฟอสเฟตทำให้มีประจุสุทธิเป็น\textbf{ลบ ($-$)} อย่างสม่ำเสมอ ดังนั้นต้องหยอดตัวอย่างลงในหลุมเจลฝั่ง\textbf{ขั้วลบ (Cathode — สายสีดำ)} เพื่อให้สนามไฟฟ้า $E = V/d$ ขับเคลื่อนโมเลกุลประจุลบให้วิ่งมุ่งหน้าไปหา\textbf{ขั้วบวก (Anode — สายสีแดง)} ตามหลักจำสั้นๆ ว่า \textbf{Run to Red} โดยโมเลกุลที่มีขนาดเล็กจะแทรกตัวผ่านรูพรุนของเจลอะกาโรสได้เร็วกว่าและเคลื่อนที่ได้ระยะทางไกลกว่าโมเลกุลขนาดใหญ่
+
+\begin{conceptbox}[สรุปสูตรคำนวณฉบับเข้าใจง่ายสำหรับปฏิบัติการที่ 8]
+\begin{itemize}
+    \item \textbf{ความต้านทานไฟฟ้าของอ่างเจล}\quad $R = \dfrac{V}{I}$ (ใช้หน่วย $I$ เป็น $\text{A}$ โดย $1\text{ mA} = 0.001\text{ A}$)
+    \item \textbf{กำลังไฟฟ้าความร้อนที่เกิดขึ้นในอ่างเจล}\quad $P = I \times V$ (หน่วยเป็นวัตต์, $\text{W}$)
+    \item \textbf{อัตราเร็วการเคลื่อนที่เฉลี่ยของแถบสีในเจล}\quad $v = \dfrac{d\text{ (mm)}}{t\text{ (min)}}$
+\end{itemize}
+\end{conceptbox}
+
+\begin{worked}[การคำนวณความต้านทานและกำลังความร้อนของอ่างรันเจลอะกาโรส]
+\textbf{โจทย์} ในการรันเจลอะกาโรสด้วยบัฟเฟอร์ $1\times\text{ TAE}$ เมื่อตั้งแหล่งจ่ายไฟที่ความต่างศักย์คงที่ $V = 100\text{ V}$ อ่านค่ากระแสไฟฟ้าได้ $I = 50\text{ mA}$ ($0.050\text{ A}$) จงคำนวณหาความต้านทานไฟฟ้า $R$ และกำลังไฟฟ้าความร้อน $P$ ที่เกิดขึ้นในอ่างเจล (และเปรียบเทียบหากนักศึกษาเผลอใช้บัฟเฟอร์ $10\times\text{ TAE}$ ที่ทำให้กระแสพุ่งสูงเป็น $500\text{ mA}$)
+
+\textbf{วิธีทำทีละขั้นตอน}
+\begin{enumerate}
+    \item คำนวณความต้านทานไฟฟ้า $R$ และกำลังไฟฟ้า $P$ ของบัฟเฟอร์ $1\times\text{ TAE}$ ปกติ
+    \begin{equation*}
+        R_{1\times} = \frac{100}{0.050} = 2{,}000\ \Omega, \qquad P_{1\times} = 0.050 \times 100 = 5.0\text{ W}
+    \end{equation*}
+    \item หากเผลอใช้บัฟเฟอร์เข้มข้น $10\times\text{ TAE}$ ($I = 0.50\text{ A}$) กำลังความร้อนจะเพิ่มขึ้นเป็น $P_{10\times} = 0.50 \times 100 = 50.0\text{ W}$ (ร้อนขึ้น $10$ เท่า ทำให้เจลอะกาโรสละลาย!)
+\end{enumerate}
+\textbf{คำตอบ} สภาวะปกติมีความต้านทาน $2{,}000\ \Omega$ และเกิดกำลังความร้อนเพียง $5.0\text{ W}$
+\end{worked}
+
+\begin{figure}[H]
+\centering
+\resizebox{0.86\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, font=\small]
+    % Gel tank
+    \draw[fill=boxBlueBg, draw=physRoyalBlue, line width=1.2pt, rounded corners=5pt] (0,0) rectangle (11.5,3.8);
+    % Gel slab
+    \draw[fill=white, draw=physRoyalBlue!70, line width=1pt, rounded corners=3pt] (1.6,0.5) rectangle (9.9,3.3);
+    % Cathode (-) left
+    \draw[line width=2.5pt, charcoal] (0.8,0.4) -- (0.8,3.4);
+    \node[fill=charcoal, text=white, font=\bfseries\footnotesize, rounded corners=2pt, inner sep=3pt] at (0.8,4.15) {ขั้วลบ Cathode ($-$ สีดำ)};
+    % Anode (+) right
+    \draw[line width=2.5pt, crimsonAlert] (10.7,0.4) -- (10.7,3.4);
+    \node[fill=crimsonAlert, text=white, font=\bfseries\footnotesize, rounded corners=2pt, inner sep=3pt] at (10.7,4.15) {ขั้วบวก Anode ($+$ สีแดง)};
+
+    % Wells
+    \foreach \y in {1.0, 1.9, 2.8} {
+        \draw[fill=charcoal!25, draw=charcoal] (2.2,\y-0.2) rectangle (2.5,\y+0.2);
+    }
+    \node[font=\scriptsize\bfseries, above] at (2.35,3.3) {หลุมหยอดตัวอย่าง};
+
+    % Bands migrating
+    % Lane 1: Large molecule (slow) & small molecule (fast)
+    \fill[purple!80, rounded corners=1pt] (4.3,2.62) rectangle (4.65,2.98);
+    \node[font=\scriptsize, above] at (4.48,3.0) {โมเลกุลใหญ่ ($v$ ช้า)};
+    \fill[cyan!80!blue, rounded corners=1pt] (7.8,2.62) rectangle (8.15,2.98);
+    \node[font=\scriptsize, above] at (7.98,3.0) {โมเลกุลเล็ก ($v$ เร็ว)};
+
+    % Lane 2
+    \fill[physAmber!90!orange, rounded corners=1pt] (6.1,1.72) rectangle (6.45,2.08);
+
+    % Lane 3: Positively charged dye moving backward!
+    \fill[bioEmerald, rounded corners=1pt] (1.75,0.82) rectangle (2.05,1.18);
+    \node[font=\scriptsize\color{bioEmerald!85!black}, right] at (2.7,1.0) {สีย้อมประจุบวกวิ่งย้อนไปขั้วลบ};
+
+    % Direction arrow
+    \draw[->, line width=1.6pt, crimsonAlert] (3.2,0.22) -- (8.5,0.22) node[midway, fill=boxBlueBg, inner sep=2pt, font=\footnotesize\bfseries] {ทิศทางการเคลื่อนที่ของ DNA / สีย้อมประจุลบ (Run to Red)};
+\end{tikzpicture}%
+}
+\caption{แผนผังการจัดวางอ่างเจลอะกาโรส ขั้วไฟฟ้า และการแยกตัวของโมเลกุลตามประจุและขนาดภายใต้สนามไฟฟ้า}
+\label{fig:lab08_setup}
+\end{figure}
+
+\section{วัสดุอุปกรณ์และขั้นตอนการปฏิบัติการ}
+
+\begin{equipbox}
+\begin{enumerate}
+    \item ชุดอ่างรันเจลอิเล็กโทรโฟรีซิส (Horizontal Gel Box) พร้อมแหล่งจ่ายไฟกระแสตรง (DC Power Supply) จำนวน $1$ ชุด
+    \item แผ่นเจลอะกาโรสความเข้มข้น $1.0\%$ ที่มีหลุมหยอดตัวอย่างตรงกลาง และสารละลายบัฟเฟอร์ $0.5\times\text{ TBE}$ และ $1\times\text{ TBE}$
+    \item สารละลายสีย้อมมาตรฐานผสมกลีเซอรอล 3 ชนิด ได้แก่ โบรโมฟีนอลบลู (ประจุลบ โมเลกุลเล็ก), ไซลีนไซทานอล (ประจุลบ โมเลกุลใหญ่) และเมทิลีนบลู (ประจุบวก)
+    \item ไมโครปิเปตขนาด P20 พร้อมทิป และไม้บรรทัดมิลลิเมตร จำนวน $1$ ชุด
+\end{enumerate}
+\end{equipbox}
+
+\begin{warningbox}
+ห้ามเปิดฝาครอบอ่างเจลหรือจุ่มนิ้วลงในบัฟเฟอร์ขณะที่แหล่งจ่ายไฟกำลังทำงานอยู่โดยเด็ดขาด ต้องกดปุ่มปิดสวิตช์ (OFF) และถอดปลั๊กขั้วสายไฟก่อนเปิดฝาครอบอ่างเจลทุกครั้ง
+\end{warningbox}
+
+\subsection{ขั้นตอนการทดลอง}
+\begin{enumerate}
+    \item \textbf{ตอนที่ 1 การทดสอบกฎของโอห์มและกำลังความร้อนของสารละลายบัฟเฟอร์}\quad เทสารละลายบัฟเฟอร์ $1\times\text{ TBE}$ ลงในอ่างทดสอบ ปิดฝาครอบแล้วปรับแรงดันไฟฟ้าที่ $50\text{ V}$, $80\text{ V}$ และ $100\text{ V}$ อ่านค่ากระแสไฟฟ้า $I$ ($\text{mA}$) ที่หน้าจอแหล่งจ่ายไฟ คำนวณค่าความต้านทาน $R$ และกำลังความร้อน $P$ บันทึกใน\mbox{ตารางที่} 8.1
+    \item \textbf{ตอนที่ 2 การแยกโมเลกุลสีย้อมด้วย Gel Electrophoresis}\quad ใช้ไมโครปิเปต P20 ดูดตัวอย่างสีย้อมทั้ง 3 ชนิด ปริมาตร $10\ \mu\text{L}$ หยอดลงในหลุมเจลอะกาโรส ปิดฝาครอบโดยต่อสายสีดำเข้าขั้วลบและสายสีแดงเข้าขั้วบวก รันเจลที่ความต่างศักย์ $100\text{ V}$ เป็นเวลา $20$ นาที แล้ววัดระยะทางและทิศทางที่แถบสีแต่ละชนิดเคลื่อนที่ได้ใน\mbox{ตารางที่} 8.2
+\end{enumerate}
+
+\section{ใบบันทึกผลการทดลองและคำถามท้ายปฏิบัติการ}
+
+\begin{worksheetbox}[ใบบันทึกผลการทดลองที่ 8\quad กฎของโอห์มและแบบจำลอง Gel Electrophoresis]
+\textbf{กลุ่มปฏิบัติการที่} \dotfill \textbf{วันที่ทำการทดลอง} \dotfill\\[4pt]
+\textbf{รายชื่อสมาชิกกลุ่ม} 1. \dotfill 2. \dotfill 3. \dotfill
+
+\vspace{4pt}
+\textbf{ตารางที่ 8.1\quad ผลการวัดกระแสไฟฟ้า ความต้านทาน และกำลังความร้อนในอ่างรันเจลตามกฎของโอห์ม}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{4.0cm} c c c >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{สภาวะในอ่างบัฟเฟอร์} & \textbf{แรงดัน $V$} & \textbf{กระแส (mA)} & \textbf{กระแส (A)} & \textbf{ความต้านทาน $R$ ($\Omega$) และกำลัง $P$ (W)} \\
+\midrule
+1. บัฟเฟอร์ $1\times\text{ TBE}$ แรงดันต่ำ & $50\text{ V}$ & ........ & ........ & $R =$ \dotfill / $P =$ \dotfill \\[6pt]
+2. บัฟเฟอร์ $1\times\text{ TBE}$ แรงดันกลาง & $80\text{ V}$ & ........ & ........ & $R =$ \dotfill / $P =$ \dotfill \\[6pt]
+3. บัฟเฟอร์ $1\times\text{ TBE}$ มาตรฐาน & $100\text{ V}$ & ........ & ........ & $R =$ \dotfill / $P =$ \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\textbf{ตารางที่ 8.2\quad ผลการเคลื่อนที่ของโมเลกุลสีย้อมในเจลอะกาโรสเมื่อรันที่ $100\text{ V}$ นาน $20\text{ min}$}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{4.0cm} c c c >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{ชนิดของตัวอย่างสีย้อม} & \textbf{มวลโมเลกุล} & \textbf{ขั้วที่วิ่งไปหา} & \textbf{ระยะ $d$ (mm)} & \textbf{อัตราเร็ว $v$ (mm/min)} \\
+\midrule
+1. โบรโมฟีนอลบลู (Bromophenol Blue) & $670\text{ Da}$ & ........ & ........ & \dotfill \\[6pt]
+2. ไซลีนไซทานอล (Xylene Cyanol) & $538\text{ Da}$ & ........ & ........ & \dotfill \\[6pt]
+3. เมทิลีนบลู (Methylene Blue) & $320\text{ Da}$ & ........ & ........ & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\textbf{สรุปและอภิปรายผลการทดลอง}\\[4pt]
+\dotfill\\[6pt]
+\dotfill
+\end{worksheetbox}
+
+\subsection{คำถามท้ายปฏิบัติการ}
+\begin{enumerate}
+    \item หากนักศึกษาเผลอใช้น้ำกลั่นบริสุทธิ์ (Deionized Water) เติมลงในอ่างรันเจลแทนสารละลายบัฟเฟอร์ TAE/TBE จะเกิดอะไรขึ้นกับค่าความต้านทานไฟฟ้า $R$ กระแสไฟฟ้า $I$ และการเคลื่อนที่ของแถบดีเอ็นเอ เพราะเหตุใด
+    \item เพราะเหตุใดในการเตรียมตัวอย่างดีเอ็นเอก่อนหยอดลงหลุมเจล จึงต้องผสมสารละลาย Loading Dye ที่มีกลีเซอรอล (Glycerol) หรือซูโครสความหนาแน่นสูงเข้าไปด้วยเสมอ (เชื่อมโยงกับความรู้เรื่องความหนาแน่นในปฏิบัติการที่ 3)
+\end{enumerate}

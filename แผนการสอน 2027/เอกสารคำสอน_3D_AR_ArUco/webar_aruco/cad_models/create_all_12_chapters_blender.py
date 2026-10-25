@@ -69,6 +69,7 @@ def build_all_12_textbook_models():
 
     for idx, (col_name, offset) in enumerate(chapters):
         ox, oy, oz = offset
+        # Base Fiducial Pedestal
         bpy.ops.mesh.primitive_cylinder_add(vertices=64, radius=1.8, depth=0.2, location=(ox, oy, oz))
         ped = bpy.context.active_object
         ped.name = f"{col_name}_Pedestal"

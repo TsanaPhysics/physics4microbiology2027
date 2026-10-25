@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>การเคลื่อนที่แบบวงกลม - ฟิสิกส์ ม.ปลาย</title>
+    <!-- MathJax v3 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            },
+            options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+            startup: { typeset: false }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/slide-core.css">
+</head>
+<body>
+
+    <div class="presentation-wrapper">
+        <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+            <a href="../index.html" style="color:#38bdf8; text-decoration:none; font-size:15px; font-weight:600;">🏠 เมนูหลัก</a>
+            <span style="color:#8a94b0; font-size:14px;">บทที่ 5 / 7</span>
+        </div>
+
+        <div class="slide-container" id="slideContainer">
+<div class="slide-container" id="slideContainer">
+
+            <!-- ========== SLIDE 1 ========== -->
+            <div class="slide active" data-index="0">
+                <span class="slide-number">1 / 20</span>
+                <div class="slide-title">
+                    การเคลื่อนที่แบบวงกลม
+                    <span class="sub">ฟิสิกส์ มัธยมศึกษาตอนปลาย</span>
+                </div>
+                <div class="slide-body" style="margin-top:28px;">
+                    <p style="font-size:22px; font-weight:500; color:#1f4a4a;">
+                        🔄 การเคลื่อนที่บนเส้นทางวงกลม – ความเร็วเปลี่ยนทิศทาง
+                    </p>
+                    <div style="display:flex; flex-wrap:wrap; gap:18px; margin-top:24px;">
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ ความเร็วเชิงมุม</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ ความเร่งสู่ศูนย์กลาง</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ แรงสู่ศูนย์กลาง</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ วงกลมแนวดิ่ง</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:28px; background:#f0faf5; border-radius:18px; padding:16px 22px; border:1px solid #b0d8d0;">
+                        <p style="font-size:18px; color:#1f3a3a;">
+                            <strong>🎯 เป้าหมาย:</strong> เข้าใจความสัมพันธ์ระหว่างความเร็วเชิงเส้นและเชิงมุม
+                            วิเคราะห์แรงที่ทำให้เกิดการเคลื่อนที่แบบวงกลม และประยุกต์ใช้กับสถานการณ์จริง
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 2 ========== -->
+            
+
+<div class="slide" data-index="1">
+                <span class="slide-number">2 / 20</span>
+                <div class="slide-title">
+                    สารบัญ
+                    <span class="sub">หัวข้อที่จะเรียนในบทนี้</span>
+                </div>
+                <div class="slide-body">
+                    <ul style="font-size:20px; list-style:none; padding-left:0; display:flex; flex-direction:column; gap:10px;">
+                        <li>🔹 <strong>1.</strong> ปริมาณเชิงมุม (มุม, ความเร็วเชิงมุม, ความเร่งเชิงมุม)</li>
+                        <li>🔹 <strong>2.</strong> ความสัมพันธ์ระหว่างเชิงเส้นและเชิงมุม</li>
+                        <li>🔹 <strong>3.</strong> คาบและความถี่</li>
+                        <li>🔹 <strong>4.</strong> ความเร่งสู่ศูนย์กลาง (\(a_c\))</li>
+                        <li>🔹 <strong>5.</strong> แรงสู่ศูนย์กลาง (\(F_c\))</li>
+                        <li>🔹 <strong>6.</strong> ตัวอย่าง: การเคลื่อนที่ในแนวราบ (รถโค้ง)</li>
+                        <li>🔹 <strong>7.</strong> การเคลื่อนที่ในแนวดิ่ง (วงกลม)</li>
+                        <li>🔹 <strong>8.</strong> ตัวอย่าง: ลูกตุ้มที่หมุน</li>
+                        <li>🔹 <strong>9.</strong> การประยุกต์ในชีวิตประจำวัน</li>
+                        <li>🔹 <strong>10.</strong> สรุป &amp; ข้อควรจำ</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 3 ========== -->
+            
+
+<div class="slide" data-index="2">
+                <span class="slide-number">3 / 20</span>
+                <div class="slide-title">
+                    ปริมาณเชิงมุม
+                    <span class="sub">มุม (\(\theta\)), ความเร็วเชิงมุม (\(\omega\)), ความเร่งเชิงมุม (\(\alpha\))</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li><strong>มุม (\(\theta\)):</strong> หน่วยเป็น <strong>เรเดียน (rad)</strong> ( \( 1 \, rad = 57.3^\circ \) )</li>
+                        <li><strong>ความเร็วเชิงมุม (\(\omega\)):</strong> อัตราการเปลี่ยนแปลงมุม \( \omega = \frac{\Delta\theta}{\Delta t} \) (rad/s)</li>
+                        <li><strong>ความเร่งเชิงมุม (\(\alpha\)):</strong> อัตราการเปลี่ยนแปลงความเร็วเชิงมุม \( \alpha = \frac{\Delta\omega}{\Delta t} \) (rad/s²)</li>
+                    </ul>
+                    <div class="highlight-box blue">
+                        💡 <strong>ความสัมพันธ์:</strong> \( \theta = \omega_0 t + \frac{1}{2}\alpha t^2 \) (คล้ายสูตรแนวตรง)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 4 ========== -->
+            
+
+<div class="slide" data-index="3">
+                <span class="slide-number">4 / 20</span>
+                <div class="slide-title">
+                    ความสัมพันธ์เชิงเส้น – เชิงมุม
+                    <span class="sub">เชื่อมโยงระหว่างการเคลื่อนที่เชิงเส้นกับวงกลม</span>
+                </div>
+                <div class="slide-body">
+                    <div class="slide-two-col">
+                        <div class="text-col">
+                            <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        \( v = r\omega \) &nbsp;&nbsp; และ &nbsp;&nbsp; \( a_t = r\alpha \)
+                     \]</div>
+                    <ul>
+                        <li>\( v \) = ความเร็วเชิงเส้น (tangential) ที่ระยะ \( r \) จากจุดศูนย์กลาง</li>
+                        <li>\( a_t \) = ความเร่งเชิงเส้นในแนวสัมผัส (เกิดจากการเปลี่ยนขนาดของความเร็ว)</li>
+                        <li>นอกจากนี้ยังมีความเร่งสู่ศูนย์กลาง \( a_c \) ซึ่งเปลี่ยนทิศทางของความเร็ว</li>
+                    </ul>
+                    <div class="highlight-box orange">
+                        ⚠️ <strong>ความเร็วเชิงมุม (\(\omega\))</strong> มีค่าเท่ากันทุกจุดบนวัตถุที่หมุนรอบแกนเดียวกัน
+                        แต่ความเร็วเชิงเส้น \(v\) จะแปรผันตามรัศมี
+                    </div>
+                </div>
+                        </div>
+                        <div class="img-col">
+                            <svg width="245" height="230" viewBox="0 0 245 230" xmlns="http://www.w3.org/2000/svg" style="border-radius:14px;background:#f8faff;border:1px solid #dde6ff;"><circle cx="122" cy="115" r="70" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4"/><circle cx="122" cy="115" r="4" fill="#334155"/><circle cx="192" cy="115" r="10" fill="#2563eb"/><line x1="192" y1="115" x2="135" y2="115" stroke="#ef4444" stroke-width="2.5"/><text x="155" y="108" font-family="Sarabun" font-size="11" font-weight="700" fill="#ef4444">F_c</text><line x1="192" y1="115" x2="192" y2="55" stroke="#059669" stroke-width="2.5"/><text x="198" y="75" font-family="Sarabun" font-size="12" font-weight="700" fill="#059669">v</text><text x="122" y="208" text-anchor="middle" font-family="Sarabun" font-size="12" font-weight="700" fill="#1e293b">F_c = mv²/r</text></svg>
+                            <p class="img-caption">ภาพประกอบที่ 1</p>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- ========== SLIDE 5 ========== -->
+            
+
+<div class="slide" data-index="4">
+                <span class="slide-number">5 / 20</span>
+                <div class="slide-title">
+                    คาบ (Period) และ ความถี่ (Frequency)
+                    <span class="sub">เวลาที่ใช้หมุน 1 รอบ และจำนวนรอบต่อวินาที</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li><strong>คาบ (\(T\)):</strong> เวลาในการหมุนครบ 1 รอบ (หน่วย วินาที)</li>
+                        <li><strong>ความถี่ (\(f\)):</strong> จำนวนรอบต่อวินาที (หน่วย เฮิรตซ์, Hz)</li>
+                    </ul>
+                    <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        \( \omega = \frac{2\pi}{T} = 2\pi f \)
+                     \]</div>
+                    <div class="highlight-box green">
+                        ✅ <strong>ตัวอย่าง:</strong> เข็มนาทีหมุนครบรอบใน 60 วินาที → \( \omega = \frac{2\pi}{60} \approx 0.105 \, rad/s \)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 6 ========== -->
+            
+
+<div class="slide" data-index="5">
+                <span class="slide-number">6 / 20</span>
+                <div class="slide-title">
+                    ความเร่งสู่ศูนย์กลาง (Centripetal Acceleration)
+                    <span class="sub">\( a_c = \frac{v^2}{r} = \omega^2 r \)</span>
+                </div>
+                <div class="slide-body">
+                    <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        \( a_c = \frac{v^2}{r} = \omega^2 r \)
+                     \]</div>
+                    <ul>
+                        <li>ความเร่งที่ <strong>ชี้เข้าสู่ศูนย์กลาง</strong> เสมอ</li>
+                        <li>เกิดจากการเปลี่ยน <strong>ทิศทาง</strong> ของความเร็ว (ไม่เปลี่ยนขนาด)</li>
+                        <li>แม้อัตราเร็วคงที่ ก็ยังมีความเร่ง (เพราะทิศทางเปลี่ยน)</li>
+                    </ul>
+                    <div class="highlight-box purple">
+                        🧠 <strong>จำ:</strong> ความเร่งสู่ศูนย์กลางเป็นผลจาก <strong>แรงลัพธ์</strong> ที่ชี้เข้าหาศูนย์กลาง
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 7 ========== -->
+            
+
+<div class="slide" data-index="6">
+                <span class="slide-number">7 / 20</span>
+                <div class="slide-title">
+                    แรงสู่ศูนย์กลาง (Centripetal Force)
+                    <span class="sub">\( F_c = m a_c = \frac{mv^2}{r} = m\omega^2 r \)</span>
+                </div>
+                <div class="slide-body">
+                    <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        \( F_c = \frac{mv^2}{r} = m\omega^2 r \)
+                     \]</div>
+                    <ul>
+                        <li>แรงลัพธ์ที่กระทำต่อวัตถุและมีทิศเข้าสู่ศูนย์กลาง</li>
+                        <li>ไม่ใช่แรงชนิดใหม่ แต่เป็นผลรวมของแรงจริง (แรงเสียดทาน, แรงตึงเชือก, แรงโน้มถ่วง ฯลฯ) ที่ชี้เข้าหาศูนย์กลาง</li>
+                    </ul>
+                    <div class="highlight-box orange">
+                        ⚠️ <strong>ข้อควรระวัง:</strong> แรงสู่ศูนย์กลาง <u>ไม่ใช่</u> แรงที่เกิดจากการหมุน (แรงเหวี่ยงหนีศูนย์) ซึ่งเป็นแรงเทียมในกรอบอ้างอิงที่ไม่เฉื่อย
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 8 ========== -->
+            
+
+<div class="slide" data-index="7">
+                <span class="slide-number">8 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่าง: รถโค้ง (แนวราบ)
+                    <span class="sub">แรงเสียดทานให้แรงสู่ศูนย์กลาง</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">รถมวล 1000 kg วิ่งด้วยความเร็ว 20 m/s บนทางโค้งรัศมี 50 m ถ้าสัมประสิทธิ์เสียดทานสถิต \(\mu_s = 0.4\) (\(g=10\)) รถจะเลี้ยวได้หรือไม่?</p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>วิธีทำ:</strong> แรงสู่ศูนย์กลางที่ต้องการ = \( \frac{mv^2}{r} = \frac{1000 \times 400}{50} = 8000 \, N \)</p>
+                        <p>แรงเสียดทานสูงสุด = \( \mu_s N = 0.4 \times 1000 \times 10 = 4000 \, N \)</p>
+                        <p>ต้องการ 8000 N > มี 4000 N → <strong>รถจะไหลออกนอกโค้ง</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 9 ========== -->
+            
+
+<div class="slide" data-index="8">
+                <span class="slide-number">9 / 20</span>
+                <div class="slide-title">
+                    ทางโค้งเอียง (Banked Curve)
+                    <span class="sub">ใช้แรงตั้งฉากช่วยให้แรงสู่ศูนย์กลาง</span>
+                </div>
+                <div class="slide-body">
+                    <div class="slide-two-col">
+                        <div class="text-col">
+                            <ul>
+                        <li>เมื่อถนนเอียงมุม \(\theta\) แรงตั้งฉากมีส่วนประกอบในแนวนอนให้แรงสู่ศูนย์กลาง</li>
+                    </ul>
+                    <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        \( \tan\theta = \frac{v^2}{rg} \) (กรณีไม่มีแรงเสียดทาน)
+                     \]</div>
+                    <p>ถ้ามีเสียดทาน จะช่วยให้เลี้ยวได้เร็วขึ้นหรือช้าลง</p>
+                    <div class="highlight-box green">
+                        ✅ <strong>ตัวอย่าง:</strong> ถ้า \(v=20 \, m/s, r=50 \, m\) → \( \tan\theta = \frac{400}{500}=0.8 \) → \(\theta \approx 38.7^\circ\)
+                    </div>
+                </div>
+                        </div>
+                        <div class="img-col">
+                            <svg width="245" height="230" viewBox="0 0 245 230" xmlns="http://www.w3.org/2000/svg" style="border-radius:14px;background:#f8faff;border:1px solid #dde6ff;"><polygon points="30,180 215,180 215,100" fill="#cbd5e1"/><rect x="110" y="115" width="40" height="25" transform="rotate(-23, 130, 127)" fill="#3b82f6"/><line x1="130" y1="127" x2="105" y2="75" stroke="#059669" stroke-width="2"/><text x="95" y="70" font-family="Sarabun" font-size="11" font-weight="700" fill="#059669">N cosθ</text><line x1="130" y1="127" x2="175" y2="127" stroke="#ef4444" stroke-width="2"/><text x="180" y="132" font-family="Sarabun" font-size="11" font-weight="700" fill="#ef4444">F_c</text><text x="122" y="210" text-anchor="middle" font-family="Sarabun" font-size="11" font-weight="700" fill="#0f172a">ถนนยกเอียง: tanθ = v²/rg</text></svg>
+                            <p class="img-caption">ภาพประกอบที่ 2</p>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- ========== SLIDE 10 ========== -->
+            
+
+<div class="slide" data-index="9">
+                <span class="slide-number">10 / 20</span>
+                <div class="slide-title">
+                    การเคลื่อนที่ในแนวดิ่ง (Vertical Circle)
+                    <span class="sub">แรงโน้มถ่วงมีผลต่อแรงสู่ศูนย์กลาง</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li>ที่จุด <strong>ล่างสุด</strong>: \( T - mg = \frac{mv^2}{r} \) (เชือกดึงขึ้น, น้ำหนักลง)</li>
+                        <li>ที่จุด <strong>บนสุด</strong>: \( T + mg = \frac{mv^2}{r} \) (ทั้งเชือกและน้ำหนักชี้ลง)</li>
+                        <li>เงื่อนไขที่เชือกไม่หย่อน (\(T \ge 0\)): ที่จุดบนสุด \( v \ge \sqrt{rg} \)</li>
+                    </ul>
+                    <div class="highlight-box purple">
+                        🧠 <strong>จำ:</strong> ความเร็วที่จุดล่างจะมากกว่าจุดบน เนื่องจากพลังงานศักย์เปลี่ยนเป็นพลังงานจลน์
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 11 ========== -->
+            
+
+<div class="slide" data-index="10">
+                <span class="slide-number">11 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่าง: วงกลมแนวดิ่ง
+                    <span class="sub">หาความเร็วที่จุดบนสุดเพื่อไม่ให้เชือกหย่อน</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">วัตถุมวล 2 kg ผูกเชือกยาว 1 m หมุนในแนวตั้ง (\(g=10\)) จงหาความเร็วต่ำสุดที่จุดบนสุดที่เชือกยังตึง</p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>วิธีทำ:</strong> ที่จุดบน \( T + mg = \frac{mv^2}{r} \) ต้องการ \(T=0\) พอดี</p>
+                        <p>\( mg = \frac{mv^2}{r} \) → \( v = \sqrt{rg} = \sqrt{1 \times 10} = \mathbf{3.16 \, m/s} \)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 12 ========== -->
+            
+
+<div class="slide" data-index="11">
+                <span class="slide-number">12 / 20</span>
+                <div class="slide-title">
+                    ลูกตุ้มที่หมุน (Conical Pendulum)
+                    <span class="sub">การเคลื่อนที่เป็นวงกลมในแนวราบ</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li>ลูกตุ้มแกว่งเป็นรูปกรวย (เชือกทำมุม \(\theta\) กับแนวตั้ง)</li>
+                        <li>แรงตึงเชือก \(T\) มีส่วนประกอบในแนวดิ่งสมดุลกับ \(mg\): \( T\cos\theta = mg \)</li>
+                        <li>ส่วนประกอบในแนวราบ \( T\sin\theta = \frac{mv^2}{r} \) โดย \(r = L\sin\theta\)</li>
+                    </ul>
+                    <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        \( \tan\theta = \frac{v^2}{rg} \) (คล้ายทางโค้งเอียง)
+                     \]</div>
+                    <div class="highlight-box blue">
+                        💡 <strong>คาบ:</strong> \( T_p = 2\pi\sqrt{\frac{L\cos\theta}{g}} \) (สำหรับมุมเล็ก)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 13 ========== -->
+            
+
+<div class="slide" data-index="12">
+                <span class="slide-number">13 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่าง: ลูกตุ้มกรวย
+                    <span class="sub">คำนวณความเร็วเชิงมุม</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">เชือกยาว 1.5 m ผูกมวล 0.5 kg หมุนเป็นกรวย โดยเชือกทำมุม 30° กับแนวตั้ง (\(g=10\)) จงหาความเร็วเชิงมุม (\(\omega\))</p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>วิธีทำ:</strong> \( r = L\sin\theta = 1.5 \times 0.5 = 0.75 \, m \)</p>
+                        <p>\( \tan\theta = \frac{v^2}{rg} \) → \( \tan30° = \frac{(\omega r)^2}{r g} = \frac{\omega^2 r}{g} \)</p>
+                        <p>\( 0.577 = \frac{\omega^2 \times 0.75}{10} \) → \( \omega^2 = \frac{5.77}{0.75} \approx 7.69 \) → \( \omega \approx \mathbf{2.77 \, rad/s} \)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 14 ========== -->
+            
+
+<div class="slide" data-index="13">
+                <span class="slide-number">14 / 20</span>
+                <div class="slide-title">
+                    การเคลื่อนที่แบบวงกลมในชีวิตประจำวัน
+                    <span class="sub">ตัวอย่างที่พบเห็นได้</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li>🚗 รถเลี้ยวโค้ง – ใช้แรงเสียดทานหรือแรงจากถนนเอียง</li>
+                        <li>🎢 รถไฟเหาะตีลังกา – ใช้หลักการวงกลมแนวดิ่ง</li>
+                        <li>🌍 ดาวเทียมโคจร – แรงโน้มถ่วงเป็นแรงสู่ศูนย์กลาง</li>
+                        <li>🌀 เครื่องปั่นผ้า – แรงเหวี่ยง (ในกรอบอ้างอิง) ช่วยแยกน้ำ</li>
+                    </ul>
+                    <div class="highlight-box orange">
+                        ⚠️ <strong>ข้อควรรู้:</strong> แรงเหวี่ยงหนีศูนย์เป็น <strong>แรงเทียม</strong> ปรากฏในกรอบอ้างอิงที่ไม่เฉื่อย
+                        ในกรอบอ้างอิงเฉื่อยจะมีเพียงแรงสู่ศูนย์กลางเท่านั้น
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 15 ========== -->
+            
+
+<div class="slide" data-index="14">
+                <span class="slide-number">15 / 20</span>
+                <div class="slide-title">
+                    ความเร่งรวมในการเคลื่อนที่วงกลม
+                    <span class="sub">เมื่อความเร็วเชิงเส้นเปลี่ยนขนาด</span>
+                </div>
+                <div class="slide-body">
+                    <div class="slide-two-col">
+                        <div class="text-col">
+                            <ul>
+                        <li>ถ้าวัตถุเคลื่อนที่ด้วยอัตราเร็วไม่คงที่ จะมีทั้ง \(a_t\) (แนวสัมผัส) และ \(a_c\) (สู่ศูนย์กลาง)</li>
+                        <li>ความเร่งรวม \( \vec{a} = \vec{a}_t + \vec{a}_c \) (ตั้งฉากกัน)</li>
+                        <li>ขนาด: \( a = \sqrt{a_t^2 + a_c^2} \)</li>
+                    </ul>
+                    <div class="highlight-box purple">
+                        🧠 <strong>จำ:</strong> \( a_c \) เปลี่ยนทิศทางของความเร็ว, \( a_t \) เปลี่ยนขนาดของความเร็ว
+                    </div>
+                </div>
+                        </div>
+                        <div class="img-col">
+                            <svg width="245" height="230" viewBox="0 0 245 230" xmlns="http://www.w3.org/2000/svg" style="border-radius:14px;background:#fdf8ff;border:1px solid #e8d5ff;"><line x1="122" y1="20" x2="122" y2="180" stroke="#cbd5e1" stroke-dasharray="3,3"/><line x1="122" y1="20" x2="170" y2="140" stroke="#475569" stroke-width="2"/><circle cx="170" cy="140" r="12" fill="#8b5cf6"/><ellipse cx="122" cy="140" rx="48" ry="14" fill="none" stroke="#c084fc" stroke-dasharray="3,3"/><text x="122" y="208" text-anchor="middle" font-family="Sarabun" font-size="11" font-weight="700" fill="#6b21a8">ลูกตุ้มกรวย Conical Pendulum</text></svg>
+                            <p class="img-caption">ภาพประกอบที่ 3</p>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- ========== SLIDE 16 ========== -->
+            
+
+<div class="slide" data-index="15">
+                <span class="slide-number">16 / 20</span>
+                <div class="slide-title">
+                    สูตรสำคัญ (พกติดตัว)
+                    <span class="sub">สรุปหัวใจของบทนี้</span>
+                </div>
+                <div class="slide-body">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px;">
+                            <h4 style="color:#0f2b3d;">🔄 ความเร็วเชิงมุม</h4>
+                            <p style="font-size:17px;">\( \omega = \frac{2\pi}{T} = 2\pi f \)</p>
+                            <p style="font-size:17px;">\( v = r\omega \)</p>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px;">
+                            <h4 style="color:#0f2b3d;">📐 ความเร่ง & แรง</h4>
+                            <p style="font-size:17px;">\( a_c = \frac{v^2}{r} = \omega^2 r \)</p>
+                            <p style="font-size:17px;">\( F_c = \frac{mv^2}{r} = m\omega^2 r \)</p>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px; grid-column: span 2;">
+                            <h4 style="color:#0f2b3d;">🧪 วงกลมแนวดิ่ง</h4>
+                            <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between;">
+                                <span>ล่าง: \( T - mg = \frac{mv^2}{r} \)</span>
+                                <span>บน: \( T + mg = \frac{mv^2}{r} \)</span>
+                                <span>\( v_{\min} = \sqrt{rg} \) (บนสุด)</span>
+                            </div>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px; grid-column: span 2;">
+                            <h4 style="color:#0f2b3d;">⛰️ ทางโค้งเอียง / ลูกตุ้มกรวย</h4>
+                            <span>\( \tan\theta = \frac{v^2}{rg} \)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 17 ========== -->
+            
+
+<div class="slide" data-index="16">
+                <span class="slide-number">17 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่างเพิ่มเติม: ดาวเทียม
+                    <span class="sub">แรงโน้มถ่วงเป็นแรงสู่ศูนย์กลาง</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">ดาวเทียมโคจรรอบโลกด้วยรัศมี \(R\) และความเร็ว \(v\) จงหาความเร่งสู่ศูนย์กลางในรูปของ \(g\) และ \(R\) (ที่ผิวโลก \(g = GM/R^2\))</p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>แนวคิด:</strong> แรงโน้มถ่วง = \( \frac{GMm}{r^2} = \frac{mv^2}{r} \)</p>
+                        <p>\( a_c = \frac{GM}{r^2} = g \left(\frac{R}{r}\right)^2 \)</p>
+                        <p>ดังนั้น \( v = \sqrt{\frac{GM}{r}} = \sqrt{\frac{gR^2}{r}} \)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 18 ========== -->
+            
+
+<div class="slide" data-index="17">
+                <span class="slide-number">18 / 20</span>
+                <div class="slide-title">
+                    ข้อผิดพลาดที่พบบ่อย
+                    <span class="sub">ระวังให้ดี</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li>❌ <strong>ลืมว่าความเร็วเชิงมุมเท่ากันทุกจุด</strong> ในวัตถุชิ้นเดียวกัน</li>
+                        <li>❌ <strong>ใช้ \(a_c = v^2/r\) โดย \(v\) ไม่ใช่ความเร็วเชิงมุม</strong> ต้องระวังหน่วย</li>
+                        <li>❌ <strong>เข้าใจว่าแรงเหวี่ยงเป็นแรงจริง</strong> (มันคือแรงเทียม)</li>
+                        <li>❌ <strong>สับสนระหว่าง \(T\) (คาบ) กับ \(T\) (แรงตึง)</strong> ใช้ชื่อให้ชัดเจน</li>
+                        <li>❌ <strong>ลืมพิจารณาทิศทางของแรงในวงกลมแนวดิ่ง</strong> โดยเฉพาะที่จุดบนและล่าง</li>
+                    </ul>
+                    <div class="highlight-box pink" style="margin-top:12px;">
+                        💡 <strong>เคล็ดลับ:</strong> วาด FBD ทุกครั้ง และเลือกทิศทางเข้าสู่ศูนย์กลางเป็นบวก
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 19 ========== -->
+            
+
+<div class="slide" data-index="18">
+                <span class="slide-number">19 / 20</span>
+                <div class="slide-title">
+                    แบบฝึกหัดท้ายบท
+                    <span class="sub">ทดสอบความเข้าใจ</span>
+                </div>
+                <div class="slide-body">
+                    <ol style="font-size:19px; line-height:2.2;">
+                        <li><strong>ข้อ 1:</strong> ล้อจักรยานรัศมี 0.3 m หมุนด้วยความเร็วเชิงมุม 10 rad/s จงหาความเร็วเชิงเส้นที่ขอบล้อ</li>
+                        <li><strong>ข้อ 2:</strong> รถมวล 800 kg วิ่งโค้งรัศมี 40 m ด้วยความเร็ว 15 m/s ถ้า \(\mu_s = 0.3\) รถจะไถลหรือไม่?</li>
+                        <li><strong>ข้อ 3:</strong> ลูกตุ้มน้ำหนักห้อยเชือกยาว 0.8 m หมุนในแนวดิ่ง จงหาความเร็วต่ำสุดที่จุดบนสุด</li>
+                        <li><strong>ข้อ 4:</strong> ถนนโค้งเอียงมุม 20° รัศมี 50 m จงหาความเร็วที่ปลอดภัย (ไม่มีเสียดทาน)</li>
+                    </ol>
+                    <div class="highlight-box blue" style="margin-top:8px;">
+                        💡 ลองทำดู แล้วตรวจสอบกับเพื่อนหรือครู
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 20 ========== -->
+            
+
+<div class="slide" data-index="19">
+                <span class="slide-number">20 / 20</span>
+                <div class="slide-title">
+                    สรุป &amp; คำแนะนำ
+                    <span class="sub">สิ่งที่ควรจำจากบทนี้</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f0faf5; border-radius:18px; padding:18px 24px; border:1px solid #b0d8d0;">
+                        <p style="font-size:20px; font-weight:600;">📌 ใจความสำคัญ</p>
+                        <ul style="font-size:18px; line-height:1.9;">
+                            <li>✅ <strong>การเคลื่อนที่วงกลม</strong> มีความเร่งแม้อัตราเร็วคงที่ (เพราะทิศทางเปลี่ยน)</li>
+                            <li>✅ <strong>ความเร่งสู่ศูนย์กลาง</strong> มีทิศเข้าสู่ศูนย์กลาง เสมอ</li>
+                            <li>✅ <strong>แรงสู่ศูนย์กลาง</strong> คือแรงลัพธ์ที่ชี้เข้าสู่ศูนย์กลาง (ไม่ใช่แรงชนิดใหม่)</li>
+                            <li>✅ ในแนวราบ: แรงเสียดทานหรือแรงตั้งฉากให้แรงสู่ศูนย์กลาง</li>
+                            <li>✅ ในแนวดิ่ง: ต้องพิจารณาแรงโน้มถ่วงร่วมด้วย โดยเฉพาะที่จุดบนและล่าง</li>
+                            <li>✅ <strong>ทางโค้งเอียง</strong> และ <strong>ลูกตุ้มกรวย</strong> ใช้สมการ \(\tan\theta = v^2/(rg)\)</li>
+                        </ul>
+                    </div>
+                    <div style="margin-top:18px; background:#eef2fa; border-radius:16px; padding:14px 22px;">
+                        <p style="font-size:19px;">
+                            <strong>🌟 คำแนะนำ:</strong> ฝึกเขียน FBD และเลือกทิศทางให้ดี
+                            การเคลื่อนที่วงกลมเป็นพื้นฐานของกลศาสตร์ท้องฟ้าและวิศวกรรม
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end slide-container -->
+
+        <!-- ========== NAVIGATION ========== -->
+        <div class="nav-bar">
+            <button class="nav-btn" id="prevBtn" disabled>
+                ◀ ย้อนกลับ
+            </button>
+
+            <div class="dot-indicators" id="dotContainer"></div>
+
+            <button class="nav-btn primary" id="nextBtn">
+                ถัดไป ▶
+            </button>
+        </div>
+
+        <div class="nav-footer">
+            <a href="ch4.html" style="color:#8a94b0; font-size:14px; text-decoration:none;">◀ บทก่อนหน้า</a>
+            <span id="slideCounterDisplay">1 / 19</span>
+            <a href="ch6.html" style="color:#8a94b0; font-size:14px; text-decoration:none;">บทถัดไป ▶</a>
+        </div>
+    </div>
+
+    <script src="../js/slide-core.js"></script>
+</body>
+</html>

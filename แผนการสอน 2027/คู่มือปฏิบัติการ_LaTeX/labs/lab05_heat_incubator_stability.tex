@@ -1,0 +1,125 @@
+\cleardoublepage
+\phantomsection
+\begin{planbox}[แผนบริหารการสอนปฏิบัติการที่ 5\quad ความร้อนจำเพาะและเสถียรภาพตู้อบ Incubator (สัปดาห์ที่ 5)]
+\noindent\textbf{1. เวลาเรียนปฏิบัติการ}\quad 3 ชั่วโมง (180 นาที)\quad \textbf{ผลลัพธ์การเรียนรู้ที่ประเมิน}\quad CLO1, CLO2, CLO3, CLO4
+
+\noindent\textbf{2. วัตถุประสงค์เชิงพฤติกรรมประจำปฏิบัติการ}
+\begin{enumerate}
+    \item คำนวณปริมาณความร้อนที่ถ่ายโอนระหว่างของเหลวโดยใช้สมการ $Q = mc\Delta T$ และตรวจสอบสมดุลความร้อนในแคลอริมิเตอร์ได้ \textbf{(CLO1 เชื่อมโยง PLO2)}
+    \item ปฏิบัติการตรวจสอบความสม่ำเสมอของการกระจายอุณหภูมิภายในตู้อบเลี้ยงเชื้อ (Incubator $37.0\,^\circ\text{C}$) และเปรียบเทียบอัตราการถ่ายโอนความร้อนระหว่างอากาศกับอ่างน้ำอุ่น (Water Bath) ได้ \textbf{(CLO2, CLO3, CLO4 เชื่อมโยง PLO1, PLO3, PLO5, PLO6)}
+\end{enumerate}
+
+\noindent\textbf{3. แผนการจัดเวลาในคาบปฏิบัติการ 3 ชั่วโมง}
+\begin{itemize}
+    \item \textbf{ชั่วโมงที่ 1}\quad ทบทวนสมการความร้อนจำเพาะ $Q = mc\Delta T$ และหลักการนำและการพาความร้อน
+    \item \textbf{ชั่วโมงที่ 2}\quad ทดลองสมดุลความร้อนในแคลอริมิเตอร์ และวัดอุณหภูมิ 5 จุดภายในตู้อบ Incubator
+    \item \textbf{ชั่วโมงที่ 3}\quad คำนวณปริมาณความร้อนและอภิปรายแนวทางการจัดวางจานเพาะเชื้อในตู้อบให้ได้รับความร้อนสม่ำเสมอ
+\end{itemize}
+\end{planbox}
+\clearpage
+
+\chapter{ความจุความร้อนจำเพาะและเสถียรภาพอุณหภูมิตู้อบเลี้ยงเชื้อ}
+\index{แคลอริมิเตอร์}\index{สมดุลความร้อน}\index{ตู้อบเลี้ยงเชื้อ Incubator}\index{อ่างน้ำควบคุมอุณหภูมิ Water Bath}
+
+\section{หลักการทางฟิสิกส์และทฤษฎีเบื้องหลังการทดลอง}
+
+เมื่อนำของเหลวที่มีอุณหภูมิสูง ($T_{\text{hot}}$) มาผสมกับของเหลวที่มีอุณหภูมิต่ำ ($T_{\text{cold}}$) ภายในภาชนะหุ้มฉนวนที่เรียกว่า \textbf{แคลอริมิเตอร์} (\textbf{Calorimeter}) ความร้อนจะถ่ายโอนจากของเหลวร้อนไปยังของเหลวเย็นจนกระทั่งทั้งสองมีอุณหภูมิผสมสุดท้ายเท่ากัน ($T_{\text{mix}}$) ตามกฎการอนุรักษ์พลังงานความร้อน คือ $\text{ความร้อนที่น้ำร้อนคายออก } (Q_{\text{lost}}) = \text{ความร้อนที่น้ำเย็นรับเข้า } (Q_{\text{gained}})$
+
+ในห้องปฏิบัติการจุลชีววิทยา การควบคุมอุณหภูมิของ\textbf{ตู้อบเลี้ยงเชื้อ} (\textbf{Incubator}) ให้คงที่ที่ $37.0 \pm 0.5\,^\circ\text{C}$ มีความสำคัญอย่างยิ่งต่ออัตราการเจริญของแบคทีเรีย หากวางจานเพาะเชื้ออัดแน่นเกินไปจนขวางการพาความร้อนของลมหมุนเวียน หรือวางชิดขอบประตูที่มีการสูญเสียความร้อน จะทำให้อุณหภูมิจริงของจานเพาะเชื้อเบี่ยงเบนไปจากค่าที่ตั้งไว้
+
+\begin{conceptbox}[สมการปริมาณความร้อนและอุณหภูมิผสมตามทฤษฎี]
+\begin{enumerate}
+    \item \textbf{ปริมาณความร้อนที่ทำให้สารมวล $m$ เปลี่ยนอุณหภูมิไป $\Delta T$}\quad $Q = m c \Delta T\quad (\text{โดย } c_{\text{น้ำ}} = 4.184\text{ J/g}\cdot^\circ\text{C})$
+    \item \textbf{อุณหภูมิผสมทางทฤษฎีเมื่อผสมน้ำมวลเท่ากัน ($m_1 = m_2$)}\quad $T_{\text{theory}} = \dfrac{T_1 + T_2}{2}$
+\end{enumerate}
+\end{conceptbox}
+
+\begin{worked}[การคำนวณความร้อนและอุณหภูมิสมดุลของการผสมน้ำ]
+\textbf{โจทย์ตัวอย่าง}\quad ผสมน้ำเย็นมวล $100\text{ g}$ อุณหภูมิ $T_1 = 24.0\,^\circ\text{C}$ เข้ากับน้ำอุ่นมวล $100\text{ g}$ อุณหภูมิ $T_2 = 56.0\,^\circ\text{C}$ จงหาอุณหภูมิผสมตามทฤษฎี และปริมาณความร้อนที่น้ำเย็นได้รับเมื่ออุณหภูมิผสมจริงวัดได้ $39.0\,^\circ\text{C}$
+
+\textbf{วิธีคำนวณทีละขั้นตอน}
+\begin{enumerate}
+    \item \textbf{อุณหภูมิผสมทางทฤษฎี}\quad $T_{\text{theory}} = \dfrac{24.0 + 56.0}{2} = 40.0\,^\circ\text{C}$
+    \item \textbf{ความร้อนที่น้ำเย็นได้รับจริง}\quad $Q = m c (T_{\text{mix}} - T_1) = 100\text{ g} \times 4.184\text{ J/(g}\cdot^\circ\text{C)} \times (39.0 - 24.0)\,^\circ\text{C} = 6{,}276\text{ J}$
+\end{enumerate}
+\end{worked}
+
+\section{แผนภาพชุดอุปกรณ์การทดลองและรายการวัสดุ}
+
+\begin{figure}[H]
+\centering
+\resizebox{0.86\textwidth}{!}{%
+\begin{tikzpicture}[font=\sffamily, >=Stealth]
+    % Left: Calorimeter
+    \begin{scope}[shift={(0,0)}]
+        \draw[fill=boxBlueBg, draw=physRoyalBlue, line width=1.2pt, rounded corners=4pt] (0,0) rectangle (6.8,4.2);
+        \node[font=\bfseries\color{physRoyalBlue}] at (3.4,3.75) {(ก) ชุดแคลอริมิเตอร์ทดสอบสมดุลความร้อน};
+        \fill[physSlate!30, draw=charcoal, line width=1.2pt] (2.0,0.6) rectangle (4.8,3.0);
+        \fill[physCyan!30, draw=physRoyalBlue, line width=1.1pt] (2.3,0.8) rectangle (4.5,2.6);
+        \draw[crimsonAlert, line width=1.8pt] (3.4,1.2) -- (3.4,3.4);
+        \fill[crimsonAlert] (3.4,1.2) circle (3pt);
+        \node[right, font=\scriptsize\bfseries, color=crimsonAlert] at (3.5,3.2) {เทอร์โมมิเตอร์วัด $T_{\text{mix}}$};
+    \end{scope}
+
+    % Right: Incubator 3-Point Thermal Mapping
+    \begin{scope}[shift={(7.6,0)}]
+        \draw[fill=boxGreenBg, draw=bioEmerald, line width=1.2pt, rounded corners=4pt] (0,0) rectangle (6.8,4.2);
+        \node[font=\bfseries\color{bioEmerald!90!black}] at (3.4,3.75) {(ข) จุดตรวจสอบอุณหภูมิตู้อบ Incubator};
+        \fill[white, draw=charcoal, line width=1.4pt] (1.4,0.6) rectangle (5.4,3.3);
+        \draw[physSlate, dashed, line width=1.0pt] (1.4,1.5) -- (5.4,1.5);
+        \draw[physSlate, dashed, line width=1.0pt] (1.4,2.4) -- (5.4,2.4);
+        \fill[crimsonAlert] (2.2,2.85) circle (3.2pt) node[right, font=\scriptsize\bfseries] {จุดที่ 1 ชั้นบนด้านใน};
+        \fill[bioEmerald] (3.4,1.95) circle (3.2pt) node[right, font=\scriptsize\bfseries] {จุดที่ 2 ชั้นกลาง};
+        \fill[physAmber] (4.4,1.05) circle (3.2pt) node[left, font=\scriptsize\bfseries] {จุดที่ 3 ชั้นล่างใกล้ประตู};
+    \end{scope}
+\end{tikzpicture}%
+}
+\caption{ชุดแคลอริมิเตอร์และตำแหน่งการวางหัววัดตรวจสอบเสถียรภาพอุณหภูมิภายในตู้อบเลี้ยงเชื้อ}
+\end{figure}
+
+\begin{equipbox}[รายการอุปกรณ์สำหรับแต่ละกลุ่ม]
+\begin{itemize}
+    \item กระป๋องแคลอริมิเตอร์พร้อมฝาปิดและแท่งคน, กระบอกตวง $100\text{ mL}$, กาต้มน้ำอุ่น และเทอร์โมมิเตอร์ดิจิทัล 3 ชุด
+    \item ตู้อบเลี้ยงเชื้อจุลินทรีย์ (Incubator) ที่ตั้งอุณหภูมิไว้ที่ $37.0\,^\circ\text{C}$
+\end{itemize}
+\end{equipbox}
+
+\section{ขั้นตอนการปฏิบัติการทดลอง}
+\begin{enumerate}
+    \item \textbf{ตอนที่ 1 สมดุลความร้อนในแคลอริมิเตอร์}\quad ตวงน้ำอุณหภูมิห้องปริมาตร $100\text{ mL}$ ($m_1 = 100\text{ g}$) ใส่แคลอริมิเตอร์ วัดอุณหภูมิเริ่มต้น $T_1$ จากนั้นตวงน้ำอุ่นปริมาตร $100\text{ mL}$ ($m_2 = 100\text{ g}$) อุณหภูมิประมาณ $55\text{--}60\,^\circ\text{C}$ วัดค่า $T_2$ ที่แน่นอนแล้วเทผสมลงในแคลอริมิเตอร์ทันที ปิดฝาคนเบาๆ อ่านค่าอุณหภูมิผสมสูงสุดที่นิ่งแล้ว ($T_{\text{mix}}$)
+    \item \textbf{ตอนที่ 2 การตรวจสอบเสถียรภาพอุณหภูมิตู้อบ Incubator}\quad นำสายหัววัดเทอร์โมมิเตอร์ดิจิทัล 3 ชุดวางไว้ที่ชั้นบนด้านใน ชั้นกลาง และชั้นล่างใกล้ขอบประตูของตู้อบ ปิดประตูตู้อบไว้ 10 นาที อ่านค่าอุณหภูมิทุกๆ 3 นาที จำนวน 3 ครั้ง
+\end{enumerate}
+
+\section{ใบบันทึกผลการทดลองประจำกลุ่ม}
+
+\begin{worksheetbox}[ใบบันทึกผลการทดลองที่ 5\quad ความร้อนจำเพาะและเสถียรภาพอุณหภูมิตู้อบเลี้ยงเชื้อ]
+\noindent\textbf{กลุ่มปฏิบัติการที่} \dotfill \textbf{วันที่ทำการทดลอง} \dotfill\\[4pt]
+\noindent\textbf{ผลการทดลองตอนที่ 1}\quad $T_1 (\text{น้ำเย็น}) = $ \dotfill $^\circ\text{C}$,\quad $T_2 (\text{น้ำอุ่น}) = $ \dotfill $^\circ\text{C}$,\quad $T_{\text{mix}} (\text{วัดจริง}) = $ \dotfill $^\circ\text{C}$\\[4pt]
+อุณหภูมิผสมตามทฤษฎี $T_{\text{theory}} = (T_1 + T_2)/2 = $ \dotfill $^\circ\text{C}$,\quad ความร้อนที่น้ำเย็นรับเข้า $Q = mc(T_{\text{mix}}-T_1) = $ \dotfill $\text{J}$
+
+\vspace{6pt}
+\noindent\textbf{ตารางบันทึกผลตอนที่ 2 การกระจายอุณหภูมิภายในตู้อบ Incubator (ตั้งค่าหน้าจอที่ $37.0\,^\circ\text{C}$)}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X c c c c c}
+\toprule
+\textbf{ตำแหน่งวางหัววัดในตู้อบ} & \textbf{นาทีที่ 3} & \textbf{นาทีที่ 6} & \textbf{นาทีที่ 9} & \textbf{เฉลี่ย ($^\circ\text{C}$)} & \textbf{ผลต่างจาก $37\,^\circ\text{C}$} \\
+\midrule
+จุดที่ 1 ชั้นบนสุดด้านใน & ............ & ............ & ............ & ............ & \dotfill \\
+จุดที่ 2 ชั้นกลาง (จุดอ้างอิง) & ............ & ............ & ............ & ............ & \dotfill \\
+จุดที่ 3 ชั้นล่างใกล้ขอบประตู & ............ & ............ & ............ & ............ & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\noindent\textbf{สรุปและอภิปรายผลการทดลอง}\\[4pt]
+\dotfill\\[6pt]
+\dotfill
+\end{worksheetbox}
+
+\section*{คำถามท้ายปฏิบัติการที่ 5}
+\begin{enumerate}
+    \item เพราะเหตุใดอุณหภูมิผสมที่วัดได้จริง ($T_{\text{mix}}$) ในตอนที่ 1 จึงมักมีค่าต่ำกว่าอุณหภูมิผสมตามทฤษฎีเล็กน้อยเสมอ
+    \item จากผลการวัดในตอนที่ 2 บริเวณใดของตู้อบเลี้ยงเชื้อที่มีอุณหภูมิต่ำกว่าค่าที่ตั้งไว้มากที่สุด และนักศึกษาควรจัดวางจานเพาะเชื้ออย่างไรในการบ่มเชื้อจริง
+\end{enumerate}

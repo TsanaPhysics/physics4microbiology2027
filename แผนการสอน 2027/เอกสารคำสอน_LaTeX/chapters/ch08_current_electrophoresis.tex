@@ -1,0 +1,168 @@
+\cleardoublepage
+\phantomsection
+\begin{planbox}[แผนบริหารการสอนประจำบทที่ 8\quad ไฟฟ้ากระแส กฎของโอห์ม และอิเล็กโทรโฟรีซิส (สัปดาห์ที่ 9)]
+\noindent\textbf{1. หัวข้อเนื้อหาประจำบท (บรรยาย 2 ชั่วโมง และปฏิบัติการ 3 ชั่วโมง)}
+\begin{itemize}
+    \item 8.1 กระแสไฟฟ้า ความต่างศักย์ ความต้านทาน และกฎของโอห์ม ($V = IR$)
+    \item 8.2 กำลังไฟฟ้า ($P = VI$) ความร้อนจูลในสารละลายบัฟเฟอร์ และความปลอดภัยทางไฟฟ้าในห้องปฏิบัติการเปียก
+    \item 8.3 หลักการทางฟิสิกส์ของเจลอิเล็กโทรโฟรีซิส (Gel Electrophoresis) ในการแยกขนาดสายดีเอ็นเอและโปรตีนของจุลินทรีย์
+    \item 8.4 ปฏิบัติการที่ 8 การวัดค่าตามกฎของโอห์มและการทดลองจำลองการเคลื่อนที่ของโมเลกุลมีประจุในสนามไฟฟ้า
+\end{itemize}
+
+\noindent\textbf{2. วัตถุประสงค์เชิงพฤติกรรมและผลลัพธ์การเรียนรู้รายวิชา (CLOs ที่เชื่อมโยง PLOs)}
+\begin{enumerate}
+    \item ใช้สามเหลี่ยมสูตรกฎของโอห์ม ($V = IR$) และกำลังไฟฟ้า ($P = VI$) คำนวณหาปริมาณทางไฟฟ้าได้ถูกต้อง \textbf{(CLO1 เชื่อมโยง PLO2)}
+    \item อธิบายกลไกทางฟิสิกส์ของเครื่อง Gel Electrophoresis ได้ว่าทำไมต้องหยดตัวอย่าง DNA ฝั่งขั้วลบ (Cathode) เพื่อวิ่งไปหาขั้วบวก (Anode) และทำไมการเพิ่มความเข้มข้นของบัฟเฟอร์มากเกินไปจึงทำให้เจลร้อนจัดจนหลอมละลาย \textbf{(CLO1, CLO2 เชื่อมโยง PLO2, PLO3)}
+    \item ปฏิบัติการวัดค่าทางไฟฟ้าด้วยมัลติมิเตอร์อย่างปลอดภัยตามหลักจรรยาบรรณห้องปฏิบัติการ \textbf{(CLO3, CLO4 เชื่อมโยง PLO1, PLO5, PLO6)}
+\end{enumerate}
+
+\noindent\textbf{3. กิจกรรมการจัดการเรียนรู้เชิงรุก (Active Learning \& OBE)}
+\begin{itemize}
+    \item \textbf{Inquiry-Based Lab}\quad วิเคราะห์คำขวัญจำง่ายสำหรับการรันเจลดีเอ็นเอ ``\textbf{Run to Red}'' (ดีเอ็นเอมีประจุลบจึงวิ่งเข้าหาขั้วบวกสายสีแดงเสมอ)
+\end{itemize}
+
+\noindent\textbf{4. สื่อการเรียนรู้และแหล่งเรียนรู้}
+\begin{itemize}
+    \item เอกสารคำสอนบทที่ 8 แหล่งจ่ายไฟกระแสตรง มัลติมิเตอร์ดิจิทัล และชุดกล่อง Gel Electrophoresis
+\end{itemize}
+
+\noindent\textbf{5. การวัดและประเมินผลประจำบท}
+\begin{itemize}
+    \item ใบงานคำนวณกฎของโอห์มและกำลังไฟฟ้า \textbf{(CLO1, CLO2)}
+    \item การประเมินทักษะการใช้มัลติมิเตอร์และรายงานปฏิบัติการที่ 8 \textbf{(CLO3, CLO4)}
+\end{itemize}
+\end{planbox}
+\clearpage
+
+\chapter{ไฟฟ้ากระแส กฎของโอห์ม และอิเล็กโทรโฟรีซิส}
+\index{ไฟฟ้ากระแส}\index{กฎของโอห์ม}\index{เจลอิเล็กโทรโฟรีซิส}\index{การแยกดีเอ็นเอ}
+
+\section{กระแสไฟฟ้า ความต้านทาน และกฎของโอห์ม}
+
+เมื่อมี\textbf{ความต่างศักย์ไฟฟ้า} (\textbf{Voltage}, $V$ มีหน่วยเป็น\textbf{โวลต์} $\text{V}$) ตกคร่อมตัวนำไฟฟ้าหรือสารละลายอิเล็กโทรไลต์ จะเกิดการไหลของประจุไฟฟ้าซึ่งเรียกว่า \textbf{กระแสไฟฟ้า} (\textbf{Electric Current}, $I$ มีหน่วยเป็น\textbf{แอมแปร์} $\text{A}$ หรือมิลลิแอมแปร์ $\text{mA}$ โดย $1\text{ A} = 1{,}000\text{ mA}$) ปริมาณกระแสไฟฟ้าที่ไหลได้จะถูกจำกัดด้วย\textbf{ความต้านทานไฟฟ้า} (\textbf{Resistance}, $R$ มีหน่วยเป็น\textbf{โอห์ม} $\Omega$) ตาม\textbf{กฎของโอห์ม} (\textbf{Ohm's Law}) ในสมการที่ (8.1)
+
+\begin{equation}
+    V = I R \qquad \Longleftrightarrow \qquad I = \frac{V}{R} \qquad \Longleftrightarrow \qquad R = \frac{V}{I}
+\end{equation}
+
+เมื่อกระแสไฟฟ้าไหลผ่านตัวต้านทานหรือสารละลายบัฟเฟอร์ จะเกิดอัตราการสูญเสียพลังงานไฟฟ้าไปเป็นพลังงานความร้อน ซึ่งคำนวณได้จาก\textbf{กำลังไฟฟ้า} (\textbf{Electric Power}, $P$ มีหน่วยเป็น\textbf{วัตต์} $\text{W}$) ตามสมการที่ (8.2)
+
+\begin{equation}
+    P = V I = I^2 R
+\end{equation}
+
+\section{ฟิสิกส์ของเจลอิเล็กโทรโฟรีซิสในการแยกดีเอ็นเอของจุลินทรีย์}
+
+ในงานอณูจุลชีววิทยา (\textbf{Molecular Microbiology}) เมื่อเราเพิ่มปริมาณดีเอ็นเอของแบคทีเรียหรือไวรัสด้วยเทคนิค PCR แล้ว เราต้องตรวจสอบขนาดของสายดีเอ็นเอด้วยเครื่อง \textbf{เจลอิเล็กโทรโฟรีซิส} (\textbf{Agarose Gel Electrophoresis}) ซึ่งเป็นการบูรณาการฟิสิกส์ไฟฟ้าและแรงต้านความหนืดเข้าด้วยกันอย่างลงตัว ดังแสดงใน\mbox{ภาพที่} 8.1
+
+\begin{figure}[H]
+\centering
+\resizebox{0.88\textwidth}{!}{%
+\begin{tikzpicture}[font=\sffamily, >=Stealth]
+    % Gel Tank
+    \fill[boxBlueBg] (0,0) rectangle (14.2,4.4);
+    \draw[physRoyalBlue, line width=1.6pt, rounded corners=3pt] (0,0) rectangle (14.2,4.4);
+
+    % Cathode (- Black) on Left
+    \fill[charcoal] (0.5,0.4) rectangle (1.3,4.0);
+    \node[white, font=\large\bfseries] at (0.9,2.2) {$-$};
+    \node[above, font=\small\bfseries, color=charcoal] at (0.9,4.4) {ขั้วลบ (Cathode สีดำ)};
+
+    % Anode (+ Red) on Right
+    \fill[crimsonAlert] (12.9,0.4) rectangle (13.7,4.0);
+    \node[white, font=\large\bfseries] at (13.3,2.2) {$+$};
+    \node[above, font=\small\bfseries, color=crimsonAlert] at (13.3,4.4) {ขั้วบวก (Anode สีแดง)};
+
+    % Agarose Gel Slab
+    \fill[white, draw=physCyan, line width=1.4pt, rounded corners=2pt] (2.0,0.6) rectangle (12.2,3.8);
+    \node[font=\footnotesize\bfseries, color=physCyan] at (7.1,3.5) {แผ่นวุ้นอะกาโรส (Agarose Gel Sieve Matrix)};
+
+    % Sample Wells on Left (near Cathode -)
+    \foreach \y in {1.1, 2.0, 2.9} {
+        \fill[physRoyalBlue!30, draw=physRoyalBlue, line width=0.9pt] (2.5,\y) rectangle (2.9,\y+0.5);
+    }
+    \node[below, font=\scriptsize\bfseries, color=physRoyalBlue] at (2.7,0.6) {หลุมหยด DNA ($-$)};
+
+    % DNA Bands migrating toward +
+    % Large fragments (slow, stay near left)
+    \fill[labPurple] (4.8,1.15) rectangle (5.1,1.55);
+    \fill[labPurple] (4.8,2.05) rectangle (5.1,2.45);
+    \node[below, font=\scriptsize\bfseries, color=labPurple] at (5.0,1.05) {DNA ชิ้นใหญ่ (ติดตาข่ายวุ้น เคลื่อนช้า)};
+
+    % Medium fragments
+    \fill[bioEmerald] (7.6,1.15) rectangle (7.9,1.55);
+    \fill[bioEmerald] (7.6,2.95) rectangle (7.9,3.35);
+
+    % Small fragments (fast, near right +)
+    \fill[physAmber] (10.5,2.05) rectangle (10.8,2.45);
+    \fill[physAmber] (10.5,2.95) rectangle (10.8,3.35);
+    \node[below, font=\scriptsize\bfseries, color=physAmber!90!black] at (10.4,1.95) {DNA ชิ้นเล็ก (คล่องตัว วิ่งเร็วสุด)};
+
+    % Electric Force Arrow
+    \draw[->, line width=1.8pt, color=crimsonAlert] (3.3,2.7) -- node[above, font=\footnotesize\bfseries] {แรงทางไฟฟ้า $\vect{F}_e = q\vect{E}$ ดึง DNA ประจุลบมุ่งสู่ขั้วบวก (Run to Red)} (11.8,2.7);
+\end{tikzpicture}%
+}
+\caption{หลักการแยกขนาดสายดีเอ็นเอด้วยสนามไฟฟ้าในแผ่นวุ้นอะกาโรส}
+\end{figure}
+
+\begin{bioappbox}[3 กฎฟิสิกส์ที่ควบคุมการแยกดีเอ็นเอใน Gel Electrophoresis]
+\begin{enumerate}
+    \item \textbf{ทิศทางการเคลื่อนที่}\quad โครงสร้างแกนหลักของสายดีเอ็นเอมีหมู่ฟอสเฟต ($\text{PO}_4^{3-}$) จึงมีประจุสุทธิเป็นลบเสมอ ดังนั้นต้องวางหลุมหยดดีเอ็นเอไว้ฝั่ง\textbf{ขั้วลบ (สายสีดำ)} เพื่อให้แรงไฟฟ้าดึงดีเอ็นเอวิ่งไปหา\textbf{ขั้วบวก (สายสีแดง)} ตามหลักจำง่ายว่า \textbf{Run to Red}
+    \item \textbf{การแยกตามขนาดโมเลกุล}\quad แผ่นวุ้นอะกาโรสทำหน้าที่เหมือนตาข่ายกรองระดับโมเลกุล สายดีเอ็นเอที่มีขนาดสั้น (คู่เบสน้อย) จะเกิดแรงเสียดทานน้อยจึงวิ่งไปได้ไกลกว่าสายดีเอ็นเอขนาดยาว
+    \item \textbf{ทำไมห้ามใช้น้ำเปล่าแทนบัฟเฟอร์ TAE/TBE}\quad น้ำกลั่นบริสุทธิ์ไม่มีไอออนนำไฟฟ้า ($R$ สูงมาก กระแส $I \approx 0$) ดีเอ็นเอจึงไม่เคลื่อนที่ แต่ถ้าใช้บัฟเฟอร์ที่เข้มข้นเกินไป ความต้านทาน $R$ จะต่ำเกินไปทำให้กระแส $I$ พุ่งสูงและเกิดความร้อน $P = I^2R$ จนแผ่นวุ้นหลอมละลาย!
+\end{enumerate}
+\end{bioappbox}
+
+\begin{worked}[การคำนวณความต้านทานและกำลังความร้อนของชุด Gel Electrophoresis]
+\textbf{โจทย์ปัญหา}\quad ในการรันเจลอะกาโรสเพื่อตรวจสอบยีนของแบคทีเรีย นักศึกษาตั้งค่าแหล่งจ่ายไฟไว้ที่ความต่างศักย์ $V = 100\text{ V}$ และอ่านค่ากระแสไฟฟ้าบนหน้าจอได้ $I = 0.05\text{ A}$ ($50\text{ mA}$) จงคำนวณหา (ก) ความต้านทานไฟฟ้า ($R$) ของระบบเจลและบัฟเฟอร์ และ (ข) กำลังไฟฟ้า ($P$) ที่เปลี่ยนเป็นความร้อนในอ่างเจล
+
+\textbf{วิธีทำทีละขั้นตอนฉบับเข้าใจง่าย}
+\begin{enumerate}
+    \item \textbf{ขั้นที่ 1 หาความต้านทานจากสามเหลี่ยมกฎของโอห์ม ($R = V / I$)}
+    \[
+        R = \frac{100\text{ V}}{0.05\text{ A}} = 2{,}000\text{ }\Omega
+    \]
+    \item \textbf{ขั้นที่ 2 หากำลังไฟฟ้าจากสูตร $P = V \times I$}
+    \[
+        P = 100\text{ V} \times 0.05\text{ A} = 5.0\text{ W}
+    \]
+\end{enumerate}
+\textbf{คำตอบ}\quad ระบบเจลมีความต้านทานเท่ากับ $2{,}000\text{ }\Omega$ และเกิดกำลังความร้อนในอ่างบัฟเฟอร์เท่ากับ $5.0\text{ W}$
+\end{worked}
+
+\section{ปฏิบัติการประจำสัปดาห์ที่ 9}
+
+\begin{labbox}[ปฏิบัติการที่ 8\quad กฎของโอห์มและแบบจำลอง Gel Electrophoresis (3 ชั่วโมง)]
+\noindent\textbf{ผลลัพธ์การเรียนรู้ที่ประเมิน}\quad CLO1 (กฎของโอห์มและกำลังไฟฟ้า), CLO2 (อธิบายกลไก Gel Electrophoresis), CLO3 (ความปลอดภัยทางไฟฟ้า), CLO4 (รายงานกลุ่ม)
+
+\vspace{4pt}
+\noindent\textbf{1. วัสดุและอุปกรณ์}
+\begin{itemize}
+    \item แหล่งจ่ายไฟกระแสตรงปรับค่าได้, ตัวต้านทานมาตรฐาน, มัลติมิเตอร์ดิจิทัล และชุดกล่องจำลอง Gel Electrophoresis พร้อมแผ่นวุ้นอะกาโรสและสีมาตรฐานจำลองขนาดดีเอ็นเอ
+\end{itemize}
+
+\noindent\textbf{2. ขั้นตอนการทดลอง}
+\begin{enumerate}
+    \item \textbf{ตอนที่ 1 การตรวจสอบกฎของโอห์ม}\quad ต่อวงจรแหล่งจ่ายไฟเข้ากับตัวต้านทาน ปรับแรงดันไฟฟ้าเป็น $2\text{ V}, 4\text{ V}, 6\text{ V}$ และ $8\text{ V}$ วัดค่ากระแสไฟฟ้า $I$ คำนวณความต้านทาน $R = V/I$
+    \item \textbf{ตอนที่ 2 การแยกสีย้อมมาตรฐานด้วยสนามไฟฟ้าในแผ่นวุ้น}\quad ใช้ไมโครปิเปตหยดสารละลายสีผสมปริมาตร $15\text{ }\mu\text{L}$ ลงในหลุมวุ้นฝั่งขั้วลบ ปิดฝาครอบนิรภัย จ่ายแรงดันไฟฟ้า $100\text{ V}$ เป็นเวลา $20$ นาที บันทึกค่ากระแสไฟฟ้า ($\text{mA}$) และวัดระยะทางที่แถบสีแต่ละแถบเคลื่อนที่ไปหาขั้วบวก
+\end{enumerate}
+
+\noindent\textbf{3. ตารางบันทึกผลการทดลอง}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{c c c c >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{แรงดัน $V$ ($\text{V}$)} & \textbf{กระแส $I$ ($\text{A}$)} & \textbf{ความต้านทาน $R$ ($\Omega$)} & \textbf{กำลัง $P$ ($\text{W}$)} & \textbf{ระยะแถบสี ($\text{mm}$)} \\
+\midrule
+$50\text{ V}$ & ............ & ............ & ............ & ............ \\
+$100\text{ V}$ & ............ & ............ & ............ & ............ \\
+\bottomrule
+\end{tabularx}
+\end{center}
+\end{labbox}
+
+\section*{คำถามท้ายบทที่ 8 (ทบทวนแนวคิดและการคำนวณเบื้องต้น)}
+\begin{enumerate}
+    \item หากนักศึกษาเผลอเสียบสายไฟขั้วบวกและขั้วลบของกล่อง Gel Electrophoresis สลับด้านกัน จะเกิดอะไรขึ้นกับตัวอย่างดีเอ็นเอที่หยดไว้ในหลุมวุ้น
+    \item ตู้อบเลี้ยงเชื้อจุลินทรีย์ใช้กับไฟบ้านความต่างศักย์ $220\text{ V}$ และมีกระแสไฟฟ้าไหลผ่าน $2.5\text{ A}$ จงคำนวณหากำลังไฟฟ้าของตู้อบเครื่องนี้ในหน่วยวัตต์ ($\text{W}$)
+\end{enumerate}

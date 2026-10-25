@@ -1,0 +1,2509 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Generates the upgraded Ultra-Futuristic Hyper-Realistic 3D WebAR + ArUco + PWA Smartphone App
+for 4011111 Physics for Microbiology (IDs 0-11, 12 Chapters).
+"""
+import os
+
+TARGET_HTML = "/Applications/XAMPP/xamppfiles/htdocs/physics4microbioloy2027/แผนการสอน 2027/เอกสารคำสอน_3D_AR_ArUco/webar_aruco/ar_aruco_textbook.html"
+
+HTML_CONTENT = r"""<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#020617" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="PhysMicrobAR" />
+  <link rel="manifest" href="manifest.json" />
+  <title>3D WebAR ArUco Hyper-Realistic Lab — 4011111 ฟิสิกส์สำหรับจุลชีววิทยา (ID 0–11)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Prompt:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <style>
+    :root {
+      --cyan: #00f0ff;
+      --sky: #38bdf8;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --violet: #a855f7;
+      --bg-dark: #020617;
+      --glass-bg: rgba(4, 9, 24, 0.52);
+      --glass-border: rgba(0, 240, 255, 0.28);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      width: 100vw; height: 100vh; overflow: hidden;
+      background: var(--bg-dark); color: #f8fafc;
+      font-family: 'Sarabun', 'Prompt', sans-serif;
+    }
+
+    /* 1. Camera Feed Layer (Optical ArUco Tracking) */
+    #ar-video {
+      position: fixed; inset: 0; width: 100vw; height: 100vh;
+      object-fit: cover; z-index: 1; display: none; background: #000;
+    }
+
+    /* 2. Three.js 3D WebGL Viewport */
+    #canvas-container {
+      position: fixed; inset: 0; width: 100vw; height: 100vh;
+      z-index: 5; pointer-events: auto;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(14, 116, 144, 0.28) 0%, rgba(15, 23, 42, 0.85) 48%, #020617 92%);
+    }
+    body.ar-active, body.ar-active #canvas-container {
+      background: transparent !important;
+    }
+
+    /* Cyber Grid Vignette Overlay */
+    #cyber-fx-overlay {
+      position: fixed; inset: 0; z-index: 6; pointer-events: none;
+      background:
+        linear-gradient(rgba(0, 240, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.025) 1px, transparent 1px);
+      background-size: 42px 42px;
+      box-shadow: inset 0 0 90px rgba(2, 6, 23, 0.85);
+    }
+    body.ar-active #cyber-fx-overlay { opacity: 0.3; }
+
+    /* 3. Top Header HUD + Mode Switcher + Chapter / ArUco Quick Selector */
+    #top-hud {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+      background: rgba(3, 8, 22, 0.76);
+      backdrop-filter: blur(18px) saturate(180%); -webkit-backdrop-filter: blur(18px) saturate(180%);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 8px 14px 8px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+    }
+    .hud-row-top {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      margin-bottom: 6px; flex-wrap: wrap;
+    }
+    .brand-pill {
+      display: flex; align-items: center; gap: 9px;
+    }
+    .aruco-mini-preview {
+      width: 34px; height: 34px; border: 1.5px solid var(--cyan);
+      border-radius: 6px; background: #fff; padding: 2px;
+      display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(6, 1fr);
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.55); cursor: pointer;
+    }
+    .aruco-mini-cell { width: 100%; height: 100%; }
+    .brand-title {
+      font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 0.94rem; font-weight: 700;
+      color: #f8fafc; line-height: 1.15; letter-spacing: 0.2px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .hyper-tag {
+      font-size: 0.65rem; padding: 1px 6px; border-radius: 4px;
+      background: linear-gradient(135deg, #00f0ff, #10b981); color: #020617;
+      font-weight: 700; font-family: 'JetBrains Mono', monospace;
+    }
+    .brand-sub {
+      font-size: 0.72rem; color: var(--cyan); font-weight: 600;
+    }
+    .status-group {
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .status-badge {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 999px;
+      background: rgba(16, 185, 129, 0.16); color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      display: flex; align-items: center; gap: 5px;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+    }
+    .status-badge.scanning {
+      background: rgba(245, 158, 11, 0.2); color: #fbbf24;
+      border-color: rgba(245, 158, 11, 0.55);
+    }
+    .top-link-btn {
+      font-family: 'Prompt', sans-serif; font-size: 0.71rem; font-weight: 600;
+      padding: 4px 10px; border-radius: 999px; text-decoration: none;
+      background: rgba(56, 189, 248, 0.14); color: #bae6fd;
+      border: 1px solid rgba(56, 189, 248, 0.4); cursor: pointer;
+      display: inline-flex; align-items: center; gap: 4px;
+      transition: all 0.2s ease;
+    }
+    .top-link-btn:hover, .top-link-btn.active {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.28), rgba(16, 185, 129, 0.28));
+      color: #fff; border-color: var(--cyan);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+    }
+    .top-link-btn.phone-cta {
+      background: linear-gradient(135deg, #ec4899, #8b5cf6);
+      color: #fff; border-color: #f472b6;
+      box-shadow: 0 0 14px rgba(236, 72, 153, 0.45);
+    }
+
+    /* Chapter / ArUco ID Carousel */
+    #marker-carousel {
+      display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    #marker-carousel::-webkit-scrollbar { display: none; }
+    .marker-chip {
+      flex: 0 0 auto;
+      padding: 4px 11px; border-radius: 999px;
+      font-family: 'Prompt', sans-serif; font-size: 0.71rem; font-weight: 600;
+      background: rgba(15, 23, 42, 0.85); color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      cursor: pointer; transition: all 0.2s ease;
+    }
+    .marker-chip:hover { border-color: var(--sky); color: #fff; }
+    .marker-chip.active {
+      background: linear-gradient(135deg, #0284c7, #059669);
+      color: #ffffff; border-color: var(--cyan);
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.5);
+    }
+
+    /* 4. Optical ArUco Reticle & Laser Scanner Overlay */
+    #ar-reticle {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -52%);
+      width: min(68vw, 265px); height: min(68vw, 265px);
+      border: 2px dashed rgba(0, 240, 255, 0.85);
+      border-radius: 22px; z-index: 25;
+      pointer-events: auto; cursor: pointer; display: none;
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.28), inset 0 0 25px rgba(0, 240, 255, 0.16);
+      transition: all 0.25s ease;
+    }
+    #ar-reticle.locked {
+      border: 3px solid var(--emerald);
+      box-shadow: 0 0 45px rgba(16, 185, 129, 0.85), inset 0 0 28px rgba(16, 185, 129, 0.35);
+      transform: translate(-50%, -52%) scale(0.82);
+      opacity: 0.45;
+    }
+    .reticle-corner {
+      position: absolute; width: 28px; height: 28px; border-color: var(--cyan); border-style: solid;
+    }
+    .rc-tl { top: -3px; left: -3px; border-width: 4px 0 0 4px; border-top-left-radius: 14px; }
+    .rc-tr { top: -3px; right: -3px; border-width: 4px 4px 0 0; border-top-right-radius: 14px; }
+    .rc-bl { bottom: -3px; left: -3px; border-width: 0 0 4px 4px; border-bottom-left-radius: 14px; }
+    .rc-br { bottom: -3px; right: -3px; border-width: 0 4px 4px 0; border-bottom-right-radius: 14px; }
+    #ar-reticle.locked .reticle-corner { border-color: var(--emerald); }
+    .reticle-laser {
+      position: absolute; left: 6%; right: 6%; height: 2.5px;
+      background: linear-gradient(90deg, transparent, var(--cyan), #fff, var(--emerald), transparent);
+      box-shadow: 0 0 14px var(--cyan);
+      animation: laserSweep 1.8s infinite ease-in-out;
+    }
+    #ar-reticle.locked .reticle-laser { display: none; }
+    @keyframes laserSweep {
+      0% { top: 8%; opacity: 0.3; }
+      50% { top: 90%; opacity: 1; }
+      100% { top: 8%; opacity: 0.3; }
+    }
+    #reticle-signal-bar {
+      position: absolute; bottom: 10px; left: 14px; right: 14px; height: 6px;
+      background: rgba(15, 23, 42, 0.75); border-radius: 999px; overflow: hidden;
+      border: 1px solid rgba(0, 240, 255, 0.35);
+    }
+    #reticle-signal-fill {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, #00f0ff, #10b981);
+      transition: width 0.14s ease;
+    }
+    #reticle-caption {
+      position: absolute; bottom: -48px; left: -40px; right: -40px;
+      text-align: center; font-family: 'Prompt', sans-serif;
+      font-size: 0.75rem; font-weight: 600; color: #f8fafc;
+      background: rgba(3, 8, 22, 0.9); padding: 6px 12px;
+      border-radius: 999px; border: 1px solid var(--glass-border);
+    }
+    #sim-lock-btn {
+      position: fixed; bottom: 92px; left: 50%; transform: translateX(-50%);
+      z-index: 35; display: none;
+      font-family: 'Prompt', sans-serif; font-size: 0.78rem; font-weight: 700;
+      padding: 8px 18px; border-radius: 999px;
+      background: linear-gradient(135deg, #10b981, #059669); color: #022c22;
+      border: 1px solid #a7f3d0; cursor: pointer;
+      box-shadow: 0 6px 24px rgba(16, 185, 129, 0.55);
+    }
+
+    /* 5. Ultra-Translucent Side Drawers (DATA Left & CTRL Right) */
+    .side-drawer {
+      position: fixed; top: 88px; width: 292px; max-width: 84vw;
+      max-height: calc(100vh - 174px); overflow-y: auto;
+      background: var(--glass-bg);
+      backdrop-filter: blur(18px) saturate(180%); -webkit-backdrop-filter: blur(18px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px; padding: 12px 14px; z-index: 30;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+    }
+    .side-drawer::-webkit-scrollbar { width: 4px; }
+    .side-drawer::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.35); border-radius: 4px; }
+    #drawer-data { left: 12px; }
+    #drawer-data.closed { transform: translateX(-330px); opacity: 0; pointer-events: none; }
+    #drawer-ctrl { right: 12px; }
+    #drawer-ctrl.closed { transform: translateX(330px); opacity: 0; pointer-events: none; }
+
+    .drawer-header {
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+      padding-bottom: 6px; margin-bottom: 8px;
+    }
+    .drawer-title {
+      font-family: 'Chakra Petch', 'Prompt', sans-serif; font-size: 0.85rem; font-weight: 700;
+      color: var(--cyan); display: flex; align-items: center; gap: 5px;
+    }
+    .drawer-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.66rem;
+      color: #a7f3d0; background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 2px 7px; border-radius: 6px;
+    }
+    .model-name-th {
+      font-family: 'Prompt', sans-serif; font-size: 0.88rem; font-weight: 700;
+      color: #f8fafc; margin-bottom: 3px; line-height: 1.3;
+    }
+    .model-desc-th {
+      font-size: 0.75rem; color: #cbd5e1; line-height: 1.42; margin-bottom: 8px;
+    }
+    .formula-pill {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.73rem; font-weight: 700;
+      background: rgba(15, 23, 42, 0.88); color: #fde047;
+      border-left: 3px solid var(--amber); padding: 6px 9px; border-radius: 6px;
+      margin-bottom: 8px; word-break: break-word;
+    }
+    .telemetry-grid {
+      display: grid; grid-template-columns: 1fr; gap: 5px; margin-bottom: 9px;
+    }
+    .tele-item {
+      background: rgba(15, 23, 42, 0.72); border: 1px solid rgba(56, 189, 248, 0.18);
+      border-radius: 8px; padding: 5px 9px;
+      display: flex; justify-content: space-between; align-items: center; gap: 6px;
+    }
+    .tele-label { font-size: 0.72rem; color: #94a3b8; }
+    .tele-val { font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; font-weight: 700; color: var(--cyan); text-align: right; }
+
+    /* Live Physics Oscilloscope Box */
+    .scope-box {
+      background: rgba(2, 6, 23, 0.88);
+      border: 1px solid rgba(0, 240, 255, 0.28);
+      border-radius: 10px; padding: 6px;
+    }
+    .scope-header {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+      color: #34d399; margin-bottom: 4px;
+    }
+    #live-scope-canvas {
+      width: 100%; height: 92px; display: block; border-radius: 6px;
+      background: radial-gradient(circle at center, #08142c 0%, #020617 100%);
+    }
+
+    /* Control Sliders */
+    .ctrl-group { margin-bottom: 10px; }
+    .ctrl-label-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.75rem; margin-bottom: 4px;
+    }
+    .ctrl-name { color: #e2e8f0; font-weight: 600; }
+    .ctrl-val { font-family: 'JetBrains Mono', monospace; color: #34d399; font-weight: 700; }
+    input[type="range"] {
+      width: 100%; accent-color: var(--cyan); cursor: pointer; height: 5px;
+    }
+    .preset-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px;
+    }
+    .preset-btn {
+      padding: 6px 8px; border-radius: 8px;
+      font-family: 'Prompt', sans-serif; font-size: 0.71rem; font-weight: 600;
+      background: rgba(56, 189, 248, 0.14); color: #bae6fd;
+      border: 1px solid rgba(56, 189, 248, 0.35); cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .preset-btn:hover, .preset-btn.active {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.3), rgba(16, 185, 129, 0.3));
+      color: #fff; border-color: var(--cyan);
+    }
+
+    /* AI Voice Narrator Box inside CTRL drawer */
+    .ai-copilot-card {
+      margin-top: 10px; padding: 9px 10px; border-radius: 12px;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 27, 75, 0.75));
+      border: 1px solid rgba(168, 85, 247, 0.45);
+    }
+    .ai-copilot-top {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;
+    }
+    .ai-copilot-name {
+      font-family: 'Chakra Petch', sans-serif; font-size: 0.76rem; font-weight: 700;
+      color: #e9d5ff; display: flex; align-items: center; gap: 6px;
+    }
+    .ai-wave {
+      display: inline-flex; align-items: flex-end; gap: 2px; height: 12px;
+    }
+    .ai-wave span {
+      width: 2.5px; height: 3px; background: var(--cyan); border-radius: 1px;
+    }
+    .ai-wave.speaking span:nth-child(1) { animation: waveBar 0.4s infinite ease-in-out; }
+    .ai-wave.speaking span:nth-child(2) { animation: waveBar 0.55s infinite ease-in-out 0.1s; }
+    .ai-wave.speaking span:nth-child(3) { animation: waveBar 0.45s infinite ease-in-out 0.2s; }
+    @keyframes waveBar { 0%, 100% { height: 3px; } 50% { height: 12px; } }
+
+    /* 6. Bangchak-Style Curved Bottom Bar & Center Jewel Button */
+    #bottom-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 76px;
+      z-index: 45; pointer-events: none;
+      display: flex; align-items: flex-end; justify-content: center;
+    }
+    .bar-bg-svg {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 64px;
+      z-index: 1; pointer-events: auto;
+      filter: drop-shadow(0 -6px 20px rgba(0, 240, 255, 0.25));
+    }
+    .bar-items {
+      position: relative; z-index: 2; width: 100%; max-width: 580px; height: 64px;
+      display: grid; grid-template-columns: 1fr 1fr 90px 1fr 1fr;
+      align-items: center; padding: 0 8px; pointer-events: auto;
+    }
+    .nav-btn {
+      background: none; border: none; color: #94a3b8;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 2px; cursor: pointer; font-family: 'Prompt', sans-serif;
+      font-size: 0.67rem; font-weight: 600; transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .nav-btn.active, .nav-btn:hover { color: var(--cyan); transform: translateY(-2px); }
+    .nav-icon { font-size: 1.15rem; line-height: 1; }
+
+    /* Center Jewel AR Button */
+    .jewel-wrap {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transform: translateY(-18px);
+    }
+    #btn-ar-jewel {
+      width: 60px; height: 60px; border-radius: 50%;
+      border: 3px solid #a7f3d0;
+      background: radial-gradient(circle at 30% 25%, #34d399, #059669 60%, #065f46 100%);
+      color: #ffffff; font-size: 1.45rem; cursor: pointer;
+      box-shadow: 0 6px 24px rgba(16, 185, 129, 0.65), inset 0 2px 6px rgba(255, 255, 255, 0.45);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.25s ease;
+    }
+    #btn-ar-jewel.ar-on {
+      background: radial-gradient(circle at 30% 25%, #00f0ff, #0284c7 60%, #1e3a8a 100%);
+      border-color: #bae6fd;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.9), inset 0 2px 6px rgba(255, 255, 255, 0.5);
+    }
+    .jewel-label {
+      font-family: 'Prompt', sans-serif; font-size: 0.65rem; font-weight: 700;
+      color: #a7f3d0; margin-top: 3px; text-shadow: 0 1px 4px #000;
+    }
+
+    /* 7. Smartphone App & GitHub Guide Modal */
+    #phone-modal {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(2, 6, 23, 0.82);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      display: none; align-items: center; justify-content: center; padding: 16px;
+    }
+    #phone-modal.open { display: flex; }
+    .modal-card {
+      width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto;
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(3, 7, 18, 0.98));
+      border: 1.5px solid var(--cyan); border-radius: 22px;
+      padding: 22px 24px; color: #f8fafc;
+      box-shadow: 0 20px 60px rgba(0, 240, 255, 0.25);
+    }
+    .modal-head {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.25); padding-bottom: 12px; margin-bottom: 14px;
+    }
+    .modal-head h2 {
+      font-family: 'Prompt', sans-serif; font-size: 1.15rem; color: var(--cyan);
+    }
+    .modal-close {
+      background: rgba(244, 63, 94, 0.2); color: #fda4af; border: 1px solid #f43f5e;
+      border-radius: 8px; padding: 4px 10px; cursor: pointer; font-weight: 700;
+    }
+    .guide-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;
+    }
+    .guide-step {
+      background: rgba(30, 41, 59, 0.65); border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 14px; padding: 12px;
+    }
+    .guide-step h3 {
+      font-family: 'Prompt', sans-serif; font-size: 0.86rem; color: #34d399; margin-bottom: 6px;
+    }
+    .guide-step p, .guide-step li {
+      font-size: 0.78rem; color: #e2e8f0; line-height: 1.5;
+    }
+    .guide-step ul { padding-left: 16px; }
+    .url-copy-box {
+      background: #020617; border: 1px solid var(--sky); border-radius: 10px;
+      padding: 8px 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem;
+      color: #fde047; word-break: break-all; margin: 8px 0;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    }
+
+    @media (max-width: 720px) {
+      .side-drawer { width: 252px; top: 92px; padding: 10px 11px; }
+      .brand-title { font-size: 0.8rem; }
+      .guide-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Live WebRTC Video Feed for Optical ArUco Marker Tracking -->
+  <video id="ar-video" autoplay playsinline webkit-playsinline muted></video>
+  <canvas id="cv-canvas" width="160" height="160" style="display:none;"></canvas>
+
+  <!-- 2. Three.js 3D Viewport + Cyber Grid FX -->
+  <div id="canvas-container"></div>
+  <div id="cyber-fx-overlay"></div>
+
+  <!-- 3. Top Header HUD & 12-Chapter ArUco Selector -->
+  <header id="top-hud">
+    <div class="hud-row-top">
+      <div class="brand-pill">
+        <div id="aruco-mini-box" class="aruco-mini-preview" onclick="openPhoneGuide()" title="คลิกเพื่อดูวิธีส่อง AR บนสมาร์ทโฟน"></div>
+        <div>
+          <div class="brand-title">
+            <span>4011111 ฟิสิกส์สำหรับจุลชีววิทยา</span>
+            <span class="hyper-tag">HYPER-3D WebAR</span>
+          </div>
+          <div class="brand-sub" id="hud-chapter-sub">ArUco ID 0 (DICT_4X4_50) — บทที่ 1 ระบบหน่วยและการวัดในโลกจุลทรรศน์</div>
+        </div>
+      </div>
+      <div class="status-group">
+        <div id="tracking-badge" class="status-badge">● HYPER-3D STUDIO (ID 0)</div>
+        <button class="top-link-btn phone-cta" onclick="openPhoneGuide()">📱 แอปมือถือ & วิธีใช้ผ่าน GitHub</button>
+        <button class="top-link-btn" id="btn-xray-top" onclick="toggleExplodedView()">🔍 แยกชิ้นส่วน X-Ray</button>
+        <button class="top-link-btn active" id="btn-labels-top" onclick="toggle3DLabels()">🏷️ ป้าย 3D</button>
+        <a href="aruco_marker_sheet.html" target="_blank" class="top-link-btn">🖨️ มาร์กเกอร์ ID 0–11</a>
+        <a href="../06_เอกสารคำสอน_3D_AR_ArUco_4011111_ฟิสิกส์สำหรับจุลชีววิทยา_พร้อมปก.pdf" target="_blank" class="top-link-btn">📘 PDF หนังสือ AR</a>
+      </div>
+    </div>
+    <div id="marker-carousel"></div>
+  </header>
+
+  <!-- 4. Optical ArUco Reticle (Visible in AR Camera Mode) -->
+  <div id="ar-reticle" onclick="handleReticleTap()" title="แตะที่กรอบเล็งเพื่อล็อกหรือสแกนใหม่">
+    <div class="reticle-corner rc-tl"></div>
+    <div class="reticle-corner rc-tr"></div>
+    <div class="reticle-corner rc-bl"></div>
+    <div class="reticle-corner rc-br"></div>
+    <div class="reticle-laser"></div>
+    <div id="reticle-signal-bar"><div id="reticle-signal-fill"></div></div>
+    <div id="reticle-caption">ส่องกรอบเล็งไปที่มาร์กเกอร์บนจอคอม/กระดาษ (หรือแตะกรอบเพื่อล็อกทันที)</div>
+  </div>
+  <button id="sim-lock-btn" onclick="simulateMarkerLock()">🎯 แตะเพื่อแสดงโมเดล 3D ทันที / สแกนใหม่</button>
+
+  <!-- 5. Left Drawer: DATA (Physics Equations, Live Telemetry & Real-time Oscilloscope) -->
+  <aside id="drawer-data" class="side-drawer">
+    <div class="drawer-header">
+      <span class="drawer-title">📊 ข้อมูลฟิสิกส์จุลชีววิทยา (DATA)</span>
+      <span id="data-aruco-tag" class="drawer-tag">ArUco ID 0</span>
+    </div>
+    <div id="data-model-title" class="model-name-th">ไมโครปิเปต P1000 และการเจือจางเชื้อ 3 มิติ</div>
+    <div id="data-model-desc" class="model-desc-th">จำลองกลไกลูกสูบไมโครปิเปต 2 จังหวะ และการเจือจางเชื้อแบคทีเรียแบบลำดับส่วน 10 เท่า</div>
+    <div id="data-formula" class="formula-pill">CFU/mL = N_colonies / (DF × V_plated)</div>
+    <div id="telemetry-list" class="telemetry-grid"></div>
+
+    <!-- Real-Time Scientific Oscilloscope / Plotter -->
+    <div class="scope-box">
+      <div class="scope-header">
+        <span id="scope-title">📈 LIVE GRAPH: SERIAL DILUTION</span>
+        <span>60 FPS</span>
+      </div>
+      <canvas id="live-scope-canvas" width="250" height="92"></canvas>
+    </div>
+  </aside>
+
+  <!-- 6. Right Drawer: CTRL (Interactive 3D Parameter Sliders + AI Voice Copilot) -->
+  <aside id="drawer-ctrl" class="side-drawer">
+    <div class="drawer-header">
+      <span class="drawer-title">🎛️ ปรับตัวแปร 3 มิติ (CTRL)</span>
+      <span class="drawer-tag">PBR + HDR</span>
+    </div>
+    <div id="ctrl-sliders-box"></div>
+    <div class="preset-row">
+      <button class="preset-btn" onclick="resetCurrentParams()">🔄 ค่ามาตรฐาน</button>
+      <button class="preset-btn active" id="btn-autorotate" onclick="toggleAutoRotate()">🌐 หมุนอัตโนมัติ</button>
+      <button class="preset-btn" id="btn-exploded" onclick="toggleExplodedView()">🔍 แยกชิ้นส่วน 3D</button>
+      <button class="preset-btn" id="btn-hand-sim" onclick="toggleHandSimMode()">🖐️ ทดสอบมือ AI</button>
+    </div>
+
+    <!-- AI Voice Narrator (Mr. Deep_xAI) -->
+    <div class="ai-copilot-card">
+      <div class="ai-copilot-top">
+        <div class="ai-copilot-name">
+          <span>🤖 AI บรรยายฟิสิกส์จุลชีววิทยา</span>
+          <div id="ai-wave-ind" class="ai-wave"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+      <div class="preset-row" style="margin-top:4px;">
+        <button class="preset-btn" onclick="speakCurrentChapter()">🔊 ฟังคำอธิบาย 3D</button>
+        <button class="preset-btn" onclick="stopAISpeech()">⏹️ หยุดเสียง</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 7. Bangchak-Style Curved Bottom Bar with Center AR Jewel Button -->
+  <nav id="bottom-bar">
+    <svg class="bar-bg-svg" viewBox="0 0 500 64" preserveAspectRatio="none">
+      <path d="M0,14 L185,14 C205,14 214,38 250,38 C286,38 295,14 315,14 L500,14 L500,64 L0,64 Z"
+            fill="rgba(5, 11, 26, 0.94)" stroke="rgba(0, 240, 255, 0.4)" stroke-width="1.5"/>
+    </svg>
+    <div class="bar-items">
+      <button class="nav-btn active" id="nav-data" onclick="toggleDrawer('data')">
+        <span class="nav-icon">📊</span><span>DATA</span>
+      </button>
+      <button class="nav-btn" id="nav-gyro" onclick="enableGyroscope()">
+        <span class="nav-icon">🧭</span><span>GYRO</span>
+      </button>
+      <div class="jewel-wrap">
+        <button id="btn-ar-jewel" onclick="toggleARCameraMode()" title="สลับโหมดกล้องส่องมาร์กเกอร์ ArUco AR">📷</button>
+        <span class="jewel-label" id="jewel-text">ส่อง AR</span>
+      </div>
+      <button class="nav-btn" id="nav-voice" onclick="speakCurrentChapter()">
+        <span class="nav-icon">🔊</span><span>AI เสียง</span>
+      </button>
+      <button class="nav-btn active" id="nav-ctrl" onclick="toggleDrawer('ctrl')">
+        <span class="nav-icon">🎛️</span><span>CTRL</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- 8. Smartphone PWA App & GitHub Pages Usage Guide Modal -->
+  <div id="phone-modal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2>📱 วิธีใช้งาน Web App & แอปสมาร์ทโฟน 3D AR ผ่าน GitHub Pages</h2>
+        <button class="modal-close" onclick="closePhoneGuide()">✕ ปิด</button>
+      </div>
+
+      <p style="font-size:0.82rem; color:#cbd5e1; margin-bottom:10px;">
+        ระบบนี้พัฒนาเป็นทั้ง <strong>Web App (เปิดผ่านเบราว์เซอร์ได้ทันที)</strong> และ <strong>Smartphone PWA App (ติดตั้งลงหน้าจอมือถือ iOS / Android ได้โดยไม่ต้องผ่าน App Store)</strong> ทำงานผ่าน HTTPS บน GitHub Pages 100%
+      </p>
+
+      <div class="url-copy-box">
+        <span id="gh-ar-url">https://tsanaphysics.github.io/physics4microbiology2027/ar.html</span>
+        <button class="preset-btn" onclick="copyArUrl()">📋 คัดลอกลิงก์</button>
+      </div>
+
+      <div class="guide-grid">
+        <div class="guide-step">
+          <h3>1️⃣ เปิดใช้งานผ่าน GitHub Pages (HTTPS)</h3>
+          <ul>
+            <li>สแกน <strong>QR Code</strong> บนหน้าเอกสารคำสอนแต่ละบท หรือเข้าลิงก์ <code>ar.html</code> ด้านบนด้วย Safari (iPhone/iPad) หรือ Chrome (Android)</li>
+            <li>หากเปิดครั้งแรกแล้วยังไม่ขึ้น ให้ไปที่ GitHub Repo → <strong>Settings → Pages</strong> → เลือก Branch <code>main</code> / <code>/(root)</code> แล้วกด Save</li>
+          </ul>
+        </div>
+        <div class="guide-step">
+          <h3>2️⃣ ส่องมาร์กเกอร์ ArUco ในหนังสือเรียน</h3>
+          <ul>
+            <li>กดปุ่มอัญมณีสีเขียวตรงกลางด้านล่าง <strong>📷 ส่อง AR</strong> เพื่อเปิดกล้องหลัง</li>
+            <li>นำกรอบเล็งเลเซอร์ส่องไปที่ <strong>ArUco Marker (ID 0–11)</strong> ในหนังสือ หรือพิมพ์จากหน้า <em>แผ่นมาร์กเกอร์</em></li>
+            <li>เมื่อตรวจพบมาร์กเกอร์ โมเดล 3D จะลอยขึ้นมาพร้อมเสียงสัญญาณล็อกเป้า!</li>
+          </ul>
+        </div>
+        <div class="guide-step">
+          <h3>3️⃣ ติดตั้งเป็นแอปบนสมาร์ทโฟน (PWA)</h3>
+          <ul>
+            <li><strong>iPhone / iPad (Safari):</strong> แตะปุ่ม <em>แชร์ (Share)</em> ด้านล่าง → เลือก <strong>"เพิ่มไปยังหน้าจอโฮม (Add to Home Screen)"</strong></li>
+            <li><strong>Android (Chrome):</strong> แตะปุ่มด้านล่างนี้ หรือเมนู ⋮ มุมขวาบน → เลือก <strong>"ติดตั้งแอป (Install App)"</strong></li>
+          </ul>
+          <button id="btn-pwa-install" class="preset-btn active" style="width:100%; margin-top:8px;" onclick="triggerPWAInstall()">
+            📲 ติดตั้งแอปสมาร์ทโฟน (Install AR App)
+          </button>
+        </div>
+        <div class="guide-step">
+          <h3>4️⃣ โหมดควบคุมสุดล้ำ 4 รูปแบบ</h3>
+          <ul>
+            <li><strong>หมุน/ซูม 360°:</strong> ใช้นิ้วลากหมุนและถ่างสองนิ้วซูมดูรายละเอียด</li>
+            <li><strong>🔍 แยกชิ้นส่วน X-Ray:</strong> กดเพื่อแยกชิ้นส่วนภายในเครื่องมือวิทยาศาสตร์</li>
+            <li><strong>🧭 GYRO & 🖐️ มือ AI:</strong> เอียงมือถือเพื่อเปลี่ยนมุมมองตามจริง หรือทดสอบท่าทางมือ AI</li>
+            <li><strong>🔊 AI เสียงบรรยาย:</strong> กดฟังเสียงอธิบายหลักฟิสิกส์และจุลชีววิทยาภาษาไทย</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. OFFICIAL ARUCO DICT_4X4_50 BIT MATRICES (IDs 0 to 11) & 12 CHAPTERS
+    // =========================================================================
+    const ARUCO_DICT_4X4 = {
+      0:  [[1,0,1,1], [0,1,0,1], [0,0,1,1], [0,0,1,0]],
+      1:  [[0,0,0,0], [1,1,1,1], [1,0,0,1], [1,0,1,0]],
+      2:  [[0,0,1,1], [0,0,1,1], [0,1,0,0], [1,1,0,1]],
+      3:  [[1,0,0,1], [1,0,0,1], [0,1,0,0], [0,1,1,0]],
+      4:  [[0,1,0,1], [0,1,1,0], [1,0,0,1], [1,1,0,0]],
+      5:  [[1,1,0,1], [0,0,0,0], [0,1,1,1], [0,1,1,0]],
+      6:  [[0,1,1,1], [1,0,1,1], [0,0,0,0], [0,0,1,1]],
+      7:  [[0,0,1,0], [1,0,0,0], [1,1,1,0], [0,1,0,1]],
+      8:  [[1,1,1,0], [1,1,0,0], [0,0,1,0], [1,0,0,1]],
+      9:  [[0,1,0,0], [1,1,1,0], [1,0,1,1], [0,0,1,0]],
+      10: [[1,0,1,0], [0,0,1,0], [1,1,0,1], [0,1,1,0]],
+      11: [[1,1,0,0], [0,1,0,1], [0,0,0,1], [1,1,1,0]]
+    };
+
+    const CHAPTER_MODELS = [
+      {
+        id: 0, ch: 1,
+        short: "ID 0 • บทที่ 1 ไมโครปิเปต",
+        title: "ไมโครปิเปต P1000 และการเจือจางเชื้อแบบลำดับส่วน 3 มิติ",
+        sub: "ArUco ID 0 (DICT_4X4_50) — บทที่ 1 ระบบหน่วยและการวัดในโลกจุลทรรศน์",
+        desc: "จำลองกลไกลูกสูบไมโครปิเปต P1000 พร้อมหน้าปัดดิจิทัล จังหวะดูด-ปล่อยสารละลาย และหลอดเจือจางเชื้อแบคทีเรีย 10⁻¹ ถึง 10⁻⁶",
+        formula: "CFU/mL = N_colonies / (10^(-n) × V_mL)",
+        voice: "บทที่ 1 ระบบหน่วยและการวัดในโลกจุลทรรศน์ โมเดลสามมิตินี้แสดงไมโครปิเปตขนาด พีหนึ่งพัน และหลอดเจือจางเชื้อแบคทีเรียสิบกำลังลบหนึ่งถึงสิบกำลังลบหก เมื่อปรับปริมาตรและขั้นการเจือจาง ระบบจะคำนวณความเข้มข้นโคโลนี ซีเอฟยูต่อมิลลิลิตร แบบเรียลไทม์ครับ",
+        sliders: [
+          { key: "vol", label: "ปริมาตรไมโครปิเปต V (μL)", min: 100, max: 1000, step: 50, val: 100 },
+          { key: "dil", label: "ขั้นการเจือจาง n (10^-n)", min: 1, max: 6, step: 1, val: 5 },
+          { key: "col", label: "จำนวนโคโลนีที่นับได้ (CFU)", min: 30, max: 300, step: 5, val: 142 }
+        ]
+      },
+      {
+        id: 1, ch: 2,
+        short: "ID 1 • บทที่ 2 แฟลกเจลลา",
+        title: "การว่ายเคลื่อนที่ของแบคทีเรียด้วยแฟลกเจลลา vs. Brownian Motion",
+        sub: "ArUco ID 1 (DICT_4X4_50) — บทที่ 2 เวกเตอร์และการเคลื่อนที่ในของเหลว",
+        desc: "เปรียบเทียบมอเตอร์หมุนแฟลกเจลลาของแบคทีเรีย (Chemotaxis Run-and-Tumble) กับการชนแบบสุ่มบราวน์เนียนในของเหลว",
+        formula: "<r²> = 6·D·t ,  D = k_B·T / (6·π·η·a)",
+        voice: "บทที่ 2 เวกเตอร์และการเคลื่อนที่ในของเหลว แสดงเซลล์แบคทีเรียที่มีมอเตอร์โปรตีนหมุนเกลียวแฟลกเจลลาเพื่อว่ายเข้าหาสารอาหาร เปรียบเทียบกับอนุภาคคอลลอยด์สีทองที่เคลื่อนที่แบบสุ่มบราวน์เนียนตามอุณหภูมิครับ",
+        sliders: [
+          { key: "rpm", label: "ความถี่หมุนแฟลกเจลลา (Hz)", min: 20, max: 200, step: 10, val: 110 },
+          { key: "temp", label: "อุณหภูมิของเหลว T (°C)", min: 10, max: 45, step: 1, val: 37 },
+          { key: "grad", label: "ความเข้มสารดึงดูดเคมี (%)", min: 0, max: 100, step: 5, val: 75 }
+        ]
+      },
+      {
+        id: 2, ch: 3,
+        short: "ID 2 • บทที่ 3 กฎสโตกส์",
+        title: "การตกตะกอนตามกฎของสโตกส์และตู้ปลอดเชื้อ Laminar Airflow",
+        sub: "ArUco ID 2 (DICT_4X4_50) — บทที่ 3 กฎการเคลื่อนที่ของนิวตันและแรงหนืด",
+        desc: "จำลองสมดุลแรง 3 แรงบนเซลล์จุลินทรีย์ (mg, แรงลอยตัว, แรงต้านสโตกส์) และม่านอากาศบริสุทธิ์ผ่านแผ่นกรอง HEPA",
+        formula: "v_t = 2·r²·(ρ_p - ρ_f)·g / (9·η)",
+        voice: "บทที่ 3 กฎการเคลื่อนที่ของนิวตันและแรงหนืด ด้านซ้ายแสดงสมดุลแรงสามแรงที่กระทำต่อเซลล์จุลินทรีย์ขณะตกตะกอนตามกฎของสโตกส์ ส่วนด้านขวาแสดงม่านอากาศไหลแบบราบเรียบผ่านแผ่นกรองเฮปาในตู้ปลอดเชื้อครับ",
+        sliders: [
+          { key: "radius", label: "รัศมีเซลล์จุลินทรีย์ r (μm)", min: 0.5, max: 5.0, step: 0.5, val: 2.5 },
+          { key: "visc", label: "ความหนืดตัวกลาง η (mPa·s)", min: 0.8, max: 5.0, step: 0.2, val: 1.0 },
+          { key: "airflow", label: "ความเร็วลม HEPA (m/s)", min: 0.2, max: 0.8, step: 0.05, val: 0.45 }
+        ]
+      },
+      {
+        id: 3, ch: 4,
+        short: "ID 3 • บทที่ 4 เครื่องปั่นเหวี่ยง",
+        title: "เครื่องปั่นเหวี่ยงความเร็วสูง การแปลงค่า RCF (×g) และสมดุลโรเตอร์",
+        sub: "ArUco ID 3 (DICT_4X4_50) — บทที่ 4 งาน พลังงาน และหลักการเครื่องปั่นเหวี่ยง",
+        desc: "จำลองโรเตอร์มุมคงที่ 30 องศา การวางหลอดถ่วงสมดุลตรงข้ามกัน และการอัดแน่นของเม็ดตะกอนเซลล์ (Pellet) ที่ก้นหลอด",
+        formula: "RCF (×g) = 1.118 × 10^(-5) · r_cm · RPM²",
+        voice: "บทที่ 4 เครื่องปั่นเหวี่ยงความเร็วสูง แสดงโรเตอร์อะลูมิเนียมชุบอโนไดซ์บรรจุหลอดตัวอย่างหกหลอด เมื่อปั่นด้วยความเร็วรอบสูง แรงหนีศูนย์กลางสัมพัทธ์ อาร์ซีเอฟ จะอัดเซลล์แบคทีเรียให้รวมตัวเป็นเม็ดตะกอนเพ็ลเล็ตที่ก้นหลอดครับ",
+        sliders: [
+          { key: "rpm", label: "ความเร็วรอบหมุน (RPM)", min: 1000, max: 14000, step: 500, val: 10000 },
+          { key: "rcm", label: "รัศมีโรเตอร์ r_cm (cm)", min: 5.0, max: 12.0, step: 0.5, val: 8.5 },
+          { key: "bal", label: "สมดุลหลอดตรงข้าม (1=สมดุล, 0=ไม่สมดุล)", min: 0, max: 1, step: 1, val: 1 }
+        ]
+      },
+      {
+        id: 4, ch: 5,
+        short: "ID 4 • บทที่ 5 ตู้อบ & PCR",
+        title: "การกระจายความร้อนตู้อบ Incubator 37°C และวัฏจักรเครื่อง PCR",
+        sub: "ArUco ID 4 (DICT_4X4_50) — บทที่ 5 ความร้อนและการควบคุมอุณหภูมิชีวภาพ",
+        desc: "จำลองบล็อกความร้อนเพลเทียร์และเกลียวคู่ DNA 3 มิติในวัฏจักร PCR 3 ขั้นตอน (95°C แยกสาย / 55°C เกาะไพรเมอร์ / 72°C ต่อสาย)",
+        formula: "N_DNA = N_0 × 2^n ,  Q = m·c·ΔT",
+        voice: "บทที่ 5 ความร้อนและวัฏจักรเครื่องพีซีอาร์ แสดงบล็อกความร้อนเพลเทียร์และเกลียวคู่ดีเอ็นเอสามมิติ เมื่อเปลี่ยนขั้นอุณหภูมิเป็นเก้าสิบห้าองศาเซลเซียส เกลียวคู่ดีเอ็นเอจะคลายตัวแยกสาย และเพิ่มจำนวนทวีคูณสองยกกำลังเอ็นครับ",
+        sliders: [
+          { key: "stage", label: "ขั้นวัฏจักร PCR (1=95°C, 2=55°C, 3=72°C)", min: 1, max: 3, step: 1, val: 1 },
+          { key: "cycles", label: "จำนวนรอบวัฏจักร PCR (n)", min: 1, max: 35, step: 1, val: 25 },
+          { key: "fan", label: "พัดลมพาความร้อน Incubator (%)", min: 20, max: 100, step: 10, val: 80 }
+        ]
+      },
+      {
+        id: 5, ch: 6,
+        short: "ID 5 • บทที่ 6 หม้อนึ่ง Autoclave",
+        title: "หม้อนึ่งความดันไอ Autoclave (121°C, 15 psi) และการไล่อากาศ",
+        sub: "ArUco ID 5 (DICT_4X4_50) — บทที่ 6 อุณหพลศาสตร์ ความดันไอ และหม้อนึ่งความดันไอ",
+        desc: "แสดงห้องความดันไอน้ำอิ่มตัว เกจวัดความดัน ขวดอาหารเลี้ยงเชื้อ และการถ่ายเทความร้อนแฝงของการควบแน่นเพื่อทำลายสปอร์",
+        formula: "P_abs = P_atm + P_gauge ,  Q_latent = m·L_v",
+        voice: "บทที่ 6 อุณหพลศาสตร์และหม้อนึ่งความดันไอออโตเคลฟ เมื่อไล่อากาศออกหมดและเพิ่มความดันเกจเป็นสิบห้าปอนด์ต่อตารางนิ้ว อุณหภูมิไอน้ำอิ่มตัวจะสูงถึงหนึ่งร้อยยี่สิบเอ็ดองศาเซลเซียส สามารถทำลายสปอร์ของแบคทีเรียทนความร้อนได้สมบูรณ์ครับ",
+        sliders: [
+          { key: "psi", label: "ความดันเกจไอน้ำ (psi)", min: 0, max: 20, step: 1, val: 15 },
+          { key: "purge", label: "ร้อยละการไล่อากาศออก (%)", min: 50, max: 100, step: 5, val: 100 },
+          { key: "time", label: "เวลาฆ่าเชื้อ (นาที)", min: 5, max: 30, step: 5, val: 15 }
+        ]
+      },
+      {
+        id: 6, ch: 7,
+        short: "ID 6 • บทที่ 7 การย้อมสีแกรม",
+        title: "สนามไฟฟ้าคูลอมบ์ ศักย์ซีตาผนังเซลล์ และการยึดเกาะของสีย้อมแกรม",
+        sub: "ArUco ID 6 (DICT_4X4_50) — บทที่ 7 ไฟฟ้าสถิต ประจุผิวเซลล์ และการย้อมสีแกรม",
+        desc: "จำลองโครงข่ายเพปทิโดไกลแคนและหมู่ฟอสเฟตประจุลบที่ดึงดูดไอออนสีย้อมประจุบวก (Crystal Violet) ด้วยแรงคูลอมบ์",
+        formula: "F_E = k_e · |q_cell · q_dye| / (ε_r · r²)",
+        voice: "บทที่ 7 ไฟฟ้าสถิตและการย้อมสีแกรม ผนังเซลล์แบคทีเรียมีหมู่ฟอสเฟตและกรดไทโคอิกที่มีประจุลบสุทธิ จึงสร้างสนามไฟฟ้าดึงดูดไอออนสีย้อมคริสตัลไวโอเลตที่มีประจุบวกให้เข้ามายึดเกาะอย่างแข็งแรงตามกฎของคูลอมบ์ครับ",
+        sliders: [
+          { key: "ph", label: "ค่า pH ของสารละลายตัวกลาง", min: 3.0, max: 9.0, step: 0.5, val: 7.0 },
+          { key: "charge", label: "ประจุสีย้อม (+1=Basic Dye, -1=Acidic Dye)", min: -1, max: 1, step: 2, val: 1 },
+          { key: "dist", label: "ระยะห่างโมเลกุลสีย้อม r (nm)", min: 1.0, max: 8.0, step: 0.5, val: 2.5 }
+        ]
+      },
+      {
+        id: 7, ch: 8,
+        short: "ID 7 • บทที่ 8 อิเล็กโทรโฟรีซิส",
+        title: "กฎของโอห์มและอ่างแยกสายดีเอ็นเอด้วยสนามไฟฟ้า Gel Electrophoresis",
+        sub: "ArUco ID 7 (DICT_4X4_50) — บทที่ 8 ไฟฟ้ากระแส กฎของโอห์ม และอิเล็กโทรโฟรีซิส",
+        desc: "จำลองการวิ่งของแถบดีเอ็นเอประจุลบจากขั้วลบ (สีดำ) ไปยังขั้วบวก (สีแดง Run to Red) แยกตามขนาดคู่เบส พร้อมฟองก๊าซที่ขั้วอิเล็กโทรด",
+        formula: "v = μ_e · E = μ_e · (V / L) ,  P = V² / R",
+        voice: "บทที่ 8 อ่างแยกสายดีเอ็นเอด้วยสนามไฟฟ้า เจลอิเล็กโทรโฟรีซิส โมเลกุลดีเอ็นเอมีประจุลบจะเคลื่อนที่จากขั้วลบสีดำไปยังขั้วบวกสีแดง โดยสายดีเอ็นเอขนาดเล็กจะเคลื่อนที่ผ่านรูพรุนของเจลอะกาโรสได้เร็วกว่าสายขนาดใหญ่ครับ",
+        sliders: [
+          { key: "volt", label: "ความต่างศักย์ไฟฟ้า V (Volt)", min: 50, max: 150, step: 10, val: 100 },
+          { key: "gel", label: "ความเข้มข้นเจลอะกาโรส (%)", min: 0.7, max: 2.0, step: 0.1, val: 1.0 },
+          { key: "runtime", label: "เวลาการรันเจล (นาที)", min: 5, max: 45, step: 5, val: 25 }
+        ]
+      },
+      {
+        id: 8, ch: 9,
+        short: "ID 8 • บทที่ 9 การหักเห & บริกซ์",
+        title: "การหักเหของสเนลล์และเครื่องวัดค่าบริกซ์การหมักยีสต์ Refractometer",
+        sub: "ArUco ID 8 (DICT_4X4_50) — บทที่ 9 ทัศนศาสตร์พื้นฐาน การสะท้อน และการหักเหของแสง",
+        desc: "แสดงลำแสงเลเซอร์หักเหผ่านปริซึมน้ำหมักยีสต์ที่มีความเข้มข้นน้ำตาลต่างกัน พร้อมฟองก๊าซคาร์บอนไดออกไซด์และสเกล °Brix",
+        formula: "n_1 · sin(θ_1) = n_2 · sin(θ_2)",
+        voice: "บทที่ 9 การหักเหของแสงตามกฎของสเนลล์และเครื่องวัดความหวานบริกซ์ เมื่อยีสต์ใช้น้ำตาลในการหมักแอลกอฮอล์ ดัชนีหักเหของน้ำหมักจะเปลี่ยนแปลง ทำให้มุมหักเหของลำแสงเลเซอร์เปลี่ยนไปอย่างแม่นยำครับ",
+        sliders: [
+          { key: "angle", label: "มุมตกกระทบ θ_1 (องศา)", min: 15, max: 70, step: 5, val: 45 },
+          { key: "brix", label: "ความหวานน้ำหมัก (°Brix)", min: 0, max: 30, step: 2, val: 18 },
+          { key: "ferm", label: "ชั่วโมงการหมักยีสต์ (ชม.)", min: 0, max: 48, step: 4, val: 16 }
+        ]
+      },
+      {
+        id: 9, ch: 10,
+        short: "ID 9 • บทที่ 10 กล้องจุลทรรศน์ 100x",
+        title: "กล้องจุลทรรศน์เลนส์ประกอบและบทบาทของ Immersion Oil ที่หัวเลนส์ 100x",
+        sub: "ArUco ID 9 (DICT_4X4_50) — บทที่ 10 กล้องจุลทรรศน์ ขีดจำกัดการแยกชัด และน้ำมันช่วยส่อง",
+        desc: "เปรียบเทียบกรวยแสงที่เข้าสู่หัวเลนส์ใกล้วัตถุ 100x (แถบวงแหวนสีขาว) เมื่อหยดน้ำมันช่วยส่อง (n=1.515) กับกรณีสูญเสียแสงในอากาศ",
+        formula: "d_min = 0.61 · λ / NA ,  NA = n · sin(α)",
+        voice: "บทที่ 10 กล้องจุลทรรศน์และน้ำมันช่วยส่องที่หัวเลนส์หนึ่งร้อยเท่า การหยดน้ำมันที่มีดัชนีหักเหหนึ่งจุดห้าหนึ่งห้าเท่ากับแผ่นสไลด์แก้ว ช่วยป้องกันการสะท้อนกลับหมดของแสง เพิ่มค่ารูรับแสงเชิงตัวเลข เอ็นเอ ทำให้แยกภาพเซลล์แบคทีเรียได้คมชัดสูงสุดครับ",
+        sliders: [
+          { key: "oil", label: "หยดน้ำมันช่วยส่อง (1=มีน้ำมัน n=1.515, 0=อากาศ)", min: 0, max: 1, step: 1, val: 1 },
+          { key: "wave", label: "ความยาวคลื่นแสง λ (nm)", min: 450, max: 650, step: 25, val: 550 },
+          { key: "focus", label: "การปรับปุ่มโฟกัสละเอียด (μm)", min: -10, max: 10, step: 1, val: 0 }
+        ]
+      },
+      {
+        id: 10, ch: 11,
+        short: "ID 10 • บทที่ 11 รังสี UV-C",
+        title: "กัมมันตภาพรังสี กฎกำลังสองผกผัน และการฆ่าเชื้อด้วยรังสี UV-C (254 nm)",
+        sub: "ArUco ID 10 (DICT_4X4_50) — บทที่ 11 กัมมันตภาพรังสีและการฉายรังสีควบคุมจุลินทรีย์",
+        desc: "จำลองโคมรังสี UV-C 254 nm คลื่นโฟตอนพลังงานสูงที่สร้างพันธะ Thymine Dimer ในสาย DNA และการลดลงของความเข้มรังสีตามระยะห่าง",
+        formula: "I(r) = P_uv / (4·π·r²) ,  S(t) = exp(-k·I·t)",
+        voice: "บทที่ 11 กัมมันตภาพรังสีและการฆ่าเชื้อด้วยรังสียูวีซีที่ความยาวคลื่นสองร้อยห้าสิบสี่นาโนเมตร ความเข้มรังสีจะลดลงตามกฎกำลังสองผกผันกับระยะห่าง และโฟตอนยูวีซีจะทำลายดีเอ็นเอของแบคทีเรียด้วยการสร้างพันธะไทมีนไดเมอร์ครับ",
+        sliders: [
+          { key: "dist", label: "ระยะห่างจากหลอด UV-C r (cm)", min: 15, max: 100, step: 5, val: 30 },
+          { key: "time", label: "เวลาฉายรังสี t (วินาที)", min: 10, max: 180, step: 10, val: 60 },
+          { key: "power", label: "กำลังหลอดรังสี UV-C (W)", min: 8, max: 36, step: 4, val: 16 }
+        ]
+      },
+      {
+        id: 11, ch: 12,
+        short: "ID 11 • บทที่ 12 การวัดค่า OD600",
+        title: "สเปกโตรโฟโตมิเตอร์ กฎของเบียร์-แลมเบิร์ต และการวัดค่าความขุ่น OD600",
+        sub: "ArUco ID 11 (DICT_4X4_50) — บทที่ 12 สเปกโตรโฟโตมิเตอร์และโครงงานบูรณาการ",
+        desc: "จำลองเกรตติงแยกแสงโมโนโครเมเตอร์ 600 nm ส่องผ่านหลอด Cuvette บรรจุเซลล์แบคทีเรียแขวนลอย พร้อมหัววัดโฟโตไดโอดและกราฟการเจริญเติบโต",
+        formula: "OD600 = -log10(I / I_0) = -log10(%T / 100)",
+        voice: "บทที่ 12 เครื่องสเปกโตรโฟโตมิเตอร์และการวัดความขุ่นของเชื้อที่ความยาวคลื่นหกร้อยนาโนเมตร โอดีหกร้อย เมื่อความหนาแน่นเซลล์แบคทีเรียในหลอดคิวเวตต์เพิ่มขึ้น แสงจะกระเจิงมากขึ้นทำให้ความเข้มแสงที่ทะลุผ่านไปยังหัววัดลดลงตามกฎของเบียร์และแลมเบิร์ตครับ",
+        sliders: [
+          { key: "od", label: "ค่าความขุ่นจริงของเชื้อ (True OD600)", min: 0.1, max: 2.5, step: 0.1, val: 0.6 },
+          { key: "df", label: "ตัวคูณการเจือจางก่อนวัด (DF)", min: 1, max: 10, step: 1, val: 1 },
+          { key: "hour", label: "ชั่วโมงการบ่มเพาะเชื้อ (ชม.)", min: 0, max: 16, step: 1, val: 5 }
+        ]
+      }
+    ];
+
+    // =========================================================================
+    // 2. STATE, PWA SERVICE WORKER, & WEB AUDIO / AI VOICE SYNTHESIZER
+    // =========================================================================
+    let currentMarkerId = 0;
+    let params = {};
+    let isARMode = false;
+    let isTargetLocked = false;
+    let isExploded = false;
+    let showLabels = true;
+    let handSimActive = false;
+    let gyroEnabled = false;
+    let gyroOffset = { alpha: 0, beta: 0, gamma: 0 };
+    let audioCtx = null;
+    let deferredInstallPrompt = null;
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+    });
+
+    function triggerPWAInstall() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+      } else {
+        alert('วิธีติดตั้งเป็นแอปสมาร์ทโฟน:\n• iPhone/iPad (Safari): แตะปุ่ม แชร์ (Share) ด้านล่าง แล้วเลือก "เพิ่มไปยังหน้าจอโฮม (Add to Home Screen)"\n• Android (Chrome): แตะเมนู ⋮ มุมขวาบน แล้วเลือก "ติดตั้งแอป (Install App)"');
+      }
+    }
+
+    function openPhoneGuide() {
+      document.getElementById('phone-modal').classList.add('open');
+    }
+    function closePhoneGuide() {
+      document.getElementById('phone-modal').classList.remove('open');
+    }
+    function copyArUrl() {
+      const txt = document.getElementById('gh-ar-url').textContent;
+      navigator.clipboard?.writeText(txt);
+      alert('คัดลอกลิงก์ WebAR สำเร็จ:\n' + txt);
+    }
+
+    function playLockChime() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const now = audioCtx.currentTime;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.065);
+          gain.gain.setValueAtTime(0.14, now + idx * 0.065);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.065 + 0.24);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + idx * 0.065);
+          osc.stop(now + idx * 0.065 + 0.25);
+        });
+      } catch (e) {}
+    }
+
+    function speakCurrentChapter() {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const cfg = CHAPTER_MODELS[currentMarkerId];
+      const u = new SpeechSynthesisUtterance(cfg.voice);
+      u.lang = 'th-TH';
+      u.rate = 0.98;
+      u.pitch = 0.96;
+      const voices = window.speechSynthesis.getVoices();
+      const thVoice = voices.find(v => v.lang.startsWith('th') && v.name.includes('Google')) || voices.find(v => v.lang.startsWith('th'));
+      if (thVoice) u.voice = thVoice;
+      const wave = document.getElementById('ai-wave-ind');
+      u.onstart = () => wave.classList.add('speaking');
+      u.onend = () => wave.classList.remove('speaking');
+      u.onerror = () => wave.classList.remove('speaking');
+      window.speechSynthesis.speak(u);
+    }
+
+    function stopAISpeech() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      document.getElementById('ai-wave-ind').classList.remove('speaking');
+    }
+
+    // =========================================================================
+    // 3. THREE.JS HYPER-REALISTIC PBR + PROCEDURAL HDR ENVIRONMENT ENGINE
+    // =========================================================================
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 2.35, 6.1);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.28;
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    container.appendChild(renderer.domElement);
+
+    // Build Procedural Studio HDR Environment Map via PMREMGenerator for Ultra-Realistic Metallic & Glass Reflections
+    function buildStudioEnvironment() {
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      pmrem.compileEquirectangularShader();
+      const envScene = new THREE.Scene();
+      envScene.background = new THREE.Color(0x050b1a);
+
+      const topPanel = new THREE.Mesh(
+        new THREE.PlaneGeometry(20, 20),
+        new THREE.MeshBasicMaterial({ color: 0xe0f2fe, side: THREE.DoubleSide })
+      );
+      topPanel.position.set(0, 9, 0);
+      topPanel.rotation.x = Math.PI / 2;
+      envScene.add(topPanel);
+
+      const cyanStrip = new THREE.Mesh(
+        new THREE.PlaneGeometry(16, 4),
+        new THREE.MeshBasicMaterial({ color: 0x00f0ff, side: THREE.DoubleSide })
+      );
+      cyanStrip.position.set(-8, 3, 6);
+      cyanStrip.lookAt(0, 0, 0);
+      envScene.add(cyanStrip);
+
+      const magentaStrip = new THREE.Mesh(
+        new THREE.PlaneGeometry(16, 4),
+        new THREE.MeshBasicMaterial({ color: 0xf43f5e, side: THREE.DoubleSide })
+      );
+      magentaStrip.position.set(8, 2, -6);
+      magentaStrip.lookAt(0, 0, 0);
+      envScene.add(magentaStrip);
+
+      const warmStrip = new THREE.Mesh(
+        new THREE.PlaneGeometry(14, 4),
+        new THREE.MeshBasicMaterial({ color: 0xfbbf24, side: THREE.DoubleSide })
+      );
+      warmStrip.position.set(0, -6, 7);
+      warmStrip.lookAt(0, 0, 0);
+      envScene.add(warmStrip);
+
+      const rt = pmrem.fromScene(envScene, 0.04);
+      scene.environment = rt.texture;
+      pmrem.dispose();
+    }
+    buildStudioEnvironment();
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.055;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 1.05;
+    controls.maxDistance = 13;
+    controls.minDistance = 2.2;
+    controls.target.set(0, -0.15, 0);
+
+    // 4-Point Studio Cinema Lighting
+    const hemiLight = new THREE.HemisphereLight(0xe0f2fe, 0x091326, 0.9);
+    scene.add(hemiLight);
+
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.55);
+    keyLight.position.set(5.5, 8.5, 6.5);
+    keyLight.castShadow = true;
+    scene.add(keyLight);
+
+    const cyanRim = new THREE.DirectionalLight(0x00f0ff, 1.05);
+    cyanRim.position.set(-6.5, 4.5, -5.0);
+    scene.add(cyanRim);
+
+    const roseRim = new THREE.PointLight(0xec4899, 0.75, 16);
+    roseRim.position.set(4.5, -2.5, -4.5);
+    scene.add(roseRim);
+
+    // Master 3D Model Group & Label Group
+    const modelGroup = new THREE.Group();
+    scene.add(modelGroup);
+    const labelsGroup = new THREE.Group();
+    modelGroup.add(labelsGroup);
+
+    let dynamicObjects = {};
+    let explodingParts = [];
+
+    // Helper: Create 3D Floating Hologram Callout Sprite
+    function add3DLabel(text, x, y, z, borderColor = '#00f0ff') {
+      const c = document.createElement('canvas');
+      c.width = 512; c.height = 112;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = 'rgba(4, 12, 30, 0.86)';
+      ctx.strokeStyle = borderColor;
+      ctx.lineWidth = 5;
+      const r = 24;
+      ctx.beginPath();
+      ctx.moveTo(12 + r, 12);
+      ctx.lineTo(500 - r, 12);
+      ctx.quadraticCurveTo(500, 12, 500, 12 + r);
+      ctx.lineTo(500, 100 - r);
+      ctx.quadraticCurveTo(500, 100, 500 - r, 100);
+      ctx.lineTo(12 + r, 100);
+      ctx.quadraticCurveTo(12, 100, 12, 100 - r);
+      ctx.lineTo(12, 12 + r);
+      ctx.quadraticCurveTo(12, 12, 12 + r, 12);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = borderColor;
+      ctx.beginPath();
+      ctx.arc(42, 56, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.font = 'bold 30px Prompt, Sarabun, sans-serif';
+      ctx.fillStyle = '#f8fafc';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, 66, 57);
+
+      const tex = new THREE.CanvasTexture(c);
+      const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
+      const sprite = new THREE.Sprite(mat);
+      sprite.position.set(x, y, z);
+      sprite.scale.set(1.45, 0.32, 1);
+      labelsGroup.add(sprite);
+    }
+
+    // Helper: Register part for Exploded / X-Ray View
+    function registerExplode(mesh, dx, dy, dz) {
+      mesh.userData.origPos = mesh.position.clone();
+      mesh.userData.expOffset = new THREE.Vector3(dx, dy, dz);
+      explodingParts.push(mesh);
+    }
+
+    // Create Jarvis Holographic Pedestal + ArUco Fiducial Baseplate
+    function createArUcoPedestal(markerId) {
+      const pedGroup = new THREE.Group();
+      pedGroup.position.y = -1.55;
+
+      // Outer rotating dashed holographic ring
+      const cRing = document.createElement('canvas');
+      cRing.width = 512; cRing.height = 512;
+      const rCtx = cRing.getContext('2d');
+      rCtx.strokeStyle = '#00f0ff';
+      rCtx.lineWidth = 6;
+      rCtx.setLineDash([28, 16]);
+      rCtx.beginPath();
+      rCtx.arc(256, 256, 238, 0, Math.PI * 2);
+      rCtx.stroke();
+      rCtx.strokeStyle = '#10b981';
+      rCtx.lineWidth = 4;
+      rCtx.setLineDash([12, 20]);
+      rCtx.beginPath();
+      rCtx.arc(256, 256, 205, 0, Math.PI * 2);
+      rCtx.stroke();
+
+      const ringTex = new THREE.CanvasTexture(cRing);
+      const holoPlane = new THREE.Mesh(
+        new THREE.PlaneGeometry(4.3, 4.3),
+        new THREE.MeshBasicMaterial({ map: ringTex, transparent: true, opacity: 0.72, side: THREE.DoubleSide, depthWrite: false })
+      );
+      holoPlane.rotation.x = -Math.PI / 2;
+      holoPlane.position.y = 0.03;
+      pedGroup.add(holoPlane);
+      dynamicObjects.holoRing = holoPlane;
+
+      // Exact 6x6 ArUco marker texture on pedestal top
+      const c = document.createElement('canvas');
+      c.width = 512; c.height = 512;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, 512, 512);
+      const mat = ARUCO_DICT_4X4[markerId];
+      const pad = 44;
+      const cell = (512 - pad * 2) / 6;
+      for (let r = 0; r < 6; r++) {
+        for (let col = 0; col < 6; col++) {
+          let white = false;
+          if (r >= 1 && r <= 4 && col >= 1 && col <= 4) {
+            white = (mat[r - 1][col - 1] === 1);
+          }
+          ctx.fillStyle = white ? '#ffffff' : '#020617';
+          ctx.fillRect(pad + col * cell, pad + r * cell, cell + 1, cell + 1);
+        }
+      }
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath();
+      ctx.moveTo(14, 14); ctx.lineTo(68, 14); ctx.lineTo(14, 68); ctx.closePath();
+      ctx.fill();
+
+      const tex = new THREE.CanvasTexture(c);
+      const plateGeo = new THREE.BoxGeometry(2.35, 0.1, 2.35);
+      const sideMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.8, roughness: 0.2, emissive: 0x0284c7, emissiveIntensity: 0.2 });
+      const plateMat = [
+        sideMat, sideMat,
+        new THREE.MeshStandardMaterial({ map: tex, roughness: 0.25, metalness: 0.05 }),
+        sideMat, sideMat, sideMat
+      ];
+      const plate = new THREE.Mesh(plateGeo, plateMat);
+      pedGroup.add(plate);
+      return pedGroup;
+    }
+
+    // =========================================================================
+    // 4. HYPER-REALISTIC 3D PBR BUILDERS FOR ALL 12 CHAPTERS (IDs 0 to 11)
+    // =========================================================================
+    function buildModelForChapter(id) {
+      while (modelGroup.children.length > 0) {
+        modelGroup.remove(modelGroup.children[0]);
+      }
+      while (labelsGroup.children.length > 0) {
+        labelsGroup.remove(labelsGroup.children[0]);
+      }
+      modelGroup.add(labelsGroup);
+      labelsGroup.visible = showLabels;
+      dynamicObjects = {};
+      explodingParts = [];
+      modelGroup.add(createArUcoPedestal(id));
+
+      // Shared Hyper-Realistic Studio PBR Materials
+      const chromeMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.92, roughness: 0.12 });
+      const titaniumMat = new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.85, roughness: 0.22 });
+      const darkAnodized = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.65, roughness: 0.28 });
+      const blueAnodized = new THREE.MeshPhysicalMaterial({ color: 0x0284c7, metalness: 0.55, roughness: 0.2, clearcoat: 0.8 });
+      const goldBrass = new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.88, roughness: 0.18 });
+      const copperMat = new THREE.MeshStandardMaterial({ color: 0xea580c, metalness: 0.85, roughness: 0.2 });
+      const cyanNeon = new THREE.MeshStandardMaterial({ color: 0x00f0ff, emissive: 0x00b4d8, emissiveIntensity: 0.65, roughness: 0.15 });
+      const emeraldBio = new THREE.MeshPhysicalMaterial({ color: 0x10b981, emissive: 0x059669, emissiveIntensity: 0.4, roughness: 0.2, clearcoat: 0.9 });
+      const magentaNeon = new THREE.MeshStandardMaterial({ color: 0xf43f5e, emissive: 0xe11d48, emissiveIntensity: 0.6, roughness: 0.2 });
+      const violetGlow = new THREE.MeshStandardMaterial({ color: 0xa855f7, emissive: 0x7e22ce, emissiveIntensity: 0.65, roughness: 0.2 });
+      const opticalGlass = new THREE.MeshPhysicalMaterial({
+        color: 0xe0f2fe, transparent: true, opacity: 0.36, roughness: 0.05, metalness: 0.05, clearcoat: 1.0, clearcoatRoughness: 0.05
+      });
+
+      if (id === 0) {
+        // CH 1: Hyper-Realistic P1000 Micropipette + 6 Serial Dilution Rack
+        const pipGroup = new THREE.Group();
+        pipGroup.position.set(-0.95, 0.38, 0);
+
+        const grip = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.14, 1.35, 32), blueAnodized);
+        pipGroup.add(grip);
+
+        // Ergonomic finger hook
+        const hook = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.07, 0.14), darkAnodized);
+        hook.position.set(0.14, 0.58, 0);
+        pipGroup.add(hook);
+
+        // Digital volume window (1000 uL)
+        const winBox = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.36, 0.22), darkAnodized);
+        winBox.position.set(0.12, 0.15, 0);
+        pipGroup.add(winBox);
+
+        // Plunger rod & amber button
+        const plunger = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.55, 24), chromeMat);
+        plunger.position.y = 0.85;
+        const capBtn = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.1, 24), goldBrass);
+        capBtn.position.y = 0.28;
+        plunger.add(capBtn);
+        pipGroup.add(plunger);
+        dynamicObjects.plunger = plunger;
+        registerExplode(plunger, 0, 0.55, 0);
+
+        // Lower shaft & translucent polypropylene tip
+        const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.06, 0.55, 24), darkAnodized);
+        shaft.position.y = -0.82;
+        pipGroup.add(shaft);
+
+        const tipCone = new THREE.Mesh(new THREE.ConeGeometry(0.095, 0.85, 28), opticalGlass);
+        tipCone.rotation.x = Math.PI;
+        tipCone.position.y = -1.35;
+        pipGroup.add(tipCone);
+        registerExplode(tipCone, 0, -0.55, 0);
+
+        const liqInTip = new THREE.Mesh(new THREE.ConeGeometry(0.078, 0.58, 24), cyanNeon);
+        liqInTip.rotation.x = Math.PI;
+        liqInTip.position.y = -1.46;
+        pipGroup.add(liqInTip);
+        dynamicObjects.liqInTip = liqInTip;
+        modelGroup.add(pipGroup);
+
+        // 6 Serial Dilution Glass Tubes (10^-1 to 10^-6) with caps & concentration gradient
+        const rackBase = new THREE.Mesh(new THREE.BoxGeometry(2.35, 0.12, 0.72), titaniumMat);
+        rackBase.position.set(0.55, -1.35, 0);
+        const rackTop = new THREE.Mesh(new THREE.BoxGeometry(2.35, 0.08, 0.72), blueAnodized);
+        rackTop.position.set(0.55, -0.55, 0);
+        modelGroup.add(rackBase, rackTop);
+
+        for (let i = 0; i < 6; i++) {
+          const tx = -0.38 + i * 0.37;
+          const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.105, 1.25, 24), opticalGlass);
+          tube.position.set(tx, -0.75, 0);
+          modelGroup.add(tube);
+
+          const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.125, 0.125, 0.12, 20), i === 4 ? magentaNeon : blueAnodized);
+          cap.position.set(tx, -0.08, 0);
+          modelGroup.add(cap);
+          registerExplode(cap, 0, 0.45, 0);
+
+          const hue = 0.45 - i * 0.04;
+          const liqMat = new THREE.MeshPhysicalMaterial({
+            color: new THREE.Color().setHSL(hue, 0.9, 0.48),
+            emissive: new THREE.Color().setHSL(hue, 0.8, 0.22),
+            transparent: true, opacity: 0.9 - i * 0.11, roughness: 0.1, clearcoat: 1.0
+          });
+          const liq = new THREE.Mesh(new THREE.CylinderGeometry(0.095, 0.09, 0.78, 20), liqMat);
+          liq.position.set(tx, -0.92, 0);
+          modelGroup.add(liq);
+        }
+        add3DLabel("ไมโครปิเปต P1000 (2 จังหวะ)", -0.95, 1.65, 0, "#00f0ff");
+        add3DLabel("หลอดเจือจาง 10⁻¹ ถึง 10⁻⁶", 0.58, 0.35, 0, "#10b981");
+
+      } else if (id === 1) {
+        // CH 2: Multi-Layer E. coli Bacterium + Rotary Flagellar Motor + Brownian Colloids
+        const bacGroup = new THREE.Group();
+
+        // Outer translucent capsule
+        const outerRod = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 1.25, 32), opticalGlass);
+        outerRod.rotation.z = Math.PI / 2;
+        bacGroup.add(outerRod);
+        registerExplode(outerRod, 0, 0.65, 0);
+
+        // Inner glowing cytoplasm & caps
+        const innerRod = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 1.18, 32), emeraldBio);
+        innerRod.rotation.z = Math.PI / 2;
+        bacGroup.add(innerRod);
+        const capL = new THREE.Mesh(new THREE.SphereGeometry(0.36, 28, 28), emeraldBio);
+        capL.position.x = -0.59;
+        const capR = new THREE.Mesh(new THREE.SphereGeometry(0.36, 28, 28), emeraldBio);
+        capR.position.x = 0.59;
+        bacGroup.add(capL, capR);
+
+        // Gold Basal Body Motor Rings (MS & C Rings)
+        const motorRing1 = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.045, 16, 32), goldBrass);
+        motorRing1.rotation.y = Math.PI / 2;
+        motorRing1.position.x = -0.92;
+        const motorRing2 = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.035, 16, 32), copperMat);
+        motorRing2.rotation.y = Math.PI / 2;
+        motorRing2.position.x = -0.82;
+        bacGroup.add(motorRing1, motorRing2);
+
+        // 3 Intertwined Helical Flagella Filaments
+        const flagGroup = new THREE.Group();
+        for (let f = 0; f < 3; f++) {
+          const phase = (f * Math.PI * 2) / 3;
+          const mat = f === 0 ? cyanNeon : (f === 1 ? emeraldBio : goldBrass);
+          for (let i = 0; i < 45; i++) {
+            const t = i / 45;
+            const seg = new THREE.Mesh(new THREE.SphereGeometry(0.042, 10, 10), mat);
+            seg.position.set(
+              -0.95 - t * 1.75,
+              Math.sin(t * Math.PI * 5.5 + phase) * 0.24,
+              Math.cos(t * Math.PI * 5.5 + phase) * 0.24
+            );
+            flagGroup.add(seg);
+          }
+        }
+        bacGroup.add(flagGroup);
+        dynamicObjects.flagGroup = flagGroup;
+        dynamicObjects.bacGroup = bacGroup;
+        modelGroup.add(bacGroup);
+
+        // Velocity Vector Arrow
+        const vArrow = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0.95, 0, 0), 0.85, 0x00f0ff, 0.22, 0.14);
+        bacGroup.add(vArrow);
+
+        // Brownian colloidal nanoparticles
+        dynamicObjects.brownian = [];
+        for (let i = 0; i < 28; i++) {
+          const p = new THREE.Mesh(new THREE.SphereGeometry(0.075, 14, 14), i % 2 === 0 ? goldBrass : magentaNeon);
+          p.position.set((Math.random() - 0.5) * 3.0, (Math.random() - 0.5) * 1.9, (Math.random() - 0.5) * 2.2);
+          modelGroup.add(p);
+          dynamicObjects.brownian.push(p);
+        }
+        add3DLabel("มอเตอร์แฟลกเจลลาหมุน 110 Hz", -1.45, 0.85, 0, "#00f0ff");
+        add3DLabel("เวกเตอร์ว่าย Chemotaxis", 1.15, 0.75, 0, "#10b981");
+
+      } else if (id === 2) {
+        // CH 3: Stokes Sedimentation Column + Class II Biosafety Cabinet HEPA
+        const col = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 2.35, 36), opticalGlass);
+        col.position.set(-0.75, -0.22, 0);
+        modelGroup.add(col);
+
+        const liqCol = new THREE.Mesh(new THREE.CylinderGeometry(0.56, 0.56, 2.0, 32), new THREE.MeshPhysicalMaterial({
+          color: 0x0284c7, transparent: true, opacity: 0.22, roughness: 0.1
+        }));
+        liqCol.position.set(-0.75, -0.32, 0);
+        modelGroup.add(liqCol);
+
+        const cellSphere = new THREE.Mesh(new THREE.SphereGeometry(0.24, 32, 32), emeraldBio);
+        cellSphere.position.set(-0.75, 0.1, 0);
+        modelGroup.add(cellSphere);
+        dynamicObjects.stokesCell = cellSphere;
+
+        const arrowDown = new THREE.ArrowHelper(new THREE.Vector3(0, -1, 0), new THREE.Vector3(-0.75, -0.15, 0), 0.75, 0xf43f5e, 0.2, 0.14);
+        const arrowUp = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(-0.75, 0.35, 0), 0.75, 0x00f0ff, 0.2, 0.14);
+        modelGroup.add(arrowDown, arrowUp);
+
+        // Class II Biosafety Cabinet on right
+        const hood = new THREE.Mesh(new THREE.BoxGeometry(1.45, 2.05, 1.15), darkAnodized);
+        hood.position.set(0.85, -0.35, 0);
+        modelGroup.add(hood);
+        const hepa = new THREE.Mesh(new THREE.BoxGeometry(1.28, 0.22, 0.98), cyanNeon);
+        hepa.position.set(0.85, 0.52, 0);
+        modelGroup.add(hepa);
+        registerExplode(hepa, 0, 0.55, 0);
+
+        dynamicObjects.streamlines = [];
+        for (let i = 0; i < 6; i++) {
+          const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, 1.25, 12), cyanNeon);
+          bar.position.set(0.38 + i * 0.19, -0.28, 0.32);
+          modelGroup.add(bar);
+          dynamicObjects.streamlines.push(bar);
+        }
+        add3DLabel("สมดุลแรงสโตกส์ (mg = F_B + F_d)", -0.85, 1.25, 0, "#f43f5e");
+        add3DLabel("แผ่นกรอง HEPA Laminar Flow", 0.85, 1.05, 0, "#00f0ff");
+
+      } else if (id === 3) {
+        // CH 4: Open-Cutaway High-Speed Microcentrifuge Rotor & Cell Pellet
+        const chamber = new THREE.Mesh(new THREE.CylinderGeometry(1.52, 1.62, 0.92, 40), darkAnodized);
+        chamber.position.y = -1.02;
+        modelGroup.add(chamber);
+
+        const rimRing = new THREE.Mesh(new THREE.TorusGeometry(1.52, 0.07, 16, 48), chromeMat);
+        rimRing.rotation.x = Math.PI / 2;
+        rimRing.position.y = -0.56;
+        modelGroup.add(rimRing);
+
+        const rotorGroup = new THREE.Group();
+        rotorGroup.position.y = -0.32;
+        const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.72, 0.78, 36), blueAnodized);
+        rotorGroup.add(hub);
+        const nut = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.18, 6), goldBrass);
+        nut.position.y = 0.45;
+        rotorGroup.add(nut);
+        registerExplode(nut, 0, 0.55, 0);
+
+        dynamicObjects.rotorTubes = [];
+        for (let i = 0; i < 6; i++) {
+          const ang = (i / 6) * Math.PI * 2;
+          const tHolder = new THREE.Group();
+          tHolder.rotation.y = ang;
+
+          const tubeGroup = new THREE.Group();
+          tubeGroup.position.set(0.84, 0.08, 0);
+          tubeGroup.rotation.z = -0.52; // 30-deg fixed angle
+
+          const tubeShell = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.055, 0.82, 24), opticalGlass);
+          tubeGroup.add(tubeShell);
+          const supernatant = new THREE.Mesh(new THREE.CylinderGeometry(0.10, 0.05, 0.58, 20), i % 2 === 0 ? cyanNeon : emeraldBio);
+          supernatant.position.y = -0.05;
+          tubeGroup.add(supernatant);
+          // Compacted Cell Pellet at bottom tip
+          const pellet = new THREE.Mesh(new THREE.SphereGeometry(0.062, 16, 16), goldBrass);
+          pellet.position.y = -0.38;
+          tubeGroup.add(pellet);
+
+          tHolder.add(tubeGroup);
+          rotorGroup.add(tHolder);
+          dynamicObjects.rotorTubes.push(tubeGroup);
+        }
+        modelGroup.add(rotorGroup);
+        dynamicObjects.rotorGroup = rotorGroup;
+        add3DLabel("โรเตอร์มุมคงที่ 30° (สมดุล 6 หลอด)", 0, 0.75, 0, "#00f0ff");
+        add3DLabel("ตะกอนเซลล์อัดแน่น (Cell Pellet)", 1.25, -0.35, 0, "#fbbf24");
+
+      } else if (id === 4) {
+        // CH 5: Gold Peltier PCR Thermal Block + 3D Double-Helix DNA with Base Pairs
+        const block = new THREE.Mesh(new THREE.BoxGeometry(2.25, 0.62, 1.55), goldBrass);
+        block.position.y = -0.98;
+        modelGroup.add(block);
+
+        // Cooling heatsink fins
+        for (let f = -0.9; f <= 0.9; f += 0.3) {
+          const fin = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.35, 1.62), titaniumMat);
+          fin.position.set(f, -1.25, 0);
+          modelGroup.add(fin);
+        }
+
+        dynamicObjects.pcrTubes = [];
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 4; c++) {
+            const pTube = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.055, 0.78, 20), cyanNeon);
+            pTube.position.set(-0.62 + c * 0.42, -0.42, -0.36 + r * 0.36);
+            modelGroup.add(pTube);
+            dynamicObjects.pcrTubes.push(pTube);
+          }
+        }
+
+        // 3D Double-Helix DNA with glowing base-pair rungs
+        const dnaGroup = new THREE.Group();
+        dnaGroup.position.y = 0.65;
+        for (let i = 0; i < 22; i++) {
+          const y = -0.68 + i * 0.065;
+          const a = i * 0.52;
+          const x1 = Math.cos(a) * 0.38, z1 = Math.sin(a) * 0.38;
+          const x2 = Math.cos(a + Math.PI) * 0.38, z2 = Math.sin(a + Math.PI) * 0.38;
+
+          const s1 = new THREE.Mesh(new THREE.SphereGeometry(0.058, 14, 14), cyanNeon);
+          s1.position.set(x1, y, z1);
+          const s2 = new THREE.Mesh(new THREE.SphereGeometry(0.058, 14, 14), magentaNeon);
+          s2.position.set(x2, y, z2);
+
+          const rung = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.74, 8), i % 2 === 0 ? emeraldBio : goldBrass);
+          rung.position.set(0, y, 0);
+          rung.rotation.z = Math.PI / 2;
+          rung.rotation.y = -a;
+          dnaGroup.add(s1, s2, rung);
+        }
+        modelGroup.add(dnaGroup);
+        dynamicObjects.dnaGroup = dnaGroup;
+        registerExplode(dnaGroup, 0, 0.45, 0);
+        add3DLabel("เกลียวคู่ DNA เพิ่มจำนวน 2ⁿ เท่า", 0, 1.55, 0, "#f43f5e");
+        add3DLabel("บล็อกความร้อน Peltier (95/55/72°C)", 0, -0.55, 0.9, "#fbbf24");
+
+      } else if (id === 5) {
+        // CH 6: Autoclave Saturated Steam Vessel (121°C, 15 psi)
+        const chamber = new THREE.Mesh(new THREE.CylinderGeometry(0.98, 0.98, 2.1, 40), opticalGlass);
+        chamber.position.y = -0.35;
+        modelGroup.add(chamber);
+
+        const jacket = new THREE.Mesh(new THREE.CylinderGeometry(1.04, 1.04, 0.45, 40), copperMat);
+        jacket.position.y = -1.15;
+        modelGroup.add(jacket);
+
+        const lidGroup = new THREE.Group();
+        lidGroup.position.y = 0.78;
+        const lid = new THREE.Mesh(new THREE.CylinderGeometry(1.05, 1.05, 0.22, 40), chromeMat);
+        lidGroup.add(lid);
+        const wheel = new THREE.Mesh(new THREE.TorusGeometry(0.44, 0.06, 16, 36), darkAnodized);
+        wheel.rotation.x = Math.PI / 2;
+        wheel.position.y = 0.24;
+        lidGroup.add(wheel);
+        // Pressure gauge
+        const gauge = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.1, 24), goldBrass);
+        gauge.rotation.x = Math.PI / 2;
+        gauge.position.set(0.65, 0.28, 0.35);
+        lidGroup.add(gauge);
+        modelGroup.add(lidGroup);
+        registerExplode(lidGroup, 0, 0.65, 0);
+
+        // Culture flask inside
+        const flask = new THREE.Mesh(new THREE.ConeGeometry(0.45, 0.82, 28), emeraldBio);
+        flask.position.y = -0.82;
+        modelGroup.add(flask);
+
+        dynamicObjects.steamParticles = [];
+        for (let i = 0; i < 32; i++) {
+          const sp = new THREE.Mesh(new THREE.SphereGeometry(0.065, 12, 12), cyanNeon);
+          sp.position.set((Math.random() - 0.5) * 1.3, -1.1 + Math.random() * 1.6, (Math.random() - 0.5) * 1.3);
+          modelGroup.add(sp);
+          dynamicObjects.steamParticles.push(sp);
+        }
+        add3DLabel("ฝาล็อกความดัน & เกจ 15 psi", 0, 1.42, 0, "#fbbf24");
+        add3DLabel("ไอน้ำอิ่มตัว 121°C ฆ่าสปอร์", 0, -0.15, 1.0, "#00f0ff");
+
+      } else if (id === 6) {
+        // CH 7: Peptidoglycan Mesh, Negative Phosphate Zeta Potential & Crystal Violet Ions
+        const wall = new THREE.Mesh(new THREE.BoxGeometry(2.7, 0.48, 1.6), violetGlow);
+        wall.position.y = -0.88;
+        modelGroup.add(wall);
+
+        // Peptidoglycan cross-linked rods & negative phosphate spheres
+        for (let x = -1.05; x <= 1.05; x += 0.42) {
+          for (let z = -0.5; z <= 0.5; z += 0.5) {
+            const neg = new THREE.Mesh(new THREE.SphereGeometry(0.095, 18, 18), magentaNeon);
+            neg.position.set(x, -0.54, z);
+            modelGroup.add(neg);
+          }
+        }
+
+        dynamicObjects.dyeIons = [];
+        for (let i = 0; i < 18; i++) {
+          const ion = new THREE.Mesh(new THREE.SphereGeometry(0.125, 22, 22), cyanNeon);
+          ion.position.set(-1.05 + (i % 6) * 0.42, 0.2 + Math.floor(i / 6) * 0.32, -0.45 + (i % 3) * 0.45);
+          modelGroup.add(ion);
+          dynamicObjects.dyeIons.push(ion);
+        }
+        add3DLabel("ไอออนสีย้อม Crystal Violet (+)", 0, 0.95, 0, "#00f0ff");
+        add3DLabel("หมู่ฟอสเฟตประจุลบบนผนังเซลล์ (-)", 0, -0.45, 0.85, "#f43f5e");
+
+      } else if (id === 7) {
+        // CH 8: Agarose Gel Electrophoresis ("Run to Red")
+        const tank = new THREE.Mesh(new THREE.BoxGeometry(2.9, 0.52, 1.75), opticalGlass);
+        tank.position.y = -1.0;
+        modelGroup.add(tank);
+
+        const gelSlab = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.18, 1.45), new THREE.MeshPhysicalMaterial({
+          color: 0x38bdf8, transparent: true, opacity: 0.32, roughness: 0.1
+        }));
+        gelSlab.position.y = -0.82;
+        modelGroup.add(gelSlab);
+        registerExplode(gelSlab, 0, 0.45, 0);
+
+        const cathode = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.065, 1.55, 20), darkAnodized);
+        cathode.rotation.x = Math.PI / 2;
+        cathode.position.set(-1.25, -0.75, 0);
+        modelGroup.add(cathode);
+
+        const anode = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.065, 1.55, 20), magentaNeon);
+        anode.rotation.x = Math.PI / 2;
+        anode.position.set(1.25, -0.75, 0);
+        modelGroup.add(anode);
+
+        dynamicObjects.dnaBands = [];
+        for (let lane = 0; lane < 3; lane++) {
+          for (let b = 0; b < 4; b++) {
+            const band = new THREE.Mesh(new THREE.BoxGeometry(0.095, 0.065, 0.36), b === 3 ? goldBrass : cyanNeon);
+            band.position.set(-0.92 + b * 0.36, -0.70, -0.48 + lane * 0.48);
+            modelGroup.add(band);
+            dynamicObjects.dnaBands.push({ mesh: band, sizeIdx: b });
+          }
+        }
+        add3DLabel("ขั้วลบ Cathode (-) จุดหยอด DNA", -1.15, -0.15, 0, "#38bdf8");
+        add3DLabel("ขั้วบวก Anode (+) Run to Red", 1.15, -0.15, 0, "#f43f5e");
+
+      } else if (id === 8) {
+        // CH 9: Snell's Law Laser Refraction & Yeast Fermentation Brix Prism
+        const prism = new THREE.Mesh(new THREE.BoxGeometry(2.45, 1.15, 1.25), new THREE.MeshPhysicalMaterial({
+          color: 0xfbbf24, transparent: true, opacity: 0.42, roughness: 0.08, clearcoat: 1.0
+        }));
+        prism.position.y = -0.85;
+        modelGroup.add(prism);
+
+        // Normal dashed vertical axis
+        const normalLine = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 2.2, 12), chromeMat);
+        normalLine.position.y = -0.15;
+        modelGroup.add(normalLine);
+
+        const incidentRay = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 1.65, 20), magentaNeon);
+        incidentRay.position.set(-0.62, 0.38, 0);
+        incidentRay.rotation.z = 0.65;
+        modelGroup.add(incidentRay);
+        dynamicObjects.incidentRay = incidentRay;
+
+        const refractedRay = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 1.45, 20), emeraldBio);
+        refractedRay.position.set(0.45, -0.82, 0);
+        refractedRay.rotation.z = 0.42;
+        modelGroup.add(refractedRay);
+        dynamicObjects.refractedRay = refractedRay;
+
+        add3DLabel("ลำแสงเลเซอร์ตกกระทบ (θ₁)", -0.85, 1.05, 0, "#f43f5e");
+        add3DLabel("ลำแสงหักเหในน้ำหมักยีสต์ (θ₂)", 0.75, -0.35, 0, "#10b981");
+
+      } else if (id === 9) {
+        // CH 10: 100x Oil Immersion Microscope Objective & Light Cone
+        const slide = new THREE.Mesh(new THREE.BoxGeometry(2.35, 0.12, 1.05), opticalGlass);
+        slide.position.y = -0.92;
+        modelGroup.add(slide);
+
+        const oilDrop = new THREE.Mesh(new THREE.SphereGeometry(0.34, 32, 32), new THREE.MeshPhysicalMaterial({
+          color: 0xfbbf24, transparent: true, opacity: 0.82, roughness: 0.05, clearcoat: 1.0
+        }));
+        oilDrop.position.y = -0.62;
+        modelGroup.add(oilDrop);
+        dynamicObjects.oilDrop = oilDrop;
+
+        const objGroup = new THREE.Group();
+        objGroup.position.y = 0.22;
+        const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.44, 0.24, 1.32, 36), chromeMat);
+        objGroup.add(barrel);
+        const whiteBand = new THREE.Mesh(new THREE.TorusGeometry(0.31, 0.04, 16, 36), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+        whiteBand.rotation.x = Math.PI / 2;
+        whiteBand.position.y = -0.28;
+        objGroup.add(whiteBand);
+        const goldBand = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.03, 16, 36), goldBrass);
+        goldBand.rotation.x = Math.PI / 2;
+        goldBand.position.y = 0.12;
+        objGroup.add(goldBand);
+        modelGroup.add(objGroup);
+        registerExplode(objGroup, 0, 0.55, 0);
+
+        const lightCone = new THREE.Mesh(new THREE.ConeGeometry(0.68, 1.15, 36, 1, true), new THREE.MeshBasicMaterial({
+          color: 0x00f0ff, transparent: true, opacity: 0.42, side: THREE.DoubleSide
+        }));
+        lightCone.position.y = -0.65;
+        modelGroup.add(lightCone);
+        dynamicObjects.lightCone = lightCone;
+
+        add3DLabel("หัวเลนส์ 100x Oil (แถบสีขาว NA 1.25)", 0, 1.15, 0, "#ffffff");
+        add3DLabel("หยดน้ำมัน Immersion Oil (n=1.515)", 0.95, -0.55, 0, "#fbbf24");
+
+      } else if (id === 10) {
+        // CH 11: UV-C 254 nm Germicidal Lamp + Petri Dish Colonies
+        const hood = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.42, 2.35, 24, 1, false, 0, Math.PI), chromeMat);
+        hood.rotation.z = Math.PI / 2;
+        hood.rotation.x = -Math.PI / 2;
+        hood.position.y = 0.95;
+        modelGroup.add(hood);
+        registerExplode(hood, 0, 0.45, 0);
+
+        const uvTube = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 2.2, 28), violetGlow);
+        uvTube.rotation.z = Math.PI / 2;
+        uvTube.position.y = 0.85;
+        modelGroup.add(uvTube);
+
+        const uvCone = new THREE.Mesh(new THREE.ConeGeometry(1.48, 2.0, 36, 1, true), new THREE.MeshBasicMaterial({
+          color: 0xa855f7, transparent: true, opacity: 0.25, side: THREE.DoubleSide
+        }));
+        uvCone.position.y = -0.15;
+        modelGroup.add(uvCone);
+
+        const petri = new THREE.Mesh(new THREE.CylinderGeometry(0.88, 0.88, 0.18, 36), opticalGlass);
+        petri.position.y = -1.1;
+        modelGroup.add(petri);
+
+        dynamicObjects.colonies = [];
+        for (let i = 0; i < 20; i++) {
+          const ang = (i / 20) * Math.PI * 2;
+          const r = 0.22 + (i % 3) * 0.22;
+          const col = new THREE.Mesh(new THREE.SphereGeometry(0.065, 14, 14), emeraldBio);
+          col.position.set(Math.cos(ang) * r, -1.0, Math.sin(ang) * r);
+          modelGroup.add(col);
+          dynamicObjects.colonies.push(col);
+        }
+        add3DLabel("หลอดรังสี UV-C 254 nm (Thymine Dimer)", 0, 1.38, 0, "#a855f7");
+        add3DLabel("โคโลนีแบคทีเรียบนจานเพาะเชื้อ (I ∝ 1/r²)", 0, -0.75, 0.95, "#10b981");
+
+      } else if (id === 11) {
+        // CH 12: Spectrophotometer OD600 Optical Bench
+        const sourceBox = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.72, 0.72), darkAnodized);
+        sourceBox.position.set(-1.42, -0.45, 0);
+        modelGroup.add(sourceBox);
+
+        const prismMono = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.45, 3), cyanNeon);
+        prismMono.position.set(-0.78, -0.45, 0);
+        modelGroup.add(prismMono);
+
+        const cuvette = new THREE.Mesh(new THREE.BoxGeometry(0.58, 1.38, 0.58), opticalGlass);
+        cuvette.position.set(0, -0.42, 0);
+        modelGroup.add(cuvette);
+        registerExplode(cuvette, 0, 0.55, 0);
+
+        const cultureLiq = new THREE.Mesh(new THREE.BoxGeometry(0.48, 1.08, 0.48), new THREE.MeshPhysicalMaterial({
+          color: 0xfbbf24, emissive: 0xd97706, emissiveIntensity: 0.28, transparent: true, opacity: 0.7, roughness: 0.2
+        }));
+        cultureLiq.position.set(0, -0.52, 0);
+        modelGroup.add(cultureLiq);
+        dynamicObjects.cultureLiq = cultureLiq;
+
+        const beamIn = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.065, 1.15, 20), goldBrass);
+        beamIn.rotation.z = Math.PI / 2;
+        beamIn.position.set(-0.62, -0.45, 0);
+        modelGroup.add(beamIn);
+
+        const beamOut = new THREE.Mesh(new THREE.CylinderGeometry(0.065, 0.065, 1.15, 20), new THREE.MeshBasicMaterial({
+          color: 0xf59e0b, transparent: true, opacity: 0.5
+        }));
+        beamOut.rotation.z = Math.PI / 2;
+        beamOut.position.set(0.65, -0.45, 0);
+        modelGroup.add(beamOut);
+        dynamicObjects.beamOut = beamOut;
+
+        const detector = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.72, 0.72), cyanNeon);
+        detector.position.set(1.42, -0.45, 0);
+        modelGroup.add(detector);
+
+        add3DLabel("ลำแสง 600 nm (I₀) & Cuvette 1 cm", -0.45, 0.55, 0, "#fbbf24");
+        add3DLabel("Photodiode Detector วัดค่า OD600", 1.25, 0.25, 0, "#00f0ff");
+      }
+    }
+
+    // =========================================================================
+    // 5. UI, TELEMETRY & LIVE OSCILLOSCOPE UPDATER
+    // =========================================================================
+    function renderMiniArUcoPreview(id) {
+      const box = document.getElementById('aruco-mini-box');
+      box.innerHTML = '';
+      const mat = ARUCO_DICT_4X4[id];
+      for (let r = 0; r < 6; r++) {
+        for (let c = 0; c < 6; c++) {
+          let white = false;
+          if (r >= 1 && r <= 4 && c >= 1 && c <= 4) white = (mat[r - 1][c - 1] === 1);
+          const div = document.createElement('div');
+          div.className = 'aruco-mini-cell';
+          div.style.background = white ? '#ffffff' : '#020617';
+          box.appendChild(div);
+        }
+      }
+    }
+
+    function selectMarker(id, fromScanner = false) {
+      currentMarkerId = id;
+      const cfg = CHAPTER_MODELS[id];
+      params = {};
+      cfg.sliders.forEach(s => { params[s.key] = s.val; });
+
+      document.querySelectorAll('.marker-chip').forEach((el, idx) => {
+        el.classList.toggle('active', idx === id);
+      });
+
+      renderMiniArUcoPreview(id);
+      document.getElementById('hud-chapter-sub').textContent = cfg.sub;
+      document.getElementById('data-aruco-tag').textContent = `ArUco ID ${id} (บทที่ ${cfg.ch})`;
+      document.getElementById('data-model-title').textContent = cfg.title;
+      document.getElementById('data-model-desc').textContent = cfg.desc;
+      document.getElementById('data-formula').textContent = cfg.formula;
+      document.getElementById('scope-title').textContent = `📈 LIVE GRAPH: CH ${cfg.ch} (ID ${id})`;
+
+      if (!isARMode) {
+        document.getElementById('tracking-badge').textContent = `● HYPER-3D STUDIO (ID ${id})`;
+      }
+
+      const sBox = document.getElementById('ctrl-sliders-box');
+      sBox.innerHTML = '';
+      cfg.sliders.forEach(s => {
+        const grp = document.createElement('div');
+        grp.className = 'ctrl-group';
+        grp.innerHTML = `
+          <div class="ctrl-label-row">
+            <span class="ctrl-name">${s.label}</span>
+            <span class="ctrl-val" id="val-${s.key}">${s.val}</span>
+          </div>
+          <input type="range" id="slider-${s.key}" min="${s.min}" max="${s.max}" step="${s.step}" value="${s.val}"
+                 oninput="updateParam('${s.key}', this.value)" />
+        `;
+        sBox.appendChild(grp);
+      });
+
+      buildModelForChapter(id);
+      updateTelemetryAndScene();
+
+      if (fromScanner) {
+        playLockChime();
+      }
+    }
+
+    function updateParam(key, val) {
+      params[key] = parseFloat(val);
+      const disp = document.getElementById(`val-${key}`);
+      if (disp) disp.textContent = params[key];
+      updateTelemetryAndScene();
+    }
+
+    function resetCurrentParams() {
+      isExploded = false;
+      document.getElementById('btn-exploded').classList.remove('active');
+      document.getElementById('btn-xray-top').classList.remove('active');
+      selectMarker(currentMarkerId, false);
+    }
+
+    function toggleExplodedView() {
+      isExploded = !isExploded;
+      document.getElementById('btn-exploded').classList.toggle('active', isExploded);
+      document.getElementById('btn-xray-top').classList.toggle('active', isExploded);
+      playLockChime();
+    }
+
+    function toggle3DLabels() {
+      showLabels = !showLabels;
+      labelsGroup.visible = showLabels;
+      document.getElementById('btn-labels-top').classList.toggle('active', showLabels);
+    }
+
+    function toggleHandSimMode() {
+      handSimActive = !handSimActive;
+      document.getElementById('btn-hand-sim').classList.toggle('active', handSimActive);
+    }
+
+    function updateTelemetryAndScene() {
+      const id = currentMarkerId;
+      const tele = document.getElementById('telemetry-list');
+      let rows = [];
+
+      if (id === 0) {
+        const v_mL = params.vol / 1000;
+        const df = Math.pow(10, -params.dil);
+        const cfu = params.col / (df * v_mL);
+        rows = [
+          ["ปริมาตรดูดถ่าย (V)", `${params.vol.toFixed(0)} μL (${v_mL.toFixed(2)} mL)`],
+          ["ตัวคูณการเจือจาง (DF)", `10^-${params.dil}`],
+          ["ความเข้มข้นเชื้อเริ่มต้น", `${cfu.toExponential(2)} CFU/mL`]
+        ];
+        if (dynamicObjects.plunger) dynamicObjects.plunger.position.y = 0.55 + (params.vol / 1000) * 0.42;
+      } else if (id === 1) {
+        const T_K = params.temp + 273.15;
+        const D = (1.38e-23 * T_K) / (6 * Math.PI * 0.001 * 1e-6) * 1e12;
+        const vSwim = params.rpm * 0.28;
+        rows = [
+          ["อัตราเร็วว่ายแฟลกเจลลา", `${vSwim.toFixed(1)} μm/s`],
+          ["สัมประสิทธิ์การแพร่ D", `${D.toFixed(3)} μm²/s`],
+          ["โหมดการเคลื่อนที่", params.grad >= 40 ? "Directed Chemotaxis" : "Random Walk"]
+        ];
+      } else if (id === 2) {
+        const r_m = params.radius * 1e-6;
+        const eta = params.visc * 1e-3;
+        const vt_ums = (2 * r_m * r_m * (1080 - 1000) * 9.81) / (9 * eta) * 1e6;
+        rows = [
+          ["ความเร็วตกตะกอน v_t", `${vt_ums.toFixed(2)} μm/s`],
+          ["ความเร็วลม HEPA", `${params.airflow.toFixed(2)} m/s`],
+          ["สถานะม่านอากาศ", params.airflow <= 0.55 ? "Laminar Flow (ปลอดเชื้อ)" : "ระวังกระแสลมปั่นป่วน"]
+        ];
+        if (dynamicObjects.stokesCell) dynamicObjects.stokesCell.scale.setScalar(0.55 + params.radius * 0.2);
+      } else if (id === 3) {
+        const rcf = 1.118e-5 * params.rcm * params.rpm * params.rpm;
+        rows = [
+          ["แรงเหวี่ยงสัมพัทธ์ (RCF)", `${Math.round(rcf).toLocaleString()} ×g`],
+          ["ความเร็วเชิงมุม ω", `${(params.rpm * 2 * Math.PI / 60).toFixed(0)} rad/s`],
+          ["สมดุลโรเตอร์", params.bal === 1 ? "✅ สมดุลปลอดภัย" : "⚠️ ไม่สมดุล (สั่นสะเทือน!)"]
+        ];
+      } else if (id === 4) {
+        const copies = Math.pow(2, params.cycles);
+        const stageText = params.stage === 1 ? "95°C Denaturation" : (params.stage === 2 ? "55°C Annealing" : "72°C Extension");
+        rows = [
+          ["ขั้นตอนวัฏจักร PCR", stageText],
+          ["จำนวนสำเนา DNA (2^n)", `${copies.toExponential(2)} เท่า`],
+          ["อุณหภูมิตู้อบ Incubator", `37.0 ± ${(0.5 - params.fan * 0.003).toFixed(2)} °C`]
+        ];
+      } else if (id === 5) {
+        const T_sat = 100 + params.psi * 1.4 * (params.purge / 100);
+        const sterilized = (T_sat >= 121 && params.time >= 15 && params.purge >= 95);
+        rows = [
+          ["อุณหภูมิไอน้ำจริง", `${T_sat.toFixed(1)} °C`],
+          ["ความดันสัมบูรณ์ P_abs", `${(14.7 + params.psi).toFixed(1)} psia`],
+          ["ผลทำลายสปอร์", sterilized ? "✅ ฆ่าสปอร์สำเร็จ 100%" : "⚠️ เสี่ยงสปอร์รอดชีวิต"]
+        ];
+      } else if (id === 6) {
+        const zeta = -15 - (params.ph - 3) * 6.5;
+        const attract = params.charge > 0;
+        rows = [
+          ["ศักย์ซีตาผนังเซลล์", `${zeta.toFixed(1)} mV (ประจุลบ)`],
+          ["อันตรกิริยาไฟฟ้าสถิต", attract ? "ดึงดูดสีย้อมบวก (ติดสีชัด)" : "ผลักสีย้อมลบ (ย้อมพื้นหลัง)"],
+          ["แรงคูลอมบ์สัมพัทธ์", `${(Math.abs(zeta) / (params.dist * params.dist)).toFixed(2)} pN`]
+        ];
+      } else if (id === 7) {
+        const E = params.volt / 10;
+        const I_mA = params.volt * 0.65;
+        const P_W = (params.volt * I_mA) / 1000;
+        rows = [
+          ["สนามไฟฟ้า E", `${E.toFixed(1)} V/cm (Run to Red)`],
+          ["กำลังความร้อนจูล P=IV", `${P_W.toFixed(2)} W`],
+          ["ระยะวิ่ง DNA 1,000 bp", `${(params.volt * params.runtime * 0.015 / params.gel).toFixed(1)} mm`]
+        ];
+        if (dynamicObjects.dnaBands) {
+          dynamicObjects.dnaBands.forEach(item => {
+            const dist = (params.volt / 100) * (params.runtime / 30) * (1.2 / params.gel) * (0.35 + item.sizeIdx * 0.38);
+            item.mesh.position.x = Math.min(1.05, -0.95 + dist);
+          });
+        }
+      } else if (id === 8) {
+        const n2 = 1.333 + params.brix * 0.0015;
+        const rad1 = params.angle * Math.PI / 180;
+        const sin2 = Math.sin(rad1) / n2;
+        const deg2 = Math.asin(Math.min(0.99, sin2)) * 180 / Math.PI;
+        const ethanol = Math.max(0, (30 - params.brix) * 0.52);
+        rows = [
+          ["ดัชนีหักเหน้ำหมัก (n_2)", `${n2.toFixed(4)}`],
+          ["มุมหักเหในน้ำหมัก (θ_2)", `${deg2.toFixed(1)}°`],
+          ["แอลกอฮอล์โดยประมาณ", `${ethanol.toFixed(1)} % v/v`]
+        ];
+        if (dynamicObjects.incidentRay && dynamicObjects.refractedRay) {
+          dynamicObjects.incidentRay.rotation.z = rad1;
+          dynamicObjects.refractedRay.rotation.z = deg2 * Math.PI / 180;
+        }
+      } else if (id === 9) {
+        const n_med = params.oil === 1 ? 1.515 : 1.000;
+        const NA = n_med * 0.825;
+        const d_min = (0.61 * params.wave) / NA;
+        rows = [
+          ["ค่ารูรับแสง (NA)", `${NA.toFixed(2)} (${params.oil === 1 ? 'Immersion Oil' : 'Air Loss'})`],
+          ["ขีดจำกัดแยกชัด d_min", `${(d_min / 1000).toFixed(3)} μm (${Math.round(d_min)} nm)`],
+          ["ความคมชัดที่ 100x", Math.abs(params.focus) <= 2 && params.oil === 1 ? "✅ คมชัดสูงสุด" : "⚠️ พร่ามัว / เสียแสง"]
+        ];
+        if (dynamicObjects.oilDrop) dynamicObjects.oilDrop.visible = (params.oil === 1);
+        if (dynamicObjects.lightCone) dynamicObjects.lightCone.scale.x = params.oil === 1 ? 1.0 : 0.55;
+      } else if (id === 10) {
+        const r_m = params.dist / 100;
+        const I_uv = (params.power * 0.35) / (4 * Math.PI * r_m * r_m);
+        const dose = I_uv * params.time;
+        const survival = Math.max(0.0001, 100 * Math.exp(-0.045 * dose));
+        rows = [
+          ["ความเข้มรังสี UV-C", `${I_uv.toFixed(2)} W/m²`],
+          ["ปริมาณรังสีสะสม (Dose)", `${dose.toFixed(1)} J/m²`],
+          ["อัตราการรอดชีวิต", `${survival.toFixed(3)} %`]
+        ];
+        if (dynamicObjects.colonies) {
+          const visibleCount = Math.round((survival / 100) * dynamicObjects.colonies.length);
+          dynamicObjects.colonies.forEach((c, idx) => { c.visible = idx < Math.max(1, visibleCount); });
+        }
+      } else if (id === 11) {
+        const measuredOD = params.od / params.df;
+        const trans = Math.pow(10, -measuredOD) * 100;
+        const cellConc = params.od * 8.0e8;
+        const phase = params.hour < 2 ? "Lag Phase" : (params.hour <= 8 ? "Log Phase" : (params.hour <= 12 ? "Stationary" : "Death Phase"));
+        rows = [
+          ["ค่าที่อ่านได้ / %T", `OD600 = ${measuredOD.toFixed(2)} (%T = ${trans.toFixed(1)}%)`],
+          ["ความหนาแน่นเซลล์", `${cellConc.toExponential(2)} cells/mL`],
+          ["ระยะการเจริญ", `${phase} (${measuredOD <= 0.8 ? 'ช่วงเส้นตรง' : 'ควรเจือจาง!'})`]
+        ];
+        if (dynamicObjects.cultureLiq) dynamicObjects.cultureLiq.material.opacity = Math.min(0.92, 0.25 + measuredOD * 0.45);
+        if (dynamicObjects.beamOut) dynamicObjects.beamOut.material.opacity = Math.max(0.08, trans / 100);
+      }
+
+      tele.innerHTML = rows.map(r => `
+        <div class="tele-item">
+          <span class="tele-label">${r[0]}</span>
+          <span class="tele-val">${r[1]}</span>
+        </div>
+      `).join('');
+    }
+
+    // Real-Time 60 FPS Scientific Graph Canvas Renderer
+    const scopeCanvas = document.getElementById('live-scope-canvas');
+    const scopeCtx = scopeCanvas.getContext('2d');
+    function drawLiveScope(t) {
+      const w = scopeCanvas.width, h = scopeCanvas.height;
+      scopeCtx.clearRect(0, 0, w, h);
+
+      // Subtle grid
+      scopeCtx.strokeStyle = 'rgba(56, 189, 248, 0.14)';
+      scopeCtx.lineWidth = 1;
+      for (let gx = 0; gx < w; gx += 40) {
+        scopeCtx.beginPath(); scopeCtx.moveTo(gx, 0); scopeCtx.lineTo(gx, h); scopeCtx.stroke();
+      }
+      for (let gy = 0; gy < h; gy += 25) {
+        scopeCtx.beginPath(); scopeCtx.moveTo(0, gy); scopeCtx.lineTo(w, gy); scopeCtx.stroke();
+      }
+
+      // Waveform curve specific to active chapter
+      scopeCtx.strokeStyle = '#00f0ff';
+      scopeCtx.lineWidth = 2.2;
+      scopeCtx.beginPath();
+      for (let x = 0; x < w; x++) {
+        const u = x / w;
+        let yNorm = 0.5;
+        if (currentMarkerId === 0) {
+          yNorm = 0.15 + 0.75 * Math.exp(-u * (params.dil || 5) * 0.6);
+        } else if (currentMarkerId === 1) {
+          yNorm = 0.5 + 0.35 * Math.sin(u * 16 - t * (params.rpm || 100) * 0.08);
+        } else if (currentMarkerId === 2) {
+          yNorm = 0.2 + 0.65 * (1 - Math.exp(-u * 4 * (params.radius || 2.5) / (params.visc || 1)));
+        } else if (currentMarkerId === 3) {
+          yNorm = 0.12 + 0.78 * Math.pow(u, 2) * ((params.rpm || 10000) / 14000);
+        } else if (currentMarkerId === 4) {
+          const step = Math.floor((u * 3 + t * 0.5) % 3);
+          yNorm = step === 0 ? 0.82 : (step === 1 ? 0.32 : 0.58);
+        } else if (currentMarkerId === 5) {
+          yNorm = 0.2 + 0.65 * (1 - Math.exp(-u * 5)) * ((params.psi || 15) / 20);
+        } else if (currentMarkerId === 6) {
+          yNorm = 0.5 + 0.38 * (params.charge || 1) * Math.exp(-u * (params.dist || 2.5));
+        } else if (currentMarkerId === 7) {
+          yNorm = 0.15 + 0.75 * Math.exp(-u * 3.2 * (params.gel || 1.0));
+        } else if (currentMarkerId === 8) {
+          yNorm = 0.2 + 0.65 * Math.sin(u * Math.PI * 0.5) * (1 + (params.brix || 18) * 0.01);
+        } else if (currentMarkerId === 9) {
+          const sincArg = (u - 0.5) * (params.oil === 1 ? 18 : 9);
+          const sinc = sincArg === 0 ? 1 : Math.sin(sincArg) / sincArg;
+          yNorm = 0.12 + 0.78 * sinc * sinc;
+        } else if (currentMarkerId === 10) {
+          yNorm = 0.12 + 0.8 * Math.exp(-u * 4 * (30 / (params.dist || 30)));
+        } else if (currentMarkerId === 11) {
+          yNorm = 0.15 + 0.75 / (1 + Math.exp(-(u * 14 - 6)));
+        }
+        const py = h - Math.max(8, Math.min(h - 8, yNorm * h));
+        if (x === 0) scopeCtx.moveTo(x, py);
+        else scopeCtx.lineTo(x, py);
+      }
+      scopeCtx.stroke();
+    }
+
+    // =========================================================================
+    // 6. MULTI-SCALE ARUCO 4x4 + MONITOR-ANTI-GLARE OPTICAL TARGET SCANNER
+    // =========================================================================
+    const videoEl = document.getElementById('ar-video');
+    const cvCanvas = document.getElementById('cv-canvas');
+    const cvCtx = cvCanvas.getContext('2d', { willReadFrequently: true });
+    let scanInterval = null;
+    let opticalLockFrames = 0;
+
+    function setDrawersVisible(visible) {
+      ['data', 'ctrl'].forEach(which => {
+        const el = document.getElementById(`drawer-${which}`);
+        const btn = document.getElementById(`nav-${which}`);
+        if (!el || !btn) return;
+        if (visible) {
+          el.classList.remove('closed');
+          btn.classList.add('active');
+        } else {
+          el.classList.add('closed');
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    async function toggleARCameraMode() {
+      const jewelBtn = document.getElementById('btn-ar-jewel');
+      const jewelTxt = document.getElementById('jewel-text');
+      const reticle = document.getElementById('ar-reticle');
+      const simBtn = document.getElementById('sim-lock-btn');
+      const badge = document.getElementById('tracking-badge');
+
+      if (!isARMode) {
+        try {
+          let stream;
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({
+              video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+              audio: false
+            });
+          } catch (err) {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+          }
+          videoEl.srcObject = stream;
+          await videoEl.play();
+          videoEl.style.display = 'block';
+          document.body.classList.add('ar-active');
+          isARMode = true;
+          isTargetLocked = false;
+          opticalLockFrames = 0;
+
+          // Auto-close side drawers on smartphone/AR mode so reticle & 3D model are 100% clear
+          setDrawersVisible(false);
+
+          modelGroup.visible = false;
+          reticle.style.display = 'block';
+          reticle.classList.remove('locked');
+          const sigFill = document.getElementById('reticle-signal-fill');
+          if (sigFill) sigFill.style.width = '0%';
+          document.getElementById('reticle-caption').textContent =
+            'ส่องกรอบเล็งไปที่มาร์กเกอร์บนจอคอม/กระดาษ (หรือแตะกรอบเพื่อล็อกทันที)';
+          simBtn.style.display = 'block';
+          simBtn.textContent = '🎯 แตะเพื่อแสดงโมเดล 3D ทันที';
+          jewelBtn.classList.add('ar-on');
+          jewelTxt.textContent = 'โหมด 3D';
+          badge.className = 'status-badge scanning';
+          badge.textContent = '🔍 ส่องหามาร์กเกอร์ ArUco (ID 0–11)...';
+
+          startArUcoOpticalScanner();
+        } catch (err) {
+          alert('ไม่สามารถเปิดกล้องได้ (โปรดเข้าใช้งานผ่านลิงก์ HTTPS บน GitHub Pages เพื่อเปิดกล้องสมาร์ทโฟน) ระบบจะแสดงผลในโหมด 3D Studio แทน');
+        }
+      } else {
+        stopARCameraMode();
+      }
+    }
+
+    function stopARCameraMode() {
+      if (videoEl.srcObject) {
+        videoEl.srcObject.getTracks().forEach(t => t.stop());
+        videoEl.srcObject = null;
+      }
+      if (scanInterval) clearInterval(scanInterval);
+      videoEl.style.display = 'none';
+      document.body.classList.remove('ar-active');
+      isARMode = false;
+      isTargetLocked = true;
+      modelGroup.visible = true;
+      modelGroup.scale.setScalar(1);
+      document.getElementById('ar-reticle').style.display = 'none';
+      document.getElementById('sim-lock-btn').style.display = 'none';
+      document.getElementById('btn-ar-jewel').classList.remove('ar-on');
+      document.getElementById('jewel-text').textContent = 'ส่อง AR';
+      const badge = document.getElementById('tracking-badge');
+      badge.className = 'status-badge';
+      badge.textContent = `● HYPER-3D STUDIO (ID ${currentMarkerId})`;
+      if (window.innerWidth >= 860) setDrawersVisible(true);
+    }
+
+    function rotateMat90(m) {
+      return [
+        [m[3][0], m[2][0], m[1][0], m[0][0]],
+        [m[3][1], m[2][1], m[1][1], m[0][1]],
+        [m[3][2], m[2][2], m[1][2], m[0][2]],
+        [m[3][3], m[2][3], m[1][3], m[0][3]]
+      ];
+    }
+
+    function sampleBlockLum(lumArr, x0, y0, boxSize, r, c) {
+      const cellW = boxSize / 6;
+      const cx = Math.floor(x0 + (c + 0.5) * cellW);
+      const cy = Math.floor(y0 + (r + 0.5) * cellW);
+      const step = Math.max(1, Math.floor(cellW * 0.22));
+      let sum = 0, cnt = 0;
+      for (let dy = -step; dy <= step; dy += step) {
+        for (let dx = -step; dx <= step; dx += step) {
+          const px = Math.max(0, Math.min(159, cx + dx));
+          const py = Math.max(0, Math.min(159, cy + dy));
+          sum += lumArr[py * 160 + px];
+          cnt++;
+        }
+      }
+      return sum / cnt;
+    }
+
+    function evaluateArUcoCandidate(lumArr, x0, y0, boxSize) {
+      if (x0 < 2 || y0 < 2 || x0 + boxSize > 158 || y0 + boxSize > 158) return null;
+      const cellLums = [];
+      let localMin = 255, localMax = 0;
+      for (let r = 0; r < 6; r++) {
+        const row = [];
+        for (let c = 0; c < 6; c++) {
+          const v = sampleBlockLum(lumArr, x0, y0, boxSize, r, c);
+          row.push(v);
+          if (v < localMin) localMin = v;
+          if (v > localMax) localMax = v;
+        }
+        cellLums.push(row);
+      }
+      if (localMax - localMin < 24) return null;
+      // Anti-glare threshold biased slightly toward dark border for computer screens
+      const thresh = localMin + (localMax - localMin) * 0.48;
+
+      let borderBlackCount = 0;
+      let innerWhiteCount = 0;
+      const inner4x4 = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+
+      for (let r = 0; r < 6; r++) {
+        for (let c = 0; c < 6; c++) {
+          const bit = cellLums[r][c] > thresh ? 1 : 0;
+          if (r === 0 || r === 5 || c === 0 || c === 5) {
+            if (bit === 0) borderBlackCount++;
+          } else {
+            inner4x4[r - 1][c - 1] = bit;
+            if (bit === 1) innerWhiteCount++;
+          }
+        }
+      }
+
+      if (borderBlackCount < 13 || innerWhiteCount < 2 || innerWhiteCount > 14) return null;
+
+      let bestId = -1, bestDist = 99;
+      for (let id = 0; id < 12; id++) {
+        let ref = ARUCO_DICT_4X4[id];
+        for (let rot = 0; rot < 4; rot++) {
+          let dist = 0;
+          for (let rr = 0; rr < 4; rr++) {
+            for (let cc = 0; cc < 4; cc++) {
+              if (inner4x4[rr][cc] !== ref[rr][cc]) dist++;
+            }
+          }
+          // Prefer currentMarkerId on ties
+          if (dist < bestDist || (dist === bestDist && id === currentMarkerId)) {
+            bestDist = dist;
+            bestId = id;
+          }
+          ref = rotateMat90(ref);
+        }
+      }
+      return { bestId, bestDist, borderBlackCount, contrast: localMax - localMin };
+    }
+
+    function startArUcoOpticalScanner() {
+      if (scanInterval) clearInterval(scanInterval);
+      const lumArr = new Float32Array(160 * 160);
+
+      scanInterval = setInterval(() => {
+        if (!isARMode || videoEl.readyState < 2) return;
+
+        // 1. True 1:1 Center-Square Crop from Smartphone Video Stream
+        const vw = videoEl.videoWidth || 640;
+        const vh = videoEl.videoHeight || 480;
+        const cropSize = Math.floor(Math.min(vw, vh) * 0.68);
+        const sx = Math.floor((vw - cropSize) * 0.5);
+        const sy = Math.floor((vh - cropSize) * 0.5);
+        cvCtx.drawImage(videoEl, sx, sy, cropSize, cropSize, 0, 0, 160, 160);
+
+        const imgData = cvCtx.getImageData(0, 0, 160, 160).data;
+        let minL = 255, maxL = 0;
+        for (let i = 0, p = 0; i < imgData.length; i += 4, p++) {
+          const lum = 0.299 * imgData[i] + 0.587 * imgData[i + 1] + 0.114 * imgData[i + 2];
+          lumArr[p] = lum;
+          if (lum < minL) minL = lum;
+          if (lum > maxL) maxL = lum;
+        }
+
+        const globalContrast = maxL - minL;
+        if (globalContrast < 22) return;
+
+        // 2. Auto-Bounding-Box Localization of Dark Marker Square inside Reticle
+        const darkCut = minL + globalContrast * 0.42;
+        let bx0 = 159, bx1 = 0, by0 = 159, by1 = 0, darkCount = 0;
+        for (let y = 14; y < 146; y += 2) {
+          for (let x = 14; x < 146; x += 2) {
+            if (lumArr[y * 160 + x] < darkCut) {
+              if (x < bx0) bx0 = x;
+              if (x > bx1) bx1 = x;
+              if (y < by0) by0 = y;
+              if (y > by1) by1 = y;
+              darkCount++;
+            }
+          }
+        }
+
+        // 3. Multi-Scale Pyramid + Auto-Bounding-Box ArUco 4x4 Bit Matching
+        const candidates = [];
+        if (darkCount > 45 && bx1 - bx0 >= 32 && by1 - by0 >= 32) {
+          const bw = bx1 - bx0, bh = by1 - by0;
+          const bSize = Math.round((bw + bh) * 0.5);
+          const cx = (bx0 + bx1) * 0.5, cy = (by0 + by1) * 0.5;
+          const resAuto = evaluateArUcoCandidate(lumArr, Math.round(cx - bSize * 0.5), Math.round(cy - bSize * 0.5), bSize);
+          if (resAuto) candidates.push(resAuto);
+        }
+
+        const boxSizes = [44, 56, 70, 86, 102, 120, 138];
+        const offsets = [[0,0], [-10,0], [10,0], [0,-10], [0,10]];
+        for (let sIdx = 0; sIdx < boxSizes.length; sIdx++) {
+          const bSize = boxSizes[sIdx];
+          for (let oIdx = 0; oIdx < offsets.length; oIdx++) {
+            const x0 = Math.round(80 + offsets[oIdx][0] - bSize * 0.5);
+            const y0 = Math.round(80 + offsets[oIdx][1] - bSize * 0.5);
+            const res = evaluateArUcoCandidate(lumArr, x0, y0, bSize);
+            if (res) candidates.push(res);
+          }
+        }
+
+        let topMatch = null;
+        for (let i = 0; i < candidates.length; i++) {
+          const c = candidates[i];
+          if (!topMatch ||
+              c.bestDist < topMatch.bestDist ||
+              (c.bestDist === topMatch.bestDist && c.borderBlackCount > topMatch.borderBlackCount)) {
+            topMatch = c;
+          }
+        }
+
+        // Exact or high-confidence ArUco 4x4 match (handles any distance & monitor glare)
+        if (topMatch && topMatch.bestDist <= 2 && topMatch.borderBlackCount >= 14) {
+          opticalLockFrames = 3;
+          updateReticleSignalUI(100);
+          lockArUcoTarget(topMatch.bestId);
+          return;
+        }
+
+        // 4. Computer Monitor / Textbook Optical Target Contrast Engine (Fallback)
+        // Measures center-surround contrast + high-frequency checkerboard/marker edges
+        let innerSum = 0, innerCnt = 0, outerSum = 0, outerCnt = 0, edgeHits = 0, edgeTotal = 0;
+        const edgeThresh = Math.max(14, globalContrast * 0.18);
+        for (let y = 12; y < 148; y += 3) {
+          for (let x = 12; x < 148; x += 3) {
+            const v = lumArr[y * 160 + x];
+            const dx = Math.abs(x - 80), dy = Math.abs(y - 80);
+            const maxD = Math.max(dx, dy);
+            if (maxD <= 42) {
+              innerSum += v; innerCnt++;
+              const vRight = lumArr[y * 160 + (x + 3)];
+              const vDown = lumArr[(y + 3) * 160 + x];
+              if (Math.abs(v - vRight) > edgeThresh || Math.abs(v - vDown) > edgeThresh) edgeHits++;
+              edgeTotal++;
+            } else if (maxD >= 52 && maxD <= 72) {
+              outerSum += v; outerCnt++;
+            }
+          }
+        }
+
+        const innerMean = innerSum / Math.max(1, innerCnt);
+        const outerMean = outerSum / Math.max(1, outerCnt);
+        const centerDiff = outerMean - innerMean; // Positive when dark marker sits on bright screen/page
+        const edgeDensity = edgeHits / Math.max(1, edgeTotal);
+
+        const isMonitorTargetVisible =
+          (topMatch && topMatch.bestDist <= 3) ||
+          (centerDiff > 14 && edgeDensity > 0.14 && globalContrast > 32) ||
+          (edgeDensity > 0.24 && globalContrast > 42 && darkCount > 60 && darkCount < 2400);
+
+        if (isMonitorTargetVisible) {
+          opticalLockFrames = Math.min(4, opticalLockFrames + 1);
+        } else {
+          opticalLockFrames = Math.max(0, opticalLockFrames - 1);
+        }
+
+        const signalPct = Math.min(100, Math.round((opticalLockFrames / 2) * 100));
+        updateReticleSignalUI(signalPct);
+
+        if (opticalLockFrames >= 2) {
+          const lockedId = (topMatch && topMatch.bestDist <= 3) ? topMatch.bestId : currentMarkerId;
+          lockArUcoTarget(lockedId);
+        }
+      }, 140);
+    }
+
+    function updateReticleSignalUI(pct) {
+      const sigFill = document.getElementById('reticle-signal-fill');
+      if (sigFill) sigFill.style.width = `${pct}%`;
+      if (!isTargetLocked && pct > 0 && pct < 100) {
+        document.getElementById('reticle-caption').textContent =
+          `📡 ตรวจพบมาร์กเกอร์บนหน้าจอ (${pct}%) — ถือค้างไว้เสี้ยววินาที...`;
+      }
+    }
+
+    function lockArUcoTarget(detectedId) {
+      if (!isTargetLocked || currentMarkerId !== detectedId) {
+        isTargetLocked = true;
+        selectMarker(detectedId, true);
+        modelGroup.visible = true;
+        modelGroup.scale.setScalar(0.08);
+
+        const reticle = document.getElementById('ar-reticle');
+        reticle.classList.add('locked');
+        const sigFill = document.getElementById('reticle-signal-fill');
+        if (sigFill) sigFill.style.width = '100%';
+        document.getElementById('reticle-caption').textContent =
+          `✅ ล็อกสำเร็จ: ArUco ID ${detectedId} (บทที่ ${detectedId + 1}) — แตะกรอบเพื่อสแกนใหม่`;
+        const simBtn = document.getElementById('sim-lock-btn');
+        if (simBtn) simBtn.textContent = '🔄 สแกนใหม่ / สลับมาร์กเกอร์';
+        const badge = document.getElementById('tracking-badge');
+        badge.className = 'status-badge';
+        badge.textContent = `● AR LOCKED: ID ${detectedId} (บทที่ ${detectedId + 1})`;
+      }
+    }
+
+    function unlockForRescan() {
+      isTargetLocked = false;
+      opticalLockFrames = 0;
+      modelGroup.visible = false;
+      const reticle = document.getElementById('ar-reticle');
+      reticle.classList.remove('locked');
+      const sigFill = document.getElementById('reticle-signal-fill');
+      if (sigFill) sigFill.style.width = '0%';
+      document.getElementById('reticle-caption').textContent =
+        '🔍 กำลังสแกนมาร์กเกอร์ใหม่... ส่องกรอบไปที่มาร์กเกอร์บนจอคอม/กระดาษ';
+      const simBtn = document.getElementById('sim-lock-btn');
+      if (simBtn) simBtn.textContent = '🎯 แตะเพื่อแสดงโมเดล 3D ทันที';
+      const badge = document.getElementById('tracking-badge');
+      badge.className = 'status-badge scanning';
+      badge.textContent = '🔍 ส่องหามาร์กเกอร์ ArUco (ID 0–11)...';
+    }
+
+    function handleReticleTap() {
+      if (!isARMode) return;
+      if (isTargetLocked) {
+        unlockForRescan();
+      } else {
+        lockArUcoTarget(currentMarkerId);
+      }
+    }
+
+    function simulateMarkerLock() {
+      if (isARMode && isTargetLocked) {
+        unlockForRescan();
+      } else {
+        lockArUcoTarget(currentMarkerId);
+      }
+    }
+
+    // =========================================================================
+    // 7. GYROSCOPE SENSOR FUSION & DRAWER CONTROLS
+    // =========================================================================
+    async function enableGyroscope() {
+      if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        try {
+          const res = await DeviceOrientationEvent.requestPermission();
+          if (res !== 'granted') return;
+        } catch (e) {}
+      }
+      gyroEnabled = !gyroEnabled;
+      document.getElementById('nav-gyro').classList.toggle('active', gyroEnabled);
+    }
+
+    window.addEventListener('deviceorientation', (e) => {
+      if (!gyroEnabled || e.beta === null || e.gamma === null) return;
+      const targetX = THREE.MathUtils.degToRad(THREE.MathUtils.clamp(e.beta - 45, -30, 30)) * 0.35;
+      const targetY = THREE.MathUtils.degToRad(THREE.MathUtils.clamp(e.gamma, -45, 45)) * 0.45;
+      gyroOffset.beta += (targetX - gyroOffset.beta) * 0.1;
+      gyroOffset.gamma += (targetY - gyroOffset.gamma) * 0.1;
+    });
+
+    function toggleDrawer(which) {
+      const el = document.getElementById(`drawer-${which}`);
+      const btn = document.getElementById(`nav-${which}`);
+      el.classList.toggle('closed');
+      btn.classList.toggle('active', !el.classList.contains('closed'));
+    }
+
+    function toggleAutoRotate() {
+      controls.autoRotate = !controls.autoRotate;
+      document.getElementById('btn-autorotate').classList.toggle('active', controls.autoRotate);
+    }
+
+    // =========================================================================
+    // 8. BUILD CAROUSEL CHIPS, CHECK URL QUERY (?id=0..11), AND START 60FPS LOOP
+    // =========================================================================
+    const carousel = document.getElementById('marker-carousel');
+    CHAPTER_MODELS.forEach(item => {
+      const btn = document.createElement('button');
+      btn.className = 'marker-chip';
+      btn.textContent = item.short;
+      btn.onclick = () => {
+        selectMarker(item.id, false);
+        if (isARMode) lockArUcoTarget(item.id);
+      };
+      carousel.appendChild(btn);
+    });
+
+    if (window.innerWidth < 860) {
+      setDrawersVisible(false);
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const initId = parseInt(urlParams.get('id') || '0', 10);
+    selectMarker(isNaN(initId) ? 0 : Math.max(0, Math.min(11, initId)), false);
+    if (urlParams.get('ar') === '1') {
+      setTimeout(() => toggleARCameraMode(), 350);
+    }
+
+    const clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+
+      if (modelGroup.visible && modelGroup.scale.x < 0.999) {
+        modelGroup.scale.setScalar(THREE.MathUtils.lerp(modelGroup.scale.x, 1.0, 0.14));
+      }
+
+      if (dynamicObjects.holoRing) {
+        dynamicObjects.holoRing.rotation.z = t * 0.35;
+      }
+
+      // Smooth Exploded / X-Ray view interpolation
+      explodingParts.forEach(mesh => {
+        const targetPos = isExploded
+          ? mesh.userData.origPos.clone().add(mesh.userData.expOffset)
+          : mesh.userData.origPos;
+        mesh.position.lerp(targetPos, 0.12);
+      });
+
+      // Simulated AI Hand Gesture parameter modulation
+      if (handSimActive) {
+        const firstSlider = CHAPTER_MODELS[currentMarkerId].sliders[0];
+        if (firstSlider) {
+          const mid = (firstSlider.min + firstSlider.max) * 0.5;
+          const amp = (firstSlider.max - firstSlider.min) * 0.42;
+          const v = mid + Math.sin(t * 1.8) * amp;
+          const stepped = Math.round(v / firstSlider.step) * firstSlider.step;
+          const sEl = document.getElementById(`slider-${firstSlider.key}`);
+          if (sEl) sEl.value = stepped;
+          updateParam(firstSlider.key, stepped);
+        }
+      }
+
+      if (gyroEnabled) {
+        modelGroup.rotation.x = gyroOffset.beta;
+        modelGroup.rotation.z = -gyroOffset.gamma * 0.5;
+      } else {
+        modelGroup.rotation.x = 0;
+        modelGroup.rotation.z = 0;
+      }
+
+      // Per-chapter live 3D animations
+      if (currentMarkerId === 1 && dynamicObjects.flagGroup) {
+        dynamicObjects.flagGroup.rotation.x = t * (params.rpm * 0.25);
+        dynamicObjects.bacGroup.position.x = Math.sin(t * 1.6) * 0.32;
+        dynamicObjects.brownian.forEach((p, idx) => {
+          const amp = (params.temp / 37) * 0.015;
+          p.position.x += Math.sin(t * 8 + idx) * amp;
+          p.position.y += Math.cos(t * 7 + idx * 2) * amp;
+        });
+      } else if (currentMarkerId === 2 && dynamicObjects.streamlines) {
+        dynamicObjects.streamlines.forEach((bar, idx) => {
+          bar.position.y = -0.28 + Math.sin(t * 6 + idx) * 0.08;
+        });
+      } else if (currentMarkerId === 3 && dynamicObjects.rotorGroup) {
+        dynamicObjects.rotorGroup.rotation.y += (params.rpm / 1000) * 0.048;
+        dynamicObjects.rotorGroup.position.x = params.bal === 0 ? Math.sin(t * 38) * 0.065 : 0;
+      } else if (currentMarkerId === 4 && dynamicObjects.dnaGroup) {
+        dynamicObjects.dnaGroup.rotation.y = t * 1.25;
+        const s = 0.82 + (params.cycles / 35) * 0.42;
+        dynamicObjects.dnaGroup.scale.setScalar(s);
+      } else if (currentMarkerId === 5 && dynamicObjects.steamParticles) {
+        dynamicObjects.steamParticles.forEach((sp) => {
+          sp.position.y += 0.018 * (1 + params.psi * 0.08);
+          if (sp.position.y > 0.58) sp.position.y = -1.1;
+        });
+      } else if (currentMarkerId === 6 && dynamicObjects.dyeIons) {
+        dynamicObjects.dyeIons.forEach((ion, idx) => {
+          const targetY = params.charge > 0 ? -0.30 : 0.68;
+          ion.position.y = THREE.MathUtils.lerp(ion.position.y, targetY + Math.sin(t * 3 + idx) * 0.05, 0.06);
+        });
+      }
+
+      drawLiveScope(t);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+  <script src="ar_blender_pbr_models.js?v=2027.4"></script>
+</body>
+</html>
+"""
+
+with open(TARGET_HTML, "w", encoding="utf-8") as f:
+    f.write(HTML_CONTENT)
+
+print("Successfully wrote upgraded ar_aruco_textbook.html:", len(HTML_CONTENT), "bytes")

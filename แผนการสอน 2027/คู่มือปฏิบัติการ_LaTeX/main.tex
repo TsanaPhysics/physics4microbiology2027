@@ -1,0 +1,79 @@
+\documentclass[12pt, a4paper, oneside]{book}
+
+\usepackage{styles/physics_microbio_lab_style}
+
+\begin{document}
+
+% ====================================================================
+% FRONT MATTER
+% ====================================================================
+\frontmatter
+\pagestyle{empty}
+
+% 1. Full-Bleed 3D Pixar Cover + Inner Academic Vector Cover
+\input{frontmatter/cover.tex}
+
+% 2. Formal Title Page
+\cleardoublepage
+\input{frontmatter/title.tex}
+
+\pagestyle{plain}
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+% 3. Preface (คำนำ)
+\cleardoublepage
+\input{frontmatter/preface.tex}
+
+% 4. Laboratory Safety, Ethics (CLO3), and Report Guide (CLO4)
+\cleardoublepage
+\input{frontmatter/safety_rules.tex}
+
+% 5. 15-Week OBE Lab Schedule & CLO Alignment
+\cleardoublepage
+\input{frontmatter/schedule.tex}
+
+% 6. Table of Contents, List of Figures, List of Tables
+\cleardoublepage
+\tableofcontents
+
+\cleardoublepage
+\listoffigures
+\addcontentsline{toc}{chapter}{สารบัญภาพชุดการทดลอง}
+
+\cleardoublepage
+\listoftables
+\addcontentsline{toc}{chapter}{สารบัญตารางบันทึกผล}
+
+% ====================================================================
+% MAIN MATTER (13 Complete 3-Hour Laboratory Modules)
+% ====================================================================
+\mainmatter
+\pagestyle{fancy}
+
+\input{labs/lab01_micropipette_measurement.tex}
+\input{labs/lab02_motion_brownian_diffusion.tex}
+\input{labs/lab03_newton_stokes_viscosity.tex}
+\input{labs/lab04_energy_centrifuge_rcf.tex}
+\input{labs/lab05_heat_incubator_stability.tex}
+\input{labs/lab06_vapor_pressure_autoclave.tex}
+\input{labs/lab07_electrostatics_cell_staining.tex}
+\input{labs/lab08_ohm_gel_electrophoresis.tex}
+\input{labs/lab09_refraction_brix_fermentation.tex}
+\input{labs/lab10_microscope_immersion_oil.tex}
+\input{labs/lab11_half_life_uv_sterilization.tex}
+\input{labs/lab12_spectrophotometer_od600.tex}
+\input{labs/lab13_integrated_mini_project.tex}
+
+% ====================================================================
+% BACK MATTER (Error Analysis, Plotting Guide, Rubrics, References)
+% ====================================================================
+\backmatter
+\input{backmatter/appendix_rubrics.tex}
+\input{backmatter/references.tex}
+\input{backmatter/biography.tex}
+
+\cleardoublepage
+\printindex
+
+\end{document}

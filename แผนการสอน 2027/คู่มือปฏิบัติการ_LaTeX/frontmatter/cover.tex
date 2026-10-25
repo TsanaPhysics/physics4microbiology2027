@@ -1,0 +1,106 @@
+\begin{titlepage}
+\newgeometry{margin=0pt}
+\thispagestyle{empty}
+\noindent%
+\begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=center, inner sep=0pt] at (current page.center) {
+        \includegraphics[width=\paperwidth, height=\paperheight]{figures/cover_lab_physics4microbio2027.jpg}
+    };
+\end{tikzpicture}
+\clearpage
+\thispagestyle{empty}
+\noindent%
+\begin{tikzpicture}[remember picture, overlay]
+    % Background Gradient (Deep Bio-Emerald & Oceanic Navy)
+    \shade[top color=bioEmerald!75!black, bottom color=charcoal!96!black]
+        (current page.south west) rectangle (current page.north east);
+
+    % Precision Coordinate Grid
+    \draw[physCyan!18, line width=0.4pt, step=1.2cm]
+        ($(current page.south west)+(-1,-1)$) grid ($(current page.north east)+(1,1)$);
+
+    % Central Vector Motif (Laboratory Instrumentation & Biophysical Measurement)
+    \begin{scope}[shift={($(current page.center)+(0,-0.5)$)}]
+        \foreach \r in {1.8, 3.0, 4.2, 5.4} {
+            \draw[bioTeal!40, line width=0.6pt, dashed] (0,0) circle (\r cm);
+        }
+        \draw[physCyan!80, line width=1.3pt, rotate=30] (0,0) ellipse (4.7cm and 1.6cm);
+        \draw[physAmber!85, line width=1.3pt, rotate=90] (0,0) ellipse (4.7cm and 1.6cm);
+        \draw[bioEmerald!85, line width=1.3pt, rotate=150] (0,0) ellipse (4.7cm and 1.6cm);
+
+        \fill[physCyan] (30:4.7cm) circle (3.5pt);
+        \fill[physAmber] (90:4.7cm) circle (3.5pt);
+        \fill[bioEmerald] (150:4.7cm) circle (3.5pt);
+
+        \draw[physAmber, line width=2.2pt, fill=bioEmerald!90!black]
+            (0:2.1cm) -- (60:2.1cm) -- (120:2.1cm) -- (180:2.1cm) -- (240:2.1cm) -- (300:2.1cm) -- cycle;
+        \fill[physCyan!35] (0,0) circle (1.2cm);
+        \node[white, font=\small\sffamily\bfseries, fill=charcoal!95, rounded corners=3pt, inner sep=4pt] at (0,0) {13 Hands-on Microbiology Labs};
+    \end{scope}
+
+    % Top Institutional Header
+    \node[anchor=north west, align=left] at ($(current page.north west)+(1.8cm, -1.5cm)$) {
+        {\fontsize{12.5pt}{16pt}\bfseries\color{physAmber} คู่มือปฏิบัติการและใบบันทึกผลการทดลองมาตรฐาน OBE}\\[3pt]
+        {\fontsize{11pt}{15pt}\bfseries\color{white} หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาจุลชีววิทยา}\\[4pt]
+        {\fontsize{8.5pt}{12pt}\color{softSmoke!80} FACULTY OF SCIENCE AND TECHNOLOGY \quad \textbullet \quad RAMBHAI BARNI RAJABHAT UNIVERSITY}
+    };
+
+    % Course Code Ribbon
+    \node[anchor=north east, align=center, draw=physAmber, fill=charcoal!95, rounded corners=2.5mm, line width=0.9pt, inner sep=6pt] at ($(current page.north east)+(-1.8cm, -1.5cm)$) {
+        {\fontsize{9pt}{11pt}\bfseries\color{physAmber} รหัสวิชา 4011111}\\[2pt]
+        {\fontsize{8pt}{10pt}\color{bioEmerald!60!white} ปฏิบัติการ 3 ชม./สัปดาห์}
+    };
+
+    % Title Banner
+    \node[anchor=north west] at ($(current page.north west)+(1.5cm,-4.2cm)$) {
+        \begin{tcolorbox}[
+            enhanced,
+            colback=charcoal!92,
+            colframe=bioEmerald!70!white,
+            boxrule=1.5pt,
+            arc=4mm,
+            width=18.0cm
+        ]
+            \vspace{6pt}
+            {\Huge\bfseries\color{white} คู่มือปฏิบัติการฟิสิกส์สำหรับจุลชีววิทยา}\\[8pt]
+            {\LARGE\bfseries\color{physAmber} 13 การทดลองเชื่อมโยงเครื่องมือวิทยาศาสตร์และเทคนิคจุลชีววิทยา}\\[8pt]
+            {\normalsize\sffamily\bfseries\color{physCyan} PHYSICS FOR MICROBIOLOGY LABORATORY MANUAL (4011111)}\\[4pt]
+            {\small\color{softSmoke} Micropipette $\bullet$ Viscosity $\bullet$ Centrifuge RCF $\bullet$ Autoclave $\bullet$ Electrophoresis $\bullet$ Oil Immersion $\bullet$ $\text{OD}_{600}$}
+            \vspace{6pt}
+        \end{tcolorbox}
+    };
+
+    % Bottom Author Card
+    \node[anchor=south west] at ($(current page.south west)+(1.5cm,1.8cm)$) {
+        \begin{tcolorbox}[
+            enhanced,
+            colback=charcoal!95,
+            colframe=physAmber,
+            boxrule=1.2pt,
+            arc=4mm,
+            width=12.4cm
+        ]
+            {\large\bfseries\color{white} ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา}\\[4pt]
+            {\footnotesize\color{physCyan} วท.บ. (ฟิสิกส์), วท.ม. (ฟิสิกส์ประยุกต์), ปร.ด. (ฟิสิกส์ประยุกต์)}\\[2pt]
+            {\footnotesize\color{softSmoke} สาขาวิชาฟิสิกส์ คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี}
+        \end{tcolorbox}
+    };
+
+    \node[anchor=south east] at ($(current page.south east)+(-1.5cm,1.8cm)$) {
+        \begin{tcolorbox}[
+            enhanced,
+            colback=charcoal!95,
+            colframe=bioEmerald,
+            boxrule=1.2pt,
+            arc=4mm,
+            width=4.8cm,
+            halign=center
+        ]
+            {\Large\bfseries\color{physAmber} ภาคเรียนที่ 2/2569}\\[2pt]
+            {\footnotesize\bfseries\color{white} 13 Lab Modules}\\[1pt]
+            {\scriptsize\color{bioEmerald!80} Low-Math Edition}
+        \end{tcolorbox}
+    };
+\end{tikzpicture}
+\end{titlepage}
+\restoregeometry

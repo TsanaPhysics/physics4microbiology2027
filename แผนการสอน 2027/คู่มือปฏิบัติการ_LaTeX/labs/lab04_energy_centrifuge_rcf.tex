@@ -1,0 +1,132 @@
+\cleardoublepage
+\phantomsection
+\begin{planbox}[แผนบริหารการสอนปฏิบัติการที่ 4\quad พลังงานกลและเครื่องปั่นเหวี่ยง Centrifuge (สัปดาห์ที่ 4)]
+\noindent\textbf{1. เวลาเรียนปฏิบัติการ}\quad 3 ชั่วโมง (180 นาที)\quad \textbf{ผลลัพธ์การเรียนรู้ที่ประเมิน}\quad CLO1, CLO2, CLO3, CLO4
+
+\noindent\textbf{2. วัตถุประสงค์เชิงพฤติกรรมประจำปฏิบัติการ}
+\begin{enumerate}
+    \item วัดรัศมีโรเตอร์ ($r_{\text{cm}}$) ของเครื่องปั่นเหวี่ยงและคำนวณแปลงค่าระหว่างความเร็วรอบต่อนาที ($\text{RPM}$) กับแรงเหวี่ยงสัมพัทธ์ ($\text{RCF}$ หรือ $\times g$) ได้ถูกต้อง \textbf{(CLO1, CLO2 เชื่อมโยง PLO2, PLO3)}
+    \item ปฏิบัติการจัดสมดุลหลอดไมโครทิวบ์ในหัวปั่นโรเตอร์และปั่นแยกตะกอนเซลล์ยีสต์ออกจากส่วนใสได้อย่างปลอดภัย \textbf{(CLO2, CLO3, CLO4 เชื่อมโยง PLO1, PLO5, PLO6)}
+\end{enumerate}
+
+\noindent\textbf{3. แผนการจัดเวลาในคาบปฏิบัติการ 3 ชั่วโมง}
+\begin{itemize}
+    \item \textbf{ชั่วโมงที่ 1}\quad สาธิตโครงสร้างภายในของเครื่อง Centrifuge การวัดรัศมีโรเตอร์ และกฎเหล็กของการถ่วงสมดุลหลอดตรงข้ามกัน
+    \item \textbf{ชั่วโมงที่ 2}\quad ปฏิบัติการวัดรัศมีโรเตอร์ คำนวณตารางแปลงค่า RPM $\leftrightarrow$ RCF และปั่นแยกตะกอนเซลล์ยีสต์ที่ความเร็วรอบต่างๆ
+    \item \textbf{ชั่วโมงที่ 3}\quad เปรียบเทียบความแน่นของเม็ดตะกอนเซลล์ (Pellet) และความใสของส่วนใสด้านบน (Supernatant) พร้อมสรุปผล
+\end{itemize}
+\end{planbox}
+\clearpage
+
+\chapter{พลังงานกลและการคำนวณแรงเหวี่ยงสัมพัทธ์ของเครื่องปั่นเหวี่ยง}
+\index{เครื่องปั่นเหวี่ยง Centrifuge}\index{แรงเหวี่ยงสัมพัทธ์ RCF}\index{เม็ดตะกอนเซลล์ Pellet}\index{การจัดสมดุลโรเตอร์}
+
+\section{หลักการทางฟิสิกส์และทฤษฎีเบื้องหลังการทดลอง}
+
+ในการเก็บเกี่ยวเซลล์แบคทีเรีย ยีสต์ หรือการตกตะกอนดีเอ็นเอในห้องปฏิบัติการจุลชีววิทยา เราใช้\textbf{เครื่องปั่นเหวี่ยง} (\textbf{Centrifuge}) เปลี่ยนพลังงานไฟฟ้าเป็นพลังงานจลน์ของการหมุนด้วยอัตราเร็วเชิงมุมสูง เพื่อให้เกิดความเร่งสู่ศูนย์กลางที่มีค่าสูงกว่าความเร่งโน้มถ่วงของโลก ($g$) หลายพันเท่า ค่าที่ระบุว่าแรงเหวี่ยงที่กระทำต่อเซลล์มีค่าเป็นกี่เท่าของแรงโน้มถ่วงโลก เรียกว่า \textbf{แรงเหวี่ยงสัมพัทธ์} (\textbf{Relative Centrifugal Force}, $\text{RCF}$ หรือ $\times g$)
+
+\begin{conceptbox}[สมการแปลงความเร็วรอบ (RPM) เป็นแรงเหวี่ยงสัมพัทธ์ (RCF)]
+\begin{equation}
+    \text{RCF} = 1.118 \times 10^{-5} \times r_{\text{cm}} \times (\text{RPM})^2
+\end{equation}
+โดยที่ $r_{\text{cm}}$ คือรัศมีของโรเตอร์วัดจากจุดกึ่งกลางแกนหมุนไปถึงก้นหลอดตัวอย่างในหน่วยเซนติเมตร ($\text{cm}$) และ $\text{RPM}$ คือจำนวนรอบการหมุนต่อนาที
+\end{conceptbox}
+
+\begin{worked}[การคำนวณหาค่า RCF ของเครื่องปั่นเหวี่ยงไมโครทิวบ์]
+\textbf{โจทย์ตัวอย่าง}\quad เครื่อง Microcentrifuge ในห้องแล็บจุลชีววิทยามีรัศมีโรเตอร์วัดถึงก้นหลอดได้ $r_{\text{cm}} = 8.5\text{ cm}$ หากตั้งความเร็วรอบที่ $6{,}000\text{ rpm}$ จะเกิดแรงเหวี่ยงสัมพัทธ์กี่ $\times g$
+
+\textbf{วิธีคำนวณทีละขั้นตอน}
+\[
+    \text{RCF} = 1.118 \times 10^{-5} \times 8.5 \times (6{,}000)^2 = 1.118 \times 10^{-5} \times 8.5 \times (3.6 \times 10^7) = 3{,}421 \times g
+\]
+\end{worked}
+
+\section{แผนภาพชุดอุปกรณ์การทดลองและข้อควรระวังความปลอดภัย}
+
+\begin{figure}[H]
+\centering
+\resizebox{0.86\textwidth}{!}{%
+\begin{tikzpicture}[font=\sffamily, >=Stealth]
+    % Left: Measuring Rotor Radius r_cm
+    \begin{scope}[shift={(0,0)}]
+        \draw[fill=boxBlueBg, draw=physRoyalBlue, line width=1.2pt, rounded corners=4pt] (0,0) rectangle (6.8,4.2);
+        \node[font=\bfseries\color{physRoyalBlue}] at (3.4,3.75) {(ก) การวัดรัศมีโรเตอร์ $r_{\text{cm}}$};
+        \fill[physSlate!30, draw=charcoal, line width=1.3pt] (1.4,1.2) -- (5.4,1.2) -- (4.8,2.8) -- (2.0,2.8) -- cycle;
+        \fill[charcoal] (3.25,0.8) rectangle (3.55,3.1);
+        \draw[<->, crimsonAlert, line width=1.5pt] (3.4,1.5) -- node[above, font=\footnotesize\bfseries] {$r_{\text{cm}}$ ($\text{cm}$)} (5.1,1.5);
+        \node[font=\scriptsize, align=center] at (3.4,0.4) {วัดจากกึ่งกลางแกนหมุนถึงก้นช่องใส่หลอด};
+    \end{scope}
+
+    % Right: Pellet vs Supernatant after Centrifugation
+    \begin{scope}[shift={(7.6,0)}]
+        \draw[fill=boxGreenBg, draw=bioEmerald, line width=1.2pt, rounded corners=4pt] (0,0) rectangle (6.8,4.2);
+        \node[font=\bfseries\color{bioEmerald!90!black}] at (3.4,3.75) {(ข) หลอดไมโครทิวบ์ก่อนและหลังปั่นเหวี่ยง};
+        % Before
+        \fill[physAmber!45, draw=physRoyalBlue, line width=1.2pt] (1.3,1.2) -- (1.3,3.0) -- (2.3,3.0) -- (2.3,1.2) -- (1.8,0.6) -- cycle;
+        \node[below, font=\scriptsize\bfseries] at (1.8,0.55) {ก่อนปั่น (ขุ่นทั่วหลอด)};
+        \draw[->, physRoyalBlue, line width=1.5pt] (2.6,2.0) -- node[above, font=\scriptsize\bfseries] {$\text{RCF}$} (3.6,2.0);
+        % After
+        \fill[physCyan!15, draw=physRoyalBlue, line width=1.2pt] (4.1,1.2) -- (4.1,3.0) -- (5.1,3.0) -- (5.1,1.2) -- (4.6,0.6) -- cycle;
+        \fill[physAmber!90!black] (4.35,0.9) -- (4.85,0.9) -- (4.6,0.6) -- cycle;
+        \node[right, font=\scriptsize\bfseries, color=physRoyalBlue] at (5.15,2.3) {ส่วนใส (Supernatant)};
+        \node[right, font=\scriptsize\bfseries, color=physAmber!90!black] at (4.95,0.8) {ตะกอนเซลล์ (Pellet)};
+    \end{scope}
+\end{tikzpicture}%
+}
+\caption{การวัดรัศมีโรเตอร์และการแยกชั้นระหว่างส่วนใสกับเม็ดตะกอนเซลล์หลังการปั่นเหวี่ยง}
+\end{figure}
+
+\begin{equipbox}[รายการอุปกรณ์สำหรับแต่ละกลุ่ม]
+\begin{itemize}
+    \item เครื่องปั่นเหวี่ยงหลอดไมโครทิวบ์ (Microcentrifuge), ไม้บรรทัดมิลลิเมตรสำหรับวัดรัศมีโรเตอร์ $r_{\text{cm}}$
+    \item หลอดไมโครทิวบ์ขนาด $1.5\text{ mL}$ จำนวน 6 หลอด, ไมโครปิเปต P1000 และสารแขวนลอยเซลล์ยีสต์ \textit{Saccharomyces cerevisiae}
+\end{itemize}
+\end{equipbox}
+
+\begin{warningbox}[กฎความปลอดภัยในการใช้เครื่อง Centrifuge]
+ต้องวางหลอดที่มีปริมาตรเท่ากันเป๊ะในช่องตรงข้ามกัน ($180^\circ$) เสมอ ปิดฝาครอบในของโรเตอร์ให้แน่น และห้ามเปิดฝาเครื่องจนกว่าตัวเลขความเร็วรอบจะลดลงเป็น $0\text{ rpm}$
+\end{warningbox}
+
+\section{ขั้นตอนการปฏิบัติการทดลอง}
+\begin{enumerate}
+    \item ขณะเครื่องปั่นเหวี่ยงปิดสวิตช์อยู่ ให้ใช้ไม้บรรทัดวัดรัศมีโรเตอร์ ($r_{\text{cm}}$) จากกึ่งกลางแกนหมุนไปถึงขอบนอกของช่องใส่หลอด บันทึกค่าในหน่วยเซนติเมตร ($\text{cm}$)
+    \item ใช้ไมโครปิเปต P1000 ดูดสารแขวนลอยยีสต์ที่เขย่าเข้ากันดีแล้ว ปริมาตร $1{,}000\text{ }\mu\text{L}$ ใส่ลงในหลอดไมโครทิวบ์ 3 หลอด และเตรียมหลอดน้ำกลั่นปริมาตร $1{,}000\text{ }\mu\text{L}$ อีก 3 หลอดสำหรับใช้เป็นหลอดถ่วงสมดุล (\textbf{Balance Tube})
+    \item นำหลอดที่ 1 (พร้อมหลอดถ่วงสมดุลวางตรงข้ามกัน) ปั่นที่ความเร็วรอบ $1{,}500\text{ rpm}$ นาน $2\text{ นาที}$, หลอดที่ 2 ปั่นที่ $3{,}000\text{ rpm}$ นาน $2\text{ นาที}$ และหลอดที่ 3 ปั่นที่ $6{,}000\text{ rpm}$ นาน $2\text{ นาที}$ คำนวณค่า $\text{RCF}$ และสังเกตความใสของส่วนบนและขนาดของเม็ดตะกอนเซลล์ที่ก้นหลอด
+\end{enumerate}
+
+\section{ใบบันทึกผลการทดลองประจำกลุ่ม}
+
+\begin{worksheetbox}[ใบบันทึกผลการทดลองที่ 4\quad การคำนวณค่า RCF และการปั่นเหวี่ยงแยกเซลล์จุลินทรีย์]
+\noindent\textbf{กลุ่มปฏิบัติการที่} \dotfill \textbf{วันที่ทำการทดลอง} \dotfill \textbf{รัศมีโรเตอร์ที่วัดได้} $r_{\text{cm}} = $ \dotfill $\text{cm}$\\[4pt]
+\noindent\textbf{รายชื่อสมาชิกกลุ่ม} 1. \dotfill 2. \dotfill 3. \dotfill
+
+\vspace{6pt}
+\noindent\textbf{ตารางบันทึกผลการคำนวณค่าแรงเหวี่ยงสัมพัทธ์ (RCF) และผลการตกตะกอนของเซลล์ยีสต์}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{c c c c >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{หลอดที่} & \textbf{รอบ (RPM)} & \textbf{RCF คำนวณ ($\times g$)} & \textbf{RCF หน้าจอเครื่อง} & \textbf{ลักษณะส่วนใสและความแน่นของเม็ดตะกอน} \\
+\midrule
+หลอดที่ 1 & $1{,}500\text{ rpm}$ & ............ & ............ & \dotfill \\
+หลอดที่ 2 & $3{,}000\text{ rpm}$ & ............ & ............ & \dotfill \\
+หลอดที่ 3 & $6{,}000\text{ rpm}$ & ............ & ............ & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\noindent\textbf{แสดงวิธีคำนวณค่า RCF ที่ความเร็วรอบ $3{,}000\text{ rpm}$ และ $6{,}000\text{ rpm}$}\\[4pt]
+\dotfill\\[6pt]
+\dotfill
+
+\noindent\textbf{สรุปและอภิปรายผลการทดลอง}\\[4pt]
+\dotfill\\[6pt]
+\dotfill
+\end{worksheetbox}
+
+\section*{คำถามท้ายปฏิบัติการที่ 4}
+\begin{enumerate}
+    \item เมื่อเพิ่มความเร็วรอบ ($\text{RPM}$) จาก $3{,}000\text{ rpm}$ เป็น $6{,}000\text{ rpm}$ (เพิ่มขึ้น $2$ เท่า) ค่าแรงเหวี่ยงสัมพัทธ์ ($\text{RCF}$) เพิ่มขึ้นเป็นกี่เท่าของค่าเดิม เพราะเหตุใด
+    \item เพราะเหตุใดหลังปั่นเหวี่ยงเสร็จแล้ว นักจุลชีววิทยาจึงต้องรีบดูดส่วนใส (Supernatant) ออกอย่างเบามือโดยไม่ให้ปลายทิปปิเปตไปชนก้นหลอดด้านที่หันออกนอกแกนหมุน
+\end{enumerate}

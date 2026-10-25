@@ -1,0 +1,166 @@
+\chapter{ไฟฟ้าสถิตและกลไกแรงดึงดูดทางไฟฟ้าของสีย้อมเซลล์จุลินทรีย์}
+
+\begin{planbox}[สัปดาห์ที่ 8 — เวลาปฏิบัติการ 3 ชั่วโมง (สอดคล้องกับ CLO1, CLO3 และ CLO4)]
+\textbf{1. วัตถุประสงค์การทดลอง}
+\begin{itemize}
+    \item ทดสอบแรงกระทำทางไฟฟ้าสถิตตามกฎของคูลอมบ์ (ประจุชนิดเดียวกันผลักกัน ประจุต่างชนิดกันดึงดูดกัน) ด้วยชุดอิเล็กโทรสโคป
+    \item เปรียบเทียบประสิทธิภาพการยึดเกาะของสีย้อมประจุบวก (Basic Dye เช่น คริสตัลไวโอเลตและเมทิลีนบลู) กับสีย้อมประจุลบ (Acidic Dye เช่น นิกโรซินและอีโอซิน) บนพื้นผิวแบบจำลองผนังเซลล์ที่มีประจุสุทธิเป็นลบ ($\zeta\text{-potential} < 0$)
+    \item อธิบายเหตุผลทางฟิสิกส์ของเทคนิคการย้อมสีแบบธรรมดา (Simple Staining) และการย้อมสีพื้นหลังแบบลบ (Negative Staining) ในงานจุลชีววิทยาได้อย่างถูกต้อง
+\end{itemize}
+\textbf{2. ความเชื่อมโยงกับผลลัพธ์การเรียนรู้ของรายวิชา (CLOs) และหลักสูตร (PLOs)}
+\begin{itemize}
+    \item \textbf{CLO1 (PLO2)}\quad อธิบายกฎของคูลอมบ์และธรรมชาติของประจุไฟฟ้าสุทธิบนผนังเซลล์แบคทีเรียได้
+    \item \textbf{CLO3 (PLO1)}\quad ปฏิบัติงานกับสารละลายสีย้อมจุลชีววิทยาด้วยความระมัดระวัง สวมถุงมือยาง และกำจัดน้ำล้างสีย้อมลงในภาชนะเฉพาะตามหลักความปลอดภัยห้องปฏิบัติการ
+    \item \textbf{CLO4 (PLO5, PLO6)}\quad สังเกต บันทึกภาพวาดจากกล้องจุลทรรศน์ และอภิปรายผลร่วมกันในกลุ่มได้อย่างเป็นระบบ
+\end{itemize}
+\end{planbox}
+
+\section{หลักการทฤษฎีและการเชื่อมโยงสู่งานจุลชีววิทยา}
+
+แรงดึงดูดและแรงผลักระหว่างประจุไฟฟ้า $q_1$ และ $q_2$ ที่อยู่ห่างกันเป็นระยะ $r$ อธิบายได้ด้วย\textbf{กฎของคูลอมบ์} (\textbf{Coulomb's Law})\index{กฎของคูลอมบ์ (Coulomb's Law)} โดยประจุไฟฟ้าชนิดเดียวกันจะออกแรงผลักกัน ส่วนประจุไฟฟ้าต่างชนิดกันจะออกแรงดึงดูดเข้าหากัน ในสารละลายน้ำที่มีค่าคงตัวไดอิเล็กทริกสัมพัทธ์สูง ($\varepsilon_r \approx 80$) ขนาดของแรงไฟฟ้าสถิตคำนวณได้จากสมการที่ \eqref{eq:lab07_coulomb}
+
+\begin{equation}
+    F_e = \frac{k\,|q_1 q_2|}{\varepsilon_r\,r^2}
+    \label{eq:lab07_coulomb}
+\end{equation}
+
+ในสภาวะที่เป็นกลาง ($\text{pH} \approx 7.0$) ผนังเซลล์ของแบคทีเรียเกือบทุกชนิดมีหมู่ฟอสเฟต ($\text{PO}_4^{3-}$) และหมู่คาร์บอกซิล ($\text{COO}^-$) แตกตัวอยู่หนาแน่น ทำให้ผิวเซลล์แบคทีเรียมี\textbf{ประจุไฟฟ้าสุทธิเป็นลบ} ($\text{Zeta Potential} \approx -15\text{ ถึง }-45\text{ mV}$) เสมอ ดังนั้น
+\begin{enumerate}
+    \item \textbf{สีย้อมประจุบวก (Basic Dye / Cationic Dye)}\quad เช่น คริสตัลไวโอเลต ($\text{CV}^+$) เมทิลีนบลู ($\text{MB}^+$) และซาฟรานิน ($\text{Saf}^+$)\index{สีย้อมประจุบวก (Basic Dye)} จะถูกดึงดูดเข้ายึดเกาะกับผนังเซลล์แบคทีเรียที่มีประจุลบโดยตรง ทำให้เห็นตัวเซลล์ติดสีชัดเจนบนพื้นหลังใส
+    \item \textbf{สีย้อมประจุลบ (Acidic Dye / Anionic Dye)}\quad เช่น นิกโรซิน (Nigrosin) และอีโอซิน ($\text{Eosin}^-$)\index{สีย้อมประจุลบ (Acidic Dye)} จะถูกผนังเซลล์แบคทีเรียผลักออกด้วยแรงคูลอมบ์ ทำให้สีไม่สามารถซึมเข้าสู่ตัวเซลล์ได้ แต่จะไปเคลือบอยู่รอบนอก เกิดเป็นภาพเซลล์ใสสว่างตัดกับพื้นหลังสีเข้ม เรียกว่า \textbf{การย้อมสีพื้นหลังแบบลบ} (\textbf{Negative Staining}) ซึ่งเหมาะสำหรับส่องดูแคปซูลของแบคทีเรีย
+\end{enumerate}
+
+\begin{conceptbox}[สรุปสูตรคำนวณฉบับเข้าใจง่ายสำหรับปฏิบัติการที่ 7]
+\begin{itemize}
+    \item \textbf{ขนาดของแรงคูลอมบ์ในอากาศ}\quad $F_0 = \dfrac{k\,|q_1 q_2|}{r^2}$ เมื่อ $k = 9.0 \times 10^9\text{ N}\cdot\text{m}^2/\text{C}^2$
+    \item \textbf{ขนาดของแรงคูลอมบ์ในน้ำบริสุทธิ์ ($\varepsilon_r = 80$)}\quad $F_{\text{water}} = \dfrac{F_0}{80}$
+    \item \textbf{กฎการจับคู่ประจุในการย้อมสีเซลล์ (ประจุผิวเซลล์เป็นลบเสมอที่ pH 7)}
+    \begin{itemize}
+        \item ผิวเซลล์ ($-$) $+$ สีย้อมประจุบวก ($+$) $\longrightarrow$ \textbf{ดึงดูดกัน} (ตัวเซลล์ติดสีเข้ม พื้นหลังใส)
+        \item ผิวเซลล์ ($-$) $+$ สีย้อมประจุลบ ($-$) $\longrightarrow$ \textbf{ผลักกัน} (ตัวเซลล์ใสสว่าง พื้นหลังมืด)
+    \end{itemize}
+\end{itemize}
+\end{conceptbox}
+
+\begin{worked}[การเปรียบเทียบขนาดแรงดึงดูดทางไฟฟ้าในอากาศและในน้ำ]
+\textbf{โจทย์} สมมติให้ไอออนบวกของสีย้อมคริสตัลไวโอเลต ($q_1 = +1.6 \times 10^{-19}\text{ C}$) อยู่ห่างจากหมู่ฟอสเฟตประจุลบของผนังเซลล์ ($q_2 = -1.6 \times 10^{-19}\text{ C}$) เป็นระยะทาง $r = 1.0\text{ nm}$ ($1.0 \times 10^{-9}\text{ m}$) หากแรงดึงดูดในสุญญากาศมีค่า $F_0 = 2.30 \times 10^{-10}\text{ N}$ จงคำนวณขนาดของแรงดึงดูดเมื่ออยู่ในตัวกลางที่เป็นน้ำ ($\varepsilon_r = 80$)
+
+\textbf{วิธีทำทีละขั้นตอน}
+\begin{enumerate}
+    \item นำค่าแรงในสุญญากาศ $F_0 = 2.30 \times 10^{-10}\text{ N}$ หารด้วยค่าคงตัวไดอิเล็กทริกสัมพัทธ์ของน้ำ $\varepsilon_r = 80$
+    \begin{equation*}
+        F_{\text{water}} = \frac{2.30 \times 10^{-10}}{80} = 2.88 \times 10^{-12}\text{ N (หรือ } 2.88\text{ pN)}
+    \end{equation*}
+\end{enumerate}
+\textbf{คำตอบ} ในตัวกลางน้ำ แรงดึงดูดทางไฟฟ้ามีค่าเท่ากับ $2.88 \times 10^{-12}\text{ N}$ ซึ่งยังมากพอที่จะยึดโมเลกุลสีย้อมประจุบวกให้ติดแน่นกับผนังเซลล์แบคทีเรีย
+\end{worked}
+
+\begin{figure}[H]
+\centering
+\resizebox{0.86\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, font=\small]
+    % Left box: Basic Dye (+)
+    \draw[fill=boxBlueBg, draw=physRoyalBlue, line width=1.1pt, rounded corners=6pt] (0,0) rectangle (6.6,4.2);
+    \node[font=\bfseries\color{physRoyalBlue}] at (3.3,3.8) {(ก) การย้อมด้วยสีย้อมประจุบวก (Basic Dye)};
+    \draw[fill=purple!45, draw=purple!80!black, line width=1.4pt, rounded corners=12pt] (1.6,1.4) rectangle (5.0,2.7);
+    \node[font=\bfseries\color{white}] at (3.3,2.05) {ตัวเซลล์ติดสีม่วงเข้ม};
+    \foreach \x in {1.9, 2.6, 3.3, 4.0, 4.7} {
+        \node[font=\scriptsize\bfseries\color{crimsonAlert}] at (\x,2.88) {$-$};
+        \node[font=\scriptsize\bfseries\color{crimsonAlert}] at (\x,1.22) {$-$};
+    }
+    \node[circle, fill=physRoyalBlue, text=white, inner sep=1.2pt, font=\scriptsize\bfseries] (cv1) at (1.1,3.2) {$\text{CV}^+$};
+    \node[circle, fill=physRoyalBlue, text=white, inner sep=1.2pt, font=\scriptsize\bfseries] (cv2) at (5.5,3.2) {$\text{CV}^+$};
+    \draw[->, line width=1.1pt, bioEmerald!85!black] (cv1) -- (1.75,2.75);
+    \draw[->, line width=1.1pt, bioEmerald!85!black] (cv2) -- (4.85,2.75);
+    \node[font=\footnotesize\bfseries\color{bioEmerald!85!black}] at (3.3,0.45) {แรงคูลอมบ์ดึงดูด ($-$ ดึงดูด $+$)};
+
+    % Right box: Acidic Dye (-)
+    \draw[fill=charcoal!85, draw=charcoal, line width=1.1pt, rounded corners=6pt] (7.4,0) rectangle (14.0,4.2);
+    \node[font=\bfseries\color{physAmber}] at (10.7,3.8) {(ข) การย้อมสีพื้นหลังแบบลบ (Negative Stain)};
+    \draw[fill=white, draw=charcoal!60, line width=1.4pt, rounded corners=12pt] (9.0,1.4) rectangle (12.4,2.7);
+    \node[font=\bfseries\color{charcoal}] at (10.7,2.05) {ตัวเซลล์ใสสว่าง};
+    \foreach \x in {9.3, 10.0, 10.7, 11.4, 12.1} {
+        \node[font=\scriptsize\bfseries\color{crimsonAlert}] at (\x,2.88) {$-$};
+        \node[font=\scriptsize\bfseries\color{crimsonAlert}] at (\x,1.22) {$-$};
+    }
+    \node[circle, fill=crimsonAlert, text=white, inner sep=1.2pt, font=\scriptsize\bfseries] (ng1) at (8.3,2.8) {$\text{Nig}^-$};
+    \node[circle, fill=crimsonAlert, text=white, inner sep=1.2pt, font=\scriptsize\bfseries] (ng2) at (13.1,2.8) {$\text{Nig}^-$};
+    \draw[->, line width=1.1pt, physAmber] (8.85,2.6) -- (8.1,3.25);
+    \draw[->, line width=1.1pt, physAmber] (12.55,2.6) -- (13.3,3.25);
+    \node[font=\footnotesize\bfseries\color{physAmber}] at (10.7,0.45) {แรงคูลอมบ์ผลักออก ($-$ ผลัก $-$)};
+\end{tikzpicture}%
+}
+\caption{เปรียบเทียบกลไกแรงไฟฟ้าสถิตระหว่างผิวเซลล์แบคทีเรียประจุลบกับ (ก) สีย้อมประจุบวก และ (ข) สีย้อมประจุลบ}
+\label{fig:lab07_setup}
+\end{figure}
+
+\section{วัสดุอุปกรณ์และขั้นตอนการปฏิบัติการ}
+
+\begin{equipbox}
+\begin{enumerate}
+    \item ชุดอิเล็กโทรสโคปแผ่นโลหะพร้อมแท่งพีวีซี แท่งอะคริลิกใส และผ้าสักหลาด จำนวน $1$ ชุด
+    \item แผ่นกระดาษกรองเซลลูโลส (จำลองพื้นผิวประจุลบ) และสไลด์แก้วสะอาด จำนวน $4$ แผ่น
+    \item สารละลายสีย้อมประจุบวก เมทิลีนบลู ($0.1\%$ Methylene Blue) และคริสตัลไวโอเลต จำนวนอย่างละ $1$ ขวดหยด
+    \item สารละลายสีย้อมประจุลบ อีโอซิน ($1\%$ Eosin Y) และหมึกอินเดีย/นิกโรซิน จำนวนอย่างละ $1$ ขวดหยด
+    \item สไลด์ตัวอย่างเซลล์ยีสต์ \textit{Saccharomyces cerevisiae} และกล้องจุลทรรศน์แบบใช้แสง จำนวน $1$ ชุด
+\end{enumerate}
+\end{equipbox}
+
+\begin{warningbox}
+สวมถุงมือยางตลอดเวลาที่หยดสารละลายสีย้อมเพื่อป้องกันสีย้อมประจุบวกย้อมติดผิวหนัง และเทน้ำล้างสไลด์ลงในขวดรวบรวมของเสียสีย้อมที่จัดเตรียมไว้ ห้ามเทลงท่อน้ำทิ้งโดยตรง
+\end{warningbox}
+
+\subsection{ขั้นตอนการทดลอง}
+\begin{enumerate}
+    \item \textbf{ตอนที่ 1 การทดสอบแรงกระทำระหว่างประจุไฟฟ้าด้วยอิเล็กโทรสโคป}\quad นำแท่งพีวีซีถูกับผ้าสักหลาดแล้วจ่อใกล้จานโลหะของอิเล็กโทรสโคป สังเกตการกางออกของแผ่นโลหะบาง จากนั้นทดสอบแรงผลักและแรงดึงดูดระหว่างแท่งพีวีซีกับแท่งอะคริลิกที่ถูด้วยผ้าไหม บันทึกผลใน\mbox{ตารางที่} 7.1
+    \item \textbf{ตอนที่ 2 การเปรียบเทียบการยึดเกาะของสีย้อมประจุบวกและประจุลบบนพื้นผิวประจุลบ}\quad หยดสีย้อมเมทิลีนบลู (ประจุบวก) และอีโอซิน (ประจุลบ) ลงบนแผ่นเซลลูโลสที่มีประจุลบในปริมาณเท่ากัน ($20\ \mu\text{L}$) ทิ้งไว้ $2$ นาที แล้วล้างด้วยน้ำกลั่นไหลผ่านเบาๆ นาน $30$ วินาที สังเกตความเข้มของสีที่หลงเหลืออยู่
+    \item \textbf{ตอนที่ 3 การส่องเปรียบเทียบ Simple Staining และ Negative Staining ของเซลล์ยีสต์}\quad หยดสารแขวนลอยยีสต์ลงบนสไลด์ 2 แผ่น แผ่นที่ 1 ย้อมด้วยเมทิลีนบลู (ประจุบวก) และแผ่นที่ 2 ผสมกับนิกโรซิน (ประจุลบ) แล้วไถสไลด์ให้บาง นำไปส่องด้วยกล้องจุลทรรศน์กำลังขยาย $400\times$ บันทึกลักษณะสีของตัวเซลล์และพื้นหลังลงใน\mbox{ตารางที่} 7.2
+\end{enumerate}
+
+\section{ใบบันทึกผลการทดลองและคำถามท้ายปฏิบัติการ}
+
+\begin{worksheetbox}[ใบบันทึกผลการทดลองที่ 7\quad ไฟฟ้าสถิตและกลไกของสีย้อมเซลล์จุลินทรีย์]
+\textbf{กลุ่มปฏิบัติการที่} \dotfill \textbf{วันที่ทำการทดลอง} \dotfill\\[4pt]
+\textbf{รายชื่อสมาชิกกลุ่ม} 1. \dotfill 2. \dotfill 3. \dotfill
+
+\vspace{4pt}
+\textbf{ตารางที่ 7.1\quad ผลการทดสอบแรงกระทำทางไฟฟ้าสถิตและการชะล้างสีย้อมบนพื้นผิวประจุลบ}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{4.2cm} c >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{ชุดการทดลอง} & \textbf{ชนิดประจุ} & \textbf{ผลที่สังเกตได้ (ดึงดูด/ผลัก/การติดสี)} & \textbf{คำอธิบายตามกฎของคูลอมบ์} \\
+\midrule
+1. แท่งพีวีซี 2 แท่งที่ถูผ้าสักหลาดแล้วนำมาเข้าใกล้กัน & $(-)$ กับ $(-)$ & \dotfill & \dotfill \\[6pt]
+2. แท่งพีวีซีถูผ้าสักหลาด เข้าใกล้แท่งอะคริลิกถูผ้าไหม & $(-)$ กับ $(+)$ & \dotfill & \dotfill \\[6pt]
+3. หยด Methylene Blue บนแผ่นประจุลบแล้วล้างน้ำ & ผิว $(-)$ สี $(+)$ & \dotfill & \dotfill \\[6pt]
+4. หยด Eosin Y บนแผ่นประจุลบแล้วล้างน้ำกลั่น & ผิว $(-)$ สี $(-)$ & \dotfill & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\textbf{ตารางที่ 7.2\quad ผลการสังเกตเซลล์ยีสต์ภายใต้กล้องจุลทรรศน์ ($400\times$) ด้วยสีย้อมต่างชนิดประจุ}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{3.8cm} c >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{ชนิดของสีย้อมที่ใช้} & \textbf{ประจุของไอออนสี} & \textbf{สีของตัวเซลล์ยีสต์} & \textbf{สีของพื้นหลังสไลด์} & \textbf{ประเภทการย้อม (Simple / Negative)} \\
+\midrule
+เมทิลีนบลู (Methylene Blue) & ประจุบวก $(+)$ & \dotfill & \dotfill & \dotfill \\[8pt]
+นิกโรซิน (Nigrosin) & ประจุลบ $(-)$ & \dotfill & \dotfill & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\textbf{สรุปและอภิปรายผลการทดลอง}\\[4pt]
+\dotfill\\[6pt]
+\dotfill
+\end{worksheetbox}
+
+\subsection{คำถามท้ายปฏิบัติการ}
+\begin{enumerate}
+    \item เพราะเหตุใดผนังเซลล์ของแบคทีเรียและยีสต์ในสภาวะค่า $\text{pH}$ เป็นกลาง ($\text{pH} \approx 7.0$) จึงมีประจุไฟฟ้าสุทธิเป็นลบ และประจุลบนี้เกิดจากหมู่ฟังก์ชันทางเคมีใดเป็นหลัก
+    \item หากนักศึกษาต้องการตรวจสอบว่าแบคทีเรียสายพันธุ์หนึ่งสร้างแคปซูล (Capsule) หุ้มเซลล์หรือไม่ เหตุใดจึงนิยมใช้เทคนิคการย้อมสีพื้นหลังแบบลบด้วยสีนิกโรซินควบคู่กับการย้อมสีตัวเซลล์ แทนการย้อมสีแบบธรรมดาเพียงอย่างเดียว
+\end{enumerate}

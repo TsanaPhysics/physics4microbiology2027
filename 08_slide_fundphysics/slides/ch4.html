@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>โมเมนตัมและสมดุล - ฟิสิกส์ ม.ปลาย</title>
+    <!-- MathJax v3 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            },
+            options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+            startup: { typeset: false }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/slide-core.css">
+</head>
+<body>
+
+    <div class="presentation-wrapper">
+        <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+            <a href="../index.html" style="color:#38bdf8; text-decoration:none; font-size:15px; font-weight:600;">🏠 เมนูหลัก</a>
+            <span style="color:#8a94b0; font-size:14px;">บทที่ 4 / 7</span>
+        </div>
+
+        <div class="slide-container" id="slideContainer">
+<div class="slide-container" id="slideContainer">
+
+            <!-- ========== SLIDE 1 ========== -->
+            <div class="slide active" data-index="0">
+                <span class="slide-number">1 / 20</span>
+                <div class="slide-title">
+                    โมเมนตัม สมดุล
+                    <span class="sub">ฟิสิกส์ มัธยมศึกษาตอนปลาย</span>
+                </div>
+                <div class="slide-body" style="margin-top:28px;">
+                    <p style="font-size:22px; font-weight:500; color:#2d2440;">
+                        ⚡ การเคลื่อนที่ภายใต้แรง และสภาพสมดุลของวัตถุ
+                    </p>
+                    <div style="display:flex; flex-wrap:wrap; gap:18px; margin-top:24px;">
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ โมเมนตัม (p = mv)</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ แรงดล (Impulse)</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ การชน &amp; กฎอนุรักษ์</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ สมดุล (เลื่อนที่ &amp; หมุน)</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:28px; background:#f5f0ff; border-radius:18px; padding:16px 22px; border:1px solid #d6c8ff;">
+                        <p style="font-size:18px; color:#1f1a3a;">
+                            <strong>🎯 เป้าหมาย:</strong> เข้าใจโมเมนตัมและแรงดล ใช้กฎอนุรักษ์โมเมนตัมแก้ปัญหาการชน
+                            และวิเคราะห์สภาวะสมดุลของวัตถุทั้งการเลื่อนที่และการหมุน
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 2 ========== -->
+            
+
+<div class="slide" data-index="1">
+                <span class="slide-number">2 / 20</span>
+                <div class="slide-title">
+                    สารบัญ
+                    <span class="sub">หัวข้อที่จะเรียนในบทนี้</span>
+                </div>
+                <div class="slide-body">
+                    <ul style="font-size:20px; list-style:none; padding-left:0; display:flex; flex-direction:column; gap:10px;">
+                        <li>🔹 <strong>1.</strong> โมเมนตัมเชิงเส้น (Linear Momentum)</li>
+                        <li>🔹 <strong>2.</strong> แรงดล (Impulse) และการเปลี่ยนแปลงโมเมนตัม</li>
+                        <li>🔹 <strong>3.</strong> กฎอนุรักษ์โมเมนตัม</li>
+                        <li>🔹 <strong>4.</strong> การชนแบบยืดหยุ่นและไม่ยืดหยุ่น</li>
+                        <li>🔹 <strong>5.</strong> ตัวอย่างการชน</li>
+                        <li>🔹 <strong>6.</strong> สมดุลการเลื่อนที่ (ΣF=0)</li>
+                        <li>🔹 <strong>7.</strong> โมเมนต์ของแรง (Torque)</li>
+                        <li>🔹 <strong>8.</strong> สมดุลการหมุน (Στ=0)</li>
+                        <li>🔹 <strong>9.</strong> จุดศูนย์กลางมวล (เบื้องต้น)</li>
+                        <li>🔹 <strong>10.</strong> สรุป &amp; เทคนิคการทำโจทย์</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 3 ========== -->
+            
+
+<div class="slide" data-index="2">
+                <span class="slide-number">3 / 20</span>
+                <div class="slide-title">
+                    โมเมนตัมเชิงเส้น (Momentum)
+                    <span class="sub">ปริมาณเวกเตอร์ของวัตถุที่เคลื่อนที่</span>
+                </div>
+                <div class="slide-body">
+                    <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        \( \vec{p} = m\vec{v} \)
+                     \]</div>
+                    <ul>
+                        <li>โมเมนตัม (\(p\)) มีหน่วยเป็น \( kg \cdot m/s \)</li>
+                        <li>เป็น <strong>ปริมาณเวกเตอร์</strong> มีทิศทางเดียวกับความเร็ว</li>
+                        <li>วัตถุที่มวลมาก หรือเคลื่อนที่เร็ว จะมีโมเมนตัมมาก</li>
+                    </ul>
+                    <div class="highlight-box purple">
+                        💡 <strong>ข้อควรจำ:</strong> โมเมนตัมเป็นตัวบอก “ปริมาณการเคลื่อนที่” ของวัตถุ
+                        แรงที่มากระทำจะเปลี่ยนโมเมนตัมของวัตถุ
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 4 ========== -->
+            
+
+<div class="slide" data-index="3">
+                <span class="slide-number">4 / 20</span>
+                <div class="slide-title">
+                    แรงดล (Impulse)
+                    <span class="sub">แรงที่กระทำในช่วงเวลาสั้น ๆ</span>
+                </div>
+                <div class="slide-body">
+                    <div class="slide-two-col">
+                        <div class="text-col">
+                            <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        \( \vec{J} = \vec{F} \cdot \Delta t = \Delta \vec{p} \)
+                     \]</div>
+                    <ul>
+                        <li>แรงดล (\(J\)) มีหน่วย \( N \cdot s \) หรือ \( kg \cdot m/s \)</li>
+                        <li>แรงดลมีค่าเท่ากับ <strong>การเปลี่ยนแปลงโมเมนตัม</strong> \(\Delta p\)</li>
+                        <li>ถ้าแรงแปรผันตามเวลา ให้ใช้ \( J = \int F \, dt \) หรือพื้นที่ใต้กราฟ \(F-t\)</li>
+                    </ul>
+                    <div class="highlight-box green">
+                        ✅ <strong>ตัวอย่าง:</strong> ใช้มือรับลูกบอล โดยยืดเวลาการรับแรง (ลดแรงกระทำ) เพื่อลดแรงดล
+                    </div>
+                </div>
+                        </div>
+                        <div class="img-col">
+                            <svg width="245" height="230" viewBox="0 0 245 230" xmlns="http://www.w3.org/2000/svg" style="border-radius:14px;background:#f8faff;border:1px solid #dde6ff;"><rect x="30" y="90" width="60" height="50" rx="8" fill="#3b82f6"/><text x="60" y="120" text-anchor="middle" font-family="Sarabun" font-size="14" font-weight="700" fill="#fff">m₁</text><rect x="155" y="90" width="60" height="50" rx="8" fill="#f97316"/><text x="185" y="120" text-anchor="middle" font-family="Sarabun" font-size="14" font-weight="700" fill="#fff">m₂</text><line x1="90" y1="115" x2="140" y2="115" stroke="#ef4444" stroke-width="3"/><polygon points="150,115 138,109 138,121" fill="#ef4444"/><text x="122" y="175" text-anchor="middle" font-family="Sarabun" font-size="12" font-weight="700" fill="#1e293b">p = mv (โมเมนตัม)</text><text x="122" y="195" text-anchor="middle" font-family="Sarabun" font-size="11" fill="#059669">Σp_ก่อน = Σp_หลัง</text></svg>
+                            <p class="img-caption">ภาพประกอบที่ 1</p>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- ========== SLIDE 5 ========== -->
+            
+
+<div class="slide" data-index="4">
+                <span class="slide-number">5 / 20</span>
+                <div class="slide-title">
+                    กฎอนุรักษ์โมเมนตัม
+                    <span class="sub">สำหรับระบบที่ไม่มีแรงภายนอก</span>
+                </div>
+                <div class="slide-body">
+                    <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        \( \sum \vec{p}_{\text{ก่อน}} = \sum \vec{p}_{\text{หลัง}} \)
+                     \]</div>
+                    <p>ใช้ได้เมื่อ <strong>แรงภายนอกสุทธิ = 0</strong> หรือแรงภายนอกมีค่าน้อยมากเมื่อเทียบกับแรงภายใน</p>
+                    <ul>
+                        <li>ใช้แก้ปัญหาการ <strong>ชน</strong> และการ <strong>ระเบิด</strong></li>
+                        <li>โมเมนตัมรวมของระบบถูกอนุรักษ์ในแต่ละแกน (X และ Y) แยกกัน</li>
+                    </ul>
+                    <div class="highlight-box orange">
+                        ⚠️ <strong>สำคัญ:</strong> พลังงานจลน์อาจไม่ถูกอนุรักษ์ (ขึ้นกับชนิดการชน)
+                        แต่โมเมนตัม <u>ถูกอนุรักษ์เสมอ</u> ในระบบปิด
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 6 ========== -->
+            
+
+<div class="slide" data-index="5">
+                <span class="slide-number">6 / 20</span>
+                <div class="slide-title">
+                    ประเภทการชน
+                    <span class="sub">จำแนกตามการอนุรักษ์พลังงานจลน์</span>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2col">
+                        <div class="col" style="background:#f0faff;">
+                            <h4 style="color:#2d7aff;">🔄 การชนยืดหยุ่น</h4>
+                            <ul style="font-size:17px;">
+                                <li>อนุรักษ์โมเมนตัม <strong>และ</strong> พลังงานจลน์</li>
+                                <li>วัตถุไม่เสียรูป, แยกจากกัน</li>
+                                <li>เช่น ลูกบิลเลียดชนกัน</li>
+                            </ul>
+                        </div>
+                        <div class="col" style="background:#fff5f7;">
+                            <h4 style="color:#e53e7a;">🧩 การชนไม่ยืดหยุ่น</h4>
+                            <ul style="font-size:17px;">
+                                <li>อนุรักษ์โมเมนตัม <strong>แต่</strong> พลังงานจลน์ไม่ถูกอนุรักษ์ (เปลี่ยนเป็นความร้อน/เสียง)</li>
+                                <li>วัตถุอาจติดกัน (ไม่ยืดหยุ่นสมบูรณ์)</li>
+                                <li>เช่น ลูกตุ้มดินเหนียว</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="highlight-box purple">
+                        🧠 <strong>การชนยืดหยุ่นสมบูรณ์</strong> : วัตถุแยกจากกัน และ \( v_{1}-v_{2} = -(u_{1}-u_{2}) \) (ความเร็วสัมพัทธ์)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 7 ========== -->
+            
+
+<div class="slide" data-index="6">
+                <span class="slide-number">7 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่างการชนที่ 1
+                    <span class="sub">การชนแบบไม่ยืดหยุ่นสมบูรณ์</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6c8ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">รถมวล 2 kg วิ่งด้วยความเร็ว 6 m/s ชนกับรถอีกคันมวล 4 kg ที่หยุดนิ่ง แล้วติดกันไป จงหาความเร็วหลังชน</p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>วิธีทำ:</strong> ใช้กฎอนุรักษ์โมเมนตัม</p>
+                        <ul>
+                            <li>\( m_1 u_1 + m_2 u_2 = (m_1+m_2)v \)</li>
+                            <li>\( 2 \times 6 + 4 \times 0 = (2+4)v \) → \( 12 = 6v \)</li>
+                            <li>\( v = \mathbf{2 \, m/s} \) (ทิศทางเดียวกับรถคันแรก)</li>
+                        </ul>
+                        <div class="highlight-box pink" style="margin-top:8px;">
+                            💡 พลังงานจลน์ลดลง: \( \Delta E_k = \frac{1}{2} \cdot 2 \cdot 6^2 - \frac{1}{2} \cdot 6 \cdot 2^2 = 36 - 12 = 24 \, J \) (เปลี่ยนเป็นพลังงานอื่น)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 8 ========== -->
+            
+
+<div class="slide" data-index="7">
+                <span class="slide-number">8 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่างการชนที่ 2
+                    <span class="sub">การชนยืดหยุ่น (1 มิติ)</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6c8ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">มวล \( m_1 = 3 \, kg \) เคลื่อนที่ 4 m/s ชน \( m_2 = 3 \, kg \) ที่หยุดนิ่ง (ยืดหยุ่น) จงหาความเร็วหลังชน</p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>วิธีทำ:</strong> มวลเท่ากัน ชนยืดหยุ่น → <strong>สลับความเร็ว</strong></p>
+                        <ul>
+                            <li>\( v_1 = 0 \, m/s \) , \( v_2 = 4 \, m/s \)</li>
+                        </ul>
+                        <div class="highlight-box blue" style="margin-top:8px;">
+                            💡 <strong>สูตรทั่วไป:</strong> \( v_1 = \frac{m_1-m_2}{m_1+m_2} u_1 + \frac{2m_2}{m_1+m_2} u_2 \)
+                            และ \( v_2 = \frac{2m_1}{m_1+m_2} u_1 + \frac{m_2-m_1}{m_1+m_2} u_2 \)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 9 ========== -->
+            
+
+<div class="slide" data-index="8">
+                <span class="slide-number">9 / 20</span>
+                <div class="slide-title">
+                    การประยุกต์: การระเบิด
+                    <span class="sub">โมเมนตัมรวมยังคงเป็นศูนย์</span>
+                </div>
+                <div class="slide-body">
+                    <div class="slide-two-col">
+                        <div class="text-col">
+                            <ul>
+                        <li>วัตถุที่อยู่นิ่งแตกออกเป็นชิ้นส่วนต่าง ๆ</li>
+                        <li>โมเมนตัมรวม <strong>ก่อนระเบิด = 0</strong> → หลังระเบิดผลรวมโมเมนตัม = 0</li>
+                        <li>ใช้แก้หาความเร็วของชิ้นส่วนที่แยกออก</li>
+                    </ul>
+                    <div class="highlight-box green">
+                        ✅ <strong>ตัวอย่าง:</strong> ระเบิดมวล 5 kg แตกเป็น 2 ชิ้น (2 kg และ 3 kg) ถ้าชิ้น 2 kg ไปทางขวาด้วย 6 m/s ชิ้น 3 kg จะไปทางซ้ายด้วย \( \frac{2\times6}{3} = 4 \, m/s \)
+                    </div>
+                </div>
+                        </div>
+                        <div class="img-col">
+                            <svg width="245" height="230" viewBox="0 0 245 230" xmlns="http://www.w3.org/2000/svg" style="border-radius:14px;background:#f8faff;border:1px solid #dde6ff;"><line x1="30" y1="190" x2="220" y2="190" stroke="#333" stroke-width="1.5"/><line x1="30" y1="190" x2="30" y2="20" stroke="#333" stroke-width="1.5"/><text x="222" y="195" font-family="Sarabun" font-size="11" fill="#333">t</text><text x="20" y="15" font-family="Sarabun" font-size="11" fill="#333">F</text><path d="M 50,190 Q 125,20 200,190" fill="#3b82f6" opacity="0.2"/><path d="M 50,190 Q 125,20 200,190" fill="none" stroke="#2563eb" stroke-width="2.5"/><text x="125" y="130" text-anchor="middle" font-family="Sarabun" font-size="12" font-weight="700" fill="#1d4ed8">พื้นที่ = การดล I = Δp</text></svg>
+                            <p class="img-caption">ภาพประกอบที่ 2</p>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- ========== SLIDE 10 ========== -->
+            
+
+<div class="slide" data-index="9">
+                <span class="slide-number">10 / 20</span>
+                <div class="slide-title">
+                    สมดุลการเลื่อนที่
+                    <span class="sub">ΣF = 0</span>
+                </div>
+                <div class="slide-body">
+                    <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        \( \sum \vec{F} = 0 \quad \Rightarrow \quad \vec{v} = \text{constant} \)
+                     \]</div>
+                    <p>วัตถุจะ <strong>หยุดนิ่ง</strong> หรือ <strong>เคลื่อนที่ด้วยความเร็วคงที่</strong></p>
+                    <ul>
+                        <li>แยกพิจารณาในแนวแกน X และ Y: \( \sum F_x = 0 \) และ \( \sum F_y = 0 \)</li>
+                        <li>ใช้ในการหาค่าตัวแปรที่ไม่ทราบ เช่น แรงตึงเชือก, แรงปฏิกิริยาตั้งฉาก, มวล</li>
+                    </ul>
+                    <div class="highlight-box orange">
+                        ⚠️ <strong>ข้อควรระวัง:</strong> สมดุลการเลื่อนที่ ≠ ไม่มีแรงกระทำ (อาจมีหลายแรงสมดุลกัน)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 11 ========== -->
+            
+
+<div class="slide" data-index="10">
+                <span class="slide-number">11 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่างสมดุลการเลื่อนที่
+                    <span class="sub">วัตถุแขวนด้วยเชือก 2 เส้น</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6c8ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">วัตถุมวล 10 kg แขวนด้วยเชือกสองเส้นทำมุม 30° และ 60° กับแนวราบ จงหาแรงตึงในเชือกแต่ละเส้น (\(g=10\))</p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>วิธีทำ:</strong> เขียนสมดุล \( \sum F_x=0, \sum F_y=0 \)</p>
+                        <ul>
+                            <li>ให้ \(T_1\) ที่มุม 30°, \(T_2\) ที่มุม 60°</li>
+                            <li>\( T_1\cos30 = T_2\cos60 \) (แกน X)</li>
+                            <li>\( T_1\sin30 + T_2\sin60 = 100 \) (แกน Y)</li>
+                            <li>แก้ระบบ: \( T_1 \approx 86.6 \, N \), \( T_2 \approx 50 \, N \)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 12 ========== -->
+            
+
+<div class="slide" data-index="11">
+                <span class="slide-number">12 / 20</span>
+                <div class="slide-title">
+                    โมเมนต์ของแรง (Torque)
+                    <span class="sub">\( \tau = F \cdot d \)</span>
+                </div>
+                <div class="slide-body">
+                    <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        \( \tau = F \cdot d \)
+                     \]</div>
+                    <ul>
+                        <li><strong>โมเมนต์ (\(\tau\)):</strong> แรงที่ทำให้วัตถุหมุนรอบจุดหมุน</li>
+                        <li>\(d\) คือ <strong>ระยะตั้งฉาก</strong> จากแนวแรงถึงจุดหมุน (แขนของแรง)</li>
+                        <li>หน่วย \( N \cdot m \) (นิวตัน-เมตร) แต่ <strong>ไม่ใช่จูล</strong></li>
+                        <li>เครื่องหมาย: ตามเข็มนาฬิกา (\(-\)) หรือทวนเข็มนาฬิกา (\(+\)) ขึ้นอยู่กับข้อตกลง</li>
+                    </ul>
+                    <div class="highlight-box purple">
+                        🧠 <strong>จำ:</strong> ถ้าแนวแรงผ่านจุดหมุน (\(d=0\)) → โมเมนต์ = 0 (ไม่มีผลให้หมุน)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 13 ========== -->
+            
+
+<div class="slide" data-index="12">
+                <span class="slide-number">13 / 20</span>
+                <div class="slide-title">
+                    สมดุลการหมุน
+                    <span class="sub">Στ = 0</span>
+                </div>
+                <div class="slide-body">
+                    <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        \( \sum \tau = 0 \)
+                     \]</div>
+                    <p>วัตถุจะไม่มีการหมุน หรือหมุนด้วยความเร็วเชิงมุมคงที่</p>
+                    <ul>
+                        <li>ผลรวมโมเมนต์ตามเข็ม = ผลรวมโมเมนต์ทวนเข็ม</li>
+                        <li>ใช้เลือก <strong>จุดหมุน</strong> ที่เหมาะสมเพื่อลดจำนวนตัวแปร (เลือกจุดที่แรงไม่ทราบค่ากระทำ)</li>
+                    </ul>
+                    <div class="highlight-box green">
+                        ✅ <strong>ตัวอย่าง:</strong> คานสมดุล: \( F_1 d_1 = F_2 d_2 \)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 14 ========== -->
+            
+
+<div class="slide" data-index="13">
+                <span class="slide-number">14 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่างสมดุลการหมุน
+                    <span class="sub">คานสมดุล</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6c8ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">คานยาว 4 ม. มีจุดหมุนตรงกลาง วางมวล 30 N ที่ระยะ 1.5 ม. ทางซ้าย จงหาน้ำหนักที่ต้องวางทางขวาที่ระยะ 1 ม. เพื่อให้คานสมดุล</p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>วิธีทำ:</strong> \( \sum \tau = 0 \) (ทวนเข็ม = ตามเข็ม)</p>
+                        <ul>
+                            <li>\( 30 \times 1.5 = W \times 1 \)</li>
+                            <li>\( W = 45 \, N \)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 15 ========== -->
+            
+
+<div class="slide" data-index="14">
+                <span class="slide-number">15 / 20</span>
+                <div class="slide-title">
+                    จุดศูนย์กลางมวล (Center of Mass)
+                    <span class="sub">ตำแหน่งเฉลี่ยของมวลทั้งหมด</span>
+                </div>
+                <div class="slide-body">
+                    <div class="slide-two-col">
+                        <div class="text-col">
+                            <div class="eq-box"><span class="eq-label">สูตรคำนวณ</span>\[ 
+                        \( x_{cm} = \frac{\sum m_i x_i}{\sum m_i} \) , \( y_{cm} = \frac{\sum m_i y_i}{\sum m_i} \)
+                     \]</div>
+                    <ul>
+                        <li>จุดศูนย์กลางมวลเป็นจุดที่แรงภายนอกสามารถพิจารณากระทำต่อระบบ</li>
+                        <li>สำหรับวัตถุเนื้อเดียวกันที่มีรูปร่างสมมาตร จะอยู่ที่จุดศูนย์กลางเรขาคณิต</li>
+                        <li>ใช้ในการวิเคราะห์การเคลื่อนที่ของระบบวัตถุ</li>
+                    </ul>
+                    <div class="highlight-box blue">
+                        💡 <strong>ตัวอย่าง:</strong> ระบบมวล 2 kg ที่ (0,0) และ 3 kg ที่ (4,0) → \( x_{cm} = \frac{2\cdot0+3\cdot4}{5} = 2.4 \, m \)
+                    </div>
+                </div>
+                        </div>
+                        <div class="img-col">
+                            <svg width="245" height="230" viewBox="0 0 245 230" xmlns="http://www.w3.org/2000/svg" style="border-radius:14px;background:#fdf8ff;border:1px solid #e8d5ff;"><rect x="25" y="125" width="195" height="12" rx="4" fill="#64748b"/><polygon points="122,137 110,165 134,165" fill="#f59e0b"/><line x1="45" y1="125" x2="45" y2="65" stroke="#ef4444" stroke-width="2.5"/><text x="45" y="55" text-anchor="middle" font-family="Sarabun" font-size="12" font-weight="700" fill="#ef4444">F₁</text><line x1="200" y1="125" x2="200" y2="175" stroke="#2563eb" stroke-width="2.5"/><text x="200" y="190" text-anchor="middle" font-family="Sarabun" font-size="12" font-weight="700" fill="#2563eb">F₂</text><text x="122" y="210" text-anchor="middle" font-family="Sarabun" font-size="12" font-weight="700" fill="#0f172a">สมดุลหมุน: Στ = 0</text></svg>
+                            <p class="img-caption">ภาพประกอบที่ 3</p>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- ========== SLIDE 16 ========== -->
+            
+
+<div class="slide" data-index="15">
+                <span class="slide-number">16 / 20</span>
+                <div class="slide-title">
+                    การเคลื่อนที่ของจุดศูนย์กลางมวล
+                    <span class="sub">กฎข้อที่ 2 ในรูปโมเมนตัม</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li>ความเร็วของจุดศูนย์กลางมวล: \( v_{cm} = \frac{\sum m_i v_i}{\sum m_i} = \frac{P_{total}}{M_{total}} \)</li>
+                        <li>ความเร่งของจุดศูนย์กลางมวล: \( a_{cm} = \frac{\sum F_{ext}}{M_{total}} \)</li>
+                        <li>ถ้าไม่มีแรงภายนอก → \( v_{cm} \) คงที่ (โมเมนตัมรวมอนุรักษ์)</li>
+                    </ul>
+                    <div class="highlight-box purple">
+                        🧠 <strong>ข้อดี:</strong> ช่วยลดความซับซ้อนในการวิเคราะห์ระบบที่มีหลายวัตถุ
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 17 ========== -->
+            
+
+<div class="slide" data-index="16">
+                <span class="slide-number">17 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่างประยุกต์: การชนและการหมุน
+                    <span class="sub">เชื่อมโยงโมเมนตัมกับสมดุล</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6c8ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">ลูกบอลมวล 0.5 kg เคลื่อนที่ 4 m/s ชนกับคานยาวที่สามารถหมุนรอบจุดหมุนได้ จงหาโมเมนต์ที่เกิดขึ้น (ใช้แนวคิดแรงดลและโมเมนต์)</p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>แนวทาง:</strong> แรงที่กระทำต่อคานในช่วงชนทำให้เกิดโมเมนต์ ใช้ \( \tau = F \cdot d \) โดย \( F = \frac{\Delta p}{\Delta t} \) (ถ้ารู้เวลา) หรือใช้แรงดลรวม</p>
+                        <div class="highlight-box orange" style="margin-top:8px;">
+                            ⚠️ <strong>ข้อควรรู้:</strong> การชนที่ทำให้วัตถุหมุน ต้องพิจารณาทั้งโมเมนตัมเชิงเส้นและโมเมนตัมเชิงมุม (ในระดับที่สูงขึ้น)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 18 ========== -->
+            
+
+<div class="slide" data-index="17">
+                <span class="slide-number">18 / 20</span>
+                <div class="slide-title">
+                    สรุปสูตรสำคัญ
+                    <span class="sub">พกไว้ติดตัว</span>
+                </div>
+                <div class="slide-body">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px;">
+                            <h4 style="color:#1f1545;">📌 โมเมนตัม & แรงดล</h4>
+                            <p style="font-size:17px;">\( p = mv \)</p>
+                            <p style="font-size:17px;">\( J = F\Delta t = \Delta p \)</p>
+                            <p style="font-size:17px;">\( \sum p_{ก่อน} = \sum p_{หลัง} \)</p>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px;">
+                            <h4 style="color:#1f1545;">⚖️ สมดุล</h4>
+                            <p style="font-size:17px;">\( \sum F = 0 \)</p>
+                            <p style="font-size:17px;">\( \sum \tau = 0 \)</p>
+                            <p style="font-size:17px;">\( \tau = F \cdot d \)</p>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px; grid-column: span 2;">
+                            <h4 style="color:#1f1545;">🔄 การชนยืดหยุ่น (1D)</h4>
+                            <div style="display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between;">
+                                <span>\( v_1 = \frac{m_1-m_2}{m_1+m_2}u_1 + \frac{2m_2}{m_1+m_2}u_2 \)</span>
+                                <span>\( v_2 = \frac{2m_1}{m_1+m_2}u_1 + \frac{m_2-m_1}{m_1+m_2}u_2 \)</span>
+                            </div>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:16px; grid-column: span 2;">
+                            <h4 style="color:#1f1545;">📍 จุดศูนย์กลางมวล</h4>
+                            <span>\( x_{cm} = \frac{\sum m_i x_i}{M} \)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 19 ========== -->
+            
+
+<div class="slide" data-index="18">
+                <span class="slide-number">19 / 20</span>
+                <div class="slide-title">
+                    ข้อควรระวัง
+                    <span class="sub">จุดผิดพลาดที่พบบ่อย</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li>❌ <strong>ลืมว่าโมเมนตัมเป็นเวกเตอร์:</strong> ต้องบวกแบบเวกเตอร์ (เครื่องหมายทิศทาง)</li>
+                        <li>❌ <strong>ใช้กฎอนุรักษ์โมเมนตัมโดยไม่ตรวจสอบแรงภายนอก:</strong> ต้องไม่มีแรงภายนอกสุทธิ</li>
+                        <li>❌ <strong>สับสนระหว่างการชนยืดหยุ่นและไม่ยืดหยุ่น:</strong> จำไว้ว่า พลังงานจลน์อนุรักษ์เฉพาะยืดหยุ่น</li>
+                        <li>❌ <strong>ลืมหน่วยของโมเมนต์:</strong> \( N \cdot m \) (ไม่ใช่ Joule)</li>
+                        <li>❌ <strong>เลือกจุดหมุนผิด:</strong> ควรเลือกจุดที่แรงไม่ทราบค่ากระทำ เพื่อลดตัวแปร</li>
+                    </ul>
+                    <div class="highlight-box pink" style="margin-top:12px;">
+                        💡 <strong>เคล็ดลับ:</strong> วาดรูปและเลือกทิศทางบวกให้ชัดเจนทุกครั้ง
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 20 ========== -->
+            
+
+<div class="slide" data-index="19">
+                <span class="slide-number">20 / 20</span>
+                <div class="slide-title">
+                    สรุป &amp; คำแนะนำ
+                    <span class="sub">สิ่งที่ควรจำจากบทนี้</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f5f0ff; border-radius:18px; padding:18px 24px; border:1px solid #d6c8ff;">
+                        <p style="font-size:20px; font-weight:600;">📌 ใจความสำคัญ</p>
+                        <ul style="font-size:18px; line-height:1.9;">
+                            <li>✅ <strong>โมเมนตัม</strong> = มวล × ความเร็ว (เวกเตอร์)</li>
+                            <li>✅ <strong>แรงดล</strong> = การเปลี่ยนแปลงโมเมนตัม = \( F \Delta t \)</li>
+                            <li>✅ <strong>กฎอนุรักษ์โมเมนตัม</strong> ใช้ในระบบปิด (ไม่มีแรงภายนอก)</li>
+                            <li>✅ <strong>การชน</strong>: ยืดหยุ่น (อนุรักษ์ \(E_k\)), ไม่ยืดหยุ่น (เสีย \(E_k\))</li>
+                            <li>✅ <strong>สมดุล</strong>: ต้อง \( \sum F = 0 \) (เลื่อนที่) และ \( \sum \tau = 0 \) (หมุน)</li>
+                            <li>✅ <strong>จุดศูนย์กลางมวล</strong> ช่วยวิเคราะห์ระบบหลายวัตถุ</li>
+                        </ul>
+                    </div>
+                    <div style="margin-top:18px; background:#eef2fa; border-radius:16px; padding:14px 22px;">
+                        <p style="font-size:19px;">
+                            <strong>🌟 คำแนะนำ:</strong> ฝึกเขียน FBD และเลือกจุดหมุนให้ถูกต้อง
+                            การทำโจทย์สมดุลต้องอาศัยความละเอียดรอบคอบในการตั้งสมการ
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end slide-container -->
+
+        <!-- ========== NAVIGATION ========== -->
+        <div class="nav-bar">
+            <button class="nav-btn" id="prevBtn" disabled>
+                ◀ ย้อนกลับ
+            </button>
+
+            <div class="dot-indicators" id="dotContainer"></div>
+
+            <button class="nav-btn primary" id="nextBtn">
+                ถัดไป ▶
+            </button>
+        </div>
+
+        <div class="nav-footer">
+            <a href="ch3.html" style="color:#8a94b0; font-size:14px; text-decoration:none;">◀ บทก่อนหน้า</a>
+            <span id="slideCounterDisplay">1 / 19</span>
+            <a href="ch5.html" style="color:#8a94b0; font-size:14px; text-decoration:none;">บทถัดไป ▶</a>
+        </div>
+    </div>
+
+    <script src="../js/slide-core.js"></script>
+</body>
+</html>

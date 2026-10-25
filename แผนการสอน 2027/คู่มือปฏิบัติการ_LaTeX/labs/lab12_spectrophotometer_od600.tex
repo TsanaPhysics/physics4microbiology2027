@@ -1,0 +1,161 @@
+\chapter{การวัดค่าการดูดกลืนแสง OD600 ประเมินการเจริญเติบโตของจุลินทรีย์ด้วยเครื่อง Spectrophotometer}
+
+\begin{planbox}[สัปดาห์ที่ 13 — เวลาปฏิบัติการ 3 ชั่วโมง (สอดคล้องกับ CLO1, CLO2 และ CLO4)]
+\textbf{1. วัตถุประสงค์การทดลอง}
+\begin{itemize}
+    \item ปรับตั้งค่าความยาวคลื่นและทำการเซตศูนย์ (Blank Calibration) ของเครื่อง Spectrophotometer ด้วยอาหารเลี้ยงเชื้อเหลวปลอดเชื้อได้อย่างถูกต้อง
+    \item วัดค่าร้อยละการส่องผ่านของแสง ($\%T$) และค่าการดูดกลืนแสงหรือความหนาแน่นเชิงแสงที่ความยาวคลื่น $600\text{ nm}$ ($\text{OD}_{600}$) ของสารแขวนลอยมาตรฐานแมคฟาร์แลนด์ (McFarland Standards) และชุดเจือจางเซลล์ยีสต์
+    \item เขียนกราฟมาตรฐาน (Standard Curve) ตามกฎของเบียร์--แลมเบิร์ต ($A = \varepsilon b c$) และคำนวณความเข้มข้นที่แท้จริงของตัวอย่างเมื่อต้องเจือจางให้อยู่ในช่วงเชิงเส้น ($\text{OD}_{600}$ ระหว่าง $0.1\text{--}0.8$)
+\end{itemize}
+\textbf{2. ความเชื่อมโยงกับผลลัพธ์การเรียนรู้ของรายวิชา (CLOs) และหลักสูตร (PLOs)}
+\begin{itemize}
+    \item \textbf{CLO1 (PLO2)}\quad อธิบายความสัมพันธ์ระหว่างความเข้มแสงส่องผ่าน ($\%T$) กับค่าการดูดกลืนแสง ($A$ หรือ $\text{OD}_{600}$) ได้
+    \item \textbf{CLO2 (PLO2, PLO3)}\quad ใช้งานเครื่อง Spectrophotometer วัดการเจริญเติบโตของเชื้อจุลินทรีย์และแก้ไขปัญหาค่า $\text{OD}_{600} > 1.0$ ด้วยการเจือจางตัวอย่างได้อย่างถูกต้อง
+    \item \textbf{CLO4 (PLO5, PLO6)}\quad สร้างกราฟมาตรฐานและหาความชันจากข้อมูลการทดลองของกลุ่มได้อย่างแม่นยำ
+\end{itemize}
+\end{planbox}
+
+\section{หลักการทฤษฎีและการเชื่อมโยงสู่งานจุลชีววิทยา}
+
+เครื่องสเปกโตรโฟโตมิเตอร์ (\textbf{Spectrophotometer})\index{สเปกโตรโฟโตมิเตอร์ (Spectrophotometer)} เป็นเครื่องมือหลักที่ใช้ติดตามกราฟการเจริญเติบโตของแบคทีเรียและยีสต์ในอาหารเหลวอย่างรวดเร็ว เมื่อฉายลำแสงความยาวคลื่น $\lambda = 600\text{ nm}$ ด้วยความเข้มเริ่มต้น $I_0$ ผ่านหลอดตัวอย่าง (\textbf{Cuvette}) ที่มีความกว้างช่วงแสง $b = 1.0\text{ cm}$ เซลล์จุลินทรีย์ที่แขวนลอยอยู่จะดูดกลืนและกระเจิงแสงออกไป ทำให้ความเข้มแสงที่ทะลุผ่านไปถึงหัววัดลดลงเหลือ $I$ ความสัมพันธ์ระหว่าง\textbf{การส่องผ่านของแสง} ($T = I/I_0$) และ\textbf{ค่าการดูดกลืนแสง} ($A$ หรือ $\text{OD}_{600}$)\index{ความหนาแน่นเชิงแสง (OD600)} เป็นไปตาม\textbf{กฎของเบียร์--แลมเบิร์ต} (\textbf{Beer--Lambert Law})\index{กฎของเบียร์--แลมเบิร์ต (Beer--Lambert Law)} ดังสมการที่ \eqref{eq:lab12_beer}
+
+\begin{equation}
+    A = \text{OD}_{600} = -\log_{10}\left(\frac{I}{I_0}\right) = 2 - \log_{10}(\%T) = \varepsilon\,b\,c
+    \label{eq:lab12_beer}
+\end{equation}
+
+เนื่องจากค่า $\text{OD}_{600}$ จะแปรผันตรงเป็นเส้นตรงกับความเข้มข้นของเซลล์ $c$ เฉพาะในช่วง $\text{OD}_{600} \approx 0.10\text{--}0.80$ เท่านั้น หากตัวอย่างเชื้อในระยะคงที่ (Stationary Phase) มีความขุ่นสูงจนอ่านค่า $\text{OD}_{600}$ ได้เกิน $1.0$ นักจุลชีววิทยาต้องทำการเจือจางตัวอย่างด้วยอาหารเหลวปลอดเชื้อ (เช่น เจือจาง $5$ เท่า หรือ $10$ เท่า) จนอ่านค่าได้อยู่ในช่วงเชิงเส้น แล้วจึงนำค่าที่อ่านได้คูณด้วย\textbf{ตัวคูณการเจือจาง} (\textbf{Dilution Factor}, $\text{DF}$)
+
+\begin{conceptbox}[สรุปสูตรคำนวณฉบับเข้าใจง่ายสำหรับปฏิบัติการที่ 12]
+\begin{itemize}
+    \item \textbf{ค่าจำขึ้นใจระหว่าง $\%T$ กับค่า $A$ ($\text{OD}_{600}$)}
+    \begin{itemize}
+        \item แสงผ่านได้ $100\%$ (Blank ใสสนิท) $\implies \text{OD}_{600} = 0.000$
+        \item แสงผ่านได้ $10\%$ $\implies \text{OD}_{600} = 1.000$ \quad และแสงผ่านได้ $1\%$ $\implies \text{OD}_{600} = 2.000$
+    \end{itemize}
+    \item \textbf{ตัวคูณการเจือจาง (Dilution Factor)}\quad $\text{DF} = \dfrac{V_{\text{เชื้อ}} + V_{\text{ตัวทำละลาย}}}{V_{\text{เชื้อ}}}$
+    \item \textbf{ค่า $\text{OD}_{600}$ ที่แท้จริงของเชื้อต้นฉบับ}\quad $\text{OD}_{\text{จริง}} = \text{OD}_{\text{ที่อ่านได้หลังเจือจาง}} \times \text{DF}$
+\end{itemize}
+\end{conceptbox}
+
+\begin{worked}[การคำนวณค่า OD600 ที่แท้จริงเมื่อทำการเจือจางตัวอย่างเชื้อ]
+\textbf{โจทย์} ตัวอย่างเชื้อแบคทีเรีย \textit{Escherichia coli} ที่บ่มนาน $16$ ชั่วโมง มีความขุ่นสูงเกินช่วงเชิงเส้น นักศึกษาจึงดูดตัวอย่างเชื้อมา $0.2\text{ mL}$ ผสมกับอาหารเหลวปลอดเชื้อ (Blank) ปริมาตร $1.8\text{ mL}$ เมื่อนำไปวัดในเครื่อง Spectrophotometer อ่านค่าได้ $\text{OD}_{600} = 0.480$ จงคำนวณค่า $\text{OD}_{600}$ ที่แท้จริงของเชื้อต้นฉบับ
+
+\textbf{วิธีทำทีละขั้นตอน}
+\begin{enumerate}
+    \item คำนวณตัวคูณการเจือจาง ($\text{DF}$) จากปริมาตรรวมหารด้วยปริมาตรเชื้อ
+    \begin{equation*}
+        \text{DF} = \frac{0.2 + 1.8}{0.2} = \frac{2.0}{0.2} = 10\text{ เท่า}
+    \end{equation*}
+    \item คำนวณค่า $\text{OD}_{600}$ ที่แท้จริงของเชื้อต้นฉบับ
+    \begin{equation*}
+        \text{OD}_{\text{จริง}} = 0.480 \times 10 = 4.80
+    \end{equation*}
+\end{enumerate}
+\textbf{คำตอบ} ตัวอย่างเชื้อต้นฉบับมีค่าความหนาแน่นเชิงแสงที่แท้จริงเท่ากับ $\text{OD}_{600} = 4.80$
+\end{worked}
+
+\begin{figure}[H]
+\centering
+\resizebox{0.86\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, font=\small]
+    % Left: Spectrophotometer optical path
+    \draw[fill=physAmber!30, draw=physAmber!90!black, line width=1pt] (0.5,1.8) circle (0.45cm);
+    \node[font=\scriptsize\bfseries, below] at (0.5,1.25) {หลอดไฟ};
+    \draw[fill=boxBlueBg, draw=physRoyalBlue, line width=1pt] (1.6,1.2) -- (2.3,2.4) -- (0.9,2.4) -- cycle;
+    \node[font=\scriptsize\bfseries, above] at (1.6,2.45) {เกรตติงเลือก $600\text{ nm}$};
+    \draw[->, line width=2pt, physAmber!90!orange] (2.2,1.8) -- (3.3,1.8) node[midway, above, font=\footnotesize\bfseries] {$I_0$};
+
+    % Cuvette
+    \draw[fill=bioEmerald!25, draw=bioEmerald!85!black, line width=1.2pt] (3.3,0.8) rectangle (4.5,2.9);
+    \foreach \x/\y in {3.6/1.2, 4.1/1.5, 3.8/2.0, 4.2/2.4, 3.6/2.5} {
+        \fill[bioEmerald!80!black] (\x,\y) circle (2.2pt);
+    }
+    \node[font=\scriptsize\bfseries, below] at (3.9,0.75) {Cuvette ($b=1\text{ cm}$)};
+
+    \draw[->, line width=1.2pt, physAmber!90!orange] (4.5,1.8) -- (5.6,1.8) node[midway, above, font=\footnotesize\bfseries] {$I$};
+    \draw[fill=charcoal!85, draw=charcoal, rounded corners=3pt] (5.6,1.2) rectangle (6.8,2.4);
+    \node[font=\scriptsize\bfseries\color{white}, align=center] at (6.2,1.8) {หัววัดแสง\\$\text{OD}_{600}$};
+
+    % Right: Beer-Lambert linear range
+    \draw[->, line width=1.1pt] (8.0,0.6) -- (13.6,0.6) node[right, font=\footnotesize\bfseries] {ความเข้มข้นเซลล์ $c$};
+    \draw[->, line width=1.1pt] (8.0,0.6) -- (8.0,3.6) node[above, font=\footnotesize\bfseries] {ค่า $\text{OD}_{600}$};
+    \fill[boxGreenBg] (8.0,0.9) rectangle (11.2,2.6);
+    \node[font=\scriptsize\bfseries\color{bioEmerald!85!black}] at (9.6,3.1) {ช่วงเชิงเส้นแม่นยำ ($\text{OD}_{600} = 0.1\text{--}0.8$)};
+    \draw[line width=1.8pt, bioEmerald!85!black] (8.0,0.6) -- (11.2,2.6);
+    \draw[dashed, line width=1.5pt, crimsonAlert] (11.2,2.6) .. controls (12.0,2.95) and (12.8,3.05) .. (13.4,3.1);
+    \node[font=\scriptsize\bfseries\color{crimsonAlert}, align=center] at (12.5,2.1) {เกิน $1.0$ กราฟโค้งอิ่มตัว\\ต้องเจือจางตัวอย่าง!};
+\end{tikzpicture}%
+}
+\caption{ทางเดินแสงภายในเครื่อง Spectrophotometer (ซ้าย) และช่วงความเป็นเส้นตรงของกราฟมาตรฐานตามกฎของเบียร์--แลมเบิร์ต (ขวา)}
+\label{fig:lab12_setup}
+\end{figure}
+
+\section{วัสดุอุปกรณ์และขั้นตอนการปฏิบัติการ}
+
+\begin{equipbox}
+\begin{enumerate}
+    \item เครื่องสเปกโตรโฟโตมิเตอร์ (Visible Spectrophotometer) ตั้งความยาวคลื่นที่ $600\text{ nm}$ จำนวน $1$ เครื่อง
+    \item หลอดวัดแสงพลาสติกใส (Disposable Cuvettes ช่วงแสง $b = 1.0\text{ cm}$) จำนวน $6$ หลอด
+    \item อาหารเลี้ยงเชื้อเหลวปลอดเชื้อสำหรับทำ Blank และสารแขวนลอยยีสต์ความเข้มข้นสัมพัทธ์ $20\%, 40\%, 60\%, 80\%$ และตัวอย่างความขุ่นสูงไม่ทราบค่า (Unknown)
+\end{enumerate}
+\end{equipbox}
+
+\begin{warningbox}
+ห้ามจับด้านใสของหลอด Cuvette ที่แสงเดินทางผ่านด้วยนิ้วมือเปล่า ให้จับเฉพาะด้านขุ่นหรือขอบบนของหลอดเท่านั้น และต้องเช็ดหยดน้ำหรือรอยนิ้วมือด้วยกระดาษเช็ดเลนส์รวมทั้งเคาะฟองอากาศออกให้หมดก่อนนำเข้าช่องวัดแสงทุกครั้ง
+\end{warningbox}
+
+\subsection{ขั้นตอนการทดลอง}
+\begin{enumerate}
+    \item \textbf{ตอนที่ 1 การทำ Blank และการสร้างกราฟมาตรฐานความขุ่นเซลล์}\quad ปรับความยาวคลื่นของเครื่อง Spectrophotometer ไปที่ $600\text{ nm}$ บรรจุอาหารเหลวปลอดเชื้อลงในหลอด Cuvette หลอดที่ 1 แล้วกดปุ่ม Zero / Blank (หน้าจอแสดง $\text{OD}_{600} = 0.000$ หรือ $\%T = 100.0\%$) จากนั้นวัดค่า $\%T$ และ $\text{OD}_{600}$ ของสารแขวนลอยมาตรฐาน $20\%, 40\%, 60\%$ และ $80\%$ บันทึกใน\mbox{ตารางที่} 12.1
+    \item \textbf{ตอนที่ 2 การวัดตัวอย่างเชื้อความขุ่นสูงด้วยการเจือจาง (Dilution)}\quad วัดค่า $\text{OD}_{600}$ ของตัวอย่างเชื้อ Unknown โดยตรง (ซึ่งจะมีค่าเกิน $1.0$) จากนั้นใช้ไมโครปิเปตดูดตัวอย่างเชื้อ $0.20\text{ mL}$ ผสมกับตัวทำละลาย Blank $1.80\text{ mL}$ ($\text{DF} = 10$) ผสมให้เข้ากันแล้ววัดค่า $\text{OD}_{600}$ หลังเจือจางเพื่อคำนวณค่าที่แท้จริงใน\mbox{ตารางที่} 12.2
+\end{enumerate}
+
+\section{ใบบันทึกผลการทดลองและคำถามท้ายปฏิบัติการ}
+
+\begin{worksheetbox}[ใบบันทึกผลการทดลองที่ 12\quad การวัดค่า OD600 ด้วยเครื่อง Spectrophotometer]
+\textbf{กลุ่มปฏิบัติการที่} \dotfill \textbf{วันที่ทำการทดลอง} \dotfill\\[4pt]
+\textbf{รายชื่อสมาชิกกลุ่ม} 1. \dotfill 2. \dotfill 3. \dotfill
+
+\vspace{4pt}
+\textbf{ตารางที่ 12.1\quad ผลการวัดค่าร้อยละการส่องผ่าน ($\%T$) และค่าการดูดกลืนแสง ($\text{OD}_{600}$) ของชุดมาตรฐาน}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{4.2cm} c c c >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{หลอดตัวอย่างมาตรฐาน} & \textbf{ความเข้มข้น} & \textbf{ค่า $\%T$ (\%)} & \textbf{$\text{OD}_{600}$ (ครั้งที่ 1)} & \textbf{ค่า $\text{OD}_{600}$ เฉลี่ย} \\
+\midrule
+หลอดที่ 1 (Blank อาหารเหลว) & $0\%$ & $100.0\%$ & $0.000$ & $0.000$ \\[5pt]
+หลอดที่ 2 (สารแขวนลอยเจือจาง) & $20\%$ & ........ & ........ & \dotfill \\[5pt]
+หลอดที่ 3 (สารแขวนลอยปานกลาง) & $40\%$ & ........ & ........ & \dotfill \\[5pt]
+หลอดที่ 4 (สารแขวนลอยค่อนข้างขุ่น) & $60\%$ & ........ & ........ & \dotfill \\[5pt]
+หลอดที่ 5 (สารแขวนลอยขุ่น) & $80\%$ & ........ & ........ & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\textbf{ตารางที่ 12.2\quad ผลการวัดตัวอย่างเชื้อ Unknown ก่อนและหลังการเจือจาง 10 เท่า ($\text{DF} = 10$)}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{5.2cm} c c >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{สภาวะของตัวอย่างเชื้อ Unknown} & \textbf{DF} & \textbf{$\text{OD}_{600}$ ที่อ่านได้} & \textbf{ค่า $\text{OD}_{600}$ ที่แท้จริง ($\text{OD}\times\text{DF}$)} \\
+\midrule
+1. วัดโดยตรงไม่เจือจาง (เกินช่วงเชิงเส้น) & $1$ & ........ & \dotfill \\[6pt]
+2. เจือจาง $10$ เท่า ($0.2\text{ mL} + 1.8\text{ mL}$) & $10$ & ........ & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\textbf{สรุปและอภิปรายผลการทดลอง}\\[4pt]
+\dotfill\\[6pt]
+\dotfill
+\end{worksheetbox}
+
+\subsection{คำถามท้ายปฏิบัติการ}
+\begin{enumerate}
+    \item เพราะเหตุใดในการวัดความหนาแน่นของเซลล์แบคทีเรียในอาหารเลี้ยงเชื้อเหลว Nutrient Broth ที่มีสีเหลืองใส จึงต้องใช้อาหารเหลว Nutrient Broth ที่ไม่ได้ใส่เชื้อเป็นหลอด Blank แทนการใช้น้ำกลั่นบริสุทธิ์
+    \item การวัดค่า $\text{OD}_{600}$ ด้วยเครื่อง Spectrophotometer สามารถแยกแยะระหว่างเซลล์แบคทีเรียที่ยังมีชีวิตอยู่กับเซลล์ที่ตายแล้วแต่ยังไม่แตกสลายได้หรือไม่ เพราะเหตุใด
+\end{enumerate}

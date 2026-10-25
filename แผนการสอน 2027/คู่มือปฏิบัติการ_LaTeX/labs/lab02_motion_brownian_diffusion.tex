@@ -1,0 +1,152 @@
+\cleardoublepage
+\phantomsection
+\begin{planbox}[แผนบริหารการสอนปฏิบัติการที่ 2\quad การเคลื่อนที่ การแพร่ และ Brownian Motion (สัปดาห์ที่ 2)]
+\noindent\textbf{1. เวลาเรียนปฏิบัติการ}\quad 3 ชั่วโมง (180 นาที)\quad \textbf{ผลลัพธ์การเรียนรู้ที่ประเมิน}\quad CLO1, CLO3, CLO4
+
+\noindent\textbf{2. วัตถุประสงค์เชิงพฤติกรรมประจำปฏิบัติการ}
+\begin{enumerate}
+    \item วัดระยะทางและเวลาของการเคลื่อนที่แนวตรง คำนวณอัตราเร็วเฉลี่ย และเขียนกราฟหาระยะทางกับเวลาได้ \textbf{(CLO1 เชื่อมโยง PLO2)}
+    \item เปรียบเทียบอัตราเร็วของการแพร่ของโมเลกุลสีย้อมในตัวกลางที่มีอุณหภูมิต่างกัน และเชื่อมโยงกับการเคลื่อนที่แบบบราวน์ (Brownian Motion) ของจุลินทรีย์ได้ \textbf{(CLO1, CLO2 เชื่อมโยง PLO2, PLO3)}
+    \item ปฏิบัติการทดลองและเขียนกราฟสรุปผลร่วมกับกลุ่มได้อย่างถูกต้องตามหลักวิชาการ \textbf{(CLO3, CLO4 เชื่อมโยง PLO1, PLO5, PLO6)}
+\end{enumerate}
+
+\noindent\textbf{3. แผนการจัดเวลาในคาบปฏิบัติการ 3 ชั่วโมง}
+\begin{itemize}
+    \item \textbf{ชั่วโมงที่ 1}\quad ทบทวนความแตกต่างระหว่างระยะทาง การกระจัด การเคลื่อนที่จริง (Chemotaxis) และการสั่นแบบบราวน์
+    \item \textbf{ชั่วโมงที่ 2}\quad ทำการทดลองตอนที่ 1 (วัดอัตราเร็วฟองอากาศในหลอดของเหลว) และตอนที่ 2 (ผลของอุณหภูมิต่ออัตราเร็วการแพร่ของสีย้อม)
+    \item \textbf{ชั่วโมงที่ 3}\quad พล็อตกราฟเส้นตรง หาความชันของกราฟ และอภิปรายผลการทดลอง
+\end{itemize}
+\end{planbox}
+\clearpage
+
+\chapter{การเคลื่อนที่ ความเร็ว และการสังเกตการแพร่และ Brownian Motion}
+\index{อัตราเร็วและความเร็ว}\index{การแพร่ของสีย้อม}\index{การเคลื่อนที่แบบบราวน์}\index{ความชันกราฟ}
+
+\section{หลักการทางฟิสิกส์และทฤษฎีเบื้องหลังการทดลอง}
+
+เมื่อวัตถุหรือฟองอากาศเคลื่อนที่ในแนวตรงด้วยอัตราเร็วสม่ำเสมอ อัตราส่วนระหว่างระยะทางที่เคลื่อนที่ได้ ($s$) ต่อเวลาที่ใช้ ($t$) จะมีค่าคงที่ ซึ่งเรียกว่า \textbf{อัตราเร็วเฉลี่ย} ($v = s/t$) หากเรานำข้อมูลไปเขียนกราฟโดยให้แกนตั้งเป็นระยะทาง $s$ และแกนนอนเป็นเวลา $t$ เราจะได้กราฟเส้นตรงที่มี\textbf{ความชัน} (\textbf{Slope}) เท่ากับอัตราเร็ว $v$ พอดี
+
+ในระดับจุลทรรศน์ โมเลกุลของน้ำและสารละลายมีการเคลื่อนที่ชนกันอย่างสุ่มตลอดเวลาด้วยพลังงานความร้อน ทำให้เกิดปรากฏการณ์ 2 ประการที่สำคัญในห้องแล็บจุลชีววิทยา คือ (1) \textbf{การเคลื่อนที่แบบบราวน์} (\textbf{Brownian Motion}) ซึ่งทำให้เซลล์แบคทีเรียที่ไม่มีแฟลกเจลลาสั่นดุ๊กดิ๊กอยู่กับที่โดยมีการกระจัดลัพธ์เป็นศูนย์ ($\vect{d} \approx 0$) และ (2) \textbf{การแพร่} (\textbf{Diffusion}) ของโมเลกุลสีย้อมหรือยาปฏิชีวนะจากบริเวณความเข้มข้นสูงไปสู่ความเข้มข้นต่ำ โดยเมื่ออุณหภูมิของของเหลวสูงขึ้น โมเลกุลจะมีพลังงานจลน์สูงขึ้นและแพร่กระจายออกไปได้เร็วขึ้น
+
+\begin{conceptbox}[สูตรอัตราเร็ว ความชันกราฟ และระยะการแพร่]
+\begin{enumerate}
+    \item \textbf{อัตราเร็วเฉลี่ยและความชันกราฟ}\quad $v = \dfrac{s}{t} = \text{ความชันของกราฟ } s\text{--}t = \dfrac{s_2 - s_1}{t_2 - t_1}$
+    \item \textbf{อัตราเร็วการแพร่เฉลี่ยของวงสีย้อม}\quad $v_{\text{diff}} = \dfrac{\text{รัศมีวงสีที่แผ่ออก } R}{\text{เวลา } t}\quad (\text{หน่วย mm/min})$
+\end{enumerate}
+\end{conceptbox}
+
+\begin{worked}[การหาอัตราเร็วจากความชันของกราฟระยะทางกับเวลา]
+\textbf{โจทย์ตัวอย่าง}\quad จากการจับเวลาฟองอากาศเคลื่อนที่ขึ้นในหลอดแก้ว พบว่าที่ระยะทาง $s_1 = 10.0\text{ cm}$ ใช้เวลา $t_1 = 4.0\text{ s}$ และที่ระยะทาง $s_2 = 30.0\text{ cm}$ ใช้เวลา $t_2 = 12.0\text{ s}$ จงหาอัตราเร็วของฟองอากาศจากความชันของกราฟ
+
+\textbf{วิธีคำนวณทีละขั้นตอน}
+\[
+    v = \text{Slope} = \frac{s_2 - s_1}{t_2 - t_1} = \frac{30.0\text{ cm} - 10.0\text{ cm}}{12.0\text{ s} - 4.0\text{ s}} = \frac{20.0\text{ cm}}{8.0\text{ s}} = 2.50\text{ cm/s}
+\]
+\end{worked}
+
+\section{แผนภาพชุดอุปกรณ์การทดลองและรายการวัสดุ}
+
+\begin{figure}[H]
+\centering
+\resizebox{0.86\textwidth}{!}{%
+\begin{tikzpicture}[font=\sffamily, >=Stealth]
+    % Left: Bubble Velocity Tube
+    \begin{scope}[shift={(0,0)}]
+        \draw[fill=boxBlueBg, draw=physRoyalBlue, line width=1.2pt, rounded corners=4pt] (0,0) rectangle (6.8,4.2);
+        \node[font=\bfseries\color{physRoyalBlue}] at (3.4,3.75) {(ก) หลอดวัดอัตราเร็วการเคลื่อนที่แนวตรง};
+        \fill[physCyan!20, draw=physRoyalBlue, line width=1.2pt] (1.0,1.6) rectangle (5.8,2.3);
+        \foreach \x/\lbl in {1.6/0 cm, 2.6/10 cm, 3.6/20 cm, 4.6/30 cm, 5.4/40 cm} {
+            \draw[crimsonAlert, line width=1.0pt] (\x,1.5) -- (\x,2.4);
+            \node[below, font=\scriptsize\bfseries] at (\x,1.45) {\lbl};
+        }
+        \fill[white, draw=physCyan, line width=1.1pt] (2.2,1.95) circle (0.22cm);
+        \draw[->, physAmber, line width=1.5pt] (2.5,1.95) -- (4.2,1.95);
+        \node[above, font=\scriptsize\bfseries, color=physAmber!90!black] at (3.35,2.35) {ฟองอากาศเคลื่อนที่ด้วยอัตราเร็วคงที่ $v$};
+    \end{scope}
+
+    % Right: Radial Dye Diffusion in Petri Dish
+    \begin{scope}[shift={(7.6,0)}]
+        \draw[fill=boxGreenBg, draw=bioEmerald, line width=1.2pt, rounded corners=4pt] (0,0) rectangle (6.8,4.2);
+        \node[font=\bfseries\color{bioEmerald!90!black}] at (3.4,3.75) {(ข) การวัดรัศมีการแพร่ของสีย้อมในจานเพาะเชื้อ};
+        \fill[white, draw=physSlate, line width=1.3pt] (3.4,1.85) circle (1.35cm);
+        \fill[physCyan!30, draw=physCyan, dashed, line width=1.0pt] (3.4,1.85) circle (0.85cm);
+        \fill[physRoyalBlue] (3.4,1.85) circle (0.22cm);
+        \draw[<->, crimsonAlert, line width=1.2pt] (3.4,1.85) -- node[above, font=\scriptsize\bfseries] {$R$} (4.25,1.85);
+        \node[font=\scriptsize, align=center] at (3.4,0.28) {วางจานเพาะเชื้อทับบนกระดาษกราฟมิลลิเมตร};
+    \end{scope}
+\end{tikzpicture}%
+}
+\caption{ชุดการทดลองวัดอัตราเร็วการเคลื่อนที่แนวตรงและการวัดรัศมีการแพร่ของโมเลกุลสีย้อมในจานเพาะเชื้อ}
+\end{figure}
+
+\begin{equipbox}[รายการอุปกรณ์สำหรับแต่ละกลุ่ม]
+\begin{itemize}
+    \item หลอดแก้วใสยาวบรรจุของเหลวพร้อมฟองอากาศ (มีขีดบอกระยะทุกๆ $10.0\text{ cm}$) และนาฬิกาจับเวลาดิจิทัล
+    \item จานเพาะเชื้อ 2 ใบ วางทับบนกระดาษกราฟมิลลิเมตร บรรจุน้ำเย็น ($10\,^\circ\text{C}$) และน้ำอุ่น ($45\,^\circ\text{C}$)
+    \item สารละลายสีย้อมเมทิลีนบลู (Methylene Blue $1\%$) และไมโครปิเปต P20 ตั้งค่าที่ $20\text{ }\mu\text{L}$
+\end{itemize}
+\end{equipbox}
+
+\section{ขั้นตอนการปฏิบัติการทดลอง}
+
+\subsection{ตอนที่ 1 การวัดอัตราเร็วและเขียนกราฟระยะทางกับเวลา}
+\begin{enumerate}
+    \item ตั้งหลอดแก้ววัดการเคลื่อนที่ให้ทำมุมเอียงคงที่ พลิกหลอดให้ฟองอากาศเริ่มต้นเคลื่อนที่จากด้านล่าง เมื่อขอบหน้าของฟองอากาศผ่านขีดเริ่มต้น ($0\text{ cm}$) ให้กดเริ่มจับเวลา
+    \item อ่านเวลา $t$ เมื่อฟองอากาศเคลื่อนที่ผ่านระยะทาง $s = 10.0\text{ cm}, 20.0\text{ cm}, 30.0\text{ cm}$ และ $40.0\text{ cm}$ ทำการทดลองซ้ำ 3 ครั้ง คำนวณเวลาเฉลี่ยและอัตราเร็วเฉลี่ย $v = s/t$
+\end{enumerate}
+
+\subsection{ตอนที่ 2 อิทธิพลของอุณหภูมิต่ออัตราเร็วการแพร่ของโมเลกุล}
+\begin{enumerate}
+    \item รอให้น้ำเย็น ($10\,^\circ\text{C}$) และน้ำอุ่น ($45\,^\circ\text{C}$) ในจานเพาะเชื้อทั้ง 2 ใบอยู่นิ่งสนิทไม่กระเพื่อม
+    \item ใช้ไมโครปิเปตหยดสีย้อมเมทิลีนบลูปริมาตร $20\text{ }\mu\text{L}$ ลงตรงจุดกึ่งกลางของจานเพาะเชื้อแต่ละใบอย่างเบาๆ พร้อมกดจับเวลา
+    \item อ่านค่ารัศมีของวงสีที่แพร่กระจายออก ($R$ ในหน่วย $\text{mm}$) จากกระดาษกราฟใต้จานเพาะเชื้อ เมื่อเวลาผ่านไป $1, 2$ และ $3$ นาที
+\end{enumerate}
+
+\section{ใบบันทึกผลการทดลองประจำกลุ่ม}
+
+\begin{worksheetbox}[ใบบันทึกผลการทดลองที่ 2\quad การเคลื่อนที่ ความเร็ว และการแพร่ของโมเลกุล]
+\noindent\textbf{กลุ่มปฏิบัติการที่} \dotfill \textbf{วันที่ทำการทดลอง} \dotfill\\[4pt]
+\noindent\textbf{รายชื่อสมาชิกกลุ่ม} 1. \dotfill 2. \dotfill 3. \dotfill
+
+\vspace{6pt}
+\noindent\textbf{ตารางบันทึกผลตอนที่ 1 การเคลื่อนที่แนวตรงของฟองอากาศในหลอดของเหลว}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X c c c c c}
+\toprule
+\textbf{ระยะทาง $s$ ($\text{cm}$)} & \textbf{ครั้งที่ 1 ($\text{s}$)} & \textbf{ครั้งที่ 2 ($\text{s}$)} & \textbf{ครั้งที่ 3 ($\text{s}$)} & \textbf{เฉลี่ย $t$ ($\text{s}$)} & \textbf{อัตราเร็ว $v$ ($\text{cm/s}$)} \\
+\midrule
+$10.0\text{ cm}$ & ........ & ........ & ........ & ........ & \dotfill \\
+$20.0\text{ cm}$ & ........ & ........ & ........ & ........ & \dotfill \\
+$30.0\text{ cm}$ & ........ & ........ & ........ & ........ & \dotfill \\
+$40.0\text{ cm}$ & ........ & ........ & ........ & ........ & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\noindent\textbf{ตารางบันทึกผลตอนที่ 2 รัศมีการแพร่ของสีย้อมเมทิลีนบลูที่อุณหภูมิต่างกัน}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X c c c c}
+\toprule
+\textbf{สภาวะอุณหภูมิน้ำในจานเพาะเชื้อ} & \textbf{$1\text{ min}$ ($\text{mm}$)} & \textbf{$2\text{ min}$ ($\text{mm}$)} & \textbf{$3\text{ min}$ ($\text{mm}$)} & \textbf{อัตราเร็วแพร่ ($\text{mm/min}$)} \\
+\midrule
+จานที่ 1 น้ำเย็น ($10\,^\circ\text{C}$) & ........ & ........ & ........ & \dotfill \\
+จานที่ 2 น้ำอุ่น ($45\,^\circ\text{C}$) & ........ & ........ & ........ & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\noindent\textbf{การคำนวณความชันกราฟตอนที่ 1 และสรุปผลการทดลอง}\\[4pt]
+ความชันของกราฟระยะทาง--เวลา $\text{Slope} = \dfrac{s_4 - s_1}{t_4 - t_1} = $ \dotfill $\text{cm/s}$\\[6pt]
+สรุปผลการทดลอง \dotfill\\[6pt]
+\dotfill
+\end{worksheetbox}
+
+\section*{คำถามท้ายปฏิบัติการที่ 2}
+\begin{enumerate}
+    \item จากผลการทดลองตอนที่ 2 อุณหภูมิของน้ำมีผลต่ออัตราเร็วการแพร่ของโมเลกุลสีย้อมอย่างไร และหลักการนี้อธิบายการแพร่ของยาปฏิชีวนะในวุ้นเพาะเชื้อได้อย่างไร
+    \item หากส่องกล้องจุลทรรศน์ดูแบคทีเรียในหยดน้ำแล้วพบว่าทุกเซลล์สั่นสะเทือนด้วยแอมพลิจูดมากขึ้นเมื่อไฟส่องสว่างใต้กล้องเกิดความร้อนสูงขึ้น ปรากฏการณ์นี้คือการเคลื่อนที่แบบใด
+\end{enumerate}

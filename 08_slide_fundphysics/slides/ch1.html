@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ระบบหน่วยและเวกเตอร์ - ฟิสิกส์ ม.ปลาย</title>
+    <!-- MathJax v3 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\(', '\)']],
+                displayMath: [['\[', '\]']]
+            },
+            options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+            startup: { typeset: false }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/slide-core.css">
+</head>
+<body>
+
+    <div class="presentation-wrapper">
+        <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+            <a href="../index.html" style="color:#38bdf8; text-decoration:none; font-size:15px; font-weight:600;">🏠 เมนูหลัก</a>
+            <span style="color:#8a94b0; font-size:14px;">บทที่ 1 / 7</span>
+        </div>
+
+        <div class="slide-container" id="slideContainer">
+<div class="slide-container" id="slideContainer">
+
+            <!-- ========== SLIDE 1 ========== -->
+            <div class="slide active" data-index="0">
+                <span class="slide-number">1 / 20</span>
+                <div class="slide-title">
+                    ระบบหน่วยและเวกเตอร์
+                    <span class="sub">ฟิสิกส์ มัธยมศึกษาตอนปลาย</span>
+                </div>
+                <div class="slide-body" style="margin-top:28px;">
+                    <p style="font-size:22px; font-weight:500; color:#2d3a5e;">
+                        📐 พื้นฐานสำคัญสำหรับการเรียนฟิสิกส์
+                    </p>
+                    <div style="display:flex; flex-wrap:wrap; gap:18px; margin-top:24px;">
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ ระบบหน่วย SI</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ ปริมาณสเกลาร์ &amp; เวกเตอร์</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ การบวกเวกเตอร์</span>
+                        </div>
+                        <div style="background:#eef2fa; border-radius:16px; padding:14px 24px;">
+                            <span style="font-weight:600;">✅ การประยุกต์ใช้</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:28px; background:#f0f7ff; border-radius:18px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:18px; color:#1f2a44;">
+                            <strong>🎯 วัตถุประสงค์:</strong> เพื่อให้เข้าใจระบบหน่วย การแยกแยะปริมาณสเกลาร์/เวกเตอร์
+                            และสามารถรวมเวกเตอร์ด้วยวิธีต่าง ๆ ได้อย่างถูกต้อง
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 2 ========== -->
+            <div class="slide" data-index="1">
+                <span class="slide-number">2 / 20</span>
+                <div class="slide-title">
+                    สารบัญ
+                    <span class="sub">หัวข้อที่จะเรียนในบทนี้</span>
+                </div>
+                <div class="slide-body">
+                    <ul style="font-size:20px; list-style:none; padding-left:0; display:flex; flex-direction:column; gap:10px;">
+                        <li>🔹 <strong>1.</strong> ระบบหน่วย SI – ปริมาณพื้นฐาน &amp; อนุพัทธ์</li>
+                        <li>🔹 <strong>2.</strong> ปริมาณสเกลาร์ vs ปริมาณเวกเตอร์</li>
+                        <li>🔹 <strong>3.</strong> การเขียนและแสดงเวกเตอร์</li>
+                        <li>🔹 <strong>4.</strong> การบวกเวกเตอร์ – วิธีทางเรขาคณิต</li>
+                        <li>🔹 <strong>5.</strong> การบวกเวกเตอร์ – วิธีแยกองค์ประกอบ (ตั้งฉาก)</li>
+                        <li>🔹 <strong>6.</strong> การบวกเวกเตอร์ – สูตรโคไซน์</li>
+                        <li>🔹 <strong>7.</strong> ตัวอย่างการคำนวณ</li>
+                        <li>🔹 <strong>8.</strong> เวกเตอร์ใน 3 มิติ</li>
+                        <li>🔹 <strong>9.</strong> การคูณเวกเตอร์ (ดอท &amp; ครอส)</li>
+                        <li>🔹 <strong>10.</strong> การประยุกต์ใช้ในฟิสิกส์</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 3 ========== -->
+            <div class="slide" data-index="2">
+                <span class="slide-number">3 / 20</span>
+                <div class="slide-title">
+                    ระบบหน่วย SI
+                    <span class="sub">ปริมาณพื้นฐาน (Base Quantities)</span>
+                </div>
+                <div class="slide-body">
+                    <div class="slide-two-col">
+                        <div class="text-col">
+                            <p>ระบบหน่วยสากล (SI) ใช้ <strong>7 ปริมาณพื้นฐาน</strong> ที่ต้องจำให้ขึ้นใจ:</p>
+                            <div class="grid-2col" style="margin-top:10px;">
+                                <div class="col"><h4>📏 ปริมาณ</h4>
+                                    <ul style="font-size:16px; padding-left:16px;">
+                                        <li>ความยาว</li><li>มวล</li><li>เวลา</li>
+                                        <li>กระแสไฟฟ้า</li><li>อุณหภูมิ</li>
+                                        <li>ปริมาณสาร</li><li>ความเข้มแสง</li>
+                                    </ul>
+                                </div>
+                                <div class="col"><h4>📦 หน่วย SI</h4>
+                                    <ul style="font-size:16px; padding-left:16px;">
+                                        <li><strong>เมตร (m)</strong></li>
+                                        <li><strong>กิโลกรัม (kg)</strong></li>
+                                        <li><strong>วินาที (s)</strong></li>
+                                        <li><strong>แอมแปร์ (A)</strong></li>
+                                        <li><strong>เคลวิน (K)</strong></li>
+                                        <li><strong>โมล (mol)</strong></li>
+                                        <li><strong>แคนเดลา (cd)</strong></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="highlight-box">
+                                💡 <strong>จำง่าย:</strong> "ม.กก. วินาที แอมแปร์ เคลวิน โมล แคนเดลา"
+                            </div>
+                        </div>
+                        <!-- ภาพ 1: SI Units Hexagon Infographic (SVG inline) -->
+                        <div class="img-col">
+                            <svg width="255" height="285" viewBox="0 0 255 285" xmlns="http://www.w3.org/2000/svg" style="border-radius:14px;background:#f8faff;border:1px solid #dde6ff;">
+                                <defs><filter id="sh1" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#00000020"/></filter></defs>
+                                <text x="127" y="15" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="12" font-weight="700" fill="#1b2d6e">SI Base Units</text>
+                                <!-- hex1: Length/m blue top center -->
+                                <polygon points="127,24 153,39 153,69 127,84 101,69 101,39" fill="#3b82f6" filter="url(#sh1)" opacity="0.93"/>
+                                <text x="127" y="50" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="8.5" font-weight="700" fill="white">ความยาว</text>
+                                <text x="127" y="62" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="12" font-weight="700" fill="white">m</text>
+                                <text x="127" y="74" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="7.5" fill="#dbeafe">meter</text>
+                                <!-- hex2: Mass/kg orange top right -->
+                                <polygon points="183,58 209,73 209,103 183,118 157,103 157,73" fill="#f97316" filter="url(#sh1)" opacity="0.93"/>
+                                <text x="183" y="84" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="8.5" font-weight="700" fill="white">มวล</text>
+                                <text x="183" y="96" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="12" font-weight="700" fill="white">kg</text>
+                                <text x="183" y="108" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="7.5" fill="#fde8d8">kilogram</text>
+                                <!-- hex3: Time/s green bottom right -->
+                                <polygon points="183,128 209,143 209,173 183,188 157,173 157,143" fill="#22c55e" filter="url(#sh1)" opacity="0.93"/>
+                                <text x="183" y="154" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="8.5" font-weight="700" fill="white">เวลา</text>
+                                <text x="183" y="166" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="12" font-weight="700" fill="white">s</text>
+                                <text x="183" y="178" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="7.5" fill="#d1fae5">second</text>
+                                <!-- hex4: Current/A red bottom center -->
+                                <polygon points="127,163 153,178 153,208 127,223 101,208 101,178" fill="#ef4444" filter="url(#sh1)" opacity="0.93"/>
+                                <text x="127" y="190" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="8" font-weight="700" fill="white">กระแสไฟฟ้า</text>
+                                <text x="127" y="202" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="12" font-weight="700" fill="white">A</text>
+                                <text x="127" y="214" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="7.5" fill="#fecaca">ampere</text>
+                                <!-- hex5: Temp/K purple bottom left -->
+                                <polygon points="71,128 97,143 97,173 71,188 45,173 45,143" fill="#8b5cf6" filter="url(#sh1)" opacity="0.93"/>
+                                <text x="71" y="151" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="8.5" font-weight="700" fill="white">อุณหภูมิ</text>
+                                <text x="71" y="163" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="12" font-weight="700" fill="white">K</text>
+                                <text x="71" y="175" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="7.5" fill="#ede9fe">kelvin</text>
+                                <!-- hex6: mol teal top left -->
+                                <polygon points="71,58 97,73 97,103 71,118 45,103 45,73" fill="#0d9488" filter="url(#sh1)" opacity="0.93"/>
+                                <text x="71" y="84" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="8" font-weight="700" fill="white">ปริมาณสาร</text>
+                                <text x="71" y="96" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="11" font-weight="700" fill="white">mol</text>
+                                <text x="71" y="108" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="7.5" fill="#ccfbf1">mole</text>
+                                <!-- hex7: candela yellow center small -->
+                                <polygon points="127,94 149,107 149,133 127,146 105,133 105,107" fill="#ca8a04" filter="url(#sh1)" opacity="0.95"/>
+                                <text x="127" y="116" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="7.5" font-weight="700" fill="white">ความเข้มแสง</text>
+                                <text x="127" y="127" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="11" font-weight="700" fill="white">cd</text>
+                                <text x="127" y="138" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="7" fill="#fef9c3">candela</text>
+                                <text x="127" y="256" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="10" fill="#6a7aaa" font-style="italic">7 ปริมาณพื้นฐาน SI</text>
+                            </svg>
+                            <p class="img-caption">ภาพ 1: 7 ปริมาณพื้นฐานระบบ SI</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 4 ========== -->
+            <div class="slide" data-index="3">
+                <span class="slide-number">4 / 20</span>
+                <div class="slide-title">
+                    ระบบหน่วย SI
+                    <span class="sub">ปริมาณอนุพัทธ์ (Derived Quantities)</span>
+                </div>
+                <div class="slide-body">
+                    <p>ปริมาณที่เกิดจาก <strong>การรวม</strong> ของปริมาณพื้นฐาน เช่น</p>
+                    <ul>
+                        <li><strong>ความเร็ว</strong> → m/s (เมตรต่อวินาที)</li>
+                        <li><strong>ความเร่ง</strong> → m/s²</li>
+                        <li><strong>แรง</strong> → kg·m/s² = <strong>นิวตัน (N)</strong></li>
+                        <li><strong>พลังงาน</strong> → kg·m²/s² = <strong>จูล (J)</strong></li>
+                        <li><strong>กำลัง</strong> → kg·m²/s³ = <strong>วัตต์ (W)</strong></li>
+                    </ul>
+                    <div class="highlight-box green">
+                        ✅ <strong>ข้อควรจำ:</strong> หน่วยอนุพัทธ์สามารถเขียนในรูปของหน่วยพื้นฐานได้เสมอ
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 5 ========== -->
+            <div class="slide" data-index="4">
+                <span class="slide-number">5 / 20</span>
+                <div class="slide-title">
+                    ปริมาณสเกลาร์ vs เวกเตอร์
+                    <span class="sub">ความแตกต่างที่สำคัญ</span>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2col">
+                        <div class="col" style="background:#f0faff; border-color:#2d7aff;">
+                            <h4 style="color:#2d7aff;">⚪ สเกลาร์</h4>
+                            <p style="font-size:18px;">บอกเพียง <strong>ขนาด</strong> อย่างเดียว</p>
+                            <ul style="font-size:17px;">
+                                <li>มวล (kg)</li>
+                                <li>เวลา (s)</li>
+                                <li>อุณหภูมิ (K)</li>
+                                <li>งาน (J)</li>
+                                <li>พลังงาน (J)</li>
+                            </ul>
+                        </div>
+                        <div class="col" style="background:#fff0f5; border-color:#e53e7a;">
+                            <h4 style="color:#e53e7a;">➡️ เวกเตอร์</h4>
+                            <p style="font-size:18px;">บอกทั้ง <strong>ขนาด</strong> และ <strong>ทิศทาง</strong></p>
+                            <ul style="font-size:17px;">
+                                <li>ความเร็ว (m/s)</li>
+                                <li>ความเร่ง (m/s²)</li>
+                                <li>แรง (N)</li>
+                                <li>โมเมนตัม (kg·m/s)</li>
+                                <li>การกระจัด (m)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="highlight-box orange">
+                        ⚠️ <strong>สำคัญ:</strong> การบวกลบเวกเตอร์ต้องคำนึงถึงทิศทางด้วย
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 6 ========== -->
+            <div class="slide" data-index="5">
+                <span class="slide-number">6 / 20</span>
+                <div class="slide-title">
+                    การเขียนเวกเตอร์
+                    <span class="sub">สัญลักษณ์และการแสดงผล</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li><strong>สัญลักษณ์:</strong> <span style="font-size:24px; font-weight:600;">\(\vec{A}\)</span> หรือ <strong>A</strong> ตัวหนา</li>
+                        <li><strong>ขนาด:</strong> <span style="font-size:22px; font-weight:500;">|\(\vec{A}\)|</span> หรือ A</li>
+                        <li><strong>ทิศทาง:</strong> ระบุด้วยมุมเทียบกับแกนอ้างอิง (เช่น แกน X)</li>
+                    </ul>
+                    <div style="background:#f8faff; border-radius:16px; padding:14px 20px; margin:14px 0; border:1px solid #d6e4ff;">
+                        <p style="font-size:18px;">
+                            <strong>📌 ตัวอย่าง:</strong> \(\vec{v} = 5 \, \text{m/s}\) ทิศตะวันออก
+                            → ขนาด = 5 m/s, ทิศ = ตะวันออก
+                        </p>
+                        <p style="font-size:18px; margin-top:6px;">
+                            \(\vec{F} = (3\hat{i} + 4\hat{j}) \, \text{N}\) → ขนาด = 5 N, ทิศทำมุม 53° กับแกน X
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 7 ========== -->
+            <div class="slide" data-index="6">
+                <span class="slide-number">7 / 20</span>
+                <div class="slide-title">
+                    การบวกเวกเตอร์
+                    <span class="sub">วิธีทางเรขาคณิต (Graphical Method)</span>
+                </div>
+                <div class="slide-body">
+                    <p><strong>📐 วิธีหัวต่อหาง (Head-to-Tail):</strong></p>
+                    <ul>
+                        <li>นำปลายของเวกเตอร์แรกต่อกับหัวของเวกเตอร์ที่สอง</li>
+                        <li>เวกเตอร์ลัพธ์คือเส้นที่ลากจากหางของตัวแรกไปยังหัวของตัวสุดท้าย</li>
+                    </ul>
+                    <div style="background:#f0f7ff; border-radius:16px; padding:14px 20px; margin:14px 0;">
+                        <p style="font-size:18px;">
+                            <strong>✏️ วิธีขนาน (Parallelogram):</strong> สำหรับ 2 เวกเตอร์
+                            ลากเส้นขนานกันแล้วลากเส้นทแยงมุมจากจุดเริ่มต้น
+                        </p>
+                    </div>
+                    <div class="highlight-box purple">
+                        💡 วิธีเรขาคณิตเหมาะสำหรับการทำความเข้าใจเบื้องต้น
+                        แต่ในการคำนวณที่แม่นยำควรใช้ <strong>วิธีแยกองค์ประกอบ</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 8 ========== -->
+            <div class="slide" data-index="7">
+                <span class="slide-number">8 / 20</span>
+                <div class="slide-title">
+                    การบวกเวกเตอร์
+                    <span class="sub">วิธีแยกองค์ประกอบ (Component Method) – ตอน 1</span>
+                </div>
+                <div class="slide-body">
+                    <p>ขั้นตอนการแยกเวกเตอร์ให้อยู่ใน <strong>แนวแกน X และ Y</strong>:</p>
+                    <ol>
+                        <li>แยกแต่ละเวกเตอร์ออกเป็น <strong>องค์ประกอบในแนวแกน X</strong> และ <strong>แกน Y</strong></li>
+                        <li>รวมองค์ประกอบในแกน X ทั้งหมด</li>
+                        <li>รวมองค์ประกอบในแกน Y ทั้งหมด</li>
+                    </ol>
+                    <div class="eq-box">
+                        <span class="eq-label">สูตรแยกองค์ประกอบ</span>
+                        \[ A_x = A\cos\theta \qquad A_y = A\sin\theta \]
+                    </div>
+                    <div class="eq-box" style="border-color:#bbf7d0;background:linear-gradient(135deg,#f0fff4,#e6fff0);">
+                        <span class="eq-label" style="color:#0fb86a;">ผลรวมองค์ประกอบ</span>
+                        \[ R_x = \sum A_x \qquad R_y = \sum A_y \]
+                    </div>
+                    <p style="font-size:15px; color:#4a5070; margin-top:4px;">
+                        (โดย θ คือมุมที่เวกเตอร์ทำกับแกน X บวก)
+                    </p>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 9 ========== -->
+            <div class="slide" data-index="8">
+                <span class="slide-number">9 / 20</span>
+                <div class="slide-title">
+                    การบวกเวกเตอร์
+                    <span class="sub">วิธีแยกองค์ประกอบ (Component Method) – ตอน 2</span>
+                </div>
+                <div class="slide-body">
+                    <p>เมื่อได้ <strong>\(R_x\)</strong> และ <strong>\(R_y\)</strong> แล้ว:</p>
+                    <div class="eq-box">
+                        <span class="eq-label">ขนาดของเวกเตอร์ลัพธ์</span>
+                        \[ R = \sqrt{R_x^2 + R_y^2} \]
+                    </div>
+                    <div class="eq-box" style="border-color:#fde68a;background:linear-gradient(135deg,#fffbf0,#fef9e7);">
+                        <span class="eq-label" style="color:#b45309;">ทิศทางของเวกเตอร์ลัพธ์</span>
+                        \[ \tan\theta = \frac{R_y}{R_x} \quad\Rightarrow\quad \theta = \tan^{-1}\!\left(\frac{R_y}{R_x}\right) \]
+                    </div>
+                    <div class="highlight-box green">
+                        ✅ <strong>ข้อดี:</strong> วิธีนี้ใช้ได้กับ <u>ทุกจำนวน</u> ของเวกเตอร์
+                        และให้ผลลัพธ์ที่แม่นยำ
+                    </div>
+                    <p style="font-size:16px; color:#4a5070; margin-top:6px;">
+                        ⚠️ ระวังเครื่องหมายของ \(R_x\) และ \(R_y\) เพื่อหาจตุภาคที่ถูกต้อง
+                    </p>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 10 ========== -->
+            <div class="slide" data-index="9">
+                <span class="slide-number">10 / 20</span>
+                <div class="slide-title">
+                    การบวกเวกเตอร์
+                    <span class="sub">สูตรโคไซน์ (สำหรับ 2 เวกเตอร์)</span>
+                </div>
+                <div class="slide-body">
+                    <p>เมื่อทราบ <strong>ขนาด</strong> ของเวกเตอร์ทั้งสอง (\(A, B\)) และ <strong>มุมระหว่างกัน (\(\theta\))</strong>:</p>
+                    <div class="eq-box">
+                        <span class="eq-label">กฎโคไซน์ (Law of Cosines)</span>
+                        \[ R = \sqrt{A^2 + B^2 + 2AB\cos\theta} \]
+                    </div>
+                    <div class="eq-box" style="border-color:#93c5fd;background:linear-gradient(135deg,#eff6ff,#dbeafe);">
+                        <span class="eq-label" style="color:#1d4ed8;">ทิศทางของ R – กฎไซน์</span>
+                        \[ \tan\alpha = \frac{B\sin\theta}{A + B\cos\theta} \]
+                    </div>
+                    <div class="highlight-box orange">
+                        ⚠️ <strong>ข้อจำกัด:</strong> ใช้ได้เฉพาะกับ <u>2 เวกเตอร์</u> เท่านั้น
+                        และต้องรู้มุมระหว่างกัน
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 11 ========== -->
+            <div class="slide" data-index="10">
+                <span class="slide-number">11 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่างที่ 1
+                    <span class="sub">การรวมเวกเตอร์ด้วยวิธีตั้งฉาก</span>
+                </div>
+                <div class="slide-body">
+                    <div class="slide-two-col">
+                        <div class="text-col">
+                            <div style="background:linear-gradient(135deg,#f8faff,#eef2fa);border-radius:16px;padding:14px 18px;border:1px solid #d6e4ff;margin-bottom:12px;">
+                                <p style="font-size:17px;font-weight:600;">📌 โจทย์:</p>
+                                <p style="font-size:16px;">วัตถุเคลื่อนที่ไปทาง <strong>ทิศตะวันออก 6 m</strong> แล้วเลี้ยวเหนือ <strong>8 m</strong> จงหาระยะกระจัดลัพธ์</p>
+                            </div>
+                            <p><strong>วิธีทำ:</strong></p>
+                            <ul style="font-size:17px;">
+                                <li>\(A_x=6,\; A_y=0\) (ทิศ X+)</li>
+                                <li>\(B_x=0,\; B_y=8\) (ทิศ Y+)</li>
+                                <li>\(R_x=6,\quad R_y=8\)</li>
+                            </ul>
+                            <div class="eq-box">
+                                <span class="eq-label">ผลลัพธ์</span>
+                                \[ R = \sqrt{6^2+8^2} = \sqrt{100} = \mathbf{10\;\text{m}} \]
+                                \[ \theta = \tan^{-1}\!\left(\tfrac{8}{6}\right) \approx 53.1° \text{ (ตะวันออกเฉียงเหนือ)} \]
+                            </div>
+                        </div>
+                        <!-- ภาพ 2: Vector Addition Diagram SVG -->
+                        <div class="img-col">
+                            <svg width="245" height="255" viewBox="0 0 245 255" xmlns="http://www.w3.org/2000/svg" style="border-radius:14px;background:#f8faff;border:1px solid #dde6ff;">
+                                <defs>
+                                    <marker id="mB" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2563eb"/></marker>
+                                    <marker id="mG" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#16a34a"/></marker>
+                                    <marker id="mR" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#dc2626"/></marker>
+                                    <marker id="mAx" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#555"/></marker>
+                                    <marker id="mAy" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#555"/></marker>
+                                </defs>
+                                <!-- Axes -->
+                                <line x1="28" y1="195" x2="225" y2="195" stroke="#555" stroke-width="1.5" marker-end="url(#mAx)"/>
+                                <line x1="28" y1="195" x2="28" y2="18" stroke="#555" stroke-width="1.5" marker-end="url(#mAy)"/>
+                                <text x="228" y="200" font-family="Sarabun,sans-serif" font-size="13" fill="#333">X</text>
+                                <text x="22" y="14" font-family="Sarabun,sans-serif" font-size="13" fill="#333">Y</text>
+                                <text x="6" y="200" font-family="Sarabun,sans-serif" font-size="10" fill="#666">O</text>
+                                <text x="100" y="215" font-family="Sarabun,sans-serif" font-size="9" fill="#555">ทิศตะวันออก</text>
+                                <text x="2" y="148" font-family="Sarabun,sans-serif" font-size="9" fill="#555" transform="rotate(-90,14,148)">ทิศเหนือ</text>
+                                <!-- Vector A (blue) East -->
+                                <line x1="28" y1="195" x2="146" y2="195" stroke="#2563eb" stroke-width="3" marker-end="url(#mB)"/>
+                                <text x="78" y="213" font-family="Sarabun,sans-serif" font-size="12" font-weight="700" fill="#2563eb">A = 6 m</text>
+                                <!-- Right angle -->
+                                <rect x="146" y="183" width="11" height="11" fill="none" stroke="#888" stroke-width="1.2"/>
+                                <!-- Vector B (green) North -->
+                                <line x1="148" y1="195" x2="148" y2="40" stroke="#16a34a" stroke-width="3" marker-end="url(#mG)"/>
+                                <text x="155" y="122" font-family="Sarabun,sans-serif" font-size="12" font-weight="700" fill="#16a34a">B = 8 m</text>
+                                <!-- Resultant R (red dashed) -->
+                                <line x1="28" y1="195" x2="146" y2="41" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="6,3" marker-end="url(#mR)"/>
+                                <text x="60" y="108" font-family="Sarabun,sans-serif" font-size="12" font-weight="700" fill="#dc2626">R = 10 m</text>
+                                <!-- Angle arc -->
+                                <path d="M 56,195 A 28,28 0 0,0 37,170" fill="none" stroke="#dc2626" stroke-width="1.5"/>
+                                <text x="58" y="179" font-family="Sarabun,sans-serif" font-size="11" fill="#dc2626">53°</text>
+                                <!-- Legend -->
+                                <line x1="18" y1="235" x2="40" y2="235" stroke="#2563eb" stroke-width="2.5"/>
+                                <text x="44" y="239" font-family="Sarabun,sans-serif" font-size="9.5" fill="#333">A (ตะวันออก)</text>
+                                <line x1="130" y1="235" x2="152" y2="235" stroke="#16a34a" stroke-width="2.5"/>
+                                <text x="156" y="239" font-family="Sarabun,sans-serif" font-size="9.5" fill="#333">B (เหนือ)</text>
+                                <line x1="18" y1="249" x2="40" y2="249" stroke="#dc2626" stroke-width="2" stroke-dasharray="4,2"/>
+                                <text x="44" y="253" font-family="Sarabun,sans-serif" font-size="9.5" fill="#333">R ลัพธ์ 10 m</text>
+                            </svg>
+                            <p class="img-caption">ภาพ 2: ไดอะแกรมการบวกเวกเตอร์</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 12 ========== -->
+            <div class="slide" data-index="11">
+                <span class="slide-number">12 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่างที่ 2
+                    <span class="sub">แรงลัพธ์จากสองแรง</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">
+                            แรง \(\vec{F_1} = 30 \, \text{N}\) ทำมุม 0° กับแกน X
+                            และ \(\vec{F_2} = 40 \, \text{N}\) ทำมุม 90° กับแกน X
+                            จงหาแรงลัพธ์
+                        </p>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <p><strong>วิธีทำ (วิธีตั้งฉาก):</strong></p>
+                        <ul>
+                            <li>\(F_{1x}=30, F_{1y}=0\)</li>
+                            <li>\(F_{2x}=0, F_{2y}=40\)</li>
+                            <li>\(R_x=30, R_y=40\)</li>
+                            <li>\(R = \sqrt{30^2+40^2} = 50 \, \text{N}\)</li>
+                            <li>\(\theta = \tan^{-1}(40/30) \approx 53.13^\circ\)</li>
+                        </ul>
+                        <div class="highlight-box green" style="margin-top:8px;">
+                            ✅ แรงลัพธ์มีขนาด <strong>50 N</strong> ทิศทาง <strong>53.13°</strong> จากแกน X
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 13 ========== -->
+            <div class="slide" data-index="12">
+                <span class="slide-number">13 / 20</span>
+                <div class="slide-title">
+                    ตัวอย่างที่ 3
+                    <span class="sub">ใช้สูตรโคไซน์</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f8faff; border-radius:16px; padding:16px 22px; border:1px solid #d6e4ff;">
+                        <p style="font-size:19px; font-weight:600;">📌 โจทย์:</p>
+                        <p style="font-size:18px;">
+                            เวกเตอร์ A ขนาด 6 หน่วย และ B ขนาด 8 หน่วย
+                            ทำมุมกัน <strong>60°</strong>
+                            จงหาขนาดของเวกเตอร์ลัพธ์
+                        </p>
+                    </div>
+                    <div style="margin-top:12px;">
+                        <p><strong>วิธีทำ (สูตรโคไซน์):</strong></p>
+                        <div class="eq-box">
+                            <span class="eq-label">แทนค่าในสูตร</span>
+                            \[ R = \sqrt{6^2 + 8^2 + 2(6)(8)\cos 60°} \]
+                        </div>
+                        <div class="eq-box" style="border-color:#bbf7d0;background:linear-gradient(135deg,#f0fff4,#e6fff0);">
+                            <span class="eq-label" style="color:#0fb86a;">คำนวณ (\(\cos 60° = 0.5\))</span>
+                            \[ = \sqrt{36+64+48} = \sqrt{148} \approx \mathbf{12.17\;\text{หน่วย}} \]
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 14 ========== -->
+            <div class="slide" data-index="13">
+                <span class="slide-number">14 / 20</span>
+                <div class="slide-title">
+                    เวกเตอร์ใน 3 มิติ
+                    <span class="sub">แกน X, Y, Z</span>
+                </div>
+                <div class="slide-body">
+                    <p>เวกเตอร์ใน 3 มิติเขียนในรูปของ <strong>เวกเตอร์ฐาน</strong> \(\hat{i}, \hat{j}, \hat{k}\):</p>
+                    <div class="eq-box">
+                        <span class="eq-label">รูปแบบทั่วไป</span>
+                        \[ \vec{A} = A_x\hat{i} + A_y\hat{j} + A_z\hat{k} \]
+                    </div>
+                    <div class="eq-box">
+                        <span class="eq-label">ขนาดของเวกเตอร์ 3D</span>
+                        \[ |\vec{A}| = \sqrt{A_x^2 + A_y^2 + A_z^2} \]
+                    </div>
+                    <div class="highlight-box purple">
+                        💡 <strong>การประยุกต์:</strong> ใช้ในกลศาสตร์ 3 มิติ, แม่เหล็กไฟฟ้า,
+                        และฟิสิกส์สมัยใหม่
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 15 ========== -->
+            <div class="slide" data-index="14">
+                <span class="slide-number">15 / 20</span>
+                <div class="slide-title">
+                    การคูณเวกเตอร์
+                    <span class="sub">ดอทโปรดักส์ (Dot Product) – \(\vec{A}\cdot\vec{B}\)</span>
+                </div>
+                <div class="slide-body">
+                    <p><strong>ผลลัพธ์เป็น <u>สเกลาร์</u></strong> — ใช้ในการหางาน พลังงาน</p>
+                    <div class="eq-box">
+                        <span class="eq-label">นิยาม Dot Product</span>
+                        \[ \vec{A}\cdot\vec{B} = AB\cos\theta = A_xB_x + A_yB_y + A_zB_z \]
+                    </div>
+                    <ul>
+                        <li>ถ้า \(\theta = 0°\) → \(\vec{A}\cdot\vec{B} = AB\) (ค่าสูงสุด)</li>
+                        <li>ถ้า \(\theta = 90°\) → \(\vec{A}\cdot\vec{B} = 0\) (ตั้งฉากกัน)</li>
+                    </ul>
+                    <div class="highlight-box green">
+                        ✅ <strong>ตัวอย่าง:</strong> งาน \(W = \vec{F}\cdot\vec{s} = Fs\cos\theta\)
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 16 ========== -->
+            <div class="slide" data-index="15">
+                <span class="slide-number">16 / 20</span>
+                <div class="slide-title">
+                    การคูณเวกเตอร์
+                    <span class="sub">ครอสโปรดักส์ (Cross Product) – \(\vec{A}\times\vec{B}\)</span>
+                </div>
+                <div class="slide-body">
+                    <div class="slide-two-col">
+                        <div class="text-col">
+                            <p><strong>ผลลัพธ์เป็น <u>เวกเตอร์</u></strong> — ใช้ในโมเมนต์ แรงบิด</p>
+                            <div class="eq-box">
+                                <span class="eq-label">ขนาด Cross Product</span>
+                                \[ |\vec{A}\times\vec{B}| = AB\sin\theta \]
+                            </div>
+                            <p style="font-size:17px;">ทิศทางของผลลัพธ์ <strong>ตั้งฉาก</strong> กับระนาบของ \(\vec{A}\) และ \(\vec{B}\) (ใช้กฎมือขวา)</p>
+                            <div class="eq-box" style="border-color:#d6b4ff;background:linear-gradient(135deg,#f8f5ff,#f0eaff);">
+                                <span class="eq-label" style="color:#7c4dff;">ในพิกัดฉาก</span>
+                                \[ \vec{A}\!\times\!\vec{B} = \begin{vmatrix}\hat{i}&\hat{j}&\hat{k}\\A_x&A_y&A_z\\B_x&B_y&B_z\end{vmatrix} \]
+                            </div>
+                            <div class="highlight-box orange">
+                                ⚠️ <strong>ข้อควรจำ:</strong> \(\vec{A}\times\vec{B} = -\vec{B}\times\vec{A}\)
+                            </div>
+                        </div>
+                        <!-- ภาพ 3: Right-Hand Rule SVG -->
+                        <div class="img-col">
+                            <svg width="225" height="255" viewBox="0 0 225 255" xmlns="http://www.w3.org/2000/svg" style="border-radius:14px;background:#fdf8ff;border:1px solid #e8d5ff;">
+                                <defs>
+                                    <marker id="rB" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2563eb"/></marker>
+                                    <marker id="rG" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#16a34a"/></marker>
+                                    <marker id="rR" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#dc2626"/></marker>
+                                </defs>
+                                <!-- Hand body -->
+                                <ellipse cx="112" cy="167" rx="50" ry="52" fill="#fde8d8" stroke="#d4956a" stroke-width="1.5"/>
+                                <!-- Thumb up -->
+                                <rect x="76" y="98" width="21" height="78" rx="10.5" fill="#fde8d8" stroke="#d4956a" stroke-width="1.5"/>
+                                <!-- Curled fingers -->
+                                <rect x="100" y="108" width="15" height="53" rx="7.5" fill="#fde8d8" stroke="#d4956a" stroke-width="1.2"/>
+                                <rect x="118" y="111" width="15" height="53" rx="7.5" fill="#fde8d8" stroke="#d4956a" stroke-width="1.2"/>
+                                <rect x="136" y="116" width="14" height="50" rx="7" fill="#fde8d8" stroke="#d4956a" stroke-width="1.2"/>
+                                <rect x="152" y="124" width="12" height="44" rx="6" fill="#fde8d8" stroke="#d4956a" stroke-width="1.2"/>
+                                <!-- Knuckle highlights -->
+                                <ellipse cx="107" cy="117" rx="6.5" ry="4.5" fill="#f5c9aa"/>
+                                <ellipse cx="125" cy="120" rx="6.5" ry="4.5" fill="#f5c9aa"/>
+                                <ellipse cx="143" cy="124" rx="6" ry="4" fill="#f5c9aa"/>
+                                <ellipse cx="158" cy="131" rx="5.5" ry="4" fill="#f5c9aa"/>
+                                <!-- Thumb nail -->
+                                <ellipse cx="86" cy="104" rx="7" ry="5" fill="#f5c9aa"/>
+                                <!-- Wrist -->
+                                <rect x="87" y="205" width="48" height="38" rx="9" fill="#fde8d8" stroke="#d4956a" stroke-width="1.2"/>
+                                <!-- A×B arrow (red up) -->
+                                <line x1="86" y1="96" x2="86" y2="20" stroke="#dc2626" stroke-width="3" marker-end="url(#rR)"/>
+                                <text x="95" y="16" font-family="Sarabun,sans-serif" font-size="13" font-weight="700" fill="#dc2626">A×B</text>
+                                <!-- Vector A (blue right) -->
+                                <line x1="86" y1="195" x2="198" y2="195" stroke="#2563eb" stroke-width="2.5" marker-end="url(#rB)"/>
+                                <text x="205" y="199" font-family="Sarabun,sans-serif" font-size="13" font-weight="700" fill="#2563eb">A</text>
+                                <!-- Vector B (green up-right) -->
+                                <line x1="86" y1="195" x2="182" y2="134" stroke="#16a34a" stroke-width="2.5" marker-end="url(#rG)"/>
+                                <text x="186" y="128" font-family="Sarabun,sans-serif" font-size="13" font-weight="700" fill="#16a34a">B</text>
+                                <!-- θ arc -->
+                                <path d="M 112,195 A 26,26 0 0,0 101,172" fill="none" stroke="#16a34a" stroke-width="1.5"/>
+                                <text x="113" y="183" font-family="Sarabun,sans-serif" font-size="11" fill="#16a34a">θ</text>
+                                <!-- Caption -->
+                                <text x="112" y="248" text-anchor="middle" font-family="Sarabun,sans-serif" font-size="11" fill="#7c4dff" font-weight="600">กฎมือขวา (Right-Hand Rule)</text>
+                            </svg>
+                            <p class="img-caption">ภาพ 3: กฎมือขวาสำหรับ Cross Product</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 17 ========== -->
+            <div class="slide" data-index="16">
+                <span class="slide-number">17 / 20</span>
+                <div class="slide-title">
+                    การประยุกต์ใช้เวกเตอร์ในฟิสิกส์
+                    <span class="sub">บทเรียนที่เกี่ยวข้อง</span>
+                </div>
+                <div class="slide-body">
+                    <div class="grid-2col">
+                        <div class="col" style="background:#f0faff;">
+                            <h4 style="color:#2d7aff;">📘 การเคลื่อนที่</h4>
+                            <ul style="font-size:17px;">
+                                <li>ความเร็ว</li>
+                                <li>ความเร่ง</li>
+                                <li>การกระจัด</li>
+                                <li>วิถีโค้ง</li>
+                            </ul>
+                        </div>
+                        <div class="col" style="background:#f0faf5;">
+                            <h4 style="color:#0fb86a;">⚡ แรง &amp; โมเมนตัม</h4>
+                            <ul style="font-size:17px;">
+                                <li>แรงลัพธ์</li>
+                                <li>โมเมนตัม</li>
+                                <li>แรงบิด (Torque)</li>
+                                <li>สมดุล</li>
+                            </ul>
+                        </div>
+                        <div class="col" style="background:#fff8ed;">
+                            <h4 style="color:#f5a623;">🔋 งาน &amp; พลังงาน</h4>
+                            <ul style="font-size:17px;">
+                                <li>งาน (Dot Product)</li>
+                                <li>กำลัง</li>
+                                <li>พลังงานศักย์</li>
+                            </ul>
+                        </div>
+                        <div class="col" style="background:#f5f0ff;">
+                            <h4 style="color:#7c4dff;">🧲 แม่เหล็กไฟฟ้า</h4>
+                            <ul style="font-size:17px;">
+                                <li>สนามไฟฟ้า</li>
+                                <li>สนามแม่เหล็ก</li>
+                                <li>แรงลอเรนซ์</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 18 ========== -->
+            <div class="slide" data-index="17">
+                <span class="slide-number">18 / 20</span>
+                <div class="slide-title">
+                    ข้อควรระวัง
+                    <span class="sub">จุดที่มักผิดพลาด</span>
+                </div>
+                <div class="slide-body">
+                    <ul>
+                        <li>❌ <strong>ลืมใส่หน่วย:</strong> ทุกครั้งที่คำนวณต้องมีหน่วยกำกับ</li>
+                        <li>❌ <strong>ใช้เครื่องหมายผิด:</strong> ทิศทางกับแกนอ้างอิง (X, Y)</li>
+                        <li>❌ <strong>ลืมแปลงหน่วย:</strong> เช่น cm → m, g → kg</li>
+                        <li>❌ <strong>ใช้สูตรผิด:</strong> สูตรโคไซน์ใช้ได้กับ 2 เวกเตอร์เท่านั้น</li>
+                        <li>❌ <strong>มุมที่ใช้:</strong> มุมในฟังก์ชันตรีโกณต้องเป็น <strong>เรเดียน</strong> หรือ <strong>องศา</strong> ให้สอดคล้อง</li>
+                    </ul>
+                    <div class="highlight-box orange" style="margin-top:12px;">
+                        ⚠️ <strong>เคล็ดลับ:</strong> วาดรูปประกอบทุกครั้ง
+                        เพื่อช่วยให้เห็นภาพและตรวจสอบทิศทาง
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 19 ========== -->
+            <div class="slide" data-index="18">
+                <span class="slide-number">19 / 20</span>
+                <div class="slide-title">
+                    แบบฝึกหัดท้ายบท
+                    <span class="sub">ทดสอบความเข้าใจ</span>
+                </div>
+                <div class="slide-body">
+                    <ol style="font-size:19px; line-height:2;">
+                        <li>
+                            <strong>ข้อ 1:</strong>
+                            จงแยกเวกเตอร์ \(\vec{F} = 100 \, \text{N}\) ที่ทำมุม 37° กับแกน X
+                            (\( \sin37°=0.6, \cos37°=0.8 \))
+                        </li>
+                        <li>
+                            <strong>ข้อ 2:</strong>
+                            เวกเตอร์ A = 5 m ทิศเหนือ, B = 12 m ทิศตะวันออก
+                            จงหาขนาดและทิศทางของ A+B
+                        </li>
+                        <li>
+                            <strong>ข้อ 3:</strong>
+                            จงหาดอทโปรดักส์ของ \(\vec{A}=3\hat{i}+4\hat{j}\) และ \(\vec{B}=6\hat{i}+8\hat{j}\)
+                        </li>
+                        <li>
+                            <strong>ข้อ 4:</strong>
+                            จงหาครอสโปรดักส์ของ \(\vec{A}=2\hat{i}\) และ \(\vec{B}=3\hat{j}\)
+                        </li>
+                    </ol>
+                    <div class="highlight-box purple" style="margin-top:8px;">
+                        💡 ลองทำด้วยตัวเองก่อน แล้วค่อยตรวจคำตอบกับเพื่อนหรือครู
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== SLIDE 20 ========== -->
+            <div class="slide" data-index="19">
+                <span class="slide-number">20 / 20</span>
+                <div class="slide-title">
+                    สรุป &amp; คำแนะนำ
+                    <span class="sub">สิ่งที่ควรจำจากบทนี้</span>
+                </div>
+                <div class="slide-body">
+                    <div style="background:#f0f7ff; border-radius:18px; padding:18px 24px; border:1px solid #d6e4ff;">
+                        <p style="font-size:20px; font-weight:600;">📌 ใจความสำคัญ</p>
+                        <ul style="font-size:18px; line-height:1.9;">
+                            <li>✅ ระบบหน่วย SI มี 7 ปริมาณพื้นฐาน</li>
+                            <li>✅ สเกลาร์บอกขนาด, เวกเตอร์บอกขนาด + ทิศทาง</li>
+                            <li>✅ การบวกเวกเตอร์ทำได้ 3 วิธี: เรขาคณิต, แยกองค์ประกอบ, สูตรโคไซน์</li>
+                            <li>✅ วิธีแยกองค์ประกอบใช้ได้กับทุกกรณีและแม่นยำที่สุด</li>
+                            <li>✅ ดอทโปรดักส์ → สเกลาร์, ครอสโปรดักส์ → เวกเตอร์</li>
+                        </ul>
+                    </div>
+                    <div style="margin-top:18px; background:#eef2fa; border-radius:16px; padding:14px 22px;">
+                        <p style="font-size:19px;">
+                            <strong>🌟 คำแนะนำ:</strong> ฝึกทำโจทย์เยอะ ๆ
+                            และวาดรูปประกอบทุกครั้ง ฟิสิกส์คือการ <strong>ฝึกฝน</strong>
+                            ไม่ใช่การท่องจำ!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end slide-container -->
+
+        <!-- ========== NAVIGATION ========== -->
+        <div class="nav-bar">
+            <button class="nav-btn" id="prevBtn" disabled>
+                ◀ ย้อนกลับ
+            </button>
+
+            <div class="dot-indicators" id="dotContainer"></div>
+
+            <button class="nav-btn primary" id="nextBtn">
+                ถัดไป ▶
+            </button>
+        </div>
+
+        <div class="nav-footer">
+            <a href="../index.html" style="color:#8a94b0; font-size:14px; text-decoration:none;">◀ บทก่อนหน้า</a>
+            <span id="slideCounterDisplay">1 / 20</span>
+            <a href="ch2.html" style="color:#8a94b0; font-size:14px; text-decoration:none;">บทถัดไป ▶</a>
+        </div>
+    </div>
+
+    <script src="../js/slide-core.js"></script>
+</body>
+</html>

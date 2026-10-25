@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บทเรียนฟิสิกส์พื้นฐาน - ม.ปลาย</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Sarabun', 'Segoe UI', sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            max-width: 800px;
+        }
+        .header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+        .header p {
+            font-size: 18px;
+            color: #94a3b8;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            width: 100%;
+            max-width: 1100px;
+        }
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 28px;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-decoration: none;
+            color: inherit;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #38bdf8;
+            box-shadow: 0 12px 30px rgba(56, 189, 248, 0.15);
+            background: #24334d;
+        }
+        .card-tag {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(56, 189, 248, 0.1);
+            color: #38bdf8;
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+        .card-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #f1f5f9;
+        }
+        .card-desc {
+            font-size: 15px;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .card-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #38bdf8;
+        }
+        .card:hover .card-action {
+            gap: 12px;
+        }
+        .footer {
+            margin-top: 60px;
+            color: #64748b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>⚡ สไลด์การเรียนรู้ ฟิสิกส์ ม.ปลาย</h1>
+        <p>รวบรวมเนื้อหา สรุปสูตร พร้อมไดอะแกรมและสมการ LaTeX สวยงาม</p>
+    </div>
+
+    <div class="grid">
+        <a href="slides/ch1.html" class="card">
+            <div>
+                <span class="card-tag">Chapter 1</span>
+                <h2 class="card-title">1. ระบบหน่วยและเวกเตอร์</h2>
+                <p class="card-desc">หน่วย SI, การเปลี่ยนหน่วย, คำนำหน้า, สเกลาร์, เวกเตอร์, การรวมเวกเตอร์, Dot/Cross Product</p>
+            </div>
+            <div class="card-action">เข้าสู่บทเรียน <span>→</span></div>
+        </a>
+
+        <a href="slides/ch2.html" class="card">
+            <div>
+                <span class="card-tag">Chapter 2</span>
+                <h2 class="card-title">2. การเคลื่อนที่ของวัตถุ</h2>
+                <p class="card-desc">ระยะทาง, การกระจัด, ความเร็ว, ความเร่ง, สมการการเคลื่อนที่ 4-5 สูตรหลัก, กราฟ v-t</p>
+            </div>
+            <div class="card-action">เข้าสู่บทเรียน <span>→</span></div>
+        </a>
+
+        <a href="slides/ch3.html" class="card">
+            <div>
+                <span class="card-tag">Chapter 3</span>
+                <h2 class="card-title">3. กฎการเคลื่อนที่ของนิวตัน</h2>
+                <p class="card-desc">มวล, แรง, กฎนิวตัน 3 ข้อ, แรงเสียดทานสถิต/จลน์, Free-body Diagram</p>
+            </div>
+            <div class="card-action">เข้าสู่บทเรียน <span>→</span></div>
+        </a>
+
+        <a href="slides/ch4.html" class="card">
+            <div>
+                <span class="card-tag">Chapter 4</span>
+                <h2 class="card-title">4. โมเมนตัมและสมดุล</h2>
+                <p class="card-desc">โมเมนตัม, การดล, กฎการอนุรักษ์โมเมนตัม, การชนแบบยืดหยุ่น/ไม่ยืดหยุ่น, สมดุลกล</p>
+            </div>
+            <div class="card-action">เข้าสู่บทเรียน <span>→</span></div>
+        </a>
+
+        <a href="slides/ch5.html" class="card">
+            <div>
+                <span class="card-tag">Chapter 5</span>
+                <h2 class="card-title">5. การเคลื่อนที่แบบวงกลม</h2>
+                <p class="card-desc">ความเร็วเชิงมุม, ความเร่งสู่ศูนย์กลาง, แรงสู่ศูนย์กลาง, การเลี้ยวโค้ง, ดาวเทียม</p>
+            </div>
+            <div class="card-action">เข้าสู่บทเรียน <span>→</span></div>
+        </a>
+
+        <a href="slides/ch6.html" class="card">
+            <div>
+                <span class="card-tag">Chapter 6</span>
+                <h2 class="card-title">6. งานและพลังงาน</h2>
+                <p class="card-desc">งานจากแรงคงที่/ไม่คงที่, พลังงานจลน์, พลังงานศักย์โน้มถ่วง/ยืดหยุ่น, กฎการอนุรักษ์พลังงาน</p>
+            </div>
+            <div class="card-action">เข้าสู่บทเรียน <span>→</span></div>
+        </a>
+
+        <a href="slides/ch7.html" class="card">
+            <div>
+                <span class="card-tag">Chapter 7</span>
+                <h2 class="card-title">7. กำลังและเครื่องกลอย่างง่าย</h2>
+                <p class="card-desc">กำลังไฟฟ้า/กล, ประสิทธิภาพเครื่องกล, คาน, รอก, พื้นเอียง, ล้อและเพลา</p>
+            </div>
+            <div class="card-action">เข้าสู่บทเรียน <span>→</span></div>
+        </a>
+    </div>
+
+    <div class="footer">
+        © 04_Education_Exam Physics Slide Presentation System
+    </div>
+
+</body>
+</html>

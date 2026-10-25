@@ -1,0 +1,78 @@
+\documentclass[12pt, a4paper, oneside]{book}
+
+\usepackage{styles/physics_microbio_style}
+
+\begin{document}
+
+% ====================================================================
+% FRONT MATTER
+% ====================================================================
+\frontmatter
+\pagestyle{empty}
+
+% 1. Full-Bleed 3D Pixar Cover + Inner Academic Vector Cover
+\input{frontmatter/cover.tex}
+
+% 2. Formal Title Page
+\cleardoublepage
+\input{frontmatter/title.tex}
+
+\pagestyle{plain}
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+% 3. Preface (คำนำ)
+\cleardoublepage
+\input{frontmatter/preface.tex}
+
+% 4. Acknowledgements (กิตติกรรมประกาศ)
+\cleardoublepage
+\input{frontmatter/acknowledgements.tex}
+
+% 5. OBE Course Syllabus & 15-Week Constructive Alignment (มคอ.3)
+\cleardoublepage
+\input{frontmatter/syllabus.tex}
+
+% 6. Table of Contents, List of Figures, List of Tables
+\cleardoublepage
+\tableofcontents
+
+\cleardoublepage
+\listoffigures
+\addcontentsline{toc}{chapter}{สารบัญภาพ}
+
+\cleardoublepage
+\listoftables
+\addcontentsline{toc}{chapter}{สารบัญตาราง}
+
+% ====================================================================
+% MAIN MATTER (12 Chapters + 13 Integrated Labs for 15 Weeks)
+% ====================================================================
+\mainmatter
+\pagestyle{fancy}
+
+\input{chapters/ch01_units_measurement.tex}
+\input{chapters/ch02_vectors_motion.tex}
+\input{chapters/ch03_newton_viscosity.tex}
+\input{chapters/ch04_work_energy_centrifuge.tex}
+\input{chapters/ch05_heat_incubator.tex}
+\input{chapters/ch06_thermodynamics_autoclave.tex}
+\input{chapters/ch07_electrostatics_staining.tex}
+\input{chapters/ch08_current_electrophoresis.tex}
+\input{chapters/ch09_optics_refraction.tex}
+\input{chapters/ch10_microscope_immersion_oil.tex}
+\input{chapters/ch11_radioactivity_uv_sterilization.tex}
+\input{chapters/ch12_spectrophotometry_project.tex}
+
+% ====================================================================
+% BACK MATTER (Low-Math Formula Guide, Rubrics, References, Biography)
+% ====================================================================
+\backmatter
+\input{backmatter/appendix_lowmath.tex}
+\input{backmatter/references.tex}
+\input{backmatter/biography.tex}
+
+\cleardoublepage
+\printindex
+
+\end{document}

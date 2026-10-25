@@ -1,0 +1,308 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{styles/physics_microbio_lab_style}[2026/10/24 RBRU Physics for Microbiology 4011111 Lab Manual Style]
+
+% ====================================================================
+% 1. PAGE GEOMETRY (A4 Standard Academic Monograph — RBRU 1.5in Margin)
+% ====================================================================
+\RequirePackage{geometry}
+\geometry{
+    a4paper,
+    top=1.5in,
+    bottom=1.0in,
+    left=1.5in,
+    right=1.0in,
+    headheight=43pt,
+    headsep=16pt,
+    footskip=28pt
+}
+
+% ====================================================================
+% 2. FONTS & THAI TYPOGRAPHY (XeLaTeX)
+% ====================================================================
+\RequirePackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX, Scale=MatchLowercase}
+
+\XeTeXlinebreaklocale "th"
+\XeTeXlinebreakskip = 0pt plus 2.5pt minus 1pt
+
+\setmainfont{Sarabun}[
+    Scale=1.08,
+    UprightFont = *,
+    BoldFont = * Bold,
+    ItalicFont = * Italic,
+    BoldItalicFont = * Bold Italic
+]
+\setsansfont{Sarabun}[
+    Scale=1.06,
+    UprightFont = *,
+    BoldFont = * Bold
+]
+\setmonofont{Menlo}[Scale=0.88]
+
+\RequirePackage{setspace}
+\setstretch{1.32}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0.32em}
+\RequirePackage{indentfirst}
+
+\tolerance=2000
+\emergencystretch=3em
+\hbadness=2000
+
+% ====================================================================
+% 3. MATHEMATICS & PHYSICS PACKAGES
+% ====================================================================
+\RequirePackage{amsmath, amssymb, amsfonts, mathtools}
+\RequirePackage{bm}
+\RequirePackage{siunitx}
+\RequirePackage{cancel}
+
+\newcommand{\vect}[1]{\bm{#1}}
+
+% ====================================================================
+% 4. COLOR PALETTE (Laboratory Emerald, Cyan, Royal Blue, Amber, Purple)
+% ====================================================================
+\RequirePackage[table,xcdraw,dvipsnames,svgnames]{xcolor}
+
+\definecolor{physRoyalBlue}{HTML}{0F3D68}
+\definecolor{physCyan}{HTML}{0284C7}
+\definecolor{physAmber}{HTML}{D97706}
+\definecolor{bioEmerald}{HTML}{059669}
+\definecolor{bioTeal}{HTML}{0D9488}
+\definecolor{labPurple}{HTML}{6D28D9}
+\definecolor{crimsonAlert}{HTML}{DC2626}
+\definecolor{charcoal}{HTML}{1E293B}
+\definecolor{physSlate}{HTML}{475569}
+\definecolor{softSmoke}{HTML}{F8FAFC}
+\definecolor{boxBlueBg}{HTML}{F0F9FF}
+\definecolor{boxGreenBg}{HTML}{ECFDF5}
+\definecolor{boxAmberBg}{HTML}{FFFBEB}
+\definecolor{boxPurpleBg}{HTML}{F5F3FF}
+\definecolor{boxRedBg}{HTML}{FEF2F2}
+
+% ====================================================================
+% 5. GRAPHICS, TIKZ, TABLES & CAPTIONS
+% ====================================================================
+\RequirePackage{graphicx}
+\RequirePackage{float}
+\RequirePackage{booktabs}
+\RequirePackage{tabularx}
+\RequirePackage{longtable}
+\RequirePackage{multirow}
+\RequirePackage{array}
+\RequirePackage{enumitem}
+\RequirePackage{needspace}
+
+\setlist[itemize]{leftmargin=2.0cm, itemsep=2pt, topsep=4pt}
+\setlist[enumerate]{leftmargin=2.0cm, itemsep=2pt, topsep=4pt}
+
+\RequirePackage{caption}
+\DeclareCaptionLabelSeparator{thaisep}{\quad}
+\captionsetup{
+    font={small},
+    labelfont={bf, color=bioEmerald!85!black},
+    labelsep=thaisep,
+    skip=6pt
+}
+\captionsetup[table]{position=above}
+\captionsetup[figure]{position=below}
+
+\AtBeginDocument{%
+    \renewcommand{\figurename}{\mbox{ภาพที่}}%
+    \renewcommand{\tablename}{\mbox{ตารางที่}}%
+    \renewcommand{\contentsname}{สารบัญ}%
+    \renewcommand{\listfigurename}{สารบัญภาพชุดการทดลอง}%
+    \renewcommand{\listtablename}{สารบัญตารางบันทึกผล}%
+    \renewcommand{\chaptername}{ปฏิบัติการที่}%
+    \renewcommand{\appendixname}{ภาคผนวก}%
+    \renewcommand{\indexname}{ดัชนีค้นคำ}%
+}
+
+\RequirePackage{tikz}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{
+    arrows.meta,
+    positioning,
+    calc,
+    shapes.geometric,
+    shapes.misc,
+    decorations.pathmorphing,
+    decorations.markings,
+    patterns,
+    backgrounds,
+    fit,
+    shadows
+}
+
+% ====================================================================
+% 6. TCOLORBOX ENVIRONMENTS (Lab Plan, Concept, Safety, Worksheet)
+% ====================================================================
+\RequirePackage[most]{tcolorbox}
+
+% 6.1 Weekly Lab Lesson Plan Box
+\newtcolorbox{planbox}[1][]{
+    enhanced,
+    breakable,
+    colback=softSmoke,
+    colframe=bioEmerald!85!black,
+    colbacktitle=bioEmerald!85!black,
+    coltitle=white,
+    fonttitle=\large\bfseries,
+    title={#1},
+    arc=2mm,
+    boxrule=1.0pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    toptitle=5pt, bottomtitle=5pt
+}
+
+% 6.2 Low-Math Formula & Concept Box
+\newtcolorbox{conceptbox}[1][]{
+    enhanced,
+    breakable,
+    colback=boxBlueBg,
+    colframe=physRoyalBlue,
+    colbacktitle=physRoyalBlue,
+    coltitle=white,
+    fonttitle=\bfseries,
+    title={สรุปสูตรและหลักการคำนวณประจำปฏิบัติการ\quad #1},
+    arc=2mm,
+    boxrule=0.9pt,
+    borderline west={3.5pt}{0pt}{physCyan},
+    left=10pt, right=10pt, top=7pt, bottom=7pt
+}
+
+% 6.3 Equipment & Materials Box
+\newtcolorbox{equipbox}[1][]{
+    enhanced,
+    breakable,
+    colback=boxGreenBg,
+    colframe=bioEmerald,
+    colbacktitle=bioEmerald,
+    coltitle=white,
+    fonttitle=\bfseries,
+    title={วัสดุ เครื่องมือวิทยาศาสตร์ และสารเคมีประจำฐานปฏิบัติการ\quad #1},
+    arc=2mm,
+    boxrule=0.9pt,
+    borderline west={3.5pt}{0pt}{bioTeal},
+    left=10pt, right=10pt, top=7pt, bottom=7pt
+}
+
+% 6.4 Pre-Lab Calculation Example Box
+\newcounter{workedcounter}[chapter]
+\renewcommand{\theworkedcounter}{\thechapter.\arabic{workedcounter}}
+\newtcolorbox{worked}[1][]{
+    enhanced,
+    breakable,
+    code={\refstepcounter{workedcounter}},
+    colback=boxAmberBg,
+    colframe=physAmber,
+    colbacktitle=physAmber!90!black,
+    coltitle=white,
+    fonttitle=\bfseries,
+    title={ตัวอย่างการคำนวณข้อมูลการทดลองที่ \theworkedcounter\quad #1},
+    arc=2mm,
+    boxrule=0.9pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt
+}
+
+% 6.5 Student Lab Data Recording Worksheet Box
+\newtcolorbox{worksheetbox}[1][]{
+    enhanced,
+    breakable,
+    colback=boxPurpleBg,
+    colframe=labPurple,
+    colbacktitle=labPurple,
+    coltitle=white,
+    fonttitle=\large\bfseries,
+    title={#1},
+    arc=2.5mm,
+    boxrule=1.1pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt
+}
+
+% 6.6 Lab Safety & Ethical Integrity Warning Box (CLO3)
+\newtcolorbox{warningbox}[1][]{
+    enhanced,
+    breakable,
+    colback=boxRedBg,
+    colframe=crimsonAlert,
+    colbacktitle=crimsonAlert,
+    coltitle=white,
+    fonttitle=\bfseries,
+    title={ข้อควรระวังความปลอดภัยและจรรยาบรรณห้องปฏิบัติการ (CLO3)\quad #1},
+    arc=2mm,
+    boxrule=0.9pt,
+    left=10pt, right=10pt, top=7pt, bottom=7pt
+}
+
+% ====================================================================
+% 7. HEADINGS & HIERARCHICAL INDENTATION (RBRU Standard)
+% ====================================================================
+\RequirePackage{titlesec}
+
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{bioEmerald!85!black}}
+  {\filright\Large\color{physRoyalBlue}\chaptername\ \thechapter}
+  {4pt}
+  {\titlerule[1.5pt]\vspace{6pt}\filright}
+  [\vspace{4pt}{\color{physAmber}\titlerule[0.8pt]}]
+\titlespacing*{\chapter}{0pt}{-15pt}{18pt}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{physRoyalBlue}}
+  {\thesection}
+  {0.8em}
+  {}
+\titlespacing*{\section}{1.25cm}{14pt plus 3pt minus 2pt}{6pt plus 2pt}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{bioEmerald!85!black}}
+  {\thesubsection}
+  {0.8em}
+  {}
+\titlespacing*{\subsection}{2.50cm}{10pt plus 2pt minus 2pt}{4pt plus 1pt}
+
+\let\origsection\section
+\renewcommand{\section}{\Needspace*{5\baselineskip}\origsection}
+
+\let\origsubsection\subsection
+\renewcommand{\subsection}{\Needspace*{4\baselineskip}\origsubsection}
+
+% ====================================================================
+% 8. HEADERS & FOOTERS (Fancyhdr — No Trailing Dot)
+% ====================================================================
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{physSlate}\nouppercase{\leftmark}}
+\fancyhead[R]{\small\color{bioEmerald!85!black}\textbf{คู่มือปฏิบัติการ 4011111}\quad|\quad\textbf{\thepage}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter\quad #1}{}}
+\renewcommand{\sectionmark}[1]{}
+
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[C]{\small\color{bioEmerald!85!black}\textbf{\thepage}}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
+% ====================================================================
+% 9. HYPERLINKS & INDEX
+% ====================================================================
+\RequirePackage{imakeidx}
+\makeindex[intoc, title=ดัชนีค้นคำ, columns=2]
+
+\RequirePackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=physRoyalBlue,
+    citecolor=bioEmerald,
+    urlcolor=physCyan,
+    pdftitle={คู่มือปฏิบัติการฟิสิกส์สำหรับจุลชีววิทยา รายวิชา 4011111 (Physics for Microbiology Laboratory Manual)},
+    pdfauthor={ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา},
+    pdfsubject={Physics for Microbiology 4011111 OBE Laboratory Manual (13 Labs)}
+}
+\endinput

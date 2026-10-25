@@ -1,0 +1,162 @@
+\chapter{การจำลองครึ่งชีวิตกัมมันตภาพรังสีและประสิทธิภาพรังสี UV-C ฆ่าเชื้อ}
+
+\begin{planbox}[สัปดาห์ที่ 12 — เวลาปฏิบัติการ 3 ชั่วโมง (สอดคล้องกับ CLO1, CLO2 และ CLO4)]
+\textbf{1. วัตถุประสงค์การทดลอง}
+\begin{itemize}
+    \item ทำการทดลองจำลองการสลายตัวของนิวเคลียสกัมมันตรังสีด้วยชุดลูกเต๋าหรือเหรียญสองหน้า เพื่อพิสูจน์สมการครึ่งชีวิต $N = N_0(1/2)^n$ โดยไม่ต้องใช้แคลคูลัส
+    \item วัดความเข้มรังสีตามระยะห่างจากแหล่งกำเนิดแสงเพื่อพิสูจน์กฎกำลังสองผกผัน ($I \propto 1/r^2$)
+    \item วิเคราะห์ข้อมูลการลดลงของจำนวนโคโลนีแบคทีเรียเมื่อได้รับรังสี UV-C ($254\text{ nm}$) ที่ระยะเวลาและระยะห่างต่างกัน เพื่อหาค่าเวลาลดทอนครึ่งชีวิตของประชากรเชื้อ ($D_{1/2}$)
+\end{itemize}
+\textbf{2. ความเชื่อมโยงกับผลลัพธ์การเรียนรู้ของรายวิชา (CLOs) และหลักสูตร (PLOs)}
+\begin{itemize}
+    \item \textbf{CLO1 (PLO2)}\quad อธิบายแนวคิดครึ่งชีวิต (Half-life) และกฎกำลังสองผกผันของความเข้มรังสีได้
+    \item \textbf{CLO2 (PLO2, PLO3)}\quad ประยุกต์ใช้สมการครึ่งชีวิตและกฎกำลังสองผกผันในการวางแผนระยะห่างและเวลาเปิดหลอดรังสี UV-C ฆ่าเชื้อในตู้ปลอดเชื้อ (Biosafety Cabinet) ได้
+    \item \textbf{CLO4 (PLO5, PLO6)}\quad รวบรวมข้อมูลสถิติของกลุ่ม เขียนกราฟการสลายตัว และสื่อสารผลการทดลองได้อย่างถูกต้อง
+\end{itemize}
+\end{planbox}
+
+\section{หลักการทฤษฎีและการเชื่อมโยงสู่งานจุลชีววิทยา}
+
+การสลายตัวของสารกัมมันตรังสีและการลดลงของจำนวนจุลินทรีย์ที่มีชีวิตรอดเมื่อได้รับรังสีฆ่าเชื้อ มีรูปแบบทางคณิตศาสตร์เดียวกัน คือ \textbf{การลดลงแบบครึ่งชีวิต} (\textbf{Half-Life Decay})\index{ครึ่งชีวิต (Half-Life)} โดยในทุกๆ ช่วงเวลา 1 ครึ่งชีวิต ($T_{1/2}$) ปริมาณสารตั้งต้นหรือจำนวนจุลินทรีย์จะลดลงเหลือ\textbf{ครึ่งหนึ่ง}ของปริมาณที่มีอยู่เดิมเสมอ หากผ่านไป $n$ รอบครึ่งชีวิต ($n = t / T_{1/2}$) ปริมาณที่เหลืออยู่ $N$ คำนวณได้จากสมการที่ \eqref{eq:lab11_halflife}
+
+\begin{equation}
+    N = N_0 \left(\frac{1}{2}\right)^n \qquad \text{เมื่อ} \qquad n = \frac{t}{T_{1/2}}
+    \label{eq:lab11_halflife}
+\end{equation}
+
+สำหรับการฆ่าเชื้อบนพื้นผิวด้วยหลอดรังสีอัลตราไวโอเลตชนิด \textbf{UV-C} ($\lambda = 254\text{ nm}$)\index{รังสีอัลตราไวโอเลต (UV-C Sterilization)} ซึ่งทำลายพันธุกรรมของแบคทีเรียด้วยการสร้างพันธะไทมีนไดเมอร์ (Thymine Dimer) บนสายดีเอ็นเอ ความเข้มรังสี $I$ (หน่วย $\text{W/m}^2$ หรือ $\mu\text{W/cm}^2$) ที่ตกกระทบบนจานเพาะเชื้อจะลดลงอย่างรวดเร็วเมื่อระยะห่าง $r$ จากหลอดไฟเพิ่มขึ้น ตาม\textbf{กฎกำลังสองผกผัน} (\textbf{Inverse-Square Law})\index{กฎกำลังสองผกผัน (Inverse-Square Law)}
+
+\begin{conceptbox}[สรุปสูตรคำนวณฉบับเข้าใจง่ายสำหรับปฏิบัติการที่ 11]
+\begin{itemize}
+    \item \textbf{สมการครึ่งชีวิตแบบคิดเลขในใจ}\quad $N = \dfrac{N_0}{2^n}$ (เช่น ผ่านไป $3$ ครึ่งชีวิต เหลือ $N_0 / 2^3 = N_0 / 8$)
+    \item \textbf{กฎกำลังสองผกผันของความเข้มรังสีเมื่อเทียบระยะห่าง $r_1$ กับ $r_2$}
+    \begin{equation*}
+        \frac{I_2}{I_1} = \left(\frac{r_1}{r_2}\right)^2 \implies I_2 = I_1 \left(\frac{r_1}{r_2}\right)^2
+    \end{equation*}
+    \item \textbf{ปริมาณรังสีสะสม (UV Dose)}\quad $\text{Dose} = \text{ความเข้มรังสี } I \times \text{เวลาฉายรังสี } t$
+\end{itemize}
+\end{conceptbox}
+
+\begin{worked}[การคำนวณความเข้มรังสี UV-C และจำนวนแบคทีเรียที่รอดชีวิต]
+\textbf{โจทย์} หลอดรังสี UV-C ในตู้ปลอดเชื้อให้ความเข้มรังสี $I_1 = 400\ \mu\text{W/cm}^2$ ที่ระยะห่าง $r_1 = 20\text{ cm}$ หากวางจานเพาะเชื้อห่างออกไปเป็น $r_2 = 40\text{ cm}$ ความเข้มรังสี $I_2$ จะเหลือเท่าใด และหากที่ระยะนี้แบคทีเรียมีเวลาครึ่งชีวิตการตาย $T_{1/2} = 2\text{ นาที}$ เมื่อเปิดไฟนาน $t = 8\text{ นาที}$ จากเชื้อเริ่มต้น $N_0 = 1{,}600\text{ CFU}$ จะเหลือรอดกี่ $\text{CFU}$
+
+\textbf{วิธีทำทีละขั้นตอน}
+\begin{enumerate}
+    \item คำนวณความเข้มรังสี $I_2$ ที่ระยะ $r_2 = 40\text{ cm}$ (ห่างขึ้น $2$ เท่า ความเข้มลดลง $2^2 = 4$ เท่า)
+    \begin{equation*}
+        I_2 = 400 \times \left(\frac{20}{40}\right)^2 = 400 \times \frac{1}{4} = 100\ \mu\text{W/cm}^2
+    \end{equation*}
+    \item คำนวณจำนวนรอบครึ่งชีวิต $n = t / T_{1/2} = 8 / 2 = 4\text{ รอบ}$ แล้วหาจำนวนเชื้อที่เหลือรอด $N$
+    \begin{equation*}
+        N = \frac{1{,}600}{2^4} = \frac{1{,}600}{16} = 100\text{ CFU}
+    \end{equation*}
+\end{enumerate}
+\textbf{คำตอบ} ความเข้มรังสีเหลือ $100\ \mu\text{W/cm}^2$ และมีแบคทีเรียเหลือรอดชีวิต $100\text{ CFU}$
+\end{worked}
+
+\begin{figure}[H]
+\centering
+\resizebox{0.86\textwidth}{!}{%
+\begin{tikzpicture}[>=Stealth, font=\small]
+    % Left: Half-life decay curve
+    \draw[->, line width=1.1pt] (0,0) -- (6.2,0) node[right, font=\footnotesize\bfseries] {จำนวนรอบครึ่งชีวิต $n$};
+    \draw[->, line width=1.1pt] (0,0) -- (0,3.8) node[above, font=\footnotesize\bfseries] {จำนวนที่เหลือ $N/N_0$ (\%)};
+    \draw[line width=1.8pt, physRoyalBlue, domain=0:5, samples=60] plot (\x, {3.2*(0.5^\x)});
+    \foreach \n/\pct/\y in {0/100\%/3.2, 1/50\%/1.6, 2/25\%/0.8, 3/12.5\%/0.4, 4/6.25\%/0.2} {
+        \fill[crimsonAlert] (\n,\y) circle (2.5pt);
+        \draw[dashed, gray] (\n,0) -- (\n,\y) -- (0,\y);
+        \node[below, font=\scriptsize] at (\n,0) {$\n$};
+        \node[left, font=\scriptsize] at (0,\y) {\pct};
+    }
+
+    % Right: UV-C Inverse-square law in Biosafety Cabinet
+    \draw[fill=purple!25, draw=purple!80!black, line width=1.2pt, rounded corners=3pt] (8.5,3.5) rectangle (12.5,3.85);
+    \node[font=\footnotesize\bfseries\color{purple!80!black}, above] at (10.5,3.85) {หลอดรังสีฆ่าเชื้อ UV-C ($254\text{ nm}$)};
+    % Rays
+    \draw[->, line width=1.1pt, purple!75] (10.0,3.5) -- (8.2,0.5);
+    \draw[->, line width=1.1pt, purple!75] (10.5,3.5) -- (10.5,0.5);
+    \draw[->, line width=1.1pt, purple!75] (11.0,3.5) -- (12.8,0.5);
+
+    % Distance r1
+    \draw[fill=boxBlueBg, draw=physRoyalBlue, line width=1pt] (9.4,2.1) rectangle (11.6,2.35);
+    \node[right, font=\scriptsize\bfseries\color{physRoyalBlue}] at (11.7,2.22) {ระยะ $r_1 = 20\text{ cm}$ ($I_1 = 100\%$)};
+
+    % Distance r2 = 2 r1
+    \draw[fill=boxAmberBg, draw=physAmber, line width=1pt] (8.3,0.7) rectangle (12.7,0.95);
+    \node[right, font=\scriptsize\bfseries\color{physAmber!85!black}] at (12.8,0.82) {ระยะ $r_2 = 40\text{ cm}$ ($I_2 = 25\%$)};
+\end{tikzpicture}%
+}
+\caption{กราฟการลดลงแบบครึ่งชีวิต (ซ้าย) และการลดลงของความเข้มรังสี UV-C ตามกฎกำลังสองผกผันของระยะห่าง (ขวา)}
+\label{fig:lab11_setup}
+\end{figure}
+
+\section{วัสดุอุปกรณ์และขั้นตอนการปฏิบัติการ}
+
+\begin{equipbox}
+\begin{enumerate}
+    \item ชุดเบี้ยสองสีหรือเหรียญจำลองนิวเคลียสกัมมันตรังสี จำนวน $100$ ชิ้น พร้อมกล่องเขย่า จำนวน $1$ ชุด
+    \item แหล่งกำเนิดแสงจำลองหลอด UV และเครื่องวัดความเข้มแสง (Lux Meter / UV Radiometer) พร้อมรางวัดระยะทาง
+    \item ชุดภาพถ่ายจานเพาะเชื้อแบคทีเรีย \textit{Escherichia coli} ที่ผ่านการฉายรังสี UV-C ($254\text{ nm}$) เป็นเวลา $0, 1, 2, 3$ และ $4$ นาที สำหรับฝึกนับจำนวนโคโลนี (CFU)
+\end{enumerate}
+\end{equipbox}
+
+\begin{warningbox}
+ในการปฏิบัติงานจริงกับตู้ปลอดเชื้อที่มีหลอดรังสี UV-C ต้องปิดกระจกหน้าตู้ลงให้สนิทและห้ามสอดมือหรือจ้องมองแสงสีม่วงฟ้าของหลอด UV-C โดยตรง เพราะจะทำให้เกิดกระจกตาอักเสบและผิวหนังไหม้ได้
+\end{warningbox}
+
+\subsection{ขั้นตอนการทดลอง}
+\begin{enumerate}
+    \item \textbf{ตอนที่ 1 การจำลองการสลายตัวครึ่งชีวิตด้วยเบี้ยสองสี}\quad เริ่มต้นด้วยเบี้ยจำนวน $N_0 = 100$ ชิ้น เขย่ากล่องแล้วเทลงบนถาด คัดเบี้ยที่หงายด้านสีแดง (แทนนิวเคลียสที่สลายตัวแล้วหรือเซลล์ที่ตายแล้ว) ออก นับจำนวนเบี้ยที่เหลือรอด $N$ บันทึกเป็นรอบการเขย่าที่ $n = 1, 2, 3, 4$ และ $5$ เปรียบเทียบกับค่าทางทฤษฎีใน\mbox{ตารางที่} 11.1
+    \item \textbf{ตอนที่ 2 การทดสอบกฎกำลังสองผกผันและการนับโคโลนีรอดชีวิตจากรังสี UV-C}\quad วัดความเข้มแสงที่ระยะห่าง $r = 15, 30$ และ $45\text{ cm}$ จากหลอดกำเนิดแสง และนับจำนวนโคโลนีแบคทีเรียที่รอดชีวิตบนจานเพาะเชื้อตามเวลาฉายรังสี UV-C บันทึกใน\mbox{ตารางที่} 11.2
+\end{enumerate}
+
+\section{ใบบันทึกผลการทดลองและคำถามท้ายปฏิบัติการ}
+
+\begin{worksheetbox}[ใบบันทึกผลการทดลองที่ 11\quad ครึ่งชีวิตและประสิทธิภาพรังสี UV-C ฆ่าเชื้อ]
+\textbf{กลุ่มปฏิบัติการที่} \dotfill \textbf{วันที่ทำการทดลอง} \dotfill\\[4pt]
+\textbf{รายชื่อสมาชิกกลุ่ม} 1. \dotfill 2. \dotfill 3. \dotfill
+
+\vspace{4pt}
+\textbf{ตารางที่ 11.1\quad ผลการจำลองการลดลงแบบครึ่งชีวิตจากจำนวนเริ่มต้น $N_0 = 100$ ชิ้น}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{c c c c >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{รอบที่ ($n$)} & \textbf{ทฤษฎี ($100/2^n$)} & \textbf{เหลือจริง (1)} & \textbf{เหลือจริง (2)} & \textbf{ค่าเฉลี่ยจากการทดลอง $\bar{N}$} \\
+\midrule
+$n = 0$ (เริ่มต้น) & $100.0$ & $100$ & $100$ & $100.0$ \\[4pt]
+$n = 1$ & $50.0$ & \dotfill & \dotfill & \dotfill \\[4pt]
+$n = 2$ & $25.0$ & \dotfill & \dotfill & \dotfill \\[4pt]
+$n = 3$ & $12.5$ & \dotfill & \dotfill & \dotfill \\[4pt]
+$n = 4$ & $6.25$ & \dotfill & \dotfill & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\textbf{ตารางที่ 11.2\quad ผลการวัดความเข้มรังสีตามระยะห่างและจำนวนโคโลนีที่รอดชีวิตจากรังสี UV-C}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{c c c | c c >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{ระยะ $r$} & \textbf{ความเข้ม $I$} & \textbf{$I/I_{15}$} & \textbf{เวลา UV} & \textbf{โคโลนี (CFU)} & \textbf{ร้อยละการรอดชีวิต (\%)} \\
+\midrule
+$15\text{ cm}$ ($1\times$) & ........ & $1.00$ & $0\text{ min}$ & $400\text{ CFU}$ & $100\%$ \\[6pt]
+$30\text{ cm}$ ($2\times$) & ........ & ........ & $1\text{ min}$ & ........ & \dotfill \\[6pt]
+$45\text{ cm}$ ($3\times$) & ........ & ........ & $2\text{ min}$ & ........ & \dotfill \\[6pt]
+$60\text{ cm}$ ($4\times$) & ........ & ........ & $4\text{ min}$ & ........ & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\textbf{สรุปและอภิปรายผลการทดลอง}\\[4pt]
+\dotfill\\[6pt]
+\dotfill
+\end{worksheetbox}
+
+\subsection{คำถามท้ายปฏิบัติการ}
+\begin{enumerate}
+    \item หากเลื่อนถาดอุปกรณ์ผ่าตัดให้ห่างจากหลอดรังสี UV-C เพิ่มขึ้นเป็น $3$ เท่าของระยะเดิม ความเข้มรังสี UV-C ที่ตกกระทบบนถาดจะลดลงเหลือกี่เท่า และต้องเปิดไฟนานขึ้นกี่เท่าจึงจะได้ปริมาณรังสีสะสม (UV Dose) เท่าเดิม
+    \item เพราะเหตุใดรังสี UV-C จึงเหมาะสำหรับการฆ่าเชื้อเฉพาะบนพื้นผิวโต๊ะและอากาศ แต่ไม่สามารถใช้ฆ่าเชื้อในอาหารเลี้ยงเชื้อที่บรรจุอยู่ในขวดแก้วหนาหรือกล่องพลาสติกทึบได้
+\end{enumerate}

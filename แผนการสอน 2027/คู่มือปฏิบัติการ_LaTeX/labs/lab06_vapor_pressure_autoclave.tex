@@ -1,0 +1,130 @@
+\cleardoublepage
+\phantomsection
+\begin{planbox}[แผนบริหารการสอนปฏิบัติการที่ 6\quad ความดันไอ จุดเดือด และหม้อนึ่ง Autoclave (สัปดาห์ที่ 6)]
+\noindent\textbf{1. เวลาเรียนปฏิบัติการ}\quad 3 ชั่วโมง (180 นาที)\quad \textbf{ผลลัพธ์การเรียนรู้ที่ประเมิน}\quad CLO1, CLO2, CLO3, CLO4
+
+\noindent\textbf{2. วัตถุประสงค์เชิงพฤติกรรมประจำปฏิบัติการ}
+\begin{enumerate}
+    \item ทดลองแสดงให้เห็นว่าจุดเดือดของน้ำเปลี่ยนแปลงตามความดันเหนือผิวน้ำ และคำนวณแปลงความดันเกจเป็นความดันสัมบูรณ์ได้ \textbf{(CLO1 เชื่อมโยง PLO2)}
+    \item บันทึกและเขียนกราฟความดันและอุณหภูมิตามเวลาจริงของรอบการทำงานหม้อนึ่งความดันไอ (Autoclave ที่ $121\,^\circ\text{C}$, $15\text{ psi}$) พร้อมปฏิบัติตามกฎความปลอดภัยของภาชนะความดันสูงได้อย่างเคร่งครัด \textbf{(CLO2, CLO3, CLO4 เชื่อมโยง PLO1, PLO3, PLO5, PLO6)}
+\end{enumerate}
+
+\noindent\textbf{3. แผนการจัดเวลาในคาบปฏิบัติการ 3 ชั่วโมง}
+\begin{itemize}
+    \item \textbf{ชั่วโมงที่ 1}\quad ทดลองตอนที่ 1 การเดือดของน้ำอุ่นที่ความดันต่ำในกระบอกฉีดยาสุญญากาศ และเตรียมขวดอาหารจำลองติดเทป Autoclave Tape
+    \item \textbf{ชั่วโมงที่ 2}\quad เดินเครื่อง Autoclave และบันทึกค่าความดันเกจ ($\text{psi}$) และอุณหภูมิ ($^\circ\text{C}$) ทุกๆ 5 นาทีตลอดรอบการทำงาน
+    \item \textbf{ชั่วโมงที่ 3}\quad เขียนกราฟรอบการฆ่าเชื้อ ตรวจสอบการเปลี่ยนสีของ Autoclave Tape และอภิปรายกรณีศึกษาความล้มเหลวจากการไม่ไล่อากาศ
+\end{itemize}
+\end{planbox}
+\clearpage
+
+\chapter{ความดันไอ จุดเดือด และการวิเคราะห์รอบการทำงานหม้อนึ่งความดันไอ}
+\index{จุดเดือดและความดัน}\index{หม้อนึ่งความดันไอ Autoclave}\index{ความดันเกจและความดันสัมบูรณ์}\index{Autoclave Tape}
+
+\section{หลักการทางฟิสิกส์และทฤษฎีเบื้องหลังการทดลอง}
+
+ของเหลวจะเดือดกลายเป็นไอเมื่อ\textbf{ความดันไออิ่มตัวของของเหลวมีค่าเท่ากับความดันภายนอกที่กดทับผิวของเหลวนั้น} ที่ระดับน้ำทะเลซึ่งมีความดันบรรยากาศ $P_{\text{atm}} = 1\text{ atm} \approx 14.7\text{ psi}$ (ความดันเกจเท่ากับ $0\text{ psi}$) น้ำจะเดือดที่อุณหภูมิ $100\,^\circ\text{C}$ หากเราลดความดันเหนือผิวน้ำลง (เช่น ดึงก้านกระบอกฉีดยาที่อุดปลายไว้) น้ำจะสามารถเดือดเป็นฟองได้ที่อุณหภูมิเพียง $60\text{--}70\,^\circ\text{C}$ ในทางกลับกัน ใน\textbf{หม้อนึ่งความดันไอ} (\textbf{Autoclave}) เราปิดฝาหม้อนึ่งและไล่อากาศออกจนเหลือแต่ไอน้ำบริสุทธิ์อัดแน่นที่ความดันเกจ $15\text{ psi}$ (ความดันสัมบูรณ์ประมาณ $2\text{ atm}$) ทำให้จุดเดือดของน้ำเพิ่มขึ้นไปอยู่ที่ $121\,^\circ\text{C}$ ซึ่งเพียงพอที่จะทำลายเอนโดสปอร์ของแบคทีเรียได้ภายใน 15--20 นาที
+
+\begin{conceptbox}[สมการความดันสัมบูรณ์และกฎความดันย่อยในหม้อนึ่ง Autoclave]
+\begin{enumerate}
+    \item \textbf{ความดันสัมบูรณ์ภายในหม้อนึ่ง}\quad $P_{\text{abs}} = P_{\text{atm}} + P_{\text{gauge}} \approx 14.7\text{ psi} + P_{\text{gauge}}$
+    \item \textbf{สภาวะมาตรฐานการฆ่าเชื้อด้วย Autoclave}\quad $P_{\text{gauge}} = 15\text{ psi}$ ($\approx 103\text{ kPa}$), อุณหภูมิไอน้ำอิ่มตัว $T = 121\,^\circ\text{C}$ ($394\text{ K}$) เป็นเวลาอย่างน้อย $15\text{ นาที}$
+\end{enumerate}
+\end{conceptbox}
+
+\begin{worked}[การคำนวณความดันสัมบูรณ์และวิเคราะห์อุณหภูมิไอน้ำ]
+\textbf{โจทย์ตัวอย่าง}\quad ขณะที่หม้อนึ่ง Autoclave กำลังอยู่ในขั้นตอนฆ่าเชื้อ หน้าปัดความดันเกจอ่านค่าได้ $P_{\text{gauge}} = 15.0\text{ psi}$ จงคำนวณหาความดันสัมบูรณ์ในหน่วย $\text{psi}$ และหน่วยบรรยากาศ ($\text{atm}$) กำหนดให้ $1\text{ atm} = 14.7\text{ psi}$
+
+\textbf{วิธีคำนวณทีละขั้นตอน}
+\begin{enumerate}
+    \item \textbf{หาความดันสัมบูรณ์ในหน่วย psi}\quad $P_{\text{abs}} = 14.7\text{ psi} + 15.0\text{ psi} = 29.7\text{ psi}$
+    \item \textbf{แปลงเป็นหน่วยบรรยากาศ (atm)}\quad $P_{\text{abs}} = \dfrac{29.7\text{ psi}}{14.7\text{ psi/atm}} = 2.02\text{ atm}$
+\end{enumerate}
+\end{worked}
+
+\section{แผนภาพชุดอุปกรณ์การทดลองและรายการวัสดุ}
+
+\begin{figure}[H]
+\centering
+\resizebox{0.86\textwidth}{!}{%
+\begin{tikzpicture}[font=\sffamily, >=Stealth]
+    % Left: Syringe Boiling under Reduced Pressure
+    \begin{scope}[shift={(0,0)}]
+        \draw[fill=boxBlueBg, draw=physRoyalBlue, line width=1.2pt, rounded corners=4pt] (0,0) rectangle (6.6,4.2);
+        \node[font=\bfseries\color{physRoyalBlue}] at (3.3,3.75) {(ก) การเดือดของน้ำที่ความดันต่ำ};
+        \fill[physCyan!25, draw=physRoyalBlue, line width=1.3pt] (1.2,1.5) rectangle (3.6,2.5);
+        \fill[charcoal] (0.9,1.85) rectangle (1.2,2.15);
+        \fill[physSlate!60, draw=charcoal, line width=1.2pt] (3.4,1.55) rectangle (3.7,2.45);
+        \draw[charcoal, line width=2.0pt] (3.7,2.0) -- (5.0,2.0);
+        \draw[charcoal, line width=2.0pt] (5.0,1.5) -- (5.0,2.5);
+        \draw[->, crimsonAlert, line width=1.6pt] (5.2,2.0) -- (6.1,2.0) node[above left, font=\scriptsize\bfseries] {ดึงก้านสูบลด $P$};
+        \foreach \x/\y in {1.8/1.8, 2.3/2.1, 2.8/1.75, 2.1/2.25} {
+            \draw[white, fill=white, draw=physRoyalBlue] (\x,\y) circle (2.2pt);
+        }
+        \node[font=\scriptsize, align=center] at (3.3,0.65) {น้ำอุ่น $70\,^\circ\text{C}$ เดือดเป็นฟองทันทีเมื่อความดันลดลง};
+    \end{scope}
+
+    % Right: Autoclave Cycle Profile
+    \begin{scope}[shift={(7.4,0)}]
+        \draw[fill=boxGreenBg, draw=bioEmerald, line width=1.2pt, rounded corners=4pt] (0,0) rectangle (7.0,4.2);
+        \node[font=\bfseries\color{bioEmerald!90!black}] at (3.5,3.75) {(ข) กราฟรอบการทำงานของ Autoclave};
+        \draw[->, line width=1.2pt] (0.8,0.8) -- (6.4,0.8) node[below left, font=\scriptsize\bfseries] {เวลา ($\text{min}$)};
+        \draw[->, line width=1.2pt] (0.8,0.8) -- (0.8,3.3) node[above right, font=\scriptsize\bfseries] {$T$ ($^\circ\text{C}$)};
+        \draw[crimsonAlert, line width=1.8pt] (0.8,1.1) -- (2.2,1.9) -- (2.8,2.8) -- (4.8,2.8) -- (6.0,1.4);
+        \draw[dashed, physRoyalBlue] (0.8,2.8) -- (4.8,2.8);
+        \node[left, font=\scriptsize\bfseries, color=crimsonAlert] at (0.8,2.8) {$121\,^\circ\text{C}$};
+        \node[above, font=\scriptsize\bfseries, color=bioEmerald!90!black] at (3.8,2.8) {ฆ่าเชื้อ 15 นาที ($15\text{ psi}$)};
+    \end{scope}
+\end{tikzpicture}%
+}
+\caption{การทดลองการเดือดของน้ำที่ความดันต่ำและกราฟรอบการฆ่าเชื้อมาตรฐานของเครื่องหม้อนึ่งความดันไอ}
+\end{figure}
+
+\begin{equipbox}[รายการอุปกรณ์สำหรับแต่ละกลุ่ม]
+\begin{itemize}
+    \item กระบอกฉีดยาพลาสติกใสขนาด $50\text{ mL}$ พร้อมจุกยางอุดปลาย, บีกเกอร์น้ำอุ่น ($70\,^\circ\text{C}$) และเทอร์โมมิเตอร์
+    \item หม้อนึ่งความดันไอ (Autoclave), ขวดแก้วใส่น้ำกลั่นพร้อมฝาเกลียว และเทปวัดผลความร้อน (Autoclave Indicator Tape)
+\end{itemize}
+\end{equipbox}
+
+\section{ขั้นตอนการปฏิบัติการทดลอง}
+\begin{enumerate}
+    \item \textbf{ตอนที่ 1 การเดือดของน้ำที่ความดันต่ำกว่าบรรยากาศ}\quad ดูดน้ำอุ่นอุณหภูมิประมาณ $70\,^\circ\text{C}$ เข้ากระบอกฉีดยาประมาณ $20\text{ mL}$ ไล่ฟองอากาศออกแล้วอุดปลายกระบอกฉีดยาด้วยจุกยางให้สนิท ออกแรงดึงก้านสูบถอยหลังเพื่อลดความดันภายในกระบอก สังเกตการเกิดฟองเดือดของน้ำทั้งที่อุณหภูมิเพียง $70\,^\circ\text{C}$
+    \item \textbf{ตอนที่ 2 การตรวจสอบรอบการทำงานของเครื่อง Autoclave}\quad ติดเทป Autoclave Tape ลงบนขวดน้ำกลั่น \textbf{คลายเกลียวฝาขวดออกครึ่งรอบ} นำเข้าหม้อนึ่งความดันไอ บันทึกค่าความดันเกจ ($\text{psi}$) และอุณหภูมิ ($^\circ\text{C}$) ทุกๆ 5 นาที และตรวจสอบแถบสีบนเทปหลังสิ้นสุดการนึ่ง
+\end{enumerate}
+
+\section{ใบบันทึกผลการทดลองประจำกลุ่ม}
+
+\begin{worksheetbox}[ใบบันทึกผลการทดลองที่ 6\quad ความดันไอ จุดเดือด และรอบการทำงานของ Autoclave]
+\noindent\textbf{กลุ่มปฏิบัติการที่} \dotfill \textbf{วันที่ทำการทดลอง} \dotfill\\[4pt]
+\noindent\textbf{ผลการสังเกตตอนที่ 1 (เมื่อดึงก้านสูบลดความดันกับน้ำอุ่น $70\,^\circ\text{C}$)} \dotfill
+
+\vspace{6pt}
+\noindent\textbf{ตารางบันทึกผลตอนที่ 2 ข้อมูลความดันและอุณหภูมิตามเวลาจริงของเครื่อง Autoclave}
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X c c c c}
+\toprule
+\textbf{ขั้นตอนการทำงานของหม้อนึ่ง} & \textbf{เวลา ($\text{min}$)} & \textbf{$P_{\text{gauge}}$ ($\text{psi}$)} & \textbf{$P_{\text{abs}}$ ($\text{psi}$)} & \textbf{อุณหภูมิ ($^\circ\text{C}$)} \\
+\midrule
+1. เริ่มต้นเปิดเครื่องและไล่อากาศ & $0\text{ min}$ & ............ & ............ & \dotfill \\
+2. ปิดวาล์วไล่อากาศและเพิ่มความดัน & $10\text{ min}$ & ............ & ............ & \dotfill \\
+3. เข้าสู่สภาวะฆ่าเชื้อมาตรฐาน & $15\text{ min}$ & ............ & ............ & \dotfill \\
+4. ครบเวลาฆ่าเชื้อ 15 นาที & $30\text{ min}$ & ............ & ............ & \dotfill \\
+5. ความดันลดลงพร้อมเปิดฝาอย่างปลอดภัย & $45\text{ min}$ & ............ & ............ & \dotfill \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{4pt}
+\noindent\textbf{ผลการเปลี่ยนสีของแถบ Autoclave Tape หลังนึ่งเสร็จ} \dotfill\\[6pt]
+\noindent\textbf{สรุปและอภิปรายผลการทดลอง}\\[4pt]
+\dotfill\\[6pt]
+\dotfill
+\end{worksheetbox}
+
+\section*{คำถามท้ายปฏิบัติการที่ 6}
+\begin{enumerate}
+    \item หากผู้ปฏิบัติงานรีบปิดวาล์วไล่อากาศเร็วเกินไปจนยังมีอากาศค้างอยู่ในหม้อนึ่ง เมื่อเข็มความดันเกจชี้ที่ $15\text{ psi}$ อุณหภูมิภายในหม้อนึ่งจะถึง $121\,^\circ\text{C}$ หรือไม่ เพราะเหตุใด
+    \item จะเกิดอะไรขึ้นหากเราเปิดวาล์วระบายไอน้ำออกอย่างรวดเร็วทันทีที่ครบเวลาฆ่าเชื้อ ในขณะที่ภายในหม้อนึ่งมีขวดอาหารเลี้ยงเชื้อเหลวบรรจุอยู่
+\end{enumerate}
