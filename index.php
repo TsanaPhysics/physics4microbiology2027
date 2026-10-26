@@ -179,8 +179,9 @@ $labs = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>4011111 ฟิสิกส์สำหรับจุลชีววิทยา (Physics for Microbiology 2026/2027) | RBRU</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/fui_cyber_theme.css">
     <style>
         body { font-family: 'Prompt', sans-serif; }
         code, pre, .font-mono { font-family: 'JetBrains Mono', monospace; }
@@ -329,17 +330,31 @@ $labs = [
                 </div>
             </div>
 
-            <!-- Right: 3D Pixar Visual Card -->
+            <!-- Right: 3D Pixar Visual Card with FUI Digital Twin Frame -->
             <div class="lg:col-span-5 relative">
-                <div class="glass-card p-4 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden group">
-                    <div class="aspect-[4/3.6] rounded-2xl overflow-hidden relative bg-slate-900">
+                <div class="fui-viewport-cyan p-4 rounded-3xl border border-cyan-400/50 shadow-2xl relative overflow-hidden group">
+                    <!-- Diagonal glass sheen & flare beams -->
+                    <div class="fui-glass-sheen"></div>
+                    <div class="fui-flare-beam top w-3/4"></div>
+                    <div class="fui-flare-beam bottom w-1/2"></div>
+
+                    <!-- Top HUD Header -->
+                    <div class="flex justify-between items-center px-2 py-1 mb-2 relative z-10 font-mono text-[11px] text-cyan-300">
+                        <span class="flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                            <span class="font-bold tracking-wider">HOLO-TWIN // RBRU-AGRI</span>
+                        </span>
+                        <span class="text-slate-400">[12.61&deg;N 102.10&deg;E]</span>
+                    </div>
+
+                    <div class="aspect-[4/3.6] rounded-2xl overflow-hidden relative bg-slate-900 border border-cyan-500/30">
                         <img src="cover_ar_physics4microbio2027.jpg" alt="4011111 ฟิสิกส์สำหรับจุลชีววิทยา 2027"
                              class="w-full h-full object-cover hero-float"
                              onerror="this.src='03_physics4microbio2026/images/cover_3d_pixar_4011111_v1.png'">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent pointer-events-none"></div>
 
                         <!-- Badge Overlay -->
-                        <div class="absolute top-3 right-3 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-cyan-400/40 text-cyan-300 text-xs font-mono font-bold">
+                        <div class="absolute top-3 right-3 px-3 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-cyan-400/40 text-cyan-300 text-xs font-mono font-bold shadow-lg">
                             ✨ 3D Pixar-Ghibli Style
                         </div>
 
@@ -350,11 +365,17 @@ $labs = [
                                 <div class="text-[10px] text-slate-400">ส่องภาพตำราจำลองเครื่องมือชีวฟิสิกส์ 3 มิติ</div>
                             </div>
                             <a href="แผนการสอน 2027/เอกสารคำสอน_3D_AR_ArUco/webar_aruco/ar_aruco_textbook.html?ar=1" target="_blank"
-                               class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold text-xs hover:scale-105 transition flex items-center gap-1">
+                               class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold text-xs hover:scale-105 transition flex items-center gap-1 shadow-md shadow-emerald-950/50">
                                 <i class="fa-solid fa-camera"></i>
                                 <span>เปิดกล้อง AR</span>
                             </a>
                         </div>
+                    </div>
+
+                    <!-- Bottom Tech Strip & Radar Node -->
+                    <div class="flex justify-between items-center px-2 pt-2 relative z-10 text-[10px] font-mono text-slate-400">
+                        <div class="w-32 h-2.5 fui-vent-stripes-cyan rounded-sm"></div>
+                        <span class="text-cyan-400 font-bold">DIGITAL LAB CORE &bull; V2.7</span>
                     </div>
                 </div>
             </div>
@@ -381,19 +402,24 @@ $labs = [
             </div>
         </div>
 
-        <!-- Cards Grid -->
+        <!-- Cards Grid with FUI Cybernetic Styling -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php foreach ($labs as $lab): ?>
-                <div class="glass-card rounded-3xl p-6 border <?= $lab['border'] ?> flex flex-col justify-between space-y-4">
-                    <div class="space-y-3">
+                <div class="fui-card-amber p-6 flex flex-col justify-between space-y-4 hover:border-cyan-400 group">
+                    <div class="space-y-3 pt-2">
                         <!-- Card Header -->
                         <div class="flex items-start justify-between gap-3">
                             <span class="px-3 py-1 rounded-xl bg-gradient-to-r <?= $lab['color'] ?> text-white font-mono font-bold text-xs shadow-md">
                                 LAB <?= $lab['num'] ?>
                             </span>
-                            <span class="px-2.5 py-0.5 rounded-full bg-slate-900 border border-white/10 text-slate-400 text-[11px] font-mono">
-                                <?= htmlspecialchars($lab['badge']) ?>
-                            </span>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2.5 py-0.5 rounded-full bg-slate-900 border border-white/10 text-slate-400 text-[11px] font-mono">
+                                    <?= htmlspecialchars($lab['badge']) ?>
+                                </span>
+                                <div class="fui-dot-matrix">
+                                    <span></span><span></span><span></span>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Titles -->
@@ -412,19 +438,25 @@ $labs = [
                         </p>
                     </div>
 
-                    <!-- Dual Action Buttons -->
-                    <div class="pt-4 border-t border-slate-800/80 grid grid-cols-2 gap-2">
-                        <a href="<?= $lab['sim_file'] ?>" target="_blank"
-                           class="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-200 border border-cyan-500/30 hover:border-cyan-400 text-xs font-bold flex items-center justify-center gap-1.5 transition">
-                            <i class="fa-solid fa-cube text-xs"></i>
-                            <span>3D Simulator</span>
-                        </a>
+                    <!-- Tech vent divider & Dual Action Buttons -->
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-2 border-t border-slate-800">
+                            <div class="w-20 h-2.5 fui-vent-stripes rounded-sm opacity-60"></div>
+                            <span class="text-amber-400/80">3D // WEBAR READY</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <a href="<?= $lab['sim_file'] ?>" target="_blank"
+                               class="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-200 border border-cyan-500/30 hover:border-cyan-400 text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                                <i class="fa-solid fa-cube text-xs"></i>
+                                <span>3D Simulator</span>
+                            </a>
 
-                        <a href="<?= $lab['lab_file'] ?>"
-                           class="py-2.5 px-3 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold text-xs shadow hover:scale-[1.02] flex items-center justify-center gap-1.5 transition">
-                            <i class="fa-solid fa-file-pen text-xs"></i>
-                            <span>คู่มือ & E-Report</span>
-                        </a>
+                            <a href="<?= $lab['lab_file'] ?>"
+                               class="py-2.5 px-3 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold text-xs shadow hover:scale-[1.02] flex items-center justify-center gap-1.5 transition">
+                                <i class="fa-solid fa-file-pen text-xs"></i>
+                                <span>คู่มือ & E-Report</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>

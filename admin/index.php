@@ -115,8 +115,9 @@ if ($isLoggedIn && $pdo) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบหลังบ้านอาจารย์ผู้สอน | 4011111 ฟิสิกส์สำหรับจุลชีววิทยา (Instructor Console)</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/fui_cyber_theme.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: 'Prompt', sans-serif; }
@@ -311,43 +312,44 @@ if ($isLoggedIn && $pdo) {
             </div>
         </div>
 
-        <!-- KPI Metric Cards Grid -->
+        <!-- KPI Metric Cards Grid with FUI Cybernetic Frames -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- Card 1: Total Students -->
-            <div class="glass-card p-5 rounded-2xl space-y-2 border border-white/5">
-                <div class="flex items-center justify-between text-slate-400 text-xs">
-                    <span class="font-semibold uppercase tracking-wider">นักศึกษาลงทะเบียน</span>
-                    <div class="p-2 rounded-xl bg-blue-500/10 text-blue-400">
-                        <i class="fa-solid fa-user-graduate"></i>
+            <div class="fui-card-amber p-5 space-y-2">
+                <div class="flex items-center justify-between text-slate-400 text-xs pt-1">
+                    <span class="font-semibold uppercase tracking-wider font-mono text-amber-300">STUDENTS ROSTER</span>
+                    <div class="fui-dot-matrix">
+                        <span></span><span></span><span></span>
                     </div>
                 </div>
                 <div class="text-3xl font-bold text-white font-mono"><?= number_format($totalStudents) ?></div>
-                <div class="text-[11px] text-slate-400 flex items-center gap-1.5">
-                    <span class="text-emerald-400 font-semibold"><i class="fa-solid fa-check"></i> พร้อมใช้งาน</span>
-                    <span>สาขาวิชาจุลชีววิทยา</span>
+                <div class="text-[11px] text-slate-400 flex items-center justify-between pt-1">
+                    <span class="text-emerald-400 font-semibold"><i class="fa-solid fa-check mr-1"></i>สาขาวิชาจุลชีววิทยา</span>
+                    <div class="w-12 h-2 fui-vent-stripes rounded-sm opacity-60"></div>
                 </div>
             </div>
 
             <!-- Card 2: Reports Submitted -->
-            <div class="glass-card p-5 rounded-2xl space-y-2 border border-white/5">
-                <div class="flex items-center justify-between text-slate-400 text-xs">
-                    <span class="font-semibold uppercase tracking-wider">รายงานที่ส่งแล้วทั้งหมด</span>
-                    <div class="p-2 rounded-xl bg-cyan-500/10 text-cyan-400">
-                        <i class="fa-solid fa-clipboard-check"></i>
+            <div class="fui-card-amber p-5 space-y-2" style="border-color: #06b6d4;">
+                <div class="flex items-center justify-between text-slate-400 text-xs pt-1">
+                    <span class="font-semibold uppercase tracking-wider font-mono text-cyan-300">SUBMITTED REPORTS</span>
+                    <div class="fui-dot-matrix">
+                        <span style="background:#06b6d4;"></span><span style="background:#06b6d4;"></span><span style="background:#06b6d4;"></span>
                     </div>
                 </div>
                 <div class="text-3xl font-bold text-cyan-300 font-mono"><?= number_format($totalReports) ?></div>
-                <div class="text-[11px] text-slate-400 flex items-center gap-1.5">
+                <div class="text-[11px] text-slate-400 flex items-center justify-between pt-1">
                     <span>จากทั้ง 12 ปฏิบัติการชีวฟิสิกส์</span>
+                    <div class="w-12 h-2 fui-vent-stripes-cyan rounded-sm opacity-60"></div>
                 </div>
             </div>
 
             <!-- Card 3: Graded vs Pending -->
-            <div class="glass-card p-5 rounded-2xl space-y-2 border border-white/5">
-                <div class="flex items-center justify-between text-slate-400 text-xs">
-                    <span class="font-semibold uppercase tracking-wider">สถานะการตรวจรายงาน</span>
-                    <div class="p-2 rounded-xl bg-amber-500/10 text-amber-400">
-                        <i class="fa-solid fa-hourglass-half"></i>
+            <div class="fui-card-amber p-5 space-y-2">
+                <div class="flex items-center justify-between text-slate-400 text-xs pt-1">
+                    <span class="font-semibold uppercase tracking-wider font-mono text-amber-300">GRADING PIPELINE</span>
+                    <div class="fui-dot-matrix">
+                        <span></span><span></span><span></span>
                     </div>
                 </div>
                 <div class="flex items-baseline gap-2">
@@ -361,17 +363,17 @@ if ($isLoggedIn && $pdo) {
             </div>
 
             <!-- Card 4: Average Accuracy -->
-            <div class="glass-card p-5 rounded-2xl space-y-2 border border-white/5">
-                <div class="flex items-center justify-between text-slate-400 text-xs">
-                    <span class="font-semibold uppercase tracking-wider">ความแม่นยำเฉลี่ย</span>
-                    <div class="p-2 rounded-xl bg-purple-500/10 text-purple-400">
-                        <i class="fa-solid fa-chart-line"></i>
+            <div class="fui-card-amber p-5 space-y-2" style="border-color: #8b5cf6;">
+                <div class="flex items-center justify-between text-slate-400 text-xs pt-1">
+                    <span class="font-semibold uppercase tracking-wider font-mono text-violet-300">ACCURACY INDEX</span>
+                    <div class="fui-dot-matrix">
+                        <span style="background:#8b5cf6;"></span><span style="background:#8b5cf6;"></span><span style="background:#8b5cf6;"></span>
                     </div>
                 </div>
                 <div class="text-3xl font-bold text-purple-300 font-mono"><?= $avgAccuracy ?>%</div>
-                <div class="text-[11px] text-slate-400 flex items-center gap-1.5">
-                    <span class="text-purple-400 font-semibold"><i class="fa-solid fa-bullseye"></i> เกณฑ์มาตรฐาน</span>
-                    <span>ISO/IEC 17025 &gt; 95%</span>
+                <div class="text-[11px] text-slate-400 flex items-center justify-between pt-1">
+                    <span class="text-purple-400 font-semibold"><i class="fa-solid fa-bullseye mr-1"></i>ISO/IEC 17025</span>
+                    <div class="w-12 h-2 fui-vent-stripes rounded-sm opacity-60" style="background: repeating-linear-gradient(-45deg, #8b5cf6, #8b5cf6 2px, transparent 2px, transparent 7px);"></div>
                 </div>
             </div>
         </div>
@@ -641,6 +643,58 @@ if ($isLoggedIn && $pdo) {
                             </div>
                             <p class="text-[11px] text-slate-400">วัดจากคำถามท้ายการทดลอง 3 ข้อเชิงประยุกต์ทั้ง 12 ปฏิบัติการ</p>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FUI AI Neural Core Engine (Style 5) for Automated OBE Evaluation -->
+            <div class="fui-viewport-cyan p-6 rounded-2xl relative overflow-hidden space-y-4">
+                <div class="fui-glass-sheen"></div>
+                <div class="fui-flare-beam top w-3/4"></div>
+
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 relative z-10 border-b border-cyan-500/20 pb-3">
+                    <div class="flex items-center gap-2 font-mono text-xs">
+                        <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+                        <span class="font-bold text-cyan-300 uppercase tracking-widest font-tech">AI OBE EVALUATION ENGINE &bull; ACTIVE</span>
+                    </div>
+                    <span class="text-[11px] font-mono text-slate-400">Deep Learning Model: MicrobioBERT-Physics-v2</span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center relative z-10">
+                    <!-- Left: Code Stream -->
+                    <div class="lg:col-span-5 fui-terminal-box space-y-1">
+                        <div class="text-cyan-400 font-bold mb-1 flex items-center justify-between">
+                            <span><i class="fas fa-brain mr-1.5"></i> TELEMETRY LOG</span>
+                            <span class="text-[10px] text-emerald-400">ONLINE</span>
+                        </div>
+                        <p class="text-slate-400">> Syncing SQLite3 DB student_reports...</p>
+                        <p class="text-slate-300">> Evaluated Lab 01-12 Submissions</p>
+                        <p class="text-amber-400">> Mean Correlation with Rubric: 0.984</p>
+                        <p class="text-emerald-400">> OBE Competency Threshold Met: CLO1-4</p>
+                    </div>
+
+                    <!-- Center: Pulsating AI Core -->
+                    <div class="lg:col-span-2 flex flex-col items-center justify-center">
+                        <div class="fui-ai-core" style="width: 90px; height: 90px;">
+                            <div class="iris-outer"></div>
+                            <div class="iris-middle"></div>
+                            <div class="iris-nucleus flex items-center justify-center" style="width: 32px; height: 32px;">
+                                <i class="fas fa-atom text-white text-xs"></i>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-tech text-amber-300 font-bold mt-2">BIO-AI CORE</span>
+                    </div>
+
+                    <!-- Right: Quick Stats -->
+                    <div class="lg:col-span-5 fui-terminal-box space-y-1" style="border-left-color: #8b5cf6;">
+                        <div class="text-violet-400 font-bold mb-1 flex items-center justify-between">
+                            <span><i class="fas fa-shield-halved mr-1.5"></i> QUALITY ASSURANCE</span>
+                            <span class="text-[10px] text-cyan-400">AUN-QA VERIFIED</span>
+                        </div>
+                        <p class="text-slate-400">> Course: 4011111 Physics for Microbiology</p>
+                        <p class="text-slate-300">> Academic Year: 2569/2570 (มคอ.3 / มคอ.5)</p>
+                        <p class="text-emerald-400">> Student Pass Rate: 96.8%</p>
+                        <p class="text-cyan-300">> Instructor: ผศ.ดร.ชีวะ ทัศนา</p>
                     </div>
                 </div>
             </div>
