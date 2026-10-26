@@ -27,7 +27,8 @@ try {
 
 $action = $_GET['action'] ?? ($_POST['action'] ?? '');
 
-switch ($action) {
+try {
+    switch ($action) {
 
     // 1. Student Registration & Login
     case 'register_student':
@@ -373,6 +374,69 @@ switch ($action) {
         echo json_encode(['success' => true, 'message' => 'บันทึกคะแนนและข้อเสนอแนะเรียบร้อยแล้ว']);
         break;
 
+    // 7.1 Get Full Report Detail for Review & Grading
+    case 'get_report_detail':
+        $reportCode = trim($_GET['report_code'] ?? ($_POST['report_code'] ?? ''));
+        if (!$reportCode) {
+            echo json_encode(['success' => false, 'error' => 'Missing report_code']);
+            exit;
+        }
+
+        $stmt = $pdo->prepare("
+            SELECT r.*, s.fullname, s.prefix, s.program, s.section, s.faculty, s.email, s.phone,
+                   c.title_th AS lab_title_th, c.title_en AS lab_title_en, c.lab_number
+            FROM lab_reports r
+            JOIN students s ON r.student_id = s.student_id
+            LEFT JOIN labs_catalog c ON r.lab_id = c.lab_id
+            WHERE r.report_code = ? OR r.id = ?
+        ");
+        $stmt->execute([$reportCode, $reportCode]);
+        $report = $stmt->fetch();
+
+        if ($report) {
+            $report['table_data'] = json_decode($report['table_data_json'] ?? '[]', true);
+            $report['quiz_answers'] = json_decode($report['quiz_answers_json'] ?? '{}', true);
+            echo json_encode(['success' => true, 'report' => $report]);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'ไม่พบข้อมูลรายงาน']);
+        }
+        break;
+
+    // 7.2 Search Student Profile & All Submitted Reports
+    case 'search_student_reports':
+        $studentId = trim($_GET['student_id'] ?? ($_POST['student_id'] ?? ''));
+        if (!$studentId) {
+            echo json_encode(['success' => false, 'error' => 'กรุณากรอกรหัสนักศึกษา']);
+            exit;
+        }
+
+        $stmt = $pdo->prepare("SELECT * FROM students WHERE student_id = ?");
+        $stmt->execute([$studentId]);
+        $student = $stmt->fetch();
+
+        if (!$student) {
+            echo json_encode(['success' => false, 'error' => 'ไม่พบข้อมูลนักศึกษารหัส ' . htmlspecialchars($studentId) . ' ในฐานข้อมูล']);
+            exit;
+        }
+
+        $stmt = $pdo->prepare("
+            SELECT r.*, c.title_th AS lab_title_th, c.title_en AS lab_title_en, c.lab_number
+            FROM lab_reports r
+            LEFT JOIN labs_catalog c ON r.lab_id = c.lab_id
+            WHERE r.student_id = ?
+            ORDER BY c.lab_number ASC, r.submitted_at DESC
+        ");
+        $stmt->execute([$studentId]);
+        $reports = $stmt->fetchAll();
+
+        echo json_encode([
+            'success' => true,
+            'student' => $student,
+            'reports' => $reports,
+            'total_submitted' => count($reports)
+        ]);
+        break;
+
     // 8. Export CSV (UTF-8 BOM)
     case 'export_csv':
         header('Content-Type: text/csv; charset=utf-8');
@@ -440,8 +504,14 @@ switch ($action) {
                 'admin_login',
                 'admin_get_overview',
                 'instructor_grade',
+                'get_report_detail',
+                'search_student_reports',
                 'export_csv'
             ]
         ]);
         break;
+    }
+} catch (Throwable $e) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }

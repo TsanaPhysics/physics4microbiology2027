@@ -115,5 +115,7 @@
         });
     });
 </script>
+<!-- Universal Online Lab Report Submitter -->
+<script src="<?php echo $basePath ?? ''; ?>js/lab_online_submit.js"></script>
 </body>
 </html>
