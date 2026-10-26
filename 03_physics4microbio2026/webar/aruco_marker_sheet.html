@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>แผ่นรวมมาร์กเกอร์ ArUco (DICT_4X4_50 : ID 0–11) — 4011111 ฟิสิกส์สำหรับจุลชีววิทยา</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: #f1f5f9; color: #0f172a;
+      padding: 24px 16px 48px;
+    }
+    .sheet-container {
+      max-width: 1080px; margin: 0 auto;
+      background: #ffffff; border-radius: 20px;
+      padding: 28px; box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+      border: 1px solid #cbd5e1;
+    }
+    .header-bar {
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      gap: 14px; background: linear-gradient(135deg, #0f172a, #1e3a8a);
+      color: #ffffff; padding: 20px 24px; border-radius: 14px; margin-bottom: 22px;
+    }
+    .header-bar h1 {
+      font-family: 'Prompt', sans-serif; font-size: 1.35rem; color: #38bdf8; margin-bottom: 4px;
+    }
+    .header-bar p { font-size: 0.92rem; color: #e2e8f0; }
+    .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      font-family: 'Prompt', sans-serif; font-size: 0.85rem; font-weight: 600;
+      padding: 9px 16px; border-radius: 10px; text-decoration: none; cursor: pointer;
+      border: none; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-primary { background: #10b981; color: #022c22; }
+    .btn-secondary { background: #38bdf8; color: #0f172a; }
+
+    .grid-12 {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 18px;
+    }
+    .aruco-card {
+      border: 2px solid #0f172a; border-radius: 14px; padding: 14px;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      background: #ffffff; transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .aruco-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(2, 132, 199, 0.16);
+    }
+    .card-top {
+      width: 100%; background: #0f172a; color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700;
+      padding: 5px 10px; border-radius: 8px; margin-bottom: 12px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .card-top span.ch-badge {
+      background: #0284c7; color: #fff; padding: 1px 7px; border-radius: 5px;
+      font-family: 'Prompt', sans-serif; font-size: 0.74rem;
+    }
+    .marker-wrap {
+      padding: 12px; border: 1.5px solid #94a3b8; border-radius: 8px;
+      background: #ffffff; margin-bottom: 10px; position: relative;
+    }
+    .orient-dot {
+      position: absolute; top: 4px; left: 4px;
+      width: 0; height: 0;
+      border-top: 12px solid #10b981; border-right: 12px solid transparent;
+    }
+    .aruco-svg { width: 150px; height: 150px; display: block; }
+    .card-title {
+      font-family: 'Prompt', sans-serif; font-size: 0.86rem; font-weight: 700;
+      color: #0f172a; margin-bottom: 4px; line-height: 1.3;
+    }
+    .card-open-link {
+      margin-top: auto; padding-top: 8px;
+      font-family: 'Prompt', sans-serif; font-size: 0.76rem; font-weight: 600;
+      color: #0284c7; text-decoration: none;
+    }
+    .card-open-link:hover { text-decoration: underline; }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .sheet-container { box-shadow: none; border: none; padding: 10px; }
+      .btn-group, .card-open-link { display: none !important; }
+      .grid-12 { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+      .aruco-svg { width: 132px; height: 132px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sheet-container">
+    <div class="header-bar">
+      <div>
+        <h1>แผ่นรวมมาร์กเกอร์ 3D WebAR (ArUco DICT_4X4_50 : ID 0 – ID 11)</h1>
+        <p>รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา — ใช้สมาร์ทโฟนเปิดสแกนเนอร์ WebAR แล้วส่องที่มาร์กเกอร์ หรือคลิกที่การ์ดเพื่อเปิดโมเดล 3 มิติ</p>
+      </div>
+      <div class="btn-group">
+        <a href="ar_aruco_textbook.html" class="btn btn-primary">📷 เปิดกล้องสแกนเนอร์ 3D WebAR</a>
+        <button onclick="window.print()" class="btn btn-secondary">🖨️ พิมพ์แผ่นมาร์กเกอร์ (A4)</button>
+      </div>
+    </div>
+
+    <div id="cards-grid" class="grid-12"></div>
+  </div>
+
+  <script>
+    const ARUCO_DICT_4X4 = {
+      0:  [[1,0,1,1], [0,1,0,1], [0,0,1,1], [0,0,1,0]],
+      1:  [[0,0,0,0], [1,1,1,1], [1,0,0,1], [1,0,1,0]],
+      2:  [[0,0,1,1], [0,0,1,1], [0,1,0,0], [1,1,0,1]],
+      3:  [[1,0,0,1], [1,0,0,1], [0,1,0,0], [0,1,1,0]],
+      4:  [[0,1,0,1], [0,1,1,0], [1,0,0,1], [1,1,0,0]],
+      5:  [[1,1,0,1], [0,0,0,0], [0,1,1,1], [0,1,1,0]],
+      6:  [[0,1,1,1], [1,0,1,1], [0,0,0,0], [0,0,1,1]],
+      7:  [[0,0,1,0], [1,0,0,0], [1,1,1,0], [0,1,0,1]],
+      8:  [[1,1,1,0], [1,1,0,0], [0,0,1,0], [1,0,0,1]],
+      9:  [[0,1,0,0], [1,1,1,0], [1,0,1,1], [0,0,1,0]],
+      10: [[1,0,1,0], [0,0,1,0], [1,1,0,1], [0,1,1,0]],
+      11: [[1,1,0,0], [0,1,0,1], [0,0,0,1], [1,1,1,0]]
+    };
+
+    const TITLES = [
+      "ไมโครปิเปต P1000 และการเจือจางเชื้อ 3 มิติ",
+      "การว่ายด้วยแฟลกเจลลา vs. Brownian Motion",
+      "การตกตะกอนสโตกส์และตู้ปลอดเชื้อ HEPA",
+      "เครื่องปั่นเหวี่ยงความเร็วสูงและค่า RCF (×g)",
+      "การกระจายความร้อนตู้อบ 37°C และเครื่อง PCR",
+      "หม้อนึ่งความดันไอ Autoclave (121°C, 15 psi)",
+      "ประจุผิวเซลล์และการยึดเกาะสีย้อมแกรม",
+      "อ่างแยกสายดีเอ็นเอ Gel Electrophoresis",
+      "การหักเหของสเนลล์และเครื่องวัด °Brix",
+      "กล้องจุลทรรศน์ 100x และน้ำมัน Immersion Oil",
+      "รังสี UV-C (254 nm) และกฎกำลังสองผกผัน",
+      "สเปกโตรโฟโตมิเตอร์และการวัดค่า OD600"
+    ];
+
+    const grid = document.getElementById('cards-grid');
+    for (let id = 0; id < 12; id++) {
+      const mat = ARUCO_DICT_4X4[id];
+      let rects = '<rect x="0" y="0" width="6" height="6" fill="#000000"/>';
+      for (let r = 0; r < 4; r++) {
+        for (let c = 0; c < 4; c++) {
+          if (mat[r][c] === 1) {
+            rects += `<rect x="${c + 1}" y="${r + 1}" width="1" height="1" fill="#ffffff"/>`;
+          }
+        }
+      }
+      const card = document.createElement('div');
+      card.className = 'aruco-card';
+      card.innerHTML = `
+        <div class="card-top">
+          <span>ArUco ID ${id}</span>
+          <span class="ch-badge">บทที่ ${id + 1}</span>
+        </div>
+        <div class="marker-wrap">
+          <div class="orient-dot" title="มุมบนซ้าย"></div>
+          <svg class="aruco-svg" viewBox="0 0 6 6" shape-rendering="crispEdges">${rects}</svg>
+        </div>
+        <div class="card-title">${TITLES[id]}</div>
+        <a class="card-open-link" href="ar_aruco_textbook.html?id=${id}">🚀 เปิดโมเดล 3 มิติประจำบทที่ ${id + 1} →</a>
+      `;
+      grid.appendChild(card);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "4011111 Physics4Microb 3D WebAR & ArUco Lab",
+  "short_name": "PhysMicrobAR",
+  "description": "แอปพลิเคชันส่องหนังสือเรียน 3D WebAR (ArUco Marker ID 0–11) และห้องปฏิบัติการเสมือนจริง รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา มรภ.รำไพพรรณี",
+  "start_url": "./ar_aruco_textbook.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#020617",
+  "theme_color": "#0284c7",
+  "lang": "th",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23020617'/%3E%3Crect x='36' y='36' width='440' height='440' rx='88' fill='none' stroke='%2338bdf8' stroke-width='16'/%3E%3Ccircle cx='256' cy='256' r='145' fill='none' stroke='%2310b981' stroke-width='12' stroke-dasharray='28 16'/%3E%3Crect x='156' y='156' width='200' height='200' fill='%23ffffff' rx='16'/%3E%3Crect x='176' y='176' width='160' height='160' fill='%23020617'/%3E%3Crect x='202' y='202' width='27' height='27' fill='%23ffffff'/%3E%3Crect x='256' y='202' width='54' height='27' fill='%23ffffff'/%3E%3Crect x='229' y='229' width='27' height='27' fill='%23ffffff'/%3E%3Crect x='283' y='229' width='27' height='54' fill='%23ffffff'/%3E%3Crect x='256' y='256' width='27' height='54' fill='%23ffffff'/%3E%3Cpolygon points='156,156 196,156 156,196' fill='%2310b981'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
