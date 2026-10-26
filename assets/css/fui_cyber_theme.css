@@ -1,0 +1,336 @@
+/**
+ * FUI Cybernetic & Deep Learning Design System (Physics for Microbiology 2026/2027)
+ * Author: Asst. Prof. Dr. Chewa Thassana (ผศ.ดร.ชีวะ ทัศนา)
+ * Styles: Sci-Fi HUD, Holographic Glassmorphism, Digital Twin, AI Neural Core
+ */
+
+:root {
+    --fui-neon-cyan: #00f2fe;
+    --fui-neon-teal: #06b6d4;
+    --fui-neon-amber: #facc15;
+    --fui-neon-gold: #f59e0b;
+    --fui-neon-rose: #f43f5e;
+    --fui-neon-emerald: #10b981;
+    --fui-neon-violet: #8b5cf6;
+    --fui-bg-dark: #020617;
+    --fui-bg-glass: rgba(15, 23, 42, 0.75);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   1. KEYFRAME ANIMATIONS
+   ───────────────────────────────────────────────────────────────────────────── */
+@keyframes fuiPulseGlow {
+    0%, 100% { opacity: 0.7; filter: drop-shadow(0 0 8px currentColor); }
+    50% { opacity: 1; filter: drop-shadow(0 0 18px currentColor); }
+}
+
+@keyframes fuiSpinClockwise {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fuiSpinCounter {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+}
+
+@keyframes fuiScanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(1000%); }
+}
+
+@keyframes fuiDataStream {
+    0% { background-position: 0 0; }
+    100% { background-position: 100px 0; }
+}
+
+@keyframes fuiBeamFlare {
+    0%, 100% { opacity: 0.5; width: 60%; }
+    50% { opacity: 1; width: 95%; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   2. STYLE 1: MODULAR CYBERNETIC CARD (AMBER / GOLD HUD)
+   ───────────────────────────────────────────────────────────────────────────── */
+.fui-card-amber {
+    position: relative;
+    background: rgba(10, 15, 26, 0.85);
+    border: 1.5px solid #eab308;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    clip-path: polygon(
+        0 18px, 18px 0, 
+        calc(100% - 18px) 0, 100% 18px, 
+        100% calc(100% - 18px), calc(100% - 18px) 100%, 
+        18px 100%, 0 calc(100% - 18px)
+    );
+    box-shadow: 0 0 15px rgba(234, 179, 8, 0.15), inset 0 0 20px rgba(234, 179, 8, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fui-card-amber:hover {
+    box-shadow: 0 0 25px rgba(234, 179, 8, 0.35), inset 0 0 30px rgba(234, 179, 8, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Glowing top notch */
+.fui-card-amber::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90px;
+    height: 6px;
+    background: #facc15;
+    box-shadow: 0 0 14px #eab308, 0 0 24px #eab308;
+    border-radius: 0 0 4px 4px;
+    z-index: 10;
+}
+
+/* Tech Vents Grille */
+.fui-vent-stripes {
+    background: repeating-linear-gradient(
+        -45deg,
+        #eab308,
+        #eab308 2px,
+        transparent 2px,
+        transparent 7px
+    );
+}
+
+.fui-vent-stripes-cyan {
+    background: repeating-linear-gradient(
+        -45deg,
+        #06b6d4,
+        #06b6d4 2px,
+        transparent 2px,
+        transparent 7px
+    );
+}
+
+/* Dot Array Indicator */
+.fui-dot-matrix {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.fui-dot-matrix span {
+    width: 3.5px;
+    height: 3.5px;
+    background: #eab308;
+    border-radius: 50%;
+    opacity: 0.7;
+    box-shadow: 0 0 4px #eab308;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   3. STYLE 2: HOLOGRAPHIC GLASSMORPHISM VIEWPORT (CYAN / TEAL HUD)
+   ───────────────────────────────────────────────────────────────────────────── */
+.fui-viewport-cyan {
+    position: relative;
+    background: linear-gradient(135deg, rgba(8, 28, 48, 0.75) 0%, rgba(2, 6, 23, 0.88) 100%);
+    border: 1.5px solid #06b6d4;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    clip-path: polygon(
+        0 24px, 24px 0, 
+        calc(100% - 24px) 0, 100% 24px, 
+        100% calc(100% - 24px), calc(100% - 24px) 100%, 
+        24px 100%, 0 calc(100% - 24px)
+    );
+    box-shadow: 0 0 25px rgba(6, 182, 212, 0.2), inset 0 0 30px rgba(6, 182, 212, 0.08);
+    overflow: hidden;
+}
+
+/* Grid Matrix Background */
+.fui-grid-matrix {
+    background-image: 
+        radial-gradient(rgba(6, 182, 212, 0.25) 1px, transparent 1px),
+        linear-gradient(to right, rgba(6, 182, 212, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px, 20px 20px, 20px 20px;
+}
+
+/* Diagonal glass reflection streak */
+.fui-glass-sheen {
+    position: absolute;
+    top: -50%;
+    left: -20%;
+    width: 140%;
+    height: 200%;
+    background: linear-gradient(
+        115deg,
+        transparent 35%,
+        rgba(255, 255, 255, 0.08) 42%,
+        rgba(255, 255, 255, 0.16) 45%,
+        rgba(255, 255, 255, 0.03) 48%,
+        transparent 55%
+    );
+    pointer-events: none;
+    transform: rotate(-10deg);
+}
+
+/* Top and Bottom Glowing Flare Beams */
+.fui-flare-beam {
+    position: absolute;
+    height: 3px;
+    background: #00f2fe;
+    box-shadow: 0 0 10px #00f2fe, 0 0 25px #06b6d4;
+    border-radius: 9999px;
+    animation: fuiBeamFlare 4s infinite ease-in-out;
+}
+.fui-flare-beam.top { top: 0; left: 50%; transform: translateX(-50%); }
+.fui-flare-beam.bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   4. STYLE 3: TELEMETRY & ANALYTICS DASHBOARD ELEMENTS
+   ───────────────────────────────────────────────────────────────────────────── */
+/* Rotating Circular Radar Avatar */
+.fui-radar-avatar {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fui-radar-avatar .outer-ring {
+    position: absolute;
+    inset: 0;
+    border: 2px dashed #00f2fe;
+    border-radius: 50%;
+    animation: fuiSpinClockwise 12s linear infinite;
+}
+.fui-radar-avatar .middle-ring {
+    position: absolute;
+    inset: 6px;
+    border: 1.5px solid rgba(6, 182, 212, 0.5);
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    animation: fuiSpinCounter 8s linear infinite;
+}
+.fui-radar-avatar .core {
+    position: absolute;
+    inset: 14px;
+    background: radial-gradient(circle, #0284c7 0%, #0369a1 80%, #082f49 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.6);
+}
+
+/* Segmented Capsule Slider */
+.fui-capsule-bar {
+    position: relative;
+    height: 18px;
+    border-radius: 9999px;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+.fui-capsule-fill {
+    height: 100%;
+    border-radius: 9999px;
+    position: relative;
+}
+.fui-capsule-fill::after {
+    content: '';
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 0 8px currentColor;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   5. STYLE 4: CENTRAL DIGITAL TWIN & COMMAND HUB (GLOBE & ORBITALS)
+   ───────────────────────────────────────────────────────────────────────────── */
+.fui-hologram-hub {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fui-globe-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(6, 182, 212, 0.4);
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+}
+.fui-globe-ring-1 {
+    width: 180px;
+    height: 180px;
+    border: 2px dashed #00f2fe;
+    animation: fuiSpinClockwise 20s linear infinite;
+}
+.fui-globe-ring-2 {
+    width: 210px;
+    height: 210px;
+    border: 1px dotted #facc15;
+    animation: fuiSpinCounter 28s linear infinite;
+}
+.fui-globe-ring-3 {
+    width: 150px;
+    height: 150px;
+    border: 1.5px solid #06b6d4;
+    border-left-color: transparent;
+    border-right-color: transparent;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   6. STYLE 5: AI NEURAL CORE & DEEP LEARNING MONITOR
+   ───────────────────────────────────────────────────────────────────────────── */
+.fui-ai-core {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fui-ai-core .iris-outer {
+    position: absolute;
+    inset: 0;
+    border: 2px solid #00f2fe;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    animation: fuiSpinClockwise 6s linear infinite;
+}
+.fui-ai-core .iris-middle {
+    position: absolute;
+    inset: 12px;
+    border: 2px dashed #f59e0b;
+    border-radius: 50%;
+    animation: fuiSpinCounter 10s linear infinite;
+}
+.fui-ai-core .iris-nucleus {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    background: radial-gradient(circle, #facc15 0%, #ea580c 70%, #7c2d12 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.9), 0 0 50px rgba(245, 158, 11, 0.5);
+    animation: fuiPulseGlow 2.5s infinite ease-in-out;
+}
+
+/* Code Stream Terminal */
+.fui-terminal-box {
+    background: rgba(2, 6, 23, 0.92);
+    border: 1px solid #1e293b;
+    border-left: 3px solid #06b6d4;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #94a3b8;
+    line-height: 1.6;
+    padding: 12px;
+    border-radius: 8px;
+}

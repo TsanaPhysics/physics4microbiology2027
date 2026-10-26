@@ -246,6 +246,9 @@ $labs = [
                 <a href="virtual_lab/index.html" class="text-slate-300 hover:text-cyan-400 transition flex items-center gap-1.5">
                     <i class="fa-solid fa-cubes text-cyan-400"></i> Virtual Lab Hub
                 </a>
+                <a href="fui_cyber_showcase.php" class="text-amber-300 hover:text-amber-200 transition flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30">
+                    <i class="fa-solid fa-microchip text-amber-400"></i> FUI Cyber Design
+                </a>
             </div>
 
             <!-- Action: Instructor Portal Link -->

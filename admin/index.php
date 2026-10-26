@@ -250,6 +250,11 @@ if ($isLoggedIn && $pdo) {
                     <span>หน้าหลักวิชา</span>
                 </a>
 
+                <a href="../fui_cyber_showcase.php" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-xs font-semibold text-amber-300 transition border border-amber-500/30">
+                    <i class="fa-solid fa-microchip text-amber-400"></i>
+                    <span>FUI Cyber Design</span>
+                </a>
+
                 <a href="../virtual_lab/api/api.php?action=export_csv" target="_blank"
                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 text-xs font-semibold transition">
                     <i class="fa-solid fa-file-csv"></i>
