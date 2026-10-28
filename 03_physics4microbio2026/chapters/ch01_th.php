@@ -153,7 +153,22 @@ include '../includes/header.php';
                         </a>
                         <a href="#sec-1.3" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
                             <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-[10px] group-hover:bg-amber-500 group-hover:text-slate-950 font-bold transition">1.3</span>
-                            <span class="truncate">ความเที่ยง แม่น & ไมโครปิเปต</span>
+                            <span class="truncate">เลขนัยสำคัญ & เครื่องมือวัด</span>
+                        </a>
+                        <a href="#sec-1.3-sigfig" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-amber-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                            <span>↳ 🔢 เลขนัยสำคัญ & กฎ 5 ข้อ</span>
+                        </a>
+                        <a href="#sec-1.3-rounding" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-amber-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                            <span>↳ ⚖️ การปัดเศษ (Banker's Rule)</span>
+                        </a>
+                        <a href="#sec-1.3-math" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-amber-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                            <span>↳ ➕➖✖️➗ การคำนวณทศนิยม</span>
+                        </a>
+                        <a href="#sec-1.3-errors" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-amber-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                            <span>↳ 🎯 ความคลาดเคลื่อน & ไมโครปิเปต</span>
+                        </a>
+                        <a href="#sec-1.3-instruments" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-amber-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                            <span>↳ 📏 ความละเอียด & ความไวเครื่องมือ</span>
                         </a>
                         <a href="#sec-1.4" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
                             <span class="w-6 h-6 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center text-[10px] group-hover:bg-teal-500 group-hover:text-slate-950 font-bold transition">1.4</span>
@@ -1962,73 +1977,463 @@ include '../includes/header.php';
                 <div class="flex items-center gap-3 mb-4">
                     <span class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 font-black font-mono flex items-center justify-center text-lg border border-amber-500/30">1.3</span>
                     <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-                        เลขนัยสำคัญ ความเที่ยง ความแม่น และความคลาดเคลื่อนของการวัดในห้องปฏิบัติการ
+                        เลขนัยสำคัญ การปัดเลข การคำนวณทศนิยม ความคลาดเคลื่อน และคุณลักษณะเครื่องมือวัด
                     </h2>
                 </div>
 
-                <div class="tex-article leading-relaxed space-y-6 text-slate-200">
-                    <!-- Figure 1.7: 3D Target: Accuracy vs Precision -->
-                    <figure class="tex-figure tex-figure-photo my-8" id="fig-accuracy-precision">
-                        <div class="rounded-2xl overflow-hidden border border-amber-500/30 shadow-2xl bg-slate-950 group">
-                            <img src="../images/sec_3d/ch01_accuracy_precision_3d.jpg" alt="เปรียบเทียบความแม่นยำและความเที่ยงตรง 3 มิติ (Accuracy vs Precision Targets)" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
+                <div class="tex-article leading-relaxed space-y-8 text-slate-200">
+                    
+                    <!-- 1.3.1 เลขนัยสำคัญ (Significant Figures) -->
+                    <div id="sec-1.3-sigfig" class="scroll-mt-32 space-y-4">
+                        <div class="flex items-center gap-2.5 pb-2 border-b border-slate-800">
+                            <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold flex items-center justify-center text-xs border border-amber-500/30">1</span>
+                            <h3 class="text-lg sm:text-xl font-bold text-white">เลขนัยสำคัญ (Significant Figures) ในงานวัดทางจุลชีววิทยา</h3>
                         </div>
-                        <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
-                            <strong class="text-amber-400">ภาพที่ 1.7</strong>&ensp;แบบจำลอง 3 มิติเปรียบเทียบความแตกต่างระหว่างความแม่น (Accuracy) และความเที่ยง (Precision) ผ่านเป้ายิง 4 รูปแบบ: (1) แม่นสูง-เที่ยงสูง เกาะกลุ่มตรงกลางเป้า (2) แม่นต่ำ-เที่ยงสูง เกาะกลุ่มแน่นแต่นอกเป้า (3) แม่นสูง-เที่ยงต่ำ กระจายรอบจุดกึ่งกลาง (4) แม่นต่ำ-เที่ยงต่ำ กระจายไร้ทิศทาง
-                        </figcaption>
-                    </figure>
-
-                    <!-- Figure 1.8: 3D Micropipette Mechanism Render -->
-                    <figure class="tex-figure tex-figure-photo my-8" id="fig-1.8-render">
-                        <div class="rounded-2xl overflow-hidden border border-amber-500/30 shadow-2xl bg-slate-950 group">
-                            <img src="../images/sec_3d/ch01_micropipette_3d.jpg" alt="ภาพตัดขวาง 3 มิติแสดงกลไกลูกสูบไมโครปิเปต 2 จังหวะ" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
-                        </div>
-                        <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
-                            <strong class="text-amber-400">ภาพที่ 1.8</strong>&ensp;แบบจำลอง 3 มิติเชิงเทคนิคแสดงภาพตัดขวางของไมโครปิเปต P1000: แสดงกลไกปุ่มกด 2 จังหวะ (First Stop สำหรับดูดสาร และ Second Stop สำหรับเป่าสารออกให้หมด), สปริงสอบเทียบ, แกนลูกสูบ, หน้าปัดดิจิทัล $1{,}000\text{ }\mu\text{L}$ และหยดของเหลวที่ปลายทิป
-                        </figcaption>
-                    </figure>
-
-                    <p class="text-[15px] sm:text-base leading-relaxed">
-                        หากเราต้องการตรวจสอบว่าไมโครปิเปตในห้องปฏิบัติการยังมีความแม่นยำหรือไม่ เราสามารถใช้วิธีชั่งมวลของน้ำกลั่นที่ดูดออกมา เนื่องจากน้ำบริสุทธิ์ที่อุณหภูมิห้องมีความหนาแน่นประมาณ $1\text{ g/mL}$ หรือกล่าวได้ว่า <strong>น้ำกลั่นปริมาตร $1{,}000\text{ }\mu\text{L}$ ($1\text{ mL}$) จะมีมวลเท่ากับ $1.0000\text{ g}$ และน้ำกลั่น $100\text{ }\mu\text{L}$ จะมีมวลเท่ากับ $0.1000\text{ g}$</strong> โดยคำนวณเปอร์เซ็นต์ความคลาดเคลื่อนสัมพัทธ์ได้ดังนี้
-                    </p>
-
-                    <!-- Formula Highlight Card: Responsive & Overflow-Safe -->
-                    <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border border-cyan-500/30 text-center shadow-xl space-y-3">
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-xs font-mono text-cyan-300 font-bold uppercase tracking-wider">
-                            <i class="fa-solid fa-square-root-variable text-cyan-400"></i> เปอร์เซ็นต์ความคลาดเคลื่อนสัมพัทธ์ (Relative Error)
-                        </div>
-                        
-                        <!-- Responsive Equation Box with overflow-x-auto -->
-                        <div class="overflow-x-auto py-3 px-2 scrollbar-thin text-base sm:text-lg md:text-xl text-amber-300 font-mono">
-                            $$\% \text{Relative Error} = \frac{\left| x_{\text{measured}} - x_{\text{true}} \right|}{x_{\text{true}}} \times 100\%$$
-                        </div>
-
-                        <!-- Thai Formula & Variable Definitions Sub-Card -->
-                        <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300 font-sans space-y-2 text-left">
-                            <div class="overflow-x-auto text-center py-1 font-mono text-slate-200">
-                                $$\% \text{ความคลาดเคลื่อน} = \frac{\left|\text{ค่าที่วัดได้จริง} - \text{ค่ามาตรฐาน}\right|}{\text{ค่ามาตรฐาน}} \times 100\%$$
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-800 text-[11px] font-mono text-slate-400">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-amber-400 font-bold">$x_{\text{measured}}$</span>
-                                    <span>= มวลหรือปริมาตรที่อ่านได้จากการทดลองจริง</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-emerald-400 font-bold">$x_{\text{true}}$</span>
-                                    <span>= ค่ามาตรฐานหรือค่าอ้างอิงที่ระบุ (เช่น $1.0000\text{ g}$)</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Warning Alert Card: First Stop vs Second Stop -->
-                    <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-rose-950/40 via-slate-900 to-slate-900 border border-rose-500/40 shadow-xl space-y-3">
-                        <div class="flex items-center gap-2.5 text-rose-300 font-bold text-base">
-                            <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg"></i> ข้อควรระวังสูงสุด: ห้ามกดปุ่มไมโครปิเปตเลยจังหวะแรกขณะดูดสารละลาย
-                        </div>
-                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                            ไมโครปิเปตมีปุ่มกด 2 จังหวะ (<strong>First Stop</strong> และ <strong>Second Stop</strong>) ขณะจุ่มปลายทิปเพื่อดูดสารละลายหรือเชื้อจุลินทรีย์ <strong>ต้องกดลงไปเพียงจังหวะแรกเท่านั้น</strong> แล้วค่อยๆ ผ่อนนิ้วขึ้น หากเผลอกดลงไปถึงจังหวะที่สองขณะดูดสาร จะทำให้ได้ปริมาตรเกินกว่าที่ตั้งไว้ถึง 10–15% ส่วนจังหวะที่สองมีไว้ใช้ตอนปล่อยสารออกจากปลายทิปให้หมดจดเท่านั้น
+                        <p class="text-[15px] sm:text-base leading-relaxed">
+                            ในการบันทึกผลการทดลองทางวิทยาศาสตร์ ตัวเลขที่ได้จากการวัดจริงจะไม่ใช่เพียงตัวเลขทางคณิตศาสตร์บริสุทธิ์ แต่ต้องสะท้อนถึง <strong>"ขีดจำกัดความละเอียดของเครื่องมือวัด (Instrument Resolution)"</strong> ที่ใช้งานจริงเสมอ ตัวเลขที่แสดงความเที่ยงตรงของการวัดนี้เรียกว่า <strong>เลขนัยสำคัญ (Significant Figures)</strong> ซึ่งประกอบด้วย:
                         </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-3 font-mono text-xs">
+                            <div class="p-4 rounded-xl bg-slate-900/90 border border-cyan-500/30 space-y-1.5">
+                                <span class="text-cyan-300 font-bold flex items-center gap-2 text-sm"><i class="fa-solid fa-check-double text-cyan-400"></i> ตัวเลขที่อ่านได้แน่นอน (Certain Digits)</span>
+                                <p class="text-slate-300 font-sans leading-relaxed">คือตัวเลขที่ตรงกับขีดสเกลจริงของเครื่องมือวัดโดยไม่ต้องคาดเดา เช่น ขีดมิลลิเมตรบนไม้บรรทัด หรือหน้าปัดดิจิทัลที่นิ่งสนิท</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-900/90 border border-amber-500/30 space-y-1.5">
+                                <span class="text-amber-300 font-bold flex items-center gap-2 text-sm"><i class="fa-solid fa-eye text-amber-400"></i> ตัวเลขประมาณค่าตัวสุดท้าย (Estimated Digit)</span>
+                                <p class="text-slate-300 font-sans leading-relaxed">คือตัวเลข 1 ตำแหน่งสุดท้ายที่ผู้วัดต้องประมาณสายตาระหว่างช่องขีดสเกลย่อย หรือตัวเลขหลักสุดท้ายของเซนเซอร์ดิจิทัลที่มีความไม่แน่นอนแฝงอยู่</p>
+                            </div>
+                        </div>
+
+                        <!-- ตารางกฎเกณฑ์ 5 ข้อการนับเลขนัยสำคัญ -->
+                        <div class="rounded-2xl overflow-hidden border border-slate-700/80 shadow-xl bg-slate-900/95 mt-4">
+                            <div class="p-3.5 bg-gradient-to-r from-amber-950/70 via-slate-900 to-slate-900 border-b border-slate-800 flex items-center justify-between flex-wrap gap-2">
+                                <span class="text-xs sm:text-sm font-bold text-amber-300 flex items-center gap-2">
+                                    <i class="fa-solid fa-list-check text-amber-400"></i> กฎเกณฑ์สากล 5 ข้อในการนับจำนวนเลขนัยสำคัญ (Rules for Significant Figures)
+                                </span>
+                                <span class="text-[10px] font-mono text-amber-300/80 bg-amber-950/80 border border-amber-500/30 px-2.5 py-0.5 rounded-full">IUPAC & ISO Standard</span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-xs text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-950/90 border-b border-slate-800 text-slate-300 font-mono">
+                                            <th class="p-3 w-12 text-center">ข้อ</th>
+                                            <th class="p-3">กฎเกณฑ์การพิจารณา</th>
+                                            <th class="p-3">ตัวอย่างข้อมูลจริงในแล็บ</th>
+                                            <th class="p-3 text-center">จำนวนเลขนัยสำคัญ</th>
+                                            <th class="p-3">เหตุผลทางมาตรวิทยา</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-800/80 text-slate-300">
+                                        <tr class="hover:bg-slate-800/40">
+                                            <td class="p-3 font-mono font-bold text-center text-amber-400">1</td>
+                                            <td class="p-3 font-semibold text-white">ตัวเลขที่ไม่ใช่ศูนย์ทุกตัว (Non-zero digits)</td>
+                                            <td class="p-3 font-mono text-cyan-300">$14.52\text{ g}$, $3.8\text{ mm}$</td>
+                                            <td class="p-3 font-mono font-bold text-center text-amber-400">4 ตัว, 2 ตัว</td>
+                                            <td class="p-3 text-[11px] text-slate-400">นับเป็นเลขนัยสำคัญเสมอทุกตำแหน่ง</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-800/40">
+                                            <td class="p-3 font-mono font-bold text-center text-amber-400">2</td>
+                                            <td class="p-3 font-semibold text-white">เลขศูนย์ระหว่างตัวเลขอื่น (Captive zeros)</td>
+                                            <td class="p-3 font-mono text-cyan-300">$1.004\text{ mL}$, $205\text{ }\mu\text{m}$</td>
+                                            <td class="p-3 font-mono font-bold text-center text-amber-400">4 ตัว, 3 ตัว</td>
+                                            <td class="p-3 text-[11px] text-slate-400">นับเป็นเลขนัยสำคัญ เพราะเป็นค่าจริงที่วัดได้ระหว่างสเกล</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-800/40">
+                                            <td class="p-3 font-mono font-bold text-center text-amber-400">3</td>
+                                            <td class="p-3 font-semibold text-white">เลขศูนย์นำหน้า (Leading zeros)</td>
+                                            <td class="p-3 font-mono text-cyan-300">$0.0025\text{ g}$, $0.0408\text{ mL}$</td>
+                                            <td class="p-3 font-mono font-bold text-center text-amber-400">2 ตัว, 3 ตัว</td>
+                                            <td class="p-3 text-[11px] text-rose-300/90 font-medium"><strong>ไม่นับ</strong> เพราะมีหน้าที่เพียงระบุตำแหน่งจุดทศนิยม</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-800/40">
+                                            <td class="p-3 font-mono font-bold text-center text-amber-400">4</td>
+                                            <td class="p-3 font-semibold text-white">เลขศูนย์ตามหลังและมีจุดทศนิยม (Trailing zeros with decimal)</td>
+                                            <td class="p-3 font-mono text-cyan-300">$1.5000\text{ g}$, $10.0\text{ mL}$</td>
+                                            <td class="p-3 font-mono font-bold text-center text-amber-400">5 ตัว, 3 ตัว</td>
+                                            <td class="p-3 text-[11px] text-slate-400"><strong>นับ</strong> เพราะสะท้อนถึงความละเอียดระดับสูงของเครื่องมือ (เช่น เครื่องชั่ง 4 ตำแหน่ง)</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-800/40">
+                                            <td class="p-3 font-mono font-bold text-center text-amber-400">5</td>
+                                            <td class="p-3 font-semibold text-white">เลขศูนย์ท้ายจำนวนเต็มที่ไม่มีจุดทศนิยม (Trailing zeros without decimal)</td>
+                                            <td class="p-3 font-mono text-cyan-300">$1{,}500\text{ CFU/mL}$</td>
+                                            <td class="p-3 font-mono font-bold text-center text-amber-400">กำกวม (2 หรือ 4)</td>
+                                            <td class="p-3 text-[11px] text-slate-400">ควรเขียนในรูป<strong>สัญกรณ์วิทยาศาสตร์</strong> เช่น $1.5\times 10^3$ (2 ตัว) หรือ $1.500\times 10^3$ (4 ตัว)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="p-3 bg-slate-950/90 border-t border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
+                                <i class="fa-solid fa-circle-info text-cyan-400 mt-0.5"></i>
+                                <span><strong>ตัวเลขแม่นตรง (Exact Numbers):</strong> เช่น จำนวนจานเพาะเชื้อ 6 จาน, การคูณด้วย $100\%$ ในสูตรคำนวณ, หรือคำจำกัดความ $1\text{ mL} = 1{,}000\text{ }\mu\text{L}$ ถือว่ามีเลขนัยสำคัญเป็น <em>อนันต์ ($\infty$)</em> จะไม่นำมาจำกัดเลขนัยสำคัญในการคำนวณผลลัพธ์</span>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- 1.3.2 กฎการปัดตัวเลข (Rounding Rules) -->
+                    <div id="sec-1.3-rounding" class="scroll-mt-32 space-y-4 pt-4 border-t border-slate-800/80">
+                        <div class="flex items-center gap-2.5 pb-2 border-b border-slate-800">
+                            <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold flex items-center justify-center text-xs border border-amber-500/30">2</span>
+                            <h3 class="text-lg sm:text-xl font-bold text-white">หลักการปัดตัวเลขทางวิทยาศาสตร์ (Scientific Rounding & Banker's Rounding)</h3>
+                        </div>
+                        <p class="text-[15px] sm:text-base leading-relaxed">
+                            เมื่อทำการคำนวณแล้วได้ตัวเลขยาวเกินกว่าเลขนัยสำคัญที่ควรมี ต้องทำการปัดเศษ (Rounding off) ตามหลักเกณฑ์สากลเพื่อป้องกันไม่ให้เกิดความคลาดเคลื่อนสะสม (Cumulative Round-off Bias) ดังนี้:
+                        </p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-2 text-xs">
+                            <!-- Rule 1: < 5 -->
+                            <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-bold text-slate-200 text-sm">กรณีตัวเลขถัดไป &lt; 5</span>
+                                    <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono text-[10px]">0, 1, 2, 3, 4</span>
+                                </div>
+                                <p class="text-slate-300">ให้ <strong>"ปัดทิ้ง (Round Down)"</strong> โดยคงตัวเลขตัวหน้าไว้เท่าเดิม</p>
+                                <div class="p-2 rounded bg-slate-950 font-mono text-cyan-300 border border-slate-800 text-[11px]">
+                                    $4.163\text{ g} \xrightarrow{\text{ปัดเหลือ 3 ตัว}} 4.16\text{ g}$
+                                </div>
+                            </div>
+
+                            <!-- Rule 2: > 5 -->
+                            <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-bold text-slate-200 text-sm">กรณีตัวเลขถัดไป &gt; 5</span>
+                                    <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono text-[10px]">6, 7, 8, 9</span>
+                                </div>
+                                <p class="text-slate-300">ให้ <strong>"ปัดขึ้น (Round Up)"</strong> โดยเพิ่มค่าตัวเลขตัวหน้าขึ้น 1</p>
+                                <div class="p-2 rounded bg-slate-950 font-mono text-cyan-300 border border-slate-800 text-[11px]">
+                                    $4.167\text{ g} \xrightarrow{\text{ปัดเหลือ 3 ตัว}} 4.17\text{ g}$
+                                </div>
+                            </div>
+
+                            <!-- Rule 3: = 5 (Banker's Rule) -->
+                            <div class="p-4 rounded-xl bg-gradient-to-br from-amber-950/40 via-slate-900 to-slate-900 border border-amber-500/40 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-bold text-amber-300 text-sm">กรณีตัวเลขถัดไป = 5 พอดี</span>
+                                    <span class="px-2 py-0.5 rounded bg-amber-950 text-amber-400 font-mono text-[10px]">Banker's Rounding</span>
+                                </div>
+                                <p class="text-slate-300 text-[11px]">
+                                    ให้พิจารณาตัวเลขข้างหน้า 5: ถ้าเป็น <strong>เลขคู่ให้ปัดทิ้ง</strong> ถ้าเป็น <strong>เลขคี่ให้ปัดขึ้นเป็นเลขคู่</strong> (Round-to-Even)
+                                </p>
+                                <div class="p-2 rounded bg-slate-950 font-mono text-amber-300 border border-slate-800 text-[11px] space-y-1">
+                                    <div>$2.450 \rightarrow 2.4$ (เลข 4 เป็นเลขคู่ ปัดทิ้ง)</div>
+                                    <div>$2.350 \rightarrow 2.4$ (เลข 3 เป็นเลขคี่ ปัดขึ้น)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 1.3.3 การคำนวณทางคณิตศาสตร์ด้วยเลขนัยสำคัญและทศนิยม (Math Operations) -->
+                    <div id="sec-1.3-math" class="scroll-mt-32 space-y-4 pt-4 border-t border-slate-800/80">
+                        <div class="flex items-center gap-2.5 pb-2 border-b border-slate-800">
+                            <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold flex items-center justify-center text-xs border border-amber-500/30">3</span>
+                            <h3 class="text-lg sm:text-xl font-bold text-white">การคำนวณทางคณิตศาสตร์ด้วยเลขนัยสำคัญและทศนิยม</h3>
+                        </div>
+                        <p class="text-[15px] sm:text-base leading-relaxed">
+                            ในการวิเคราะห์ข้อมูลแล็บ เช่น การคำนวณมวลรวมของสารผสม หรือการคำนวณความเข้มข้นสารอาหาร จะต้องใช้กฎคณิตศาสตร์ 2 กฎที่แตกต่างกันอย่างสิ้นเชิง:
+                        </p>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 text-xs">
+                            <!-- Rule A: บวก และ ลบ -->
+                            <div class="p-5 rounded-2xl bg-slate-900/90 border border-cyan-500/30 space-y-3">
+                                <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+                                    <span class="font-bold text-cyan-300 text-sm flex items-center gap-2">
+                                        <i class="fa-solid fa-plus-minus text-cyan-400"></i> การบวกและการลบ (Addition & Subtraction)
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 font-mono text-[10px]">ยึดตำแหน่งทศนิยม</span>
+                                </div>
+                                <p class="text-slate-300 leading-relaxed text-[13px]">
+                                    ผลลัพธ์สุดท้ายต้องมี <strong>"จำนวนตำแหน่งทศนิยมเท่ากับตัวตั้งที่มีตำแหน่งทศนิยมน้อยที่สุด"</strong> (ไม่ขึ้นกับจำนวนเลขนัยสำคัญรวม)
+                                </p>
+                                <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80 font-mono space-y-1.5 text-slate-200">
+                                    <div class="text-slate-400 text-[11px] mb-1 font-sans">ตัวอย่าง: ชั่งสารเคมี 3 ชนิดลงในบีกเกอร์เดียวกัน:</div>
+                                    <div class="flex justify-between"><span>ผงวุ้น Agar:</span> <span class="text-white">$15.2\text{ g}$ <em class="text-slate-500">(ทศนิยม 1 ตำแหน่ง)</em></span></div>
+                                    <div class="flex justify-between"><span>น้ำตาล Peptone:</span> <span class="text-white">$1.245\text{ g}$ <em class="text-slate-500">(ทศนิยม 3 ตำแหน่ง)</em></span></div>
+                                    <div class="flex justify-between"><span>เกลือ NaCl:</span> <span class="text-white">$0.35\text{ g}$ <em class="text-slate-500">(ทศนิยม 2 ตำแหน่ง)</em></span></div>
+                                    <div class="pt-2 border-t border-slate-800 flex justify-between font-bold text-cyan-300">
+                                        <span>ผลบวกตามคณิตศาสตร์:</span> <span>$16.795\text{ g}$</span>
+                                    </div>
+                                    <div class="p-2 rounded bg-cyan-950/50 border border-cyan-800/50 text-cyan-200 text-xs">
+                                        <strong>ผลลัพธ์ที่ถูกต้องตามเลขนัยสำคัญ:</strong> $16.8\text{ g}$ (ปัดเหลือทศนิยม 1 ตำแหน่ง ตาม $15.2\text{ g}$)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Rule B: คูณ และ หาร -->
+                            <div class="p-5 rounded-2xl bg-slate-900/90 border border-emerald-500/30 space-y-3">
+                                <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+                                    <span class="font-bold text-emerald-300 text-sm flex items-center gap-2">
+                                        <i class="fa-solid fa-xmark text-emerald-400"></i> การคูณและการหาร (Multiplication & Division)
+                                    </span>
+                                    <span class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 font-mono text-[10px]">ยึดจำนวนเลขนัยสำคัญ</span>
+                                </div>
+                                <p class="text-slate-300 leading-relaxed text-[13px]">
+                                    ผลลัพธ์สุดท้ายต้องมี <strong>"จำนวนเลขนัยสำคัญเท่ากับตัวตั้งที่มีเลขนัยสำคัญน้อยที่สุด"</strong>
+                                </p>
+                                <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80 font-mono space-y-1.5 text-slate-200">
+                                    <div class="text-slate-400 text-[11px] mb-1 font-sans">ตัวอย่าง: คำนวณความเข้มข้นสารละลายกลูโคส:</div>
+                                    <div class="flex justify-between"><span>มวลกลูโคส $m$:</span> <span class="text-white">$1.25\text{ g}$ <em class="text-slate-500">(เลขนัยสำคัญ 3 ตัว)</em></span></div>
+                                    <div class="flex justify-between"><span>ปริมาตรน้ำ $V$:</span> <span class="text-white">$0.050\text{ L}$ <em class="text-slate-500">(เลขนัยสำคัญ 2 ตัว)</em></span></div>
+                                    <div class="pt-2 border-t border-slate-800 flex justify-between font-bold text-emerald-300">
+                                        <span>สูตรความเข้มข้น $C = \frac{m}{V}$:</span> <span>$\frac{1.25}{0.050} = 25\text{ g/L}$</span>
+                                    </div>
+                                    <div class="p-2 rounded bg-emerald-950/50 border border-emerald-800/50 text-emerald-200 text-xs">
+                                        <strong>ผลลัพธ์ที่ถูกต้องตามเลขนัยสำคัญ:</strong> $25\text{ g/L}$ (มีเลขนัยสำคัญ 2 ตัว ตาม $0.050\text{ L}$)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Guard Digits Alert Card -->
+                        <div class="p-4 rounded-xl bg-slate-950 border border-indigo-500/30 text-xs text-slate-300 flex items-start gap-3">
+                            <i class="fa-solid fa-shield-halved text-indigo-400 text-base mt-0.5 shrink-0"></i>
+                            <div>
+                                <strong class="text-indigo-300 block mb-0.5">เทคนิค Guard Digits ในการคำนวณหลายขั้นตอน:</strong>
+                                <span>หากการทดลองต้องคำนวณหลายขั้นตอนต่อเนื่องกัน <em>ห้ามปัดเศษตัวเลขในขั้นตอนกลาง</em> ให้เก็บตำแหน่งทศนิยมเกินไว้อย่างน้อย 1–2 ตำแหน่ง (Guard digits) และทำการปัดเศษตามกฎเลขนัยสำคัญใน <strong>ขั้นตอนสุดท้ายเพียงครั้งเดียว</strong> เพื่อป้องกันความคลาดเคลื่อนสะสมที่เกิดจากการปัดเศษซ้ำซ้อน (Accumulated Round-off Error)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 1.3.4 ความคลาดเคลื่อนของการวัด (Types of Measurement Errors) -->
+                    <div id="sec-1.3-errors" class="scroll-mt-32 space-y-4 pt-4 border-t border-slate-800/80">
+                        <div class="flex items-center gap-2.5 pb-2 border-b border-slate-800">
+                            <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold flex items-center justify-center text-xs border border-amber-500/30">4</span>
+                            <h3 class="text-lg sm:text-xl font-bold text-white">ความคลาดเคลื่อนในการวัด (Experimental Errors & Uncertainty)</h3>
+                        </div>
+                        <p class="text-[15px] sm:text-base leading-relaxed">
+                            ในการทดลองทางฟิสิกส์และจุลชีววิทยา <strong>ไม่มีการวัดใดที่ได้ค่าจริงแท้แน่นอน $100\%$</strong> ทุกผลการวัดย่อมมีความคลาดเคลื่อน (Experimental Error) แฝงอยู่เสมอ ซึ่งจำแนกออกได้เป็น 3 ประเภทหลัก:
+                        </p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                            <!-- Systematic Error -->
+                            <div class="p-4 rounded-xl bg-slate-900/90 border border-rose-500/30 space-y-2">
+                                <div class="flex items-center gap-2 text-rose-300 font-bold text-sm">
+                                    <i class="fa-solid fa-arrows-to-dot"></i> ความคลาดเคลื่อนเชิงระบบ (Systematic Error)
+                                </div>
+                                <p class="text-slate-300 leading-relaxed">
+                                    มีความเบี่ยงเบนไปในทิศทางเดียวกันเสมอ (ค่าสูงกว่าจริงตลอดหรือต่ำกว่าจริงตลอด)
+                                </p>
+                                <ul class="text-[11px] text-slate-400 space-y-1 list-disc list-inside">
+                                    <li><strong>สาเหตุ:</strong> เครื่องมือเสื่อมสภาพ, สเกลคดงอ, มี Zero Error บนเครื่องชั่ง</li>
+                                    <li><strong>วิธีแก้ไข:</strong> สอบเทียบเครื่องมือ (Calibration), ปรับตั้งศูนย์ (Tare)</li>
+                                </ul>
+                            </div>
+
+                            <!-- Random Error -->
+                            <div class="p-4 rounded-xl bg-slate-900/90 border border-amber-500/30 space-y-2">
+                                <div class="flex items-center gap-2 text-amber-300 font-bold text-sm">
+                                    <i class="fa-solid fa-shuffle"></i> ความคลาดเคลื่อนแบบสุ่ม (Random Error)
+                                </div>
+                                <p class="text-slate-300 leading-relaxed">
+                                    มีความผันแปรขึ้นลงไร้ทิศทางแน่นอนรอบค่าเฉลี่ยจริง
+                                </p>
+                                <ul class="text-[11px] text-slate-400 space-y-1 list-disc list-inside">
+                                    <li><strong>สาเหตุ:</strong> ลมพัด, อุณหภูมิห้องแกว่ง, มุมสายตา (Parallax error)</li>
+                                    <li><strong>วิธีแก้ไข:</strong> ทำซ้ำหลายครั้ง ($n \ge 3$) แล้วหาค่าเฉลี่ย ($\bar{x}$) และ SD</li>
+                                </ul>
+                            </div>
+
+                            <!-- Gross / Human Error -->
+                            <div class="p-4 rounded-xl bg-slate-900/90 border border-purple-500/30 space-y-2">
+                                <div class="flex items-center gap-2 text-purple-300 font-bold text-sm">
+                                    <i class="fa-solid fa-user-xmark"></i> ความคลาดเคลื่อนจากมนุษย์ (Gross / Human Error)
+                                </div>
+                                <p class="text-slate-300 leading-relaxed">
+                                    เกิดจากความประมาทหรือความเข้าใจผิดของผู้ทดลองเอง
+                                </p>
+                                <ul class="text-[11px] text-slate-400 space-y-1 list-disc list-inside">
+                                    <li><strong>สาเหตุ:</strong> ดูดสารเลยจังหวะ 2, อ่านสเกลผิดขีด, จดตัวเลขสลับหลัก</li>
+                                    <li><strong>วิธีแก้ไข:</strong> ต้องตัดข้อมูลชุดนั้นทิ้ง และฝึกทักษะทำซ้ำใหม่</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Figure 1.7: 3D Target: Accuracy vs Precision -->
+                        <figure class="tex-figure tex-figure-photo my-8" id="fig-accuracy-precision">
+                            <div class="rounded-2xl overflow-hidden border border-amber-500/30 shadow-2xl bg-slate-950 group">
+                                <img src="../images/sec_3d/ch01_accuracy_precision_3d.jpg" alt="เปรียบเทียบความแม่นยำและความเที่ยงตรง 3 มิติ (Accuracy vs Precision Targets)" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
+                            </div>
+                            <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+                                <strong class="text-amber-400">ภาพที่ 1.7</strong>&ensp;แบบจำลอง 3 มิติเปรียบเทียบความแตกต่างระหว่างความแม่น (Accuracy) และความเที่ยง (Precision) ผ่านเป้ายิง 4 รูปแบบ: (1) แม่นสูง-เที่ยงสูง เกาะกลุ่มตรงกลางเป้า (2) แม่นต่ำ-เที่ยงสูง เกาะกลุ่มแน่นแต่นอกเป้า (3) แม่นสูง-เที่ยงต่ำ กระจายรอบจุดกึ่งกลาง (4) แม่นต่ำ-เที่ยงต่ำ กระจายไร้ทิศทาง
+                            </figcaption>
+                        </figure>
+
+                        <!-- Figure 1.8: 3D Micropipette Mechanism Render -->
+                        <figure class="tex-figure tex-figure-photo my-8" id="fig-1.8-render">
+                            <div class="rounded-2xl overflow-hidden border border-amber-500/30 shadow-2xl bg-slate-950 group">
+                                <img src="../images/sec_3d/ch01_micropipette_3d.jpg" alt="ภาพตัดขวาง 3 มิติแสดงกลไกลูกสูบไมโครปิเปต 2 จังหวะ" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
+                            </div>
+                            <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+                                <strong class="text-amber-400">ภาพที่ 1.8</strong>&ensp;แบบจำลอง 3 มิติเชิงเทคนิคแสดงภาพตัดขวางของไมโครปิเปต P1000: แสดงกลไกปุ่มกด 2 จังหวะ (First Stop สำหรับดูดสาร และ Second Stop สำหรับเป่าสารออกให้หมด), สปริงสอบเทียบ, แกนลูกสูบ, หน้าปัดดิจิทัล $1{,}000\text{ }\mu\text{L}$ และหยดของเหลวที่ปลายทิป
+                            </figcaption>
+                        </figure>
+
+                        <p class="text-[15px] sm:text-base leading-relaxed">
+                            หากเราต้องการตรวจสอบว่าไมโครปิเปตในห้องปฏิบัติการยังมีความแม่นยำหรือไม่ เราสามารถใช้วิธีชั่งมวลของน้ำกลั่นที่ดูดออกมา เนื่องจากน้ำบริสุทธิ์ที่อุณหภูมิห้องมีความหนาแน่นประมาณ $1\text{ g/mL}$ หรือกล่าวได้ว่า <strong>น้ำกลั่นปริมาตร $1{,}000\text{ }\mu\text{L}$ ($1\text{ mL}$) จะมีมวลเท่ากับ $1.0000\text{ g}$ และน้ำกลั่น $100\text{ }\mu\text{L}$ จะมีมวลเท่ากับ $0.1000\text{ g}$</strong> โดยคำนวณเปอร์เซ็นต์ความคลาดเคลื่อนสัมพัทธ์ได้ดังนี้
+                        </p>
+
+                        <!-- Formula Highlight Card: Responsive & Overflow-Safe -->
+                        <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border border-cyan-500/30 text-center shadow-xl space-y-3">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-xs font-mono text-cyan-300 font-bold uppercase tracking-wider">
+                                <i class="fa-solid fa-square-root-variable text-cyan-400"></i> เปอร์เซ็นต์ความคลาดเคลื่อนสัมพัทธ์ (Relative Error)
+                            </div>
+                            
+                            <!-- Responsive Equation Box with overflow-x-auto -->
+                            <div class="overflow-x-auto py-3 px-2 scrollbar-thin text-base sm:text-lg md:text-xl text-amber-300 font-mono">
+                                $$\% \text{Relative Error} = \frac{\left| x_{\text{measured}} - x_{\text{true}} \right|}{x_{\text{true}}} \times 100\%$$
+                            </div>
+
+                            <!-- Thai Formula & Variable Definitions Sub-Card -->
+                            <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300 font-sans space-y-2 text-left">
+                                <div class="overflow-x-auto text-center py-1 font-mono text-slate-200">
+                                    $$\% \text{ความคลาดเคลื่อน} = \frac{\left|\text{ค่าที่วัดได้จริง} - \text{ค่ามาตรฐาน}\right|}{\text{ค่ามาตรฐาน}} \times 100\%$$
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-800 text-[11px] font-mono text-slate-400">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-amber-400 font-bold">$x_{\text{measured}}$</span>
+                                        <span>= มวลหรือปริมาตรที่อ่านได้จากการทดลองจริง</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-emerald-400 font-bold">$x_{\text{true}}$</span>
+                                        <span>= ค่ามาตรฐานหรือค่าอ้างอิงที่ระบุ (เช่น $1.0000\text{ g}$)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Warning Alert Card: First Stop vs Second Stop -->
+                        <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-rose-950/40 via-slate-900 to-slate-900 border border-rose-500/40 shadow-xl space-y-3">
+                            <div class="flex items-center gap-2.5 text-rose-300 font-bold text-base">
+                                <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg"></i> ข้อควรระวังสูงสุด: ห้ามกดปุ่มไมโครปิเปตเลยจังหวะแรกขณะดูดสารละลาย
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                                ไมโครปิเปตมีปุ่มกด 2 จังหวะ (<strong>First Stop</strong> และ <strong>Second Stop</strong>) ขณะจุ่มปลายทิปเพื่อดูดสารละลายหรือเชื้อจุลินทรีย์ <strong>ต้องกดลงไปเพียงจังหวะแรกเท่านั้น</strong> แล้วค่อยๆ ผ่อนนิ้วขึ้น หากเผลอกดลงไปถึงจังหวะที่สองขณะดูดสาร จะทำให้ได้ปริมาตรเกินกว่าที่ตั้งไว้ถึง 10–15% ส่วนจังหวะที่สองมีไว้ใช้ตอนปล่อยสารออกจากปลายทิปให้หมดจดเท่านั้น
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 1.3.5 คุณลักษณะของเครื่องมือวัด: ความแม่น ความเที่ยง ความละเอียด และความไว -->
+                    <div id="sec-1.3-instruments" class="scroll-mt-32 space-y-4 pt-4 border-t border-slate-800/80">
+                        <div class="flex items-center gap-2.5 pb-2 border-b border-slate-800">
+                            <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold flex items-center justify-center text-xs border border-amber-500/30">5</span>
+                            <h3 class="text-lg sm:text-xl font-bold text-white">คุณลักษณะสำคัญของเครื่องมือวัด: ความแม่น ความเที่ยง ความละเอียด และความไว</h3>
+                        </div>
+                        <p class="text-[15px] sm:text-base leading-relaxed">
+                            ในการเลือกใช้เครื่องมือวัดสำหรับงานวิจัยจุลชีววิทยา นักวิทยาศาสตร์ต้องเข้าใจความแตกต่างเชิงลึกระหว่าง 4 มิติทางมาตรวิทยา (Metrological Dimensions) เพื่อประเมินขีดจำกัดของการทดลองได้อย่างถูกต้อง:
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+                            <!-- 1. Accuracy -->
+                            <div class="p-4 rounded-xl bg-slate-900/90 border border-emerald-500/30 space-y-2">
+                                <div class="text-emerald-300 font-bold text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-bullseye text-emerald-400"></i> ความแม่น (Accuracy)
+                                </div>
+                                <p class="text-slate-300 leading-relaxed">
+                                    ความใกล้เคียงระหว่าง <strong>"ค่าเฉลี่ยที่วัดได้จริง"</strong> กับ <strong>"ค่าจริงมาตรฐาน (True Value)"</strong>
+                                </p>
+                                <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400">
+                                    ประเมินด้วย <em>$\% \text{Relative Error}$</em> ยิ่งน้อยแปลว่ายิ่งแม่นสูง
+                                </div>
+                            </div>
+
+                            <!-- 2. Precision -->
+                            <div class="p-4 rounded-xl bg-slate-900/90 border border-cyan-500/30 space-y-2">
+                                <div class="text-cyan-300 font-bold text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-crosshairs text-cyan-400"></i> ความเที่ยง (Precision)
+                                </div>
+                                <p class="text-slate-300 leading-relaxed">
+                                    ความสอดคล้องหรือความสามารถในการ <strong>"ซ้ำรอยเดิม"</strong> เมื่อทำการวัดซ้ำหลายครั้งภายใต้สภาวะเดียวกัน
+                                </p>
+                                <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400">
+                                    ประเมินด้วย <em>ส่วนเบี่ยงเบนมาตรฐาน (SD)</em> หรือ <em>$\% \text{CV}$</em>
+                                </div>
+                            </div>
+
+                            <!-- 3. Resolution -->
+                            <div class="p-4 rounded-xl bg-slate-900/90 border border-amber-500/30 space-y-2">
+                                <div class="text-amber-300 font-bold text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-ruler text-amber-400"></i> ความละเอียด (Resolution)
+                                </div>
+                                <p class="text-slate-300 leading-relaxed">
+                                    ขนาดของการเปลี่ยนแปลงที่ <strong>"เล็กที่สุด (Least Count)"</strong> ของปริมาณที่วัด ซึ่งเครื่องมือสามารถตรวจจับและแสดงผลได้
+                                </p>
+                                <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400">
+                                    เช่น ไมโครมิเตอร์วัดได้ละเอียด $0.01\text{ mm}$, เครื่องชั่ง 4 ตำแหน่งได้ $0.0001\text{ g}$
+                                </div>
+                            </div>
+
+                            <!-- 4. Sensitivity -->
+                            <div class="p-4 rounded-xl bg-slate-900/90 border border-purple-500/30 space-y-2">
+                                <div class="text-purple-300 font-bold text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-bolt-lightning text-purple-400"></i> ความไว (Sensitivity)
+                                </div>
+                                <p class="text-slate-300 leading-relaxed">
+                                    อัตราส่วนการเปลี่ยนแปลงสัญญาณตอบสนอง (Output) ต่อการเปลี่ยนแปลงปริมาณสาร (Input)
+                                </p>
+                                <div class="p-2 rounded bg-slate-950 font-mono text-purple-300 border border-slate-800 text-[11px]">
+                                    $$S = \frac{\Delta \text{Output}}{\Delta \text{Input}} = \frac{\Delta y}{\Delta x}$$
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ตารางเปรียบเทียบเครื่องมือวัดในห้องปฏิบัติการจุลชีววิทยา -->
+                        <div class="rounded-2xl overflow-hidden border border-slate-700/80 shadow-xl bg-slate-900/95 mt-5">
+                            <div class="p-3.5 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-900 border-b border-slate-800 flex items-center justify-between flex-wrap gap-2">
+                                <span class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-scale-balanced text-cyan-400"></i> ตารางเปรียบเทียบคุณลักษณะเครื่องมือวัดสำคัญในห้องปฏิบัติการจุลชีววิทยา
+                                </span>
+                                <span class="text-[10px] font-mono text-cyan-300 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-500/40">Lab Metrology Matrix</span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-xs text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-slate-950/90 border-b border-slate-800 text-slate-300 font-mono">
+                                            <th class="p-3">เครื่องมือวัด</th>
+                                            <th class="p-3">ปริมาณที่วัด</th>
+                                            <th class="p-3 text-center">ความละเอียด (Resolution)</th>
+                                            <th class="p-3">ความไวและพฤติกรรม (Sensitivity / Feature)</th>
+                                            <th class="p-3">ตัวอย่างงานในห้องปฏิบัติการจุลชีววิทยา</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-800/80 text-slate-300">
+                                        <tr class="hover:bg-slate-800/40">
+                                            <td class="p-3 font-semibold text-white flex items-center gap-2"><i class="fa-solid fa-ruler-combined text-teal-400"></i> เวอร์เนียร์คาลิปเปอร์</td>
+                                            <td class="p-3">ความยาว มิติภายนอก/ใน</td>
+                                            <td class="p-3 font-mono text-cyan-300 text-center font-bold">$0.05\text{ mm}$ หรือ $0.02\text{ mm}$</td>
+                                            <td class="p-3 text-[11px] text-slate-400">ขีดเวอร์เนียร์สเกลขยายความละเอียดสายตา 20-50 เท่า</td>
+                                            <td class="p-3 text-slate-300">วัดเส้นผ่านศูนย์กลางวงยับยั้งเชื้อ (Inhibition Zone) ในจานเพาะเชื้อ</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-800/40">
+                                            <td class="p-3 font-semibold text-white flex items-center gap-2"><i class="fa-solid fa-compass-drafting text-teal-400"></i> ไมโครมิเตอร์</td>
+                                            <td class="p-3">ความหนา เส้นผ่านศูนย์กลางจิ๋ว</td>
+                                            <td class="p-3 font-mono text-cyan-300 text-center font-bold">$0.01\text{ mm}$ ($10\text{ }\mu\text{m}$)</td>
+                                            <td class="p-3 text-[11px] text-slate-400">ใช้หลักเกลียวละเอียด มี Ratchet Stop คุมแรงกดคงที่</td>
+                                            <td class="p-3 text-slate-300">วัดความหนาแผ่นสไลด์แก้วและ Coverslip ในงานกล้องจุลทรรศน์</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-800/40">
+                                            <td class="p-3 font-semibold text-white flex items-center gap-2"><i class="fa-solid fa-scale-unbalanced text-amber-400"></i> เครื่องชั่งวิเคราะห์ 4 ตำแหน่ง</td>
+                                            <td class="p-3">มวลสารเคมี ($m$)</td>
+                                            <td class="p-3 font-mono text-cyan-300 text-center font-bold">$0.0001\text{ g}$ ($0.1\text{ mg}$)</td>
+                                            <td class="p-3 text-[11px] text-slate-400">เซนเซอร์แม่เหล็กไฟฟ้า (EMFC) ไวต่อลมและอุณหภูมิสูงมาก</td>
+                                            <td class="p-3 text-slate-300">ชั่งยาปฏิชีวนะ สารปฏิชีวนะมาตรฐาน และทดสอบสอบเทียบไมโครปิเปต</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-800/40">
+                                            <td class="p-3 font-semibold text-white flex items-center gap-2"><i class="fa-solid fa-eye-dropper text-cyan-400"></i> ไมโครปิเปต P1000</td>
+                                            <td class="p-3">ปริมาตรของเหลว ($V$)</td>
+                                            <td class="p-3 font-mono text-cyan-300 text-center font-bold">$1\text{ }\mu\text{L}$ (ช่วง $100\text{--}1{,}000\text{ }\mu\text{L}$)</td>
+                                            <td class="p-3 text-[11px] text-slate-400">Air Displacement ลูกสูบกลไกเที่ยงตรงสูง ISO 8655</td>
+                                            <td class="p-3 text-slate-300">ดูดจ่ายอาหารเหลว บัฟเฟอร์ และสารแขวนลอยเซลล์แบคทีเรีย</td>
+                                        </tr>
+                                        <tr class="hover:bg-slate-800/40">
+                                            <td class="p-3 font-semibold text-white flex items-center gap-2"><i class="fa-solid fa-chart-line text-purple-400"></i> สเปกโทรโฟโตมิเตอร์ UV-Vis</td>
+                                            <td class="p-3">การดูดกลืนแสง ($\text{OD}_{600}$)</td>
+                                            <td class="p-3 font-mono text-cyan-300 text-center font-bold">$0.001\text{ AU}$</td>
+                                            <td class="p-3 text-[11px] text-slate-400">ความไว $S = \varepsilon b$ วัดความชันตามกฎ Beer-Lambert</td>
+                                            <td class="p-3 text-slate-300">ตรวจติดตามการเติบโตของประชากรแบคทีเรีย (Growth Curve)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
@@ -2549,9 +2954,11 @@ function retypesetMathJax(container) {
     if (!container) return;
     if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
         mathJaxQueue = mathJaxQueue.then(() => {
-            if (typeof MathJax.typesetClear === 'function') {
-                MathJax.typesetClear([container]);
-            }
+            try {
+                if (typeof MathJax.typesetClear === 'function') {
+                    MathJax.typesetClear([container]);
+                }
+            } catch (e) {}
             return MathJax.typesetPromise([container]);
         }).catch(err => {
             console.warn('MathJax typesetting queue caught:', err);
@@ -2707,7 +3114,7 @@ function renderInspectorCard(u) {
                         <h4 class="text-xl sm:text-2xl font-black text-white tracking-tight">${u.name_th} (${u.name_en})</h4>
                         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-500/40 shadow-inner">
                             <i class="fa-solid fa-atom text-[10px] text-cyan-400"></i>
-                            <span>$\\mathrm{${u.sym}} = ${u.formula_si}$</span>
+                            <span>$\\\\mathrm{${u.sym}} = ${u.formula_si}$</span>
                         </div>
                     </div>
                     <div class="text-xs font-bold text-slate-300 mt-1.5 flex items-center gap-2.5 flex-wrap">
@@ -2726,7 +3133,7 @@ function renderInspectorCard(u) {
                     <i class="fa-solid fa-link text-indigo-400 mr-1"></i> นิยามอนุพัทธ์สากล (Coherent)
                 </span>
                 <div class="text-sm sm:text-base font-black font-mono text-emerald-300 overflow-x-auto">
-                    $1\\text{ ${u.sym}} = ${u.formula_coherent}$
+                    $1\\\\text{ ${u.sym}} = ${u.formula_coherent}$
                 </div>
             </div>
         </div>
@@ -2894,6 +3301,11 @@ function initTocScrollSpy() {
         'sec-1.2',
         'sec-aruco',
         'sec-1.3',
+        'sec-1.3-sigfig',
+        'sec-1.3-rounding',
+        'sec-1.3-math',
+        'sec-1.3-errors',
+        'sec-1.3-instruments',
         'sec-1.4',
         'review-questions'
     ];

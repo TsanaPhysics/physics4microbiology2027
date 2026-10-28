@@ -313,8 +313,116 @@
     linkcolor=physRoyalBlue,
     citecolor=bioEmerald,
     urlcolor=physCyan,
-    pdftitle={เอกสารคำสอน รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา (Physics for Microbiology)},
+    pdftitle={เอกสารคำสอน 3D WebAR + ArUco รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา (Physics for Microbiology)},
     pdfauthor={ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา},
-    pdfsubject={Physics for Microbiology 4011111 OBE Course Textbook and Lab Manual}
+    pdfsubject={Physics for Microbiology 4011111 3D WebAR ArUco Textbook}
+}
+
+% ====================================================================
+% 10. 3D WEBAR ARUCO MARKER VECTOR ENGINE (DICT_4X4_50 IDs 0-11)
+% ====================================================================
+\definecolor{arCyan}{HTML}{00B4D8}
+\definecolor{arDark}{HTML}{0F172A}
+
+\newcommand{\drawaruco}[2][2.4cm]{%
+  \begin{tikzpicture}[x=\dimexpr#1/6\relax, y=\dimexpr#1/6\relax]
+    % Quiet zone white border
+    \fill[white, draw=physRoyalBlue!60, line width=0.6pt] (-0.35,-0.35) rectangle (6.35,6.35);
+    % 6x6 Black base (includes 1-bit outer black border)
+    \fill[black] (0,0) rectangle (6,6);
+    % Top-left orientation corner triangle
+    \fill[bioEmerald] (-0.35,6.35) -- (0.45,6.35) -- (-0.35,5.55) -- cycle;
+    \ifnum#2=0\relax
+      \foreach \x/\y in {1/4, 3/4, 4/4, 2/3, 4/3, 3/2, 4/2, 3/1} { \fill[white] (\x,\y) rectangle ++(1,1); }
+    \fi
+    \ifnum#2=1\relax
+      \foreach \x/\y in {1/3, 2/3, 3/3, 4/3, 1/2, 4/2, 1/1, 3/1} { \fill[white] (\x,\y) rectangle ++(1,1); }
+    \fi
+    \ifnum#2=2\relax
+      \foreach \x/\y in {3/4, 4/4, 3/3, 4/3, 2/2, 1/1, 2/1, 4/1} { \fill[white] (\x,\y) rectangle ++(1,1); }
+    \fi
+    \ifnum#2=3\relax
+      \foreach \x/\y in {1/4, 4/4, 1/3, 4/3, 2/2, 2/1, 3/1} { \fill[white] (\x,\y) rectangle ++(1,1); }
+    \fi
+    \ifnum#2=4\relax
+      \foreach \x/\y in {2/4, 4/4, 2/3, 3/3, 1/2, 4/2, 1/1, 2/1} { \fill[white] (\x,\y) rectangle ++(1,1); }
+    \fi
+    \ifnum#2=5\relax
+      \foreach \x/\y in {1/4, 2/4, 4/4, 2/2, 3/2, 4/2, 2/1, 3/1} { \fill[white] (\x,\y) rectangle ++(1,1); }
+    \fi
+    \ifnum#2=6\relax
+      \foreach \x/\y in {2/4, 3/4, 4/4, 1/3, 3/3, 4/3, 3/1, 4/1} { \fill[white] (\x,\y) rectangle ++(1,1); }
+    \fi
+    \ifnum#2=7\relax
+      \foreach \x/\y in {3/4, 1/3, 1/2, 2/2, 3/2, 2/1, 4/1} { \fill[white] (\x,\y) rectangle ++(1,1); }
+    \fi
+    \ifnum#2=8\relax
+      \foreach \x/\y in {1/4, 2/4, 3/4, 1/3, 2/3, 3/2, 1/1, 4/1} { \fill[white] (\x,\y) rectangle ++(1,1); }
+    \fi
+    \ifnum#2=9\relax
+      \foreach \x/\y in {2/4, 1/3, 2/3, 3/3, 1/2, 3/2, 4/2, 3/1} { \fill[white] (\x,\y) rectangle ++(1,1); }
+    \fi
+    \ifnum#2=10\relax
+      \foreach \x/\y in {1/4, 3/4, 3/3, 1/2, 2/2, 4/2, 2/1, 3/1} { \fill[white] (\x,\y) rectangle ++(1,1); }
+    \fi
+    \ifnum#2=11\relax
+      \foreach \x/\y in {1/4, 2/4, 2/3, 4/3, 4/2, 1/1, 2/1, 3/1} { \fill[white] (\x,\y) rectangle ++(1,1); }
+    \fi
+  \end{tikzpicture}%
+}
+
+\newtcolorbox{arucobox}[1]{
+    enhanced,
+    breakable,
+    colback=boxBlueBg!60!white,
+    colframe=physRoyalBlue,
+    colbacktitle=arDark,
+    coltitle=white,
+    fonttitle=\bfseries,
+    title={{\color{physCyan}[3D WebAR + ArUco Marker]}\quad #1},
+    arc=2.5mm,
+    boxrule=1.1pt,
+    left=8pt, right=8pt, top=7pt, bottom=7pt
+}
+
+\newcommand{\arucomarkerbadge}[5]{%
+  \begin{arucobox}{มาร์กเกอร์ ArUco ID #1 สำหรับส่องดูโมเดล 3 มิติประจำบทที่ #2 — #3}
+    \noindent
+    \begin{minipage}[c]{0.23\linewidth}
+      \centering
+      \drawaruco[2.5cm]{#1}\\[3pt]
+      {\scriptsize\bfseries\color{arDark} ArUco ID #1 (4x4)}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[c]{0.74\linewidth}
+      \footnotesize
+      \textbf{\color{physRoyalBlue}แบบจำลอง 3 มิติที่ปรากฏบนหน้าจอมือถือ}\quad #4\\[3pt]
+      \textbf{\color{bioEmerald!85!black}ตัวแปรที่ปรับค่าโต้ตอบได้ (Interactive 3D Controls)}\quad #5\\[3pt]
+      \textbf{\color{crimsonAlert}วิธีใช้งาน}\quad เปิดเว็บแอป \href{webar_aruco/ar_aruco_textbook.html?id=#1}{\texttt{webar\_aruco/ar\_aruco\_textbook.html}} บนสมาร์ทโฟนหรือแท็บเล็ต กดปุ่มเปิดกล้อง AR แล้วส่องกรอบเล็งไปที่มาร์กเกอร์ \textbf{ArUco ID #1} ด้านซ้ายมือ เพื่อเรียกดูโมเดล 3 มิติลอยตัวบนหน้าหนังสือทันที
+    \end{minipage}
+  \end{arucobox}
+}
+
+% ====================================================================
+% 11. 3D SECTION FIGURE MACRO (SEQUENTIAL NUMBERING)
+% ====================================================================
+\newcommand{\deepskinfig}[2]{%
+  \begin{figure}[H]
+    \centering
+    \begin{tcolorbox}[
+      enhanced,
+      colback=softSmoke,
+      colframe=physRoyalBlue!85!physCyan,
+      boxrule=0.85pt,
+      arc=2.0mm,
+      left=3pt, right=3pt, top=3pt, bottom=3pt,
+      width=0.92\textwidth
+    ]
+      \centering
+      \includegraphics[width=0.96\linewidth, height=4.95cm, keepaspectratio]{#1}
+    \end{tcolorbox}
+    \vspace{-4pt}
+    \caption{#2}
+  \end{figure}
 }
 \endinput
