@@ -23,15 +23,23 @@ try {
     $dbError = $e->getMessage();
 }
 
-// Handle Logout
+// Handle Instructor Logout
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     unset($_SESSION['physics_admin_logged']);
     unset($_SESSION['physics_admin_user']);
-    header('Location: index.php');
+    header('Location: index.php?tab=instructor');
     exit;
 }
 
-// Handle Login POST
+// Handle Student Logout
+if (isset($_GET['action']) && $_GET['action'] === 'student_logout') {
+    unset($_SESSION['physics_student_logged']);
+    unset($_SESSION['physics_student']);
+    header('Location: index.php?tab=student');
+    exit;
+}
+
+// Handle Instructor Login POST
 $loginError = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login_submit'])) {
     $username = trim($_POST['username'] ?? '');
@@ -59,8 +67,153 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login_submit'])) {
     }
 }
 
+// Handle Student Login POST
+$studentLoginError = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['student_login_submit'])) {
+    $sid = trim($_POST['student_id'] ?? '');
+    if (!$sid) {
+        $studentLoginError = 'กรุณากรอกรหัสนักศึกษา';
+    } elseif ($pdo) {
+        $stmt = $pdo->prepare("SELECT * FROM students WHERE student_id = ?");
+        $stmt->execute([$sid]);
+        $st = $stmt->fetch();
+        if ($st) {
+            $uStmt = $pdo->prepare("UPDATE students SET last_active = CURRENT_TIMESTAMP WHERE student_id = ?");
+            $uStmt->execute([$sid]);
+            $_SESSION['physics_student_logged'] = true;
+            $_SESSION['physics_student'] = $st;
+            header('Location: index.php');
+            exit;
+        } else {
+            $studentLoginError = "ไม่พบรหัสนักศึกษา '{$sid}' ในระบบ — กรุณาคลิกแท็บ 'ลงทะเบียนใหม่' เพื่อสร้างประวัตินักศึกษา";
+        }
+    } else {
+        $studentLoginError = 'ฐานข้อมูลไม่พร้อมใช้งาน: ' . $dbError;
+    }
+}
+
+// Handle Student Registration POST
+$studentRegError = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['student_register_submit'])) {
+    $sid = trim($_POST['student_id'] ?? '');
+    $pfx = trim($_POST['prefix'] ?? 'นาย');
+    $fn = trim($_POST['fullname'] ?? '');
+    $prg = trim($_POST['program'] ?? 'จุลชีววิทยา');
+    $sec = trim($_POST['section'] ?? 'Sec 01');
+    $em = trim($_POST['email'] ?? '');
+    $ph = trim($_POST['phone'] ?? '');
+
+    if (!$sid || !$fn) {
+        $studentRegError = 'กรุณากรอกรหัสนักศึกษาและชื่อ-นามสกุลให้ครบถ้วน';
+    } elseif ($pdo) {
+        try {
+            $stmt = $pdo->prepare("
+                INSERT INTO students (student_id, prefix, fullname, program, section, email, phone, last_active)
+                VALUES (:sid, :pfx, :fn, :prg, :sec, :em, :ph, CURRENT_TIMESTAMP)
+                ON CONFLICT(student_id) DO UPDATE SET
+                    prefix = excluded.prefix,
+                    fullname = excluded.fullname,
+                    program = excluded.program,
+                    section = excluded.section,
+                    email = excluded.email,
+                    phone = excluded.phone,
+                    last_active = CURRENT_TIMESTAMP
+            ");
+            $stmt->execute([
+                ':sid' => $sid,
+                ':pfx' => $pfx,
+                ':fn' => $fn,
+                ':prg' => $prg,
+                ':sec' => $sec,
+                ':em' => $em,
+                ':ph' => $ph
+            ]);
+
+            $stmt = $pdo->prepare("SELECT * FROM students WHERE student_id = ?");
+            $stmt->execute([$sid]);
+            $st = $stmt->fetch();
+
+            $_SESSION['physics_student_logged'] = true;
+            $_SESSION['physics_student'] = $st;
+            header('Location: index.php?registered=1');
+            exit;
+        } catch (Exception $e) {
+            $studentRegError = 'บันทึกลงทะเบียนไม่สำเร็จ: ' . $e->getMessage();
+        }
+    } else {
+        $studentRegError = 'ฐานข้อมูลไม่พร้อมใช้งาน: ' . $dbError;
+    }
+}
+
 $isLoggedIn = !empty($_SESSION['physics_admin_logged']);
 $adminUser = $_SESSION['physics_admin_user'] ?? ['fullname' => 'ผศ.ดร.ชีวะ ทัศนา', 'username' => 'admin'];
+
+$isStudentLoggedIn = !empty($_SESSION['physics_student_logged']);
+$currentStudent = $_SESSION['physics_student'] ?? null;
+
+// Determine active login tab when not logged in
+$activeTab = $_GET['tab'] ?? 'student';
+if ($studentRegError || isset($_GET['register'])) {
+    $activeTab = 'register';
+} elseif ($loginError || isset($_GET['instructor'])) {
+    $activeTab = 'instructor';
+}
+
+// Student Dashboard Data
+$studentReports = [];
+$studentReportsByLab = [];
+$studentGradedCount = 0;
+$studentPendingCount = 0;
+$studentAccSum = 0;
+$allLabsCatalog = [];
+$totalSubmittedLabs = 0;
+$studentAvgAccuracy = 0;
+$studentProgressPct = 0;
+
+if ($isStudentLoggedIn && $pdo && $currentStudent) {
+    $stmt = $pdo->prepare("SELECT * FROM students WHERE student_id = ?");
+    $stmt->execute([$currentStudent['student_id']]);
+    $freshSt = $stmt->fetch();
+    if ($freshSt) {
+        $currentStudent = $freshSt;
+        $_SESSION['physics_student'] = $freshSt;
+    }
+
+    $stmt = $pdo->query("SELECT * FROM labs_catalog ORDER BY lab_number ASC");
+    $allLabsCatalog = $stmt->fetchAll();
+
+    $stmt = $pdo->prepare("
+        SELECT r.*, c.title_th AS lab_title_th, c.title_en AS lab_title_en, c.lab_number
+        FROM lab_reports r
+        LEFT JOIN labs_catalog c ON r.lab_id = c.lab_id
+        WHERE r.student_id = ?
+        ORDER BY r.submitted_at DESC
+    ");
+    $stmt->execute([$currentStudent['student_id']]);
+    $studentReports = $stmt->fetchAll();
+
+    foreach ($studentReports as $rep) {
+        $lid = strtolower($rep['lab_id']);
+        if (!isset($studentReportsByLab[$lid])) {
+            $studentReportsByLab[$lid] = $rep;
+        }
+        if (preg_match('/lab(\d+)/', $lid, $m)) {
+            $norm = sprintf("lab%02d", (int)$m[1]);
+            if (!isset($studentReportsByLab[$norm])) {
+                $studentReportsByLab[$norm] = $rep;
+            }
+        }
+        if ($rep['instructor_score'] !== null && $rep['instructor_score'] !== '') {
+            $studentGradedCount++;
+        } else {
+            $studentPendingCount++;
+        }
+        $studentAccSum += floatval($rep['accuracy_score'] ?? 0);
+    }
+    $totalSubmittedLabs = count($studentReports);
+    $studentAvgAccuracy = $totalSubmittedLabs > 0 ? round($studentAccSum / $totalSubmittedLabs, 1) : 0;
+    $studentProgressPct = min(100, round(($totalSubmittedLabs / 13) * 100));
+}
 
 // Fetch overview data if logged in
 $students = [];
@@ -145,77 +298,609 @@ if ($isLoggedIn && $pdo) {
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-cyan-500 selection:text-slate-950">
 
-<?php if (!$isLoggedIn): ?>
-    <!-- ─── LOGIN SCREEN ──────────────────────────────────────────────────────── -->
+<?php if ($isStudentLoggedIn && $currentStudent): ?>
+    <!-- ─── AUTHENTICATED STUDENT DASHBOARD ──────────────────────────────── -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-white/10 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand -->
+            <div class="flex items-center gap-3">
+                <a href="../index.php" class="flex items-center gap-2.5 group">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-500 flex items-center justify-center text-slate-950 shadow-md group-hover:scale-105 transition">
+                        <i class="fa-solid fa-graduation-cap text-base"></i>
+                    </div>
+                    <div>
+                        <div class="text-[10px] uppercase tracking-widest text-emerald-400 font-mono font-bold">Physics 4 Microbiology</div>
+                        <div class="text-sm sm:text-base font-bold text-white group-hover:text-emerald-300 transition">ระบบสารสนเทศและการส่งงานของผู้เรียน</div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Student Profile & Actions -->
+            <div class="flex items-center gap-3">
+                <a href="../index.php" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-xs font-semibold text-slate-300 transition border border-white/5">
+                    <i class="fa-solid fa-house"></i>
+                    <span>หน้าหลักวิชา</span>
+                </a>
+
+                <a href="../virtual_lab/index.html" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 text-xs font-semibold transition border border-cyan-500/30">
+                    <i class="fa-solid fa-flask"></i>
+                    <span>ห้องแล็บเสมือนจริง 3D</span>
+                </a>
+
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-emerald-500/30">
+                    <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-400 to-cyan-500 text-slate-950 font-bold text-xs flex items-center justify-center font-mono">
+                        <?= substr($currentStudent['student_id'], -2) ?>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-xs font-bold text-white leading-tight">
+                            <?= htmlspecialchars(($currentStudent['prefix'] ?? '') . $currentStudent['fullname']) ?>
+                        </div>
+                        <div class="text-[10px] text-emerald-400 font-mono">
+                            รหัส: <?= htmlspecialchars($currentStudent['student_id']) ?> (<?= htmlspecialchars($currentStudent['section'] ?? 'Sec 01') ?>)
+                        </div>
+                    </div>
+                </div>
+
+                <a href="index.php?action=student_logout"
+                   class="p-2 rounded-xl bg-slate-900 hover:bg-rose-500/20 border border-slate-800 hover:border-rose-500/40 text-slate-400 hover:text-rose-400 transition"
+                   title="ออกจากระบบนักศึกษา (Logout)">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-sm"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Student Dashboard Body -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <?php if (isset($_GET['registered'])): ?>
+            <div class="p-4 rounded-2xl bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-cyan-500/20 border border-emerald-500/40 text-emerald-200 text-sm flex items-center justify-between shadow-lg">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">🎉</span>
+                    <div>
+                        <strong class="font-bold text-white">ยินดีต้อนรับ <?= htmlspecialchars($currentStudent['fullname']) ?>!</strong>
+                        <div class="text-xs text-emerald-300">ลงทะเบียนเข้าสู่ระบบวิชา 4011111 สำเร็จ พร้อมทำการทดลองและติดตามการส่งงานทั้ง 13 ปฏิบัติการได้ทันที</div>
+                    </div>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white text-xs px-2 py-1">✕</button>
+            </div>
+        <?php endif; ?>
+
+        <!-- Welcome Banner -->
+        <div class="glass-panel p-6 sm:p-8 rounded-3xl relative overflow-hidden border border-white/10 bg-gradient-to-r from-slate-900 via-slate-900/90 to-emerald-950/40">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                <div class="space-y-2">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold font-mono">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span>Student Learning Console: Active</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                        ผลการเรียนและการส่งรายงานปฏิบัติการเสมือนจริง
+                    </h1>
+                    <p class="text-xs sm:text-sm text-slate-300 max-w-2xl">
+                        <?= htmlspecialchars($currentStudent['program'] ?? 'จุลชีววิทยา') ?> • <?= htmlspecialchars($currentStudent['faculty'] ?? 'คณะวิทยาศาสตร์และเทคโนโลยี') ?> • <?= htmlspecialchars($currentStudent['university'] ?? 'มหาวิทยาลัยราชภัฏรำไพพรรณี') ?>
+                    </p>
+                </div>
+
+                <!-- Progress Circle / Mini Widget -->
+                <div class="flex items-center gap-4 p-4 rounded-2xl bg-slate-950/60 border border-white/10">
+                    <div class="text-center">
+                        <div class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 font-mono">
+                            <?= $studentProgressPct ?>%
+                        </div>
+                        <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">ความก้าวหน้ารวม</div>
+                    </div>
+                    <div class="w-px h-10 bg-slate-800"></div>
+                    <div class="text-xs text-slate-300 space-y-1">
+                        <div>ส่งแล้ว: <strong class="text-white font-mono"><?= $totalSubmittedLabs ?>/13</strong> แล็บ</div>
+                        <div>ตรวจแล้ว: <strong class="text-emerald-400 font-mono"><?= $studentGradedCount ?></strong> ฉบับ</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mt-6 pt-4 border-t border-slate-800/80">
+                <div class="flex items-center justify-between text-xs text-slate-400 mb-1.5 font-mono">
+                    <span>สถานะความก้าวหน้าทั้ง 13 ปฏิบัติการ</span>
+                    <span class="text-emerald-400 font-bold"><?= $totalSubmittedLabs ?> จาก 13 ปฏิบัติการ (<?= $studentProgressPct ?>%)</span>
+                </div>
+                <div class="w-full h-3 rounded-full bg-slate-950 border border-slate-800 overflow-hidden">
+                    <div class="h-full rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 transition-all duration-700 shadow-lg shadow-emerald-500/50"
+                         style="width: <?= $studentProgressPct ?>%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 Stat Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="glass-card p-5 rounded-2xl space-y-2">
+                <div class="flex items-center justify-between text-slate-400">
+                    <span class="text-xs font-semibold">ส่งรายงานแล้ว</span>
+                    <i class="fa-solid fa-file-arrow-up text-cyan-400"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-white font-mono"><?= $totalSubmittedLabs ?> <span class="text-xs text-slate-500 font-sans">/ 13 แล็บ</span></div>
+                <div class="text-[11px] text-cyan-300">รายงานถูกบันทึกลง SQLite3</div>
+            </div>
+
+            <div class="glass-card p-5 rounded-2xl space-y-2">
+                <div class="flex items-center justify-between text-slate-400">
+                    <span class="text-xs font-semibold">อาจารย์ตรวจแล้ว</span>
+                    <i class="fa-solid fa-clipboard-check text-emerald-400"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono"><?= $studentGradedCount ?> <span class="text-xs text-slate-500 font-sans">ฉบับ</span></div>
+                <div class="text-[11px] text-emerald-300">ประเมินและให้คะแนนสมบูรณ์</div>
+            </div>
+
+            <div class="glass-card p-5 rounded-2xl space-y-2">
+                <div class="flex items-center justify-between text-slate-400">
+                    <span class="text-xs font-semibold">รออาจารย์ตรวจ</span>
+                    <i class="fa-solid fa-clock text-amber-400"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-amber-400 font-mono"><?= $studentPendingCount ?> <span class="text-xs text-slate-500 font-sans">ฉบับ</span></div>
+                <div class="text-[11px] text-amber-300">อยู่ในคิวการตรวจของอาจารย์</div>
+            </div>
+
+            <div class="glass-card p-5 rounded-2xl space-y-2">
+                <div class="flex items-center justify-between text-slate-400">
+                    <span class="text-xs font-semibold">ความแม่นยำเฉลี่ย</span>
+                    <i class="fa-solid fa-bullseye text-purple-400"></i>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-purple-400 font-mono"><?= $studentAvgAccuracy ?>%</div>
+                <div class="text-[11px] text-purple-300">ความแม่นยำการทดลองเสมือนจริง</div>
+            </div>
+        </div>
+
+        <!-- 13 Labs Interactive Submissions Tracker Table -->
+        <div class="glass-panel rounded-3xl overflow-hidden border border-white/10 shadow-xl space-y-4 p-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+                <div>
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-cyan-400"></i>
+                        <span>รายการติดตาม 13 ปฏิบัติการชีวฟิสิกส์</span>
+                    </h2>
+                    <p class="text-xs text-slate-400">คลิกที่ปุ่ม 'ทำการทดลอง' เพื่อเข้าสู่ห้องแล็บ 3D และส่งรายงานผลออนไลน์</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold">
+                        สถานะ: <?= $totalSubmittedLabs >= 13 ? 'ส่งครบทุกแล็บแล้ว 🎉' : 'เหลืออีก ' . (13 - $totalSubmittedLabs) . ' แล็บ' ?>
+                    </span>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800/80 bg-slate-900/60 font-mono">
+                            <th class="py-3.5 px-4 font-semibold">แล็บ</th>
+                            <th class="py-3.5 px-4 font-semibold">ชื่อปฏิบัติการ (Courseware Lab Title)</th>
+                            <th class="py-3.5 px-4 font-semibold">สถานะการส่ง</th>
+                            <th class="py-3.5 px-4 font-semibold">คะแนน / ความแม่นยำ</th>
+                            <th class="py-3.5 px-4 font-semibold">ข้อเสนอแนะอาจารย์</th>
+                            <th class="py-3.5 px-4 font-semibold text-right">การปฏิบัติการ</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/60 text-xs">
+                        <?php
+                        $labUrls = [
+                            1 => '../03_physics4microbio2026/labs/lab01_measurement.php',
+                            2 => '../03_physics4microbio2026/labs/lab02_brownian_motion.php',
+                            3 => '../03_physics4microbio2026/labs/lab03_viscosity.php',
+                            4 => '../03_physics4microbio2026/labs/lab04_centrifuge.php',
+                            5 => '../03_physics4microbio2026/labs/lab05_heat_incubator.php',
+                            6 => '../03_physics4microbio2026/labs/lab06_autoclave.php',
+                            7 => '../03_physics4microbio2026/labs/lab07_gram_electrostatics.php',
+                            8 => '../03_physics4microbio2026/labs/lab08_electrophoresis.php',
+                            9 => '../03_physics4microbio2026/labs/lab09_refraction.php',
+                            10 => '../03_physics4microbio2026/labs/lab10_microscope.php',
+                            11 => '../03_physics4microbio2026/labs/lab11_radioactivity_uv.php',
+                            12 => '../03_physics4microbio2026/labs/lab12_od600.php',
+                            13 => '../03_physics4microbio2026/labs/lab13_mini_project.php',
+                        ];
+
+                        foreach ($allLabsCatalog as $labCat):
+                            $lNum = (int)$labCat['lab_number'];
+                            $lId = strtolower($labCat['lab_id']);
+                            $normKey = sprintf("lab%02d", $lNum);
+                            $report = $studentReportsByLab[$normKey] ?? ($studentReportsByLab[$lId] ?? null);
+                            $isSubmitted = !empty($report);
+                            $isGraded = $isSubmitted && ($report['instructor_score'] !== null && $report['instructor_score'] !== '');
+                            $labLink = $labUrls[$lNum] ?? "../03_physics4microbio2026/labs/lab01_measurement.php";
+                        ?>
+                        <tr class="hover:bg-slate-900/40 transition">
+                            <!-- Lab Number Badge -->
+                            <td class="py-3.5 px-4 font-mono font-bold">
+                                <span class="px-2.5 py-1 rounded-lg <?= $isGraded ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : ($isSubmitted ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'bg-slate-800 text-slate-400') ?>">
+                                    LAB <?= sprintf('%02d', $lNum) ?>
+                                </span>
+                            </td>
+
+                            <!-- Title -->
+                            <td class="py-3.5 px-4">
+                                <div class="font-bold text-white text-xs sm:text-sm"><?= htmlspecialchars($labCat['title_th']) ?></div>
+                                <div class="text-[11px] text-slate-400 font-mono"><?= htmlspecialchars($labCat['title_en'] ?? '') ?></div>
+                            </td>
+
+                            <!-- Submission Status -->
+                            <td class="py-3.5 px-4">
+                                <?php if ($isGraded): ?>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-semibold text-[11px]">
+                                        <i class="fa-solid fa-circle-check text-emerald-400"></i> ตรวจแล้ว
+                                    </span>
+                                <?php elseif ($isSubmitted): ?>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 font-semibold text-[11px]">
+                                        <i class="fa-solid fa-clock-rotate-left text-amber-400"></i> ส่งแล้ว (รอตรวจ)
+                                    </span>
+                                <?php else: ?>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-slate-400 font-semibold text-[11px]">
+                                        <i class="fa-solid fa-hourglass-start"></i> ยังไม่ส่งรายงาน
+                                    </span>
+                                <?php endif; ?>
+                            </td>
+
+                            <!-- Scores -->
+                            <td class="py-3.5 px-4">
+                                <?php if ($isSubmitted): ?>
+                                    <div class="space-y-0.5">
+                                        <?php if ($isGraded): ?>
+                                            <div class="text-xs font-bold text-emerald-300 font-mono">
+                                                คะแนน: <?= htmlspecialchars($report['instructor_score']) ?> / 10
+                                            </div>
+                                        <?php endif; ?>
+                                        <div class="text-[11px] text-slate-400">
+                                            ความแม่นยำ: <strong class="text-cyan-300 font-mono"><?= htmlspecialchars($report['accuracy_score'] ?? '0') ?>%</strong>
+                                        </div>
+                                    </div>
+                                <?php else: ?>
+                                    <span class="text-slate-600">-</span>
+                                <?php endif; ?>
+                            </td>
+
+                            <!-- Feedback -->
+                            <td class="py-3.5 px-4 max-w-xs">
+                                <?php if ($isGraded && !empty($report['instructor_feedback'])): ?>
+                                    <div class="text-xs text-amber-200 bg-amber-950/30 border border-amber-500/30 rounded-lg p-2 leading-relaxed">
+                                        "<?= htmlspecialchars($report['instructor_feedback']) ?>"
+                                    </div>
+                                <?php elseif ($isSubmitted): ?>
+                                    <span class="text-slate-500 text-[11px]">รออาจารย์บันทึกข้อเสนอแนะ</span>
+                                <?php else: ?>
+                                    <span class="text-slate-600">-</span>
+                                <?php endif; ?>
+                            </td>
+
+                            <!-- Actions -->
+                            <td class="py-3.5 px-4 text-right">
+                                <div class="inline-flex items-center gap-2">
+                                    <?php if ($isSubmitted): ?>
+                                        <button type="button"
+                                                onclick='openReportModal(<?= json_encode($report, JSON_HEX_APOS | JSON_HEX_QUOT) ?>, <?= json_encode($labCat, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'
+                                                class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 text-xs font-semibold transition flex items-center gap-1.5"
+                                                title="ดูข้อมูลรายงานผลการทดลองที่ส่ง">
+                                            <i class="fa-solid fa-file-lines"></i>
+                                            <span>ดูรายงาน</span>
+                                        </button>
+                                    <?php endif; ?>
+
+                                    <a href="<?= $labLink ?>" target="_blank"
+                                       class="px-3.5 py-1.5 rounded-lg <?= $isSubmitted ? 'bg-slate-800/80 hover:bg-slate-700 text-slate-300' : 'bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold shadow-md' ?> text-xs transition flex items-center gap-1.5">
+                                        <i class="fa-solid fa-flask"></i>
+                                        <span><?= $isSubmitted ? 'ทบทวนแล็บ' : 'ทำแล็บ & ส่งรายงาน' ?></span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Quick Links Hub -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+            <a href="../03_physics4microbio2026/index.php" class="glass-card p-5 rounded-2xl hover:border-cyan-400/50 transition group space-y-2">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center group-hover:scale-110 transition">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div class="font-bold text-white text-sm group-hover:text-cyan-300 transition">12 บทเรียนทฤษฎีชีวฟิสิกส์</div>
+                <p class="text-xs text-slate-400 leading-relaxed">เข้าศึกษาเอกสารคำสอน 12 บทเรียน พร้อมสูตรคำนวณและข้อสอบประเมินตนเอง</p>
+            </a>
+
+            <a href="../virtual_lab/index.html" class="glass-card p-5 rounded-2xl hover:border-teal-400/50 transition group space-y-2">
+                <div class="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center group-hover:scale-110 transition">
+                    <i class="fa-solid fa-cube"></i>
+                </div>
+                <div class="font-bold text-white text-sm group-hover:text-teal-300 transition">ห้องแล็บเสมือนจริง 3D Hub</div>
+                <p class="text-xs text-slate-400 leading-relaxed">รวมซิมูเลเตอร์ 3 มิติ PBR และจำลองการทดลองเสมือนจริงทุกบท</p>
+            </a>
+
+            <a href="../แผนการสอน 2027/เอกสารคำสอน_3D_AR_ArUco/webar_aruco/ar_aruco_textbook.html?ar=1" target="_blank" class="glass-card p-5 rounded-2xl hover:border-purple-400/50 transition group space-y-2">
+                <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center group-hover:scale-110 transition">
+                    <i class="fa-solid fa-camera-rotate"></i>
+                </div>
+                <div class="font-bold text-white text-sm group-hover:text-purple-300 transition">3D WebAR ArUco Scanner</div>
+                <p class="text-xs text-slate-400 leading-relaxed">เปิดกล้องสมาร์ทโฟนส่องมาร์กเกอร์ ArUco (ID 0–11) ในหนังสือเรียน</p>
+            </a>
+        </div>
+    </main>
+
+    <!-- Student Report Details Modal -->
+    <div id="studentReportModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 sm:p-8 space-y-6 border border-white/20 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeReportModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center text-sm transition">
+                ✕
+            </button>
+            <div class="space-y-1">
+                <div class="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold" id="modalReportCode">REPORT</div>
+                <h3 class="text-xl font-bold text-white" id="modalLabTitle">ข้อมูลรายงานผลการทดลอง</h3>
+                <div class="text-xs text-slate-400" id="modalSubmitTime">เวลาส่งรายงาน: -</div>
+            </div>
+
+            <!-- Scores summary -->
+            <div class="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                <div>
+                    <div class="text-xs text-slate-400">ความแม่นยำจากการจำลอง</div>
+                    <div class="text-xl font-extrabold text-cyan-300 font-mono" id="modalAccuracy">-%</div>
+                </div>
+                <div>
+                    <div class="text-xs text-slate-400">คะแนนประเมินจากอาจารย์</div>
+                    <div class="text-xl font-extrabold text-emerald-400 font-mono" id="modalInstructorScore">รออาจารย์ตรวจ</div>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-300">ข้อเสนอแนะจากอาจารย์ผู้สอน:</label>
+                <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-amber-200" id="modalFeedback">
+                    ยังไม่มีข้อเสนอแนะ
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-300">ตารางข้อมูลผลการทดลองที่บันทึก (Data Table / Parameters):</label>
+                <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 font-mono text-[11px] text-slate-300 overflow-x-auto max-h-56" id="modalTableData">
+                    -
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button type="button" onclick="closeReportModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs transition">
+                    ปิดหน้าต่าง
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openReportModal(report, labCat) {
+            document.getElementById('modalReportCode').textContent = report.report_code || 'LAB REPORT';
+            document.getElementById('modalLabTitle').textContent = (labCat ? labCat.title_th : '') + ' (' + report.lab_id.toUpperCase() + ')';
+            document.getElementById('modalSubmitTime').textContent = 'เวลาส่งรายงาน: ' + (report.submitted_at || '-');
+            document.getElementById('modalAccuracy').textContent = (report.accuracy_score !== null ? report.accuracy_score + '%' : '-');
+            document.getElementById('modalInstructorScore').textContent = (report.instructor_score !== null ? report.instructor_score + ' / 10 คะแนน' : '⏳ รออาจารย์ตรวจ');
+            document.getElementById('modalFeedback').textContent = report.instructor_feedback || 'ยังไม่มีข้อเสนอแนะจากอาจารย์';
+
+            const tableEl = document.getElementById('modalTableData');
+            try {
+                if (report.table_data_json) {
+                    const parsed = JSON.parse(report.table_data_json);
+                    tableEl.textContent = JSON.stringify(parsed, null, 2);
+                } else {
+                    tableEl.textContent = 'ไม่มีข้อมูลตารางบันทึกเพิ่มเติม';
+                }
+            } catch (e) {
+                tableEl.textContent = report.table_data_json || '-';
+            }
+
+            const modal = document.getElementById('studentReportModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeReportModal() {
+            const modal = document.getElementById('studentReportModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    </script>
+
+<?php elseif (!$isLoggedIn): ?>
+    <!-- ─── UNIFIED AUTHENTICATION & REGISTRATION GATEWAY ─────────────────── -->
     <div class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950">
         <!-- Ambient Glow Circles -->
         <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="w-full max-w-md relative z-10">
-            <div class="glass-panel p-8 rounded-3xl shadow-2xl border border-white/10 space-y-6">
+        <div class="w-full max-w-lg relative z-10 my-8">
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-2xl border border-white/10 space-y-6">
                 <!-- Header -->
                 <div class="text-center space-y-2">
                     <div class="inline-flex p-3 rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-teal-500/20 border border-cyan-500/30 text-cyan-400 mb-2 shadow-lg shadow-cyan-950/50">
-                        <i class="fa-solid fa-user-shield text-2xl"></i>
+                        <i class="fa-solid fa-graduation-cap text-2xl"></i>
                     </div>
-                    <div class="text-xs uppercase tracking-widest text-cyan-400 font-mono font-semibold">LEQs-GLOBE Faculty System</div>
-                    <h1 class="text-2xl font-bold text-white tracking-tight">ระบบหลังบ้านอาจารย์ผู้สอน</h1>
+                    <div class="text-xs uppercase tracking-widest text-cyan-400 font-mono font-semibold">Faculty of Science and Technology • RBRU</div>
+                    <h1 class="text-2xl font-bold text-white tracking-tight">ระบบลงทะเบียนและเข้าสู่ระบบ</h1>
                     <p class="text-xs text-slate-400">4011111 ฟิสิกส์สำหรับจุลชีววิทยา (Physics for Microbiology)</p>
                 </div>
 
-                <?php if ($loginError): ?>
-                    <div class="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
-                        <i class="fa-solid fa-triangle-exclamation text-rose-400"></i>
-                        <span><?= htmlspecialchars($loginError) ?></span>
-                    </div>
-                <?php endif; ?>
-
-                <?php if ($dbError): ?>
-                    <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs">
-                        <strong>เตือนฐานข้อมูล:</strong> <?= htmlspecialchars($dbError) ?>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Form -->
-                <form method="POST" action="index.php" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">ชื่อผู้ใช้งานอาจารย์ (Username)</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
-                                <i class="fa-solid fa-user text-xs"></i>
-                            </span>
-                            <input type="text" name="username" value="admin" required
-                                   class="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-sm text-white placeholder-slate-500 outline-none transition font-mono">
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1.5">รหัสผ่าน (Password)</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
-                                <i class="fa-solid fa-lock text-xs"></i>
-                            </span>
-                            <input type="password" name="password" value="LEQs" required
-                                   class="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-sm text-white placeholder-slate-500 outline-none transition font-mono">
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-900/50 border border-white/5 p-3 rounded-xl text-[11px] text-slate-400 flex items-start gap-2">
-                        <i class="fa-solid fa-key text-amber-400 mt-0.5"></i>
-                        <div>
-                            <span class="text-slate-300 font-semibold">บัญชีทดสอบเริ่มต้น:</span>
-                            <span class="font-mono text-cyan-300">admin</span> / รหัสผ่าน: <span class="font-mono text-cyan-300">LEQs</span>
-                        </div>
-                    </div>
-
-                    <button type="submit" name="login_submit"
-                            class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-950 font-bold text-sm shadow-lg shadow-cyan-950/40 hover:scale-[1.01] active:scale-[0.99] transition duration-200 flex items-center justify-center gap-2">
+                <!-- 3 Tab Switchers -->
+                <div class="grid grid-cols-3 gap-1.5 p-1.5 rounded-2xl bg-slate-900/90 border border-slate-800">
+                    <button type="button" onclick="switchAuthTab('student')" id="tabBtn-student"
+                            class="py-2.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 <?= $activeTab === 'student' ? 'bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white' ?>">
                         <i class="fa-solid fa-right-to-bracket"></i>
-                        <span>เข้าสู่ระบบจัดการ (Sign In)</span>
+                        <span>เข้าสู่ระบบนักศึกษา</span>
                     </button>
-                </form>
 
+                    <button type="button" onclick="switchAuthTab('register')" id="tabBtn-register"
+                            class="py-2.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 <?= $activeTab === 'register' ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white' ?>">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>ลงทะเบียนใหม่</span>
+                    </button>
+
+                    <button type="button" onclick="switchAuthTab('instructor')" id="tabBtn-instructor"
+                            class="py-2.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 <?= $activeTab === 'instructor' ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md' : 'text-slate-400 hover:text-white' ?>">
+                        <i class="fa-solid fa-user-shield"></i>
+                        <span>อาจารย์ผู้สอน</span>
+                    </button>
+                </div>
+
+                <!-- ════ TAB 1: STUDENT LOGIN ════ -->
+                <div id="tabContent-student" class="<?= $activeTab === 'student' ? 'block' : 'hidden' ?> space-y-4">
+                    <?php if ($studentLoginError): ?>
+                        <div class="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-400"></i>
+                            <span><?= htmlspecialchars($studentLoginError) ?></span>
+                        </div>
+                    <?php endif; ?>
+
+                    <form method="POST" action="index.php" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">รหัสนักศึกษา (Student ID)</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+                                    <i class="fa-solid fa-id-card text-xs"></i>
+                                </span>
+                                <input type="text" name="student_id" placeholder="เช่น 67144001 หรือ 6604101001" required
+                                       class="w-full pl-9 pr-3.5 py-3 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 text-sm text-white placeholder-slate-500 outline-none transition font-mono">
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-1">กรอกรหัสนักศึกษาเพื่อเข้าดูผลการเรียน คะแนนแล็บ และส่งรายงานออนไลน์</p>
+                        </div>
+
+                        <button type="submit" name="student_login_submit"
+                                class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-400 hover:to-teal-400 text-slate-950 font-bold text-sm shadow-lg shadow-cyan-950/40 hover:scale-[1.01] active:scale-[0.99] transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                            <span>เข้าสู่ระบบติดตามผลการเรียน (Sign In)</span>
+                        </button>
+                    </form>
+
+                    <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5 text-xs text-center text-slate-400">
+                        ยังไม่เคยลงทะเบียนในระบบ? 
+                        <button type="button" onclick="switchAuthTab('register')" class="text-cyan-400 hover:underline font-bold ml-1">
+                            คลิกที่นี่เพื่อลงทะเบียนนักศึกษาใหม่
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ════ TAB 2: STUDENT REGISTRATION ════ -->
+                <div id="tabContent-register" class="<?= $activeTab === 'register' ? 'block' : 'hidden' ?> space-y-4">
+                    <?php if ($studentRegError): ?>
+                        <div class="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-400"></i>
+                            <span><?= htmlspecialchars($studentRegError) ?></span>
+                        </div>
+                    <?php endif; ?>
+
+                    <form method="POST" action="index.php" class="space-y-3.5">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="sm:col-span-1">
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">คำนำหน้า</label>
+                                <select name="prefix" class="w-full px-3 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-emerald-400 text-sm text-white outline-none">
+                                    <option value="นาย">นาย</option>
+                                    <option value="นางสาว">นางสาว</option>
+                                    <option value="นาง">นาง</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">รหัสนักศึกษา *</label>
+                                <input type="text" name="student_id" placeholder="เช่น 67144001" required
+                                       class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-emerald-400 text-sm text-white placeholder-slate-500 outline-none font-mono">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">ชื่อ - นามสกุล *</label>
+                            <input type="text" name="fullname" placeholder="เช่น ชลธิชา สุขเกษม" required
+                                   class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-emerald-400 text-sm text-white placeholder-slate-500 outline-none">
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">สาขาวิชา</label>
+                                <select name="program" class="w-full px-3 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-emerald-400 text-xs text-white outline-none">
+                                    <option value="จุลชีววิทยา">จุลชีววิทยา</option>
+                                    <option value="วิทยาศาสตร์และเทคโนโลยีการเกษตร">วิทยาศาสตร์และเทคโนโลยีการเกษตร</option>
+                                    <option value="วิทยาศาสตร์สิ่งแวดล้อม">วิทยาศาสตร์สิ่งแวดล้อม</option>
+                                    <option value="เทคโนโลยีชีวภาพ">เทคโนโลยีชีวภาพ</option>
+                                    <option value="วิทยาศาสตร์ทั่วไป">วิทยาศาสตร์ทั่วไป</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">กลุ่มเรียน (Section)</label>
+                                <select name="section" class="w-full px-3 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-emerald-400 text-xs text-white outline-none">
+                                    <option value="Sec 01">Sec 01</option>
+                                    <option value="Sec 02">Sec 02</option>
+                                    <option value="Sec 03">Sec 03</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">อีเมลนักศึกษา (RBRU Mail)</label>
+                                <input type="email" name="email" placeholder="student@rbru.ac.th"
+                                       class="w-full px-3 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-emerald-400 text-xs text-white placeholder-slate-500 outline-none font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">เบอร์โทรศัพท์</label>
+                                <input type="tel" name="phone" placeholder="08x-xxx-xxxx"
+                                       class="w-full px-3 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-emerald-400 text-xs text-white placeholder-slate-500 outline-none font-mono">
+                            </div>
+                        </div>
+
+                        <button type="submit" name="student_register_submit"
+                                class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-950/40 hover:scale-[1.01] active:scale-[0.99] transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>บันทึกลงทะเบียนเรียน (Register Student)</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- ════ TAB 3: INSTRUCTOR LOGIN ════ -->
+                <div id="tabContent-instructor" class="<?= $activeTab === 'instructor' ? 'block' : 'hidden' ?> space-y-4">
+                    <?php if ($loginError): ?>
+                        <div class="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation text-rose-400"></i>
+                            <span><?= htmlspecialchars($loginError) ?></span>
+                        </div>
+                    <?php endif; ?>
+
+                    <form method="POST" action="index.php" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">ชื่อผู้ใช้งานอาจารย์ (Username)</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+                                    <i class="fa-solid fa-user text-xs"></i>
+                                </span>
+                                <input type="text" name="username" value="admin" required
+                                       class="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 text-sm text-white placeholder-slate-500 outline-none transition font-mono">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">รหัสผ่าน (Password)</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+                                    <i class="fa-solid fa-lock text-xs"></i>
+                                </span>
+                                <input type="password" name="password" value="LEQs" required
+                                       class="w-full pl-9 pr-3.5 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 text-sm text-white placeholder-slate-500 outline-none transition font-mono">
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900/50 border border-white/5 p-3 rounded-xl text-[11px] text-slate-400 flex items-start gap-2">
+                            <i class="fa-solid fa-key text-amber-400 mt-0.5"></i>
+                            <div>
+                                <span class="text-slate-300 font-semibold">บัญชีทดสอบเริ่มต้น:</span>
+                                <span class="font-mono text-cyan-300">admin</span> / รหัสผ่าน: <span class="font-mono text-cyan-300">LEQs</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" name="login_submit"
+                                class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-sm shadow-lg shadow-amber-950/40 hover:scale-[1.01] active:scale-[0.99] transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-user-shield"></i>
+                            <span>เข้าสู่ระบบอาจารย์ผู้สอน (Instructor Sign In)</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Footer Back to Home -->
                 <div class="text-center pt-2 border-t border-slate-800">
                     <a href="../index.php" class="text-xs text-slate-400 hover:text-cyan-400 transition flex items-center justify-center gap-1.5">
                         <i class="fa-solid fa-arrow-left"></i>
@@ -226,6 +911,29 @@ if ($isLoggedIn && $pdo) {
         </div>
     </div>
 
+    <script>
+        function switchAuthTab(tab) {
+            ['student', 'register', 'instructor'].forEach(t => {
+                const btn = document.getElementById('tabBtn-' + t);
+                const content = document.getElementById('tabContent-' + t);
+                if (t === tab) {
+                    content.classList.remove('hidden');
+                    content.classList.add('block');
+                    if (t === 'student') {
+                        btn.className = 'py-2.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 shadow-md';
+                    } else if (t === 'register') {
+                        btn.className = 'py-2.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-md';
+                    } else {
+                        btn.className = 'py-2.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md';
+                    }
+                } else {
+                    content.classList.add('hidden');
+                    content.classList.remove('block');
+                    btn.className = 'py-2.5 px-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-slate-400 hover:text-white';
+                }
+            });
+        }
+    </script>
 <?php else: ?>
     <!-- ─── AUTHENTICATED INSTRUCTOR DASHBOARD ──────────────────────────────── -->
     <!-- Top Navigation Bar -->

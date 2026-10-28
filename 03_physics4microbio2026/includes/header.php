@@ -222,9 +222,9 @@ elseif (strpos($currentFilename, '_zh.php') !== false) $currentLang = 'zh';
 
         <!-- Language & Admin Action -->
         <div class="flex items-center space-x-3">
-            <a href="<?php echo $basePath ?? ''; ?>../admin/index.php" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5" title="เข้าสู่ระบบอาจารย์ผู้สอน">
-                <i class="fa-solid fa-user-shield"></i>
-                <span class="hidden sm:inline">อาจารย์</span>
+            <a href="<?php echo $basePath ?? ''; ?>../admin/index.php" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5" title="ระบบลงทะเบียนและเข้าสู่ระบบนักศึกษา/อาจารย์">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span class="hidden sm:inline">ลงทะเบียน / เข้าระบบ</span>
             </a>
             <div class="flex items-center bg-white/5 rounded-xl p-1 border border-white/10">
                 <button onclick="handleLangChange('th')" class="lang-btn w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold transition-all hover:bg-white/10" id="btn-th">TH</button>

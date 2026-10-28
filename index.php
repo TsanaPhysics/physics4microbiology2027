@@ -466,11 +466,11 @@ $enrichmentModules = [
                 </a>
             </div>
 
-            <!-- Action: Instructor Portal Link -->
+            <!-- Action: Student Registration / Login & Instructor Portal -->
             <div class="flex items-center gap-3">
                 <a href="admin/index.php" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold text-xs shadow-lg shadow-cyan-950/50 hover:scale-105 transition flex items-center gap-2">
-                    <i class="fa-solid fa-user-shield"></i>
-                    <span>หลังบ้านอาจารย์</span>
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>ลงทะเบียน / เข้าสู่ระบบ</span>
                 </a>
             </div>
         </div>
@@ -523,8 +523,8 @@ $enrichmentModules = [
                     </a>
 
                     <a href="admin/index.php" class="px-5 py-3.5 rounded-2xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-cyan-300 font-semibold text-sm border border-white/10 transition flex items-center gap-2">
-                        <i class="fa-solid fa-lock text-cyan-400"></i>
-                        <span>ระบบหลังบ้านอาจารย์</span>
+                        <i class="fa-solid fa-user-graduate text-cyan-400"></i>
+                        <span>ลงทะเบียน & ติดตามผลการเรียน</span>
                     </a>
                 </div>
 
@@ -909,7 +909,7 @@ $enrichmentModules = [
                     <li><a href="#labs" class="hover:text-cyan-400 transition">12 ปฏิบัติการชีวฟิสิกส์ 3D</a></li>
                     <li><a href="03_physics4microbio2026/index.php" class="hover:text-cyan-400 transition">12 บทเรียนทฤษฎีและตำรา</a></li>
                     <li><a href="virtual_lab/index.html" class="hover:text-cyan-400 transition">Virtual Lab Simulator Hub</a></li>
-                    <li><a href="admin/index.php" class="hover:text-cyan-400 transition text-cyan-400 font-semibold"><i class="fa-solid fa-lock text-[10px]"></i> เข้าสู่ระบบหลังบ้านอาจารย์ (Admin)</a></li>
+                    <li><a href="admin/index.php" class="hover:text-cyan-400 transition text-cyan-400 font-semibold"><i class="fa-solid fa-graduation-cap text-[10px]"></i> ลงทะเบียน / เข้าสู่ระบบนักศึกษา & อาจารย์</a></li>
                 </ul>
             </div>
 
