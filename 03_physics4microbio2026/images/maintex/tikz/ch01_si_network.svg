@@ -1,186 +1,272 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="100%" height="100%" style="background:#090d16; font-family:'Prompt',system-ui,sans-serif;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="100%" height="100%" style="background:#090d16; font-family:'Prompt',system-ui,-apple-system,sans-serif;">
   <defs>
-    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.18"/>
-      <stop offset="100%" stop-color="#0284c7" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#38bdf8"/>
-      <stop offset="100%" stop-color="#0284c7"/>
-    </linearGradient>
-    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#34d399"/>
-      <stop offset="100%" stop-color="#059669"/>
-    </linearGradient>
-    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fbbf24"/>
-      <stop offset="100%" stop-color="#d97706"/>
-    </linearGradient>
-    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#c084fc"/>
-      <stop offset="100%" stop-color="#7c3aed"/>
-    </linearGradient>
-    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fb7185"/>
-      <stop offset="100%" stop-color="#e11d48"/>
-    </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.5"/>
+    <filter id="cardShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.6"/>
     </filter>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+    </radialGradient>
   </defs>
 
-  <!-- Background Glow & Grid -->
-  <rect width="960" height="560" fill="#090d16"/>
-  <circle cx="480" cy="280" r="260" fill="url(#bgGlow)"/>
-  
-  <!-- Outer Orbit Line -->
-  <circle cx="480" cy="280" r="210" fill="none" stroke="#1e293b" stroke-width="2" stroke-dasharray="6,6"/>
-  <circle cx="480" cy="280" r="115" fill="none" stroke="#334155" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <!-- Ambient Background Glow -->
+  <rect width="1000" height="1000" fill="#080c18"/>
+  <circle cx="500" cy="520" r="380" fill="url(#centerGlow)"/>
 
-  <!-- Title Header -->
-  <text x="480" y="38" text-anchor="middle" fill="#f8fafc" font-size="20" font-weight="700" letter-spacing="0.5">ระบบหน่วยสากลเอสไอฉบับปรับปรุงใหม่ (The Revised SI — 2019)</text>
-  <text x="480" y="60" text-anchor="middle" fill="#94a3b8" font-size="12">ผูกโยง 7 หน่วยฐานสากลเข้ากับ 7 ค่าคงตัวพื้นฐานแห่งเอกภพ (Fundamental Physical Constants)</text>
-
-  <!-- Central Hub: The 2019 SI Core -->
-  <g transform="translate(480, 280)">
-    <circle r="60" fill="#0f172a" stroke="#38bdf8" stroke-width="3" filter="url(#shadow)"/>
-    <circle r="52" fill="none" stroke="#0284c7" stroke-width="1" stroke-dasharray="4,3"/>
-    <text y="-14" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="700" letter-spacing="1">BIPM / CGPM</text>
-    <text y="6" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="800">REVISED SI</text>
-    <text y="24" text-anchor="middle" fill="#10b981" font-size="11" font-weight="700">20 พฤษภาคม 2019</text>
+  <!-- Top Title Header -->
+  <g transform="translate(500, 60)">
+    <text text-anchor="middle" fill="#38bdf8" font-size="13" font-weight="700" letter-spacing="3" font-family="'JetBrains Mono', monospace">INTERNATIONAL SYSTEM OF UNITS (BIPM 2019)</text>
+    <text y="32" text-anchor="middle" fill="#ffffff" font-size="32" font-weight="800" letter-spacing="1">SI Base Units &bull; 7 หน่วยฐานสากล</text>
+    <text y="56" text-anchor="middle" fill="#94a3b8" font-size="14">รากฐานการวัดทางฟิสิกส์สำหรับการสอบเทียบและการทดลองในห้องปฏิบัติการจุลชีววิทยา</text>
   </g>
 
-  <!-- Connection Lines (Center to Constants to Units) -->
-  <!-- 1. Second (s) at Top: 90 deg up (x=480, y=70) -->
-  <line x1="480" y1="220" x2="480" y2="165" stroke="#38bdf8" stroke-width="2"/>
-  <line x1="480" y1="165" x2="480" y2="105" stroke="#38bdf8" stroke-width="2"/>
-
-  <!-- 2. Metre (m) at ~38 deg: (x=660, y=140) -->
-  <line x1="525" y1="240" x2="600" y2="185" stroke="#34d399" stroke-width="2"/>
-  <line x1="600" y1="185" x2="670" y2="135" stroke="#34d399" stroke-width="2"/>
-
-  <!-- 3. Kilogram (kg) at ~90 deg right: (x=730, y=280) -->
-  <line x1="540" y1="280" x2="635" y2="280" stroke="#fbbf24" stroke-width="2"/>
-  <line x1="635" y1="280" x2="730" y2="280" stroke="#fbbf24" stroke-width="2"/>
-
-  <!-- 4. Ampere (A) at ~142 deg: (x=660, y=420) -->
-  <line x1="525" y1="320" x2="600" y2="375" stroke="#fb7185" stroke-width="2"/>
-  <line x1="600" y1="375" x2="670" y2="425" stroke="#fb7185" stroke-width="2"/>
-
-  <!-- 5. Kelvin (K) at ~218 deg: (x=300, y=420) -->
-  <line x1="435" y1="320" x2="360" y2="375" stroke="#f97316" stroke-width="2"/>
-  <line x1="360" y1="375" x2="290" y2="425" stroke="#f97316" stroke-width="2"/>
-
-  <!-- 6. Mole (mol) at ~270 deg left: (x=230, y=280) -->
-  <line x1="420" y1="280" x2="325" y2="280" stroke="#a855f7" stroke-width="2"/>
-  <line x1="325" y1="280" x2="230" y2="280" stroke="#a855f7" stroke-width="2"/>
-
-  <!-- 7. Candela (cd) at ~322 deg: (x=300, y=140) -->
-  <line x1="435" y1="240" x2="360" y2="185" stroke="#eab308" stroke-width="2"/>
-  <line x1="360" y1="185" x2="290" y2="135" stroke="#eab308" stroke-width="2"/>
-
-  <!-- Cross-link dependency arrows (s -> m via c, s & m -> kg via h, s -> A via e, etc.) -->
-  <path d="M 480 105 Q 575 120 670 135" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.6"/>
-  <path d="M 670 135 Q 700 200 730 280" fill="none" stroke="#34d399" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.6"/>
-
-  <!-- ═════ INNER ORBIT: 7 DEFINING CONSTANTS (Pills) ═════ -->
-  <!-- ΔνCs -->
-  <g transform="translate(480, 165)">
-    <rect x="-48" y="-14" width="96" height="28" rx="14" fill="#0f172a" stroke="#38bdf8" stroke-width="1.8"/>
-    <text y="4" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="700" font-family="'JetBrains Mono',monospace">Δν_Cs</text>
+<circle cx="500" cy="520" r="350" fill="none" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.6"/>
+  <path d="M 384.98 275.73 A 270 270 0 0 1 615.02 275.73 L 579.24 351.72 A 186 186 0 0 0 420.76 351.72 Z" fill="#ef4444" filter="url(#cardShadow)"/>
+  <path d="M 421.19 352.63 A 185 185 0 0 1 578.81 352.63 L 548.99 415.96 A 115 115 0 0 0 451.01 415.96 Z" fill="#fca5a5"/>
+  <path d="M 619.27 277.77 A 270 270 0 0 1 762.70 457.62 L 680.97 477.03 A 186 186 0 0 0 582.16 353.13 Z" fill="#0284c7" filter="url(#cardShadow)"/>
+  <path d="M 581.72 354.03 A 185 185 0 0 1 680.00 477.26 L 611.89 493.43 A 115 115 0 0 0 550.80 416.83 Z" fill="#bae6fd"/>
+  <path d="M 763.74 462.22 A 270 270 0 0 1 712.56 686.49 L 646.43 634.70 A 186 186 0 0 0 681.69 480.20 Z" fill="#22c55e" filter="url(#cardShadow)"/>
+  <path d="M 680.71 480.41 A 185 185 0 0 1 645.64 634.08 L 590.53 590.91 A 115 115 0 0 0 612.34 495.39 Z" fill="#bbf7d0"/>
+  <path d="M 709.62 690.18 A 270 270 0 0 1 502.36 789.99 L 501.62 705.99 A 186 186 0 0 0 644.40 637.23 Z" fill="#eab308" filter="url(#cardShadow)"/>
+  <path d="M 643.63 636.60 A 185 185 0 0 1 501.61 704.99 L 501.00 635.00 A 115 115 0 0 0 589.28 592.48 Z" fill="#fef08a"/>
+  <path d="M 497.64 789.99 A 270 270 0 0 1 290.38 690.18 L 355.60 637.23 A 186 186 0 0 0 498.38 705.99 Z" fill="#2563eb" filter="url(#cardShadow)"/>
+  <path d="M 498.39 704.99 A 185 185 0 0 1 356.37 636.60 L 410.72 592.48 A 115 115 0 0 0 499.00 635.00 Z" fill="#bfdbfe"/>
+  <path d="M 287.44 686.49 A 270 270 0 0 1 236.26 462.22 L 318.31 480.20 A 186 186 0 0 0 353.57 634.70 Z" fill="#d946ef" filter="url(#cardShadow)"/>
+  <path d="M 354.36 634.08 A 185 185 0 0 1 319.29 480.41 L 387.66 495.39 A 115 115 0 0 0 409.47 590.91 Z" fill="#f5d0fe"/>
+  <path d="M 237.30 457.62 A 270 270 0 0 1 380.73 277.77 L 417.84 353.13 A 186 186 0 0 0 319.03 477.03 Z" fill="#f97316" filter="url(#cardShadow)"/>
+  <path d="M 320.00 477.26 A 185 185 0 0 1 418.28 354.03 L 449.20 416.83 A 115 115 0 0 0 388.11 493.43 Z" fill="#fed7aa"/>
+  <g transform="rotate(0.0, 500, 520) translate(500, 292)">
+    <text transform="rotate(0)" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-size="28" font-weight="900" font-family="'Outfit','Prompt',sans-serif" filter="url(#cardShadow)">kg</text>
   </g>
-  <!-- c -->
-  <g transform="translate(600, 185)">
-    <rect x="-30" y="-14" width="60" height="28" rx="14" fill="#0f172a" stroke="#34d399" stroke-width="1.8"/>
-    <text y="4" text-anchor="middle" fill="#34d399" font-size="12" font-weight="700" font-family="'JetBrains Mono',monospace">c</text>
+  <g transform="rotate(0.0, 500, 520) translate(500, 370)">
+    <text transform="rotate(0)" text-anchor="middle" dominant-baseline="central" fill="#7f1d1d" font-size="13" font-weight="800" font-family="'Outfit','Prompt',sans-serif">kilogram</text>
   </g>
-  <!-- h -->
-  <g transform="translate(635, 280)">
-    <rect x="-30" y="-14" width="60" height="28" rx="14" fill="#0f172a" stroke="#fbbf24" stroke-width="1.8"/>
-    <text y="4" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700" font-family="'JetBrains Mono',monospace">h</text>
+  <g transform="rotate(51.42857142857143, 500, 520) translate(500, 292)">
+    <text transform="rotate(0)" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-size="28" font-weight="900" font-family="'Outfit','Prompt',sans-serif" filter="url(#cardShadow)">m</text>
   </g>
-  <!-- e -->
-  <g transform="translate(600, 375)">
-    <rect x="-30" y="-14" width="60" height="28" rx="14" fill="#0f172a" stroke="#fb7185" stroke-width="1.8"/>
-    <text y="4" text-anchor="middle" fill="#fb7185" font-size="12" font-weight="700" font-family="'JetBrains Mono',monospace">e</text>
+  <g transform="rotate(51.42857142857143, 500, 520) translate(500, 370)">
+    <text transform="rotate(0)" text-anchor="middle" dominant-baseline="central" fill="#0369a1" font-size="13" font-weight="800" font-family="'Outfit','Prompt',sans-serif">meter</text>
   </g>
-  <!-- k -->
-  <g transform="translate(360, 375)">
-    <rect x="-30" y="-14" width="60" height="28" rx="14" fill="#0f172a" stroke="#f97316" stroke-width="1.8"/>
-    <text y="4" text-anchor="middle" fill="#f97316" font-size="12" font-weight="700" font-family="'JetBrains Mono',monospace">k</text>
+  <g transform="rotate(102.85714285714286, 500, 520) translate(500, 292)">
+    <text transform="rotate(180)" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-size="28" font-weight="900" font-family="'Outfit','Prompt',sans-serif" filter="url(#cardShadow)">s</text>
   </g>
-  <!-- N_A -->
-  <g transform="translate(325, 280)">
-    <rect x="-35" y="-14" width="70" height="28" rx="14" fill="#0f172a" stroke="#a855f7" stroke-width="1.8"/>
-    <text y="4" text-anchor="middle" fill="#a855f7" font-size="11" font-weight="700" font-family="'JetBrains Mono',monospace">N_A</text>
+  <g transform="rotate(102.85714285714286, 500, 520) translate(500, 370)">
+    <text transform="rotate(180)" text-anchor="middle" dominant-baseline="central" fill="#15803d" font-size="13" font-weight="800" font-family="'Outfit','Prompt',sans-serif">second</text>
   </g>
-  <!-- K_cd -->
-  <g transform="translate(360, 185)">
-    <rect x="-35" y="-14" width="70" height="28" rx="14" fill="#0f172a" stroke="#eab308" stroke-width="1.8"/>
-    <text y="4" text-anchor="middle" fill="#eab308" font-size="11" font-weight="700" font-family="'JetBrains Mono',monospace">K_cd</text>
+  <g transform="rotate(154.28571428571428, 500, 520) translate(500, 292)">
+    <text transform="rotate(180)" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-size="28" font-weight="900" font-family="'Outfit','Prompt',sans-serif" filter="url(#cardShadow)">A</text>
+  </g>
+  <g transform="rotate(154.28571428571428, 500, 520) translate(500, 370)">
+    <text transform="rotate(180)" text-anchor="middle" dominant-baseline="central" fill="#854d0e" font-size="13" font-weight="800" font-family="'Outfit','Prompt',sans-serif">ampere</text>
+  </g>
+  <g transform="rotate(205.71428571428572, 500, 520) translate(500, 292)">
+    <text transform="rotate(180)" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-size="28" font-weight="900" font-family="'Outfit','Prompt',sans-serif" filter="url(#cardShadow)">K</text>
+  </g>
+  <g transform="rotate(205.71428571428572, 500, 520) translate(500, 370)">
+    <text transform="rotate(180)" text-anchor="middle" dominant-baseline="central" fill="#1e40af" font-size="13" font-weight="800" font-family="'Outfit','Prompt',sans-serif">kelvin</text>
+  </g>
+  <g transform="rotate(257.14285714285717, 500, 520) translate(500, 292)">
+    <text transform="rotate(180)" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-size="28" font-weight="900" font-family="'Outfit','Prompt',sans-serif" filter="url(#cardShadow)">mol</text>
+  </g>
+  <g transform="rotate(257.14285714285717, 500, 520) translate(500, 370)">
+    <text transform="rotate(180)" text-anchor="middle" dominant-baseline="central" fill="#86198f" font-size="13" font-weight="800" font-family="'Outfit','Prompt',sans-serif">mole</text>
+  </g>
+  <g transform="rotate(308.57142857142856, 500, 520) translate(500, 292)">
+    <text transform="rotate(0)" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-size="28" font-weight="900" font-family="'Outfit','Prompt',sans-serif" filter="url(#cardShadow)">cd</text>
+  </g>
+  <g transform="rotate(308.57142857142856, 500, 520) translate(500, 370)">
+    <text transform="rotate(0)" text-anchor="middle" dominant-baseline="central" fill="#9a3412" font-size="13" font-weight="800" font-family="'Outfit','Prompt',sans-serif">candela</text>
+  </g>
+  <!-- Center Hub -->
+  <circle cx="500" cy="520" r="110" fill="#0f172a" stroke="#38bdf8" stroke-width="3" filter="url(#cardShadow)"/>
+  <circle cx="500" cy="520" r="100" fill="none" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <g transform="translate(500, 520)">
+    <circle r="22" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-width="1.5"/>
+    <text y="-32" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="700" letter-spacing="1.5">REVISED SI 2019</text>
+    <text y="-8" text-anchor="middle" fill="#f8fafc" font-size="20" font-weight="800">SI BASE</text>
+    <text y="14" text-anchor="middle" fill="#38bdf8" font-size="18" font-weight="800">UNITS</text>
+    <text y="36" text-anchor="middle" fill="#94a3b8" font-size="11" font-weight="600">7 หน่วยฐานสากล</text>
   </g>
 
-  <!-- ═════ OUTER ORBIT: 7 BASE UNITS (Cards) ═════ -->
+  <line x1="500.00" y1="244.00" x2="500.00" y2="196.00" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,4" opacity="0.8"/>
+  <circle cx="500.00" cy="244.00" r="3.5" fill="#ef4444"/>
 
-  <!-- 1. SECOND (s) -->
-  <g transform="translate(480, 95)" filter="url(#shadow)">
-    <rect x="-70" y="-32" width="140" height="64" rx="16" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5"/>
-    <text y="-10" text-anchor="middle" fill="#38bdf8" font-size="16" font-weight="800">วินาที (s)</text>
-    <text y="8" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">เวลา (Time)</text>
-    <text y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono',monospace">9 192 631 770 Hz</text>
+      <!-- Weighing Scale with footprints -->
+      <g transform="translate(500.00, 150.00)">
+        <rect x="-42" y="-42" width="84" height="84" rx="20" fill="#1e293b" stroke="#ef4444" stroke-width="2.5" filter="url(#cardShadow)"/>
+        <!-- Dial at top -->
+        <path d="M -16 -18 A 16 16 0 0 1 16 -18 Z" fill="#ef4444" opacity="0.3"/>
+        <path d="M -16 -18 A 16 16 0 0 1 16 -18" fill="none" stroke="#ef4444" stroke-width="2"/>
+        <line x1="0" y1="-18" x2="4" y2="-26" stroke="#ffffff" stroke-width="2"/>
+        <!-- Footprints -->
+        <g fill="#ef4444">
+          <!-- Left foot -->
+          <ellipse cx="-11" cy="5" rx="5" ry="12"/>
+          <circle cx="-13" cy="-10" r="2.2"/>
+          <circle cx="-9" cy="-11" r="1.8"/>
+          <circle cx="-5" cy="-9" r="1.5"/>
+          <!-- Right foot -->
+          <ellipse cx="11" cy="5" rx="5" ry="12"/>
+          <circle cx="13" cy="-10" r="2.2"/>
+          <circle cx="9" cy="-11" r="1.8"/>
+          <circle cx="5" cy="-9" r="1.5"/>
+        </g>
+        <!-- Badge label -->
+        <rect x="-48" y="48" width="96" height="24" rx="8" fill="#0f172a" stroke="#ef4444" stroke-width="1.2"/>
+        <text y="64" text-anchor="middle" fill="#fca5a5" font-size="10" font-weight="700">มวล &bull; Mass</text>
+      </g>
+    
+  <line x1="715.79" y1="347.92" x2="753.31" y2="317.99" stroke="#0284c7" stroke-width="2" stroke-dasharray="4,4" opacity="0.8"/>
+  <circle cx="715.79" cy="347.92" r="3.5" fill="#0284c7"/>
+
+      <!-- Tape Measure -->
+      <g transform="translate(789.28, 289.31)">
+        <rect x="-42" y="-42" width="84" height="84" rx="20" fill="#1e293b" stroke="#0284c7" stroke-width="2.5" filter="url(#cardShadow)"/>
+        <!-- Tape body -->
+        <rect x="-24" y="-20" width="34" height="34" rx="8" fill="#0284c7"/>
+        <circle cx="-7" cy="-3" r="8" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+        <!-- Tape strip extended -->
+        <path d="M 10 2 L 32 -14 L 30 -20 L 10 -6 Z" fill="#bae6fd"/>
+        <!-- Ruler tick marks -->
+        <line x1="14" y1="-4" x2="16" y2="-8" stroke="#0284c7" stroke-width="1.5"/>
+        <line x1="19" y1="-7" x2="21" y2="-11" stroke="#0284c7" stroke-width="1.5"/>
+        <line x1="24" y1="-10" x2="26" y2="-14" stroke="#0284c7" stroke-width="1.5"/>
+        <line x1="29" y1="-13" x2="31" y2="-17" stroke="#0284c7" stroke-width="1.5"/>
+        <!-- Badge label -->
+        <rect x="-52" y="48" width="104" height="24" rx="8" fill="#0f172a" stroke="#0284c7" stroke-width="1.2"/>
+        <text y="64" text-anchor="middle" fill="#bae6fd" font-size="10" font-weight="700">ความยาว &bull; Length</text>
+      </g>
+    
+  <line x1="769.08" y1="581.42" x2="815.88" y2="592.10" stroke="#22c55e" stroke-width="2" stroke-dasharray="4,4" opacity="0.8"/>
+  <circle cx="769.08" cy="581.42" r="3.5" fill="#22c55e"/>
+
+      <!-- Stopwatch / Clock -->
+      <g transform="translate(860.72, 602.33)">
+        <rect x="-42" y="-42" width="84" height="84" rx="20" fill="#1e293b" stroke="#22c55e" stroke-width="2.5" filter="url(#cardShadow)"/>
+        <!-- Top button -->
+        <rect x="-6" y="-30" width="12" height="6" rx="2" fill="#22c55e"/>
+        <!-- Clock face -->
+        <circle cx="0" cy="2" r="22" fill="#0f172a" stroke="#22c55e" stroke-width="3"/>
+        <circle cx="0" cy="2" r="3" fill="#ffffff"/>
+        <!-- Hands: 10 past 10 -->
+        <line x1="0" y1="2" x2="-8" y2="-8" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="0" y1="2" x2="10" y2="-4" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/>
+        <!-- Ticks -->
+        <circle cx="0" cy="-15" r="1.5" fill="#4ade80"/>
+        <circle cx="17" cy="2" r="1.5" fill="#4ade80"/>
+        <circle cx="0" cy="19" r="1.5" fill="#4ade80"/>
+        <circle cx="-17" cy="2" r="1.5" fill="#4ade80"/>
+        <!-- Badge label -->
+        <rect x="-48" y="48" width="96" height="24" rx="8" fill="#0f172a" stroke="#22c55e" stroke-width="1.2"/>
+        <text y="64" text-anchor="middle" fill="#bbf7d0" font-size="10" font-weight="700">เวลา &bull; Time</text>
+      </g>
+    
+  <line x1="619.75" y1="768.67" x2="640.58" y2="811.91" stroke="#eab308" stroke-width="2" stroke-dasharray="4,4" opacity="0.8"/>
+  <circle cx="619.75" cy="768.67" r="3.5" fill="#eab308"/>
+
+      <!-- Electrical Socket Outlet -->
+      <g transform="translate(660.54, 853.36)">
+        <rect x="-42" y="-42" width="84" height="84" rx="20" fill="#1e293b" stroke="#eab308" stroke-width="2.5" filter="url(#cardShadow)"/>
+        <!-- Outlet faceplate -->
+        <rect x="-20" y="-24" width="40" height="48" rx="8" fill="#eab308" opacity="0.9"/>
+        <!-- Top socket -->
+        <circle cx="0" cy="-12" r="10" fill="#0f172a"/>
+        <rect x="-4" y="-16" width="3" height="8" rx="1.5" fill="#ffffff"/>
+        <rect x="1" y="-16" width="3" height="8" rx="1.5" fill="#ffffff"/>
+        <circle cx="0" cy="-7" r="1.5" fill="#ffffff"/>
+        <!-- Bottom socket -->
+        <circle cx="0" cy="12" r="10" fill="#0f172a"/>
+        <rect x="-4" y="8" width="3" height="8" rx="1.5" fill="#ffffff"/>
+        <rect x="1" y="8" width="3" height="8" rx="1.5" fill="#ffffff"/>
+        <circle cx="0" cy="17" r="1.5" fill="#ffffff"/>
+        <!-- Badge label -->
+        <rect x="-56" y="48" width="112" height="24" rx="8" fill="#0f172a" stroke="#eab308" stroke-width="1.2"/>
+        <text y="64" text-anchor="middle" fill="#fef08a" font-size="10" font-weight="700">กระแสไฟฟ้า &bull; Current</text>
+      </g>
+    
+  <line x1="380.25" y1="768.67" x2="359.42" y2="811.91" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,4" opacity="0.8"/>
+  <circle cx="380.25" cy="768.67" r="3.5" fill="#2563eb"/>
+
+      <!-- Lab Thermometer -->
+      <g transform="translate(339.46, 853.36)">
+        <rect x="-42" y="-42" width="84" height="84" rx="20" fill="#1e293b" stroke="#2563eb" stroke-width="2.5" filter="url(#cardShadow)"/>
+        <!-- Thermometer tube -->
+        <rect x="-6" y="-24" width="12" height="34" rx="6" fill="#0f172a" stroke="#3b82f6" stroke-width="2"/>
+        <!-- Bulb -->
+        <circle cx="0" cy="14" r="11" fill="#2563eb" stroke="#3b82f6" stroke-width="2"/>
+        <circle cx="-3" cy="11" r="3" fill="#93c5fd" opacity="0.8"/>
+        <!-- Liquid column -->
+        <rect x="-3" y="-12" width="6" height="24" fill="#2563eb"/>
+        <!-- Tick marks -->
+        <line x1="8" y1="-20" x2="14" y2="-20" stroke="#60a5fa" stroke-width="1.8"/>
+        <line x1="8" y1="-14" x2="12" y2="-14" stroke="#60a5fa" stroke-width="1.5"/>
+        <line x1="8" y1="-8" x2="14" y2="-8" stroke="#60a5fa" stroke-width="1.8"/>
+        <line x1="8" y1="-2" x2="12" y2="-2" stroke="#60a5fa" stroke-width="1.5"/>
+        <!-- Badge label -->
+        <rect x="-50" y="48" width="100" height="24" rx="8" fill="#0f172a" stroke="#2563eb" stroke-width="1.2"/>
+        <text y="64" text-anchor="middle" fill="#bfdbfe" font-size="10" font-weight="700">อุณหภูมิ &bull; Temp</text>
+      </g>
+    
+  <line x1="230.92" y1="581.42" x2="184.12" y2="592.10" stroke="#d946ef" stroke-width="2" stroke-dasharray="4,4" opacity="0.8"/>
+  <circle cx="230.92" cy="581.42" r="3.5" fill="#d946ef"/>
+
+      <!-- Molecular Structure -->
+      <g transform="translate(139.28, 602.33)">
+        <rect x="-42" y="-42" width="84" height="84" rx="20" fill="#1e293b" stroke="#d946ef" stroke-width="2.5" filter="url(#cardShadow)"/>
+        <!-- Chemical bonds -->
+        <line x1="-16" y1="-10" x2="0" y2="2" stroke="#e879f9" stroke-width="3"/>
+        <line x1="0" y1="2" x2="18" y2="-8" stroke="#e879f9" stroke-width="3"/>
+        <line x1="0" y1="2" x2="-6" y2="18" stroke="#e879f9" stroke-width="3"/>
+        <line x1="18" y1="-8" x2="16" y2="14" stroke="#e879f9" stroke-width="3"/>
+        <line x1="-16" y1="-10" x2="-22" y2="8" stroke="#e879f9" stroke-width="3"/>
+        <!-- Atom spheres -->
+        <circle cx="0" cy="2" r="8" fill="#d946ef" stroke="#ffffff" stroke-width="1.5"/>
+        <circle cx="-16" cy="-10" r="7" fill="#c026d3" stroke="#ffffff" stroke-width="1.5"/>
+        <circle cx="18" cy="-8" r="7" fill="#c026d3" stroke="#ffffff" stroke-width="1.5"/>
+        <circle cx="-6" cy="18" r="6" fill="#f472b6" stroke="#ffffff" stroke-width="1.5"/>
+        <circle cx="16" cy="14" r="6" fill="#f472b6" stroke="#ffffff" stroke-width="1.5"/>
+        <circle cx="-22" cy="8" r="5" fill="#f472b6" stroke="#ffffff" stroke-width="1.5"/>
+        <!-- Badge label -->
+        <rect x="-56" y="48" width="112" height="24" rx="8" fill="#0f172a" stroke="#d946ef" stroke-width="1.2"/>
+        <text y="64" text-anchor="middle" fill="#f5d0fe" font-size="10" font-weight="700">ปริมาณสาร &bull; Mole</text>
+      </g>
+    
+  <line x1="284.21" y1="347.92" x2="246.69" y2="317.99" stroke="#f97316" stroke-width="2" stroke-dasharray="4,4" opacity="0.8"/>
+  <circle cx="284.21" cy="347.92" r="3.5" fill="#f97316"/>
+
+      <!-- Light Bulb / Illumination -->
+      <g transform="translate(210.72, 289.31)">
+        <rect x="-42" y="-42" width="84" height="84" rx="20" fill="#1e293b" stroke="#f97316" stroke-width="2.5" filter="url(#cardShadow)"/>
+        <!-- Light rays -->
+        <line x1="-24" y1="-22" x2="-30" y2="-28" stroke="#fb923c" stroke-width="2" stroke-linecap="round"/>
+        <line x1="0" y1="-30" x2="0" y2="-38" stroke="#fb923c" stroke-width="2" stroke-linecap="round"/>
+        <line x1="24" y1="-22" x2="30" y2="-28" stroke="#fb923c" stroke-width="2" stroke-linecap="round"/>
+        <line x1="-32" y1="-2" x2="-40" y2="-2" stroke="#fb923c" stroke-width="2" stroke-linecap="round"/>
+        <line x1="32" y1="-2" x2="40" y2="-2" stroke="#fb923c" stroke-width="2" stroke-linecap="round"/>
+        <!-- Glass bulb -->
+        <path d="M -16 -4 C -16 -16 16 -16 16 -4 C 16 4 9 9 9 14 L -9 14 C -9 9 -16 4 -16 -4 Z" fill="#f97316" fill-opacity="0.3" stroke="#f97316" stroke-width="2.5"/>
+        <!-- Filament -->
+        <path d="M -6 4 Q -3 -8 0 4 Q 3 -8 6 4" fill="none" stroke="#fed7aa" stroke-width="2"/>
+        <!-- Screw base -->
+        <rect x="-8" y="15" width="16" height="5" rx="1.5" fill="#64748b"/>
+        <rect x="-6" y="21" width="12" height="4" rx="1.5" fill="#475569"/>
+        <!-- Badge label -->
+        <rect x="-56" y="48" width="112" height="24" rx="8" fill="#0f172a" stroke="#f97316" stroke-width="1.2"/>
+        <text y="64" text-anchor="middle" fill="#fed7aa" font-size="10" font-weight="700">ความเข้มแสง &bull; Light</text>
+      </g>
+    
+  <!-- Bottom Metrology Summary Panel -->
+  <g transform="translate(100, 890)">
+    <rect width="800" height="70" rx="16" fill="#0f172a" stroke="#1e293b" stroke-width="1.5" filter="url(#cardShadow)"/>
+    <g transform="translate(25, 26)">
+      <circle cx="8" cy="8" r="14" fill="#38bdf8" fill-opacity="0.15" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="8" y="12" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="800">i</text>
+      <text x="32" y="6" fill="#f8fafc" font-size="13" font-weight="700">ระบบหน่วยเอสไอฉบับปรับปรุงใหม่ (The Revised SI — 2019 by BIPM/CGPM)</text>
+      <text x="32" y="24" fill="#94a3b8" font-size="11">กำหนดนิยาม 7 หน่วยฐานสากลผ่านค่าคงที่พื้นฐานของธรรมชาติอย่างสมบูรณ์ ปราศจากการเสื่อมสลายของวัตถุประดิษฐ์</text>
+    </g>
   </g>
-
-  <!-- 2. METRE (m) -->
-  <g transform="translate(690, 130)" filter="url(#shadow)">
-    <rect x="-70" y="-32" width="140" height="64" rx="16" fill="#1e293b" stroke="#34d399" stroke-width="2.5"/>
-    <text y="-10" text-anchor="middle" fill="#34d399" font-size="16" font-weight="800">เมตร (m)</text>
-    <text y="8" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">ความยาว (Length)</text>
-    <text y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono',monospace">c = 299 792 458 m/s</text>
-  </g>
-
-  <!-- 3. KILOGRAM (kg) -->
-  <g transform="translate(770, 280)" filter="url(#shadow)">
-    <rect x="-75" y="-32" width="150" height="64" rx="16" fill="#1e293b" stroke="#fbbf24" stroke-width="2.5"/>
-    <text y="-10" text-anchor="middle" fill="#fbbf24" font-size="16" font-weight="800">กิโลกรัม (kg)</text>
-    <text y="8" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">มวล (Mass)</text>
-    <text y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono',monospace">h = 6.626 070 15×10⁻³⁴</text>
-  </g>
-
-  <!-- 4. AMPERE (A) -->
-  <g transform="translate(690, 430)" filter="url(#shadow)">
-    <rect x="-70" y="-32" width="140" height="64" rx="16" fill="#1e293b" stroke="#fb7185" stroke-width="2.5"/>
-    <text y="-10" text-anchor="middle" fill="#fb7185" font-size="16" font-weight="800">แอมแปร์ (A)</text>
-    <text y="8" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">กระแสไฟฟ้า (Current)</text>
-    <text y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono',monospace">e = 1.602 176 634×10⁻¹⁹</text>
-  </g>
-
-  <!-- 5. KELVIN (K) -->
-  <g transform="translate(270, 430)" filter="url(#shadow)">
-    <rect x="-70" y="-32" width="140" height="64" rx="16" fill="#1e293b" stroke="#f97316" stroke-width="2.5"/>
-    <text y="-10" text-anchor="middle" fill="#f97316" font-size="16" font-weight="800">เคลวิน (K)</text>
-    <text y="8" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">อุณหพลวัต (Temp)</text>
-    <text y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono',monospace">k = 1.380 649×10⁻²³</text>
-  </g>
-
-  <!-- 6. MOLE (mol) -->
-  <g transform="translate(190, 280)" filter="url(#shadow)">
-    <rect x="-75" y="-32" width="150" height="64" rx="16" fill="#1e293b" stroke="#a855f7" stroke-width="2.5"/>
-    <text y="-10" text-anchor="middle" fill="#a855f7" font-size="16" font-weight="800">โมล (mol)</text>
-    <text y="8" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">ปริมาณสาร (Substance)</text>
-    <text y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono',monospace">N_A = 6.022 140 76×10²³</text>
-  </g>
-
-  <!-- 7. CANDELA (cd) -->
-  <g transform="translate(270, 130)" filter="url(#shadow)">
-    <rect x="-70" y="-32" width="140" height="64" rx="16" fill="#1e293b" stroke="#eab308" stroke-width="2.5"/>
-    <text y="-10" text-anchor="middle" fill="#eab308" font-size="16" font-weight="800">แคนเดลา (cd)</text>
-    <text y="8" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">ความเข้มแสง (Intensity)</text>
-    <text y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono',monospace">K_cd = 683 lm/W</text>
-  </g>
-
-  <!-- Bottom Legend/Note -->
-  <text x="480" y="525" text-anchor="middle" fill="#64748b" font-size="11">
-    ★ นิยามทั้งหมดในปัจจุบัน (2019–ปัจจุบัน) ปราศจากการอิงวัตถุประดิษฐ์ (No physical artifacts) ทำให้มาตรฐานมีความเสถียรคงทนชั่วกัลปาวสาน
-  </text>
 </svg>
-

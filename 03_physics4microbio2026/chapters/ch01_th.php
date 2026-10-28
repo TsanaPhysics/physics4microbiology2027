@@ -419,7 +419,7 @@ include '../includes/header.php';
                             <img src="../images/maintex/tikz/ch01_si_network.svg" alt="แผนผัง 7 ค่าคงตัวพื้นฐานกับ 7 หน่วยฐานเอสไอ" class="w-full h-auto" loading="lazy">
                         </div>
                         <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
-                            <strong class="text-cyan-400">ภาพที่ 1.3</strong>&ensp;แผนผังเครือข่ายความสัมพันธ์ระหว่าง 7 ค่าคงตัวพื้นฐานแห่งเอกภพ (Defining Constants) สู่ 7 หน่วยฐานเอสไอ (Revised SI 2019) ได้แก่ วินาที ($\text{s}$), เมตร ($\text{m}$), กิโลกรัม ($\text{kg}$), แอมแปร์ ($\text{A}$), เคลวิน ($\text{K}$), โมล ($\text{mol}$) และแคนเดลา ($\text{cd}$)
+                            <strong class="text-cyan-400">ภาพที่ 1.3</strong>&ensp;แผนภาพวงล้อ 7 หน่วยฐานสากลเอสไอ (The 7 SI Base Units Wheel): ได้แก่ กิโลกรัม ($\text{kg}$), เมตร ($\text{m}$), วินาที ($\text{s}$), แอมแปร์ ($\text{A}$), เคลวิน ($\text{K}$), โมล ($\text{mol}$) และแคนเดลา ($\text{cd}$) พร้อมไอคอนเครื่องมือวัดประจำแต่ละหน่วย และนิยามสากลระบบเอสไอใหม่ (Revised SI 2019)
                         </figcaption>
                     </figure>
 
@@ -1091,6 +1091,16 @@ include '../includes/header.php';
                         </div>
                     </div>
 
+                    <!-- Figure 1.4: SI Base to Derived Units Flowchart for Microbiology (NIST SP 1247 Adaptation) -->
+                    <figure class="tex-figure tex-figure-diagram my-10" id="fig-si-derived-microbio">
+                        <div class="rounded-2xl overflow-hidden border border-emerald-500/30 shadow-2xl bg-slate-950 p-2 sm:p-4">
+                            <img src="../images/maintex/tikz/ch01_si_derived_microbio.svg" alt="แผนผังเครือข่าย 7 หน่วยฐานสากล สู่หน่วยอนุพันธ์ในงานจุลชีววิทยา (NIST SP 1247 Adaptation)" class="w-full h-auto" loading="lazy">
+                        </div>
+                        <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+                            <strong class="text-emerald-400">ภาพที่ 1.4</strong>&ensp;แผนผังเครือข่ายความเชื่อมโยงจาก 7 หน่วยฐานสากลเอสไอ สู่หน่วยอนุพันธ์สำคัญในงานจุลชีววิทยา (SI Base to Derived Units Hierarchy in Microbiology): พัฒนาตามแนวทางมาตรฐาน NIST SP 1247 โดยถอดรหัสสายสัมพันธ์การคูณ (เส้นทึบ) และการหาร (เส้นประ) พร้อมระบุตัวอย่างการประยุกต์ใช้งานจริงในห้องปฏิบัติการจุลชีววิทยา เช่น อัตราเร่งเอนไซม์ ($\text{kat}$), ความดันหม้อนึ่งไอและออสโมซิส ($\text{Pa}$), พลังงาน ATP ($\text{J}$), เจลอิเล็กโทรโฟรีซิส ($\text{V, }\Omega$), และการฉายรังสีแกมมาฆ่าเชื้อ ($\text{Gy, Sv}$)
+                        </figcaption>
+                    </figure>
+
                     <!-- TABLE 1.2: SI DERIVED UNITS -->
                     <div class="tex-tablefig mt-10 scroll-mt-20" id="tab-1.2">
                         <div class="p-3.5 bg-gradient-to-r from-emerald-950/80 via-slate-900 to-slate-900 rounded-t-xl border border-b-0 border-emerald-500/30 flex items-center justify-between flex-wrap gap-2 shadow-lg">
@@ -1675,27 +1685,27 @@ include '../includes/header.php';
                 </div>
 
                 <div class="tex-article leading-relaxed space-y-6 text-slate-200">
-                    <!-- Figure 1.3: 3D Serial Dilution Render -->
-                    <figure class="tex-figure tex-figure-photo my-8" id="fig-1.3-render">
+                    <!-- Figure 1.5: 3D Serial Dilution Render -->
+                    <figure class="tex-figure tex-figure-photo my-8" id="fig-1.5-render">
                         <div class="rounded-2xl overflow-hidden border border-emerald-500/30 shadow-2xl bg-slate-950 group">
-                            <img src="../images/sec_3d/ch01_serial_dilution_3d.jpg" alt="ภาพที่ 1.3 การเจือจางแบบลำดับส่วน 10 เท่า Serial Dilution 3 มิติ" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
+                            <img src="../images/sec_3d/ch01_serial_dilution_3d.jpg" alt="ภาพที่ 1.5 การเจือจางแบบลำดับส่วน 10 เท่า Serial Dilution 3 มิติ" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
                         </div>
                         <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
-                            <strong class="text-emerald-400">ภาพที่ 1.3</strong>&ensp;แบบจำลอง 3 มิติของการเจือจางเชื้อแบบลำดับส่วน 10 เท่า (10-Fold Serial Dilution): แสดงหลอดทดลอง 5 หลอดตั้งแต่ $10^{-1}$ ถึง $10^{-5}$ พร้อมลูกศรการดูดถ่ายสารด้วยไมโครปิเปต $100\text{ }\mu\text{L}$ และผลการเจริญของโคโลนีแบคทีเรียบนจานวุ้นเพาะเชื้อ (TNTC $\rightarrow$ 150 CFU $\rightarrow$ 15 CFU)
+                            <strong class="text-emerald-400">ภาพที่ 1.5</strong>&ensp;แบบจำลอง 3 มิติของการเจือจางเชื้อแบบลำดับส่วน 10 เท่า (10-Fold Serial Dilution): แสดงหลอดทดลอง 5 หลอดตั้งแต่ $10^{-1}$ ถึง $10^{-5}$ พร้อมลูกศรการดูดถ่ายสารด้วยไมโครปิเปต $100\text{ }\mu\text{L}$ และผลการเจริญของโคโลนีแบคทีเรียบนจานวุ้นเพาะเชื้อ (TNTC $\rightarrow$ 150 CFU $\rightarrow$ 15 CFU)
                         </figcaption>
                     </figure>
 
                     <p class="text-[15px] sm:text-base leading-relaxed">
-                        นักศึกษาจำนวนมากมักสับสนเมื่อต้องคำนวณเลขยกกำลังติดลบ เช่น $10^{-6}$ หารด้วย $10^{-3}$ เพื่อขจัดปัญหานี้ เราสามารถใช้ <strong>เทคนิคบันไดขั้นละ 1,000</strong> (<strong>Step-by-1,000 Ladder Method</strong>) ซึ่งจำง่ายเหมือนการแลกธนบัตร กล่าวคือ หน่วยที่เรียงติดกันจากใหญ่ไปเล็ก ได้แก่ <strong>หน่วยปกติ $\rightarrow$ มิลลิ ($\text{m}$) $\rightarrow$ ไมโคร ($\mu$) $\rightarrow$ นาโน ($\text{n}$)</strong> จะมีค่าห่างกันขั้นละ $1{,}000$ เท่าเสมอ ดังแสดงในภาพที่ 1.4
+                        นักศึกษาจำนวนมากมักสับสนเมื่อต้องคำนวณเลขยกกำลังติดลบ เช่น $10^{-6}$ หารด้วย $10^{-3}$ เพื่อขจัดปัญหานี้ เราสามารถใช้ <strong>เทคนิคบันไดขั้นละ 1,000</strong> (<strong>Step-by-1,000 Ladder Method</strong>) ซึ่งจำง่ายเหมือนการแลกธนบัตร กล่าวคือ หน่วยที่เรียงติดกันจากใหญ่ไปเล็ก ได้แก่ <strong>หน่วยปกติ $\rightarrow$ มิลลิ ($\text{m}$) $\rightarrow$ ไมโคร ($\mu$) $\rightarrow$ นาโน ($\text{n}$)</strong> จะมีค่าห่างกันขั้นละ $1{,}000$ เท่าเสมอ ดังแสดงในภาพที่ 1.6
                     </p>
 
                     <!-- SVG Diagram: Ladder -->
-                    <figure class="tex-figure tex-figure-diagram my-8" id="fig-1.4-diagram">
+                    <figure class="tex-figure tex-figure-diagram my-8" id="fig-1.6-diagram">
                         <div class="rounded-2xl overflow-hidden border border-slate-700/80 shadow-2xl bg-slate-950 p-3 sm:p-4">
                             <img src="../images/maintex/tikz/ch01_tikz1.svg" alt="แผนภาพบันไดคำอุปสรรคขั้นละ 1,000 เท่า" class="w-full h-auto" loading="lazy">
                         </div>
                         <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
-                            <strong class="text-emerald-400">ภาพที่ 1.4</strong>&ensp;แผนภาพบันไดคำอุปสรรคขั้นละ 1,000 เท่า สำหรับการแปลงหน่วยขนาดเซลล์และปริมาตรสารละลายในห้องปฏิบัติการ
+                            <strong class="text-emerald-400">ภาพที่ 1.6</strong>&ensp;แผนภาพบันไดคำอุปสรรคขั้นละ 1,000 เท่า สำหรับการแปลงหน่วยขนาดเซลล์และปริมาตรสารละลายในห้องปฏิบัติการ
                         </figcaption>
                     </figure>
 
@@ -1807,27 +1817,23 @@ include '../includes/header.php';
                 </div>
 
                 <div class="tex-article leading-relaxed space-y-6 text-slate-200">
-                    <!-- Figure 1.5: 3D Micropipette Mechanism Render -->
-                    <figure class="tex-figure tex-figure-photo my-8" id="fig-1.5-render">
-                        <div class="rounded-2xl overflow-hidden border border-amber-500/30 shadow-2xl bg-slate-950 group">
-                            <img src="../images/sec_3d/ch01_micropipette_3d.jpg" alt="ภาพที่ 1.5 ภาพตัดขวาง 3 มิติแสดงกลไกลูกสูบไมโครปิเปต 2 จังหวะ" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
-                        </div>
-                        <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
-                            <strong class="text-amber-400">ภาพที่ 1.6</strong>&ensp;แบบจำลอง 3 มิติเชิงเทคนิคแสดงภาพตัดขวางของไมโครปิเปต P1000: แสดงกลไกปุ่มกด 2 จังหวะ (First Stop สำหรับดูดสาร และ Second Stop สำหรับเป่าสารออกให้หมด), สปริงสอบเทียบ, แกนลูกสูบ, หน้าปัดดิจิทัล $1{,}000\text{ }\mu\text{L}$ และหยดของเหลวที่ปลายทิป
-                        </figcaption>
-                    </figure>
-
-                    <p class="text-[15px] sm:text-base leading-relaxed">
-                        ในการบันทึกผลการทดลองทางวิทยาศาสตร์ ตัวเลขทุกตัวที่เขียนลงในตารางบันทึกผลต้องสะท้อนความละเอียดของเครื่องมือวัดจริง ซึ่งเรียกว่า <strong>เลขนัยสำคัญ</strong> (<strong>Significant Figures</strong>) โดยประกอบด้วยตัวเลขที่อ่านได้แน่นอนจากขีดสเกลรวมกับตัวเลขประมาณค่าอีก 1 ตำแหน่ง นอกจากนี้ นักจุลชีววิทยาต้องแยกแยะความแตกต่างระหว่าง <strong>ความแม่น</strong> (<strong>Accuracy</strong> คือความใกล้เคียงกับค่าจริงมาตรฐาน) และ <strong>ความเที่ยง</strong> (<strong>Precision</strong> คือความสม่ำเสมอหรือการซ้ำรอยเดิมเมื่อวัดซ้ำหลายครั้ง)
-                    </p>
-
-                    <!-- 3D Target: Accuracy vs Precision -->
+                    <!-- Figure 1.7: 3D Target: Accuracy vs Precision -->
                     <figure class="tex-figure tex-figure-photo my-8" id="fig-accuracy-precision">
                         <div class="rounded-2xl overflow-hidden border border-amber-500/30 shadow-2xl bg-slate-950 group">
                             <img src="../images/sec_3d/ch01_accuracy_precision_3d.jpg" alt="เปรียบเทียบความแม่นยำและความเที่ยงตรง 3 มิติ (Accuracy vs Precision Targets)" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
                         </div>
                         <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
-                            <strong class="text-amber-400">ภาพที่ 1.5</strong>&ensp;แบบจำลอง 3 มิติเปรียบเทียบความแตกต่างระหว่างความแม่น (Accuracy) และความเที่ยง (Precision) ผ่านเป้ายิง 4 รูปแบบ: (1) แม่นสูง-เที่ยงสูง เกาะกลุ่มตรงกลางเป้า (2) แม่นต่ำ-เที่ยงสูง เกาะกลุ่มแน่นแต่นอกเป้า (3) แม่นสูง-เที่ยงต่ำ กระจายรอบจุดกึ่งกลาง (4) แม่นต่ำ-เที่ยงต่ำ กระจายไร้ทิศทาง
+                            <strong class="text-amber-400">ภาพที่ 1.7</strong>&ensp;แบบจำลอง 3 มิติเปรียบเทียบความแตกต่างระหว่างความแม่น (Accuracy) และความเที่ยง (Precision) ผ่านเป้ายิง 4 รูปแบบ: (1) แม่นสูง-เที่ยงสูง เกาะกลุ่มตรงกลางเป้า (2) แม่นต่ำ-เที่ยงสูง เกาะกลุ่มแน่นแต่นอกเป้า (3) แม่นสูง-เที่ยงต่ำ กระจายรอบจุดกึ่งกลาง (4) แม่นต่ำ-เที่ยงต่ำ กระจายไร้ทิศทาง
+                        </figcaption>
+                    </figure>
+
+                    <!-- Figure 1.8: 3D Micropipette Mechanism Render -->
+                    <figure class="tex-figure tex-figure-photo my-8" id="fig-1.8-render">
+                        <div class="rounded-2xl overflow-hidden border border-amber-500/30 shadow-2xl bg-slate-950 group">
+                            <img src="../images/sec_3d/ch01_micropipette_3d.jpg" alt="ภาพตัดขวาง 3 มิติแสดงกลไกลูกสูบไมโครปิเปต 2 จังหวะ" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
+                        </div>
+                        <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+                            <strong class="text-amber-400">ภาพที่ 1.8</strong>&ensp;แบบจำลอง 3 มิติเชิงเทคนิคแสดงภาพตัดขวางของไมโครปิเปต P1000: แสดงกลไกปุ่มกด 2 จังหวะ (First Stop สำหรับดูดสาร และ Second Stop สำหรับเป่าสารออกให้หมด), สปริงสอบเทียบ, แกนลูกสูบ, หน้าปัดดิจิทัล $1{,}000\text{ }\mu\text{L}$ และหยดของเหลวที่ปลายทิป
                         </figcaption>
                     </figure>
 
@@ -1835,11 +1841,32 @@ include '../includes/header.php';
                         หากเราต้องการตรวจสอบว่าไมโครปิเปตในห้องปฏิบัติการยังมีความแม่นยำหรือไม่ เราสามารถใช้วิธีชั่งมวลของน้ำกลั่นที่ดูดออกมา เนื่องจากน้ำบริสุทธิ์ที่อุณหภูมิห้องมีความหนาแน่นประมาณ $1\text{ g/mL}$ หรือกล่าวได้ว่า <strong>น้ำกลั่นปริมาตร $1{,}000\text{ }\mu\text{L}$ ($1\text{ mL}$) จะมีมวลเท่ากับ $1.0000\text{ g}$ และน้ำกลั่น $100\text{ }\mu\text{L}$ จะมีมวลเท่ากับ $0.1000\text{ g}$</strong> โดยคำนวณเปอร์เซ็นต์ความคลาดเคลื่อนสัมพัทธ์ได้จากสมการที่ (1.1)
                     </p>
 
-                    <!-- Formula Highlight Card -->
-                    <div class="p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 border border-slate-700/80 text-center shadow-lg">
-                        <span class="text-xs font-mono text-cyan-400 uppercase tracking-widest block mb-1">สมการที่ (1.1) เปอร์เซ็นต์ความคลาดเคลื่อนสัมพัทธ์ (Relative Error)</span>
-                        <div class="text-base sm:text-lg text-white font-mono py-2">
-                            $$\text{เปอร์เซ็นต์ความคลาดเคลื่อน} = \frac{|\text{ค่าที่วัดได้จริง} - \text{ค่ามาตรฐาน}|}{\text{ค่ามาตรฐาน}} \times 100\% \tag{1.1}$$
+                    <!-- Formula Highlight Card: Responsive & Overflow-Safe -->
+                    <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border border-cyan-500/30 text-center shadow-xl space-y-3">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-xs font-mono text-cyan-300 font-bold uppercase tracking-wider">
+                            <i class="fa-solid fa-square-root-variable text-cyan-400"></i> สมการที่ (1.1) เปอร์เซ็นต์ความคลาดเคลื่อนสัมพัทธ์ (Relative Error)
+                        </div>
+                        
+                        <!-- Responsive Equation Box with overflow-x-auto -->
+                        <div class="overflow-x-auto py-3 px-2 scrollbar-thin text-base sm:text-lg md:text-xl text-amber-300 font-mono">
+                            $$\% \text{Relative Error} = \frac{\left| x_{\text{measured}} - x_{\text{true}} \right|}{x_{\text{true}}} \times 100\% \tag{1.1}$$
+                        </div>
+
+                        <!-- Thai Formula & Variable Definitions Sub-Card -->
+                        <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300 font-sans space-y-2 text-left">
+                            <div class="overflow-x-auto text-center py-1 font-mono text-slate-200">
+                                $$\% \text{ความคลาดเคลื่อน} = \frac{\left|\text{ค่าที่วัดได้จริง} - \text{ค่ามาตรฐาน}\right|}{\text{ค่ามาตรฐาน}} \times 100\%$$
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-800 text-[11px] font-mono text-slate-400">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-amber-400 font-bold">$x_{\text{measured}}$</span>
+                                    <span>= มวลหรือปริมาตรที่อ่านได้จากการทดลองจริง</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-emerald-400 font-bold">$x_{\text{true}}$</span>
+                                    <span>= ค่ามาตรฐานหรือค่าอ้างอิงที่ระบุ (เช่น $1.0000\text{ g}$)</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

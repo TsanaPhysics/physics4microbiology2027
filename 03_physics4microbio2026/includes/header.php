@@ -96,10 +96,21 @@
         .lang-zh div.lang-block[lang="zh"] { display: block; }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 8px; height: 6px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+
+        /* MathJax Global Responsive Overflow Protection */
+        mjx-container, .MathJax, .tex-display {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            padding: 4px 0 !important;
+        }
+        mjx-container[display="true"] {
+            margin: 0.5em 0 !important;
+        }
     </style>
 </head>
 <?php
