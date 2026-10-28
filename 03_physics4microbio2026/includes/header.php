@@ -95,6 +95,12 @@
         .lang-en div.lang-block[lang="en"] { display: block; }
         .lang-zh div.lang-block[lang="zh"] { display: block; }
 
+        /* Smooth Anchor Scrolling & Scroll Padding */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 7.5rem;
+        }
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; height: 6px; }
         ::-webkit-scrollbar-track { background: #0f172a; }

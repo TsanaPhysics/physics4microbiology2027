@@ -94,20 +94,22 @@ include '../includes/header.php';
     </section>
 
     <!-- Sticky Table of Contents Quick Nav Bar -->
-    <div class="sticky top-16 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 py-2.5 shadow-md">
+    <div id="quick-nav-bar" class="sticky top-16 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 py-2.5 shadow-md">
         <div class="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 overflow-x-auto text-xs font-mono whitespace-nowrap scrollbar-none">
-            <span class="text-slate-400 font-bold flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
+            <span class="text-slate-400 font-bold flex items-center gap-1.5 text-[11px] uppercase tracking-wider shrink-0">
                 <i class="fa-solid fa-compass text-cyan-400"></i> ทางลัดหัวข้อ:
             </span>
             <div class="flex items-center gap-2">
-                <a href="#curriculum-plan" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-indigo-600/30 text-slate-300 hover:text-indigo-300 border border-slate-700/60 transition">📋 แผนการสอน</a>
-                <a href="#sec-1.1" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-cyan-600/30 text-slate-300 hover:text-cyan-300 border border-slate-700/60 transition">1.1 หน่วยเอสไอ & 7 ค่าคงตัว</a>
-                <a href="#tab-1.1" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-cyan-600/30 text-slate-300 hover:text-cyan-300 border border-slate-700/60 transition">📊 ตาราง 7 หน่วยฐาน</a>
-                <a href="#sec-1.2" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-emerald-600/30 text-slate-300 hover:text-emerald-300 border border-slate-700/60 transition">1.2 บันไดเลื่อนจุดทศนิยม</a>
-                <a href="#sec-aruco" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-emerald-600/30 text-slate-300 hover:text-emerald-300 border border-slate-700/60 transition">🥽 ArUco ID:0</a>
-                <a href="#sec-1.3" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-amber-600/30 text-slate-300 hover:text-amber-300 border border-slate-700/60 transition">1.3 ความเที่ยง แม่น & ปิเปต</a>
-                <a href="#sec-1.4" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-teal-600/30 text-slate-300 hover:text-teal-300 border border-slate-700/60 transition">1.4 ปฏิบัติการที่ 1</a>
-                <a href="#review-questions" class="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-indigo-600/30 text-slate-300 hover:text-indigo-300 border border-slate-700/60 transition">📝 คำถามท้ายบท</a>
+                <a href="#curriculum-plan" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-indigo-600/30 text-slate-300 hover:text-indigo-300 border border-slate-700/60 transition">📋 แผนการสอน</a>
+                <a href="#sec-1.1" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-cyan-600/30 text-slate-300 hover:text-cyan-300 border border-slate-700/60 transition">1.1 หน่วยเอสไอ</a>
+                <a href="#fig-1.3" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-cyan-600/30 text-slate-300 hover:text-cyan-300 border border-slate-700/60 transition">🎡 วงล้อ 3D</a>
+                <a href="#tab-1.1" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-cyan-600/30 text-slate-300 hover:text-cyan-300 border border-slate-700/60 transition">📊 ตาราง 7 หน่วยฐาน</a>
+                <a href="#fig-1.4" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-purple-600/30 text-slate-300 hover:text-purple-300 border border-slate-700/60 transition">🧬 เครือข่าย 22 หน่วย</a>
+                <a href="#sec-1.2" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-emerald-600/30 text-slate-300 hover:text-emerald-300 border border-slate-700/60 transition">1.2 บันไดเลื่อน</a>
+                <a href="#sec-aruco" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-emerald-600/30 text-slate-300 hover:text-emerald-300 border border-slate-700/60 transition">🥽 ArUco ID:0</a>
+                <a href="#sec-1.3" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-amber-600/30 text-slate-300 hover:text-amber-300 border border-slate-700/60 transition">1.3 ความเที่ยง แม่น</a>
+                <a href="#sec-1.4" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-teal-600/30 text-slate-300 hover:text-teal-300 border border-slate-700/60 transition">1.4 ปฏิบัติการที่ 1</a>
+                <a href="#review-questions" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-indigo-600/30 text-slate-300 hover:text-indigo-300 border border-slate-700/60 transition">📝 คำถามท้ายบท</a>
             </div>
         </div>
     </div>
@@ -122,36 +124,42 @@ include '../includes/header.php';
                 <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-xl space-y-3">
                     <div class="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 flex items-center justify-between pb-2.5 border-b border-slate-800">
                         <span class="flex items-center gap-2"><i class="fa-solid fa-list-ul"></i> สารบัญประจำบท</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-500/30">4 หัวข้อ</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-500/30">4 หัวข้อหลัก</span>
                     </div>
-                    <nav class="space-y-1 text-xs font-mono">
-                        <a href="#curriculum-plan" class="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+                    <nav id="sidebar-toc" class="space-y-1 text-xs font-mono">
+                        <a href="#curriculum-plan" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
                             <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-[10px] group-hover:bg-indigo-500 group-hover:text-slate-950 font-bold transition">📋</span>
                             <span class="truncate">แผนการสอนประจำบท</span>
                         </a>
-                        <a href="#sec-1.1" class="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+                        <a href="#sec-1.1" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
                             <span class="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[10px] group-hover:bg-cyan-500 group-hover:text-slate-950 font-bold transition">1.1</span>
                             <span class="truncate">หน่วยเอสไอ & 7 ค่าคงตัว</span>
                         </a>
-                        <a href="#tab-1.1" class="group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-cyan-300 hover:bg-slate-800/50 transition text-[11px] pl-6">
-                            <span>↳ ตาราง 1.1: 7 หน่วยฐาน</span>
+                        <a href="#fig-1.3" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-cyan-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                            <span>↳ 🎡 ภาพ 1.3: วงล้อ 3D 7 หน่วยฐาน</span>
                         </a>
-                        <a href="#sec-1.2" class="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+                        <a href="#tab-1.1" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-cyan-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                            <span>↳ 📊 ตาราง 1.1: นิยาม 7 หน่วยฐาน</span>
+                        </a>
+                        <a href="#fig-1.4" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-cyan-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                            <span>↳ 🧬 ภาพ 1.4: เครือข่าย 22 หน่วย</span>
+                        </a>
+                        <a href="#sec-1.2" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
                             <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] group-hover:bg-emerald-500 group-hover:text-slate-950 font-bold transition">1.2</span>
                             <span class="truncate">การแปลงหน่วย & บันไดเลื่อน</span>
                         </a>
-                        <a href="#sec-aruco" class="group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-emerald-300 hover:bg-slate-800/50 transition text-[11px] pl-6">
+                        <a href="#sec-aruco" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-emerald-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
                             <span>↳ 🥽 3D WebAR ArUco ID:0</span>
                         </a>
-                        <a href="#sec-1.3" class="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+                        <a href="#sec-1.3" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
                             <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-[10px] group-hover:bg-amber-500 group-hover:text-slate-950 font-bold transition">1.3</span>
                             <span class="truncate">ความเที่ยง แม่น & ไมโครปิเปต</span>
                         </a>
-                        <a href="#sec-1.4" class="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+                        <a href="#sec-1.4" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
                             <span class="w-6 h-6 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center text-[10px] group-hover:bg-teal-500 group-hover:text-slate-950 font-bold transition">1.4</span>
                             <span class="truncate">ปฏิบัติการที่ 1 & การวัดละเอียด</span>
                         </a>
-                        <a href="#review-questions" class="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+                        <a href="#review-questions" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
                             <span class="w-6 h-6 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-[10px] group-hover:bg-purple-500 group-hover:text-slate-950 font-bold transition">📝</span>
                             <span class="truncate">คำถามทบทวนท้ายบท</span>
                         </a>
@@ -212,7 +220,7 @@ include '../includes/header.php';
                 <div id="chapterContent" class="rounded-3xl shadow-2xl overflow-hidden border p-5 sm:p-8 md:p-12 bg-slate-900/95 backdrop-blur-3xl border-slate-800 space-y-12 transition-all">
 
             <!-- Curriculum Planbox (แผนบริหารการสอนประจำบทที่ 1 — 4 Card Grid) -->
-            <div id="curriculum-plan" class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-indigo-950/50 via-slate-900 to-slate-950 border border-indigo-500/30 shadow-2xl space-y-6">
+            <div id="curriculum-plan" class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-indigo-950/50 via-slate-900 to-slate-950 border border-indigo-500/30 shadow-2xl space-y-6 scroll-mt-32">
                 <div class="flex items-center justify-between flex-wrap gap-4 pb-4 border-b border-indigo-500/20">
                     <div class="flex items-center gap-3.5">
                         <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-purple-600/40 flex items-center justify-center text-indigo-300 border border-indigo-400/40 shadow-lg shadow-indigo-500/20 text-xl">
@@ -237,26 +245,46 @@ include '../includes/header.php';
                             <div class="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-800">
                                 <h4 class="text-xs sm:text-[13px] font-bold font-mono uppercase text-indigo-300 tracking-wider flex items-center gap-2">
                                     <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xs border border-indigo-500/30">1</span>
-                                    หัวข้อเนื้อหาประจำบท
+                                    หัวข้อเนื้อหาประจำบท (คลิกเพื่อไปยังหัวข้อ)
                                 </h4>
                                 <span class="text-[11px] font-mono text-indigo-300 bg-indigo-950/80 px-2 py-0.5 rounded border border-indigo-500/30">บรรยาย 2 ชม. + ปฏิบัติการ 3 ชม.</span>
                             </div>
-                            <ul class="text-xs sm:text-[13px] space-y-2.5 text-slate-300">
-                                <li class="flex items-start gap-2">
-                                    <span class="text-cyan-400 font-mono font-bold mt-0.5">1.1</span>
-                                    <span>ระบบหน่วยเอสไอและ 7 ค่าคงตัวพื้นฐานในงานจุลชีววิทยา (SI 2019)</span>
+                            <ul class="text-xs sm:text-[13px] space-y-2 text-slate-300">
+                                <li>
+                                    <a href="#sec-1.1" class="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-cyan-500/10 border border-transparent hover:border-cyan-500/30 transition-all">
+                                        <span class="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 font-mono font-bold flex items-center justify-center text-xs shrink-0 border border-cyan-500/30 group-hover:bg-cyan-500 group-hover:text-slate-950 transition">1.1</span>
+                                        <div>
+                                            <span class="text-white group-hover:text-cyan-300 font-semibold transition block">ระบบหน่วยเอสไอและ 7 ค่าคงตัวพื้นฐานในงานจุลชีววิทยา (SI 2019)</span>
+                                            <span class="text-[10px] text-slate-400 font-mono">BIPM Metrology, 7 หน่วยฐาน, แผนภาพ 3D & 22 หน่วยอนุพัทธ์</span>
+                                        </div>
+                                    </a>
                                 </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="text-emerald-400 font-mono font-bold mt-0.5">1.2</span>
-                                    <span>การแปลงหน่วยเซลล์และปริมาตรด้วยเทคนิคบันไดเลื่อนจุดทศนิยม ($\text{mm} \leftrightarrow \mu\text{m} \leftrightarrow \text{nm}$)</span>
+                                <li>
+                                    <a href="#sec-1.2" class="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/30 transition-all">
+                                        <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 font-mono font-bold flex items-center justify-center text-xs shrink-0 border border-emerald-500/30 group-hover:bg-emerald-500 group-hover:text-slate-950 transition">1.2</span>
+                                        <div>
+                                            <span class="text-white group-hover:text-emerald-300 font-semibold transition block">การแปลงหน่วยเซลล์และปริมาตรด้วยเทคนิคบันไดเลื่อนจุดทศนิยม</span>
+                                            <span class="text-[10px] text-slate-400 font-mono">คำอุปสรรค $\text{mm} \leftrightarrow \mu\text{m} \leftrightarrow \text{nm}$, $\text{mL} \leftrightarrow \mu\text{L}$ & 3D WebAR ArUco</span>
+                                        </div>
+                                    </a>
                                 </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="text-amber-400 font-mono font-bold mt-0.5">1.3</span>
-                                    <span>เลขนนัยสำคัญ ความเที่ยง ความแม่น และฟิสิกส์การใช้ไมโครปิเปต</span>
+                                <li>
+                                    <a href="#sec-1.3" class="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-amber-500/10 border border-transparent hover:border-amber-500/30 transition-all">
+                                        <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 font-mono font-bold flex items-center justify-center text-xs shrink-0 border border-amber-500/30 group-hover:bg-amber-500 group-hover:text-slate-950 transition">1.3</span>
+                                        <div>
+                                            <span class="text-white group-hover:text-amber-300 font-semibold transition block">เลขนัยสำคัญ ความเที่ยง ความแม่น และฟิสิกส์การใช้ไมโครปิเปต</span>
+                                            <span class="text-[10px] text-slate-400 font-mono">Accuracy vs Precision, กลไก P1000 2 จังหวะ & การทดสอบมวลน้ำกลั่น</span>
+                                        </div>
+                                    </a>
                                 </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="text-teal-400 font-mono font-bold mt-0.5">1.4</span>
-                                    <span>ปฏิบัติการที่ 1 การวัดละเอียดและทักษะการใช้ไมโครปิเปตสำหรับงานจุลชีววิทยา</span>
+                                <li>
+                                    <a href="#sec-1.4" class="group flex items-start gap-2.5 p-2 rounded-xl hover:bg-teal-500/10 border border-transparent hover:border-teal-500/30 transition-all">
+                                        <span class="w-6 h-6 rounded-lg bg-teal-500/20 text-teal-400 font-mono font-bold flex items-center justify-center text-xs shrink-0 border border-teal-500/30 group-hover:bg-teal-500 group-hover:text-slate-950 transition">1.4</span>
+                                        <div>
+                                            <span class="text-white group-hover:text-teal-300 font-semibold transition block">ปฏิบัติการที่ 1 การวัดละเอียดและทักษะไมโครปิเปตสำหรับงานจุลชีววิทยา</span>
+                                            <span class="text-[10px] text-slate-400 font-mono">เวอร์เนียร์คาลิปเปอร์, ไมโครมิเตอร์, เครื่องชั่ง 4 ตำแหน่ง & ใบรายงานผล</span>
+                                        </div>
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -367,7 +395,7 @@ include '../includes/header.php';
             </div>
 
             <!-- SECTION 1.1 -->
-            <section id="sec-1.1" class="tex-section scroll-mt-20">
+            <section id="sec-1.1" class="tex-section scroll-mt-32">
                 <div class="flex items-center gap-3 mb-4">
                     <span class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 font-black font-mono flex items-center justify-center text-lg border border-cyan-500/30">1.1</span>
                     <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight">
@@ -414,7 +442,8 @@ include '../includes/header.php';
                     </figure>
 
                     <!-- 3D Pixar Scene 2: SI Base Units 3D Wheel -->
-                    <figure class="tex-figure tex-figure-photo my-8" id="fig-si-wheel">
+                    <figure class="tex-figure tex-figure-photo my-8 scroll-mt-32" id="fig-1.3">
+                        <span id="fig-si-wheel"></span>
                         <div class="rounded-2xl overflow-hidden border border-cyan-500/40 shadow-2xl bg-slate-950/90 group flex justify-center items-center p-4 sm:p-6 lg:p-8 backdrop-blur-xl">
                             <img src="../images/sec_3d/ch01_si_wheel_3d.jpg" alt="แบบจำลอง 3 มิติ สไตล์พิกซาร์ วงล้อ 7 หน่วยฐานสากลเอสไอ (The 7 SI Base Units 3D Pixar Wheel)" class="w-full max-w-2xl h-auto object-contain rounded-2xl group-hover:scale-[1.02] transition-transform duration-500 shadow-2xl" loading="lazy">
                         </div>
@@ -864,7 +893,7 @@ include '../includes/header.php';
                     </div>
 
                     <!-- TABLE 1.1: 7 SI BASE UNITS -->
-                    <div class="tex-tablefig mt-10 scroll-mt-20" id="tab-1.1">
+                    <div class="tex-tablefig mt-10 scroll-mt-32" id="tab-1.1">
                         <div class="p-3.5 bg-gradient-to-r from-cyan-950/80 via-slate-900 to-slate-900 rounded-t-xl border border-b-0 border-cyan-500/30 flex items-center justify-between flex-wrap gap-2 shadow-lg">
                             <span class="text-xs sm:text-sm font-bold text-cyan-300 flex items-center gap-2.5">
                                 <span class="w-7 h-7 rounded-lg bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-400 shadow-sm">
@@ -1091,8 +1120,9 @@ include '../includes/header.php';
                         </div>
                     </div>
 
-                                        <!-- Figure 1.4: SI Base to Derived Units Flowchart & Interactive Metrology Explorer -->
-                    <figure class="tex-figure tex-figure-diagram my-10" id="fig-si-derived-microbio">
+                    <!-- Figure 1.4: SI Base to Derived Units Flowchart & Interactive Metrology Explorer -->
+                    <figure class="tex-figure tex-figure-diagram my-10 scroll-mt-32" id="fig-1.4">
+                        <span id="fig-si-derived-microbio"></span>
                         <!-- Card Header & Navigation Bar -->
                         <div class="rounded-t-2xl border border-b-0 border-emerald-500/40 bg-gradient-to-r from-slate-900 via-emerald-950/40 to-slate-900 p-4 sm:p-5 shadow-2xl backdrop-blur-xl">
                             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -1796,7 +1826,7 @@ include '../includes/header.php';
             </section>
 
             <!-- SECTION 1.2 -->
-            <section id="sec-1.2" class="tex-section scroll-mt-20">
+            <section id="sec-1.2" class="tex-section scroll-mt-32">
                 <div class="flex items-center gap-3 mb-4">
                     <span class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 font-black font-mono flex items-center justify-center text-lg border border-emerald-500/30">1.2</span>
                     <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight">
@@ -1830,7 +1860,7 @@ include '../includes/header.php';
                     </figure>
 
                     <!-- ArUco Marker Badge Section (Enhanced Glassmorphism) -->
-                    <div id="sec-aruco" class="tex-aruco p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-emerald-950/40 border border-emerald-500/40 shadow-2xl my-8 scroll-mt-20">
+                    <div id="sec-aruco" class="tex-aruco p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-emerald-950/40 border border-emerald-500/40 shadow-2xl my-8 scroll-mt-32">
                         <div class="flex flex-col sm:flex-row items-center gap-5">
                             <div class="tex-aruco-marker bg-white p-3 rounded-2xl shadow-xl flex flex-col items-center shrink-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.4 -0.4 6.8 6.8" width="130" height="130" role="img" aria-label="ArUco ID 0">
@@ -1928,7 +1958,7 @@ include '../includes/header.php';
             </section>
 
             <!-- SECTION 1.3 -->
-            <section id="sec-1.3" class="tex-section scroll-mt-20">
+            <section id="sec-1.3" class="tex-section scroll-mt-32">
                 <div class="flex items-center gap-3 mb-4">
                     <span class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 font-black font-mono flex items-center justify-center text-lg border border-amber-500/30">1.3</span>
                     <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight">
@@ -2003,7 +2033,7 @@ include '../includes/header.php';
             </section>
 
             <!-- SECTION 1.4 -->
-            <section id="sec-1.4" class="tex-section scroll-mt-20">
+            <section id="sec-1.4" class="tex-section scroll-mt-32">
                 <div class="flex items-center gap-3 mb-4">
                     <span class="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-400 font-black font-mono flex items-center justify-center text-lg border border-teal-500/30">1.4</span>
                     <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-white tracking-tight">
@@ -2133,7 +2163,7 @@ include '../includes/header.php';
             </section>
 
             <!-- SECTION: REVIEW QUESTIONS -->
-            <section id="review-questions" class="mt-14 p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950/40 border border-indigo-500/30 shadow-2xl scroll-mt-20">
+            <section id="review-questions" class="mt-14 p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950/40 border border-indigo-500/30 shadow-2xl scroll-mt-32">
                 <div class="flex items-center justify-between flex-wrap gap-2 mb-6 pb-4 border-b border-indigo-500/20">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-lg border border-indigo-500/30 shadow-inner">
@@ -2838,15 +2868,82 @@ function searchSiUnits(q) {
 // Auto init on page load
 document.addEventListener('DOMContentLoaded', () => {
     initSiInteractiveMetrology();
+    initTocScrollSpy();
 });
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    setTimeout(initSiInteractiveMetrology, 50);
+    setTimeout(() => {
+        initSiInteractiveMetrology();
+        initTocScrollSpy();
+    }, 50);
 }
 if (window.MathJax && MathJax.startup && MathJax.startup.promise) {
     MathJax.startup.promise.then(() => {
         const card = document.getElementById('si-inspector-card');
         if (card) retypesetMathJax(card);
     });
+}
+
+// Dynamic Table of Contents (TOC) Active Scroll Spy
+function initTocScrollSpy() {
+    const targets = [
+        'curriculum-plan',
+        'sec-1.1',
+        'fig-1.3',
+        'tab-1.1',
+        'fig-1.4',
+        'sec-1.2',
+        'sec-aruco',
+        'sec-1.3',
+        'sec-1.4',
+        'review-questions'
+    ];
+
+    const elements = targets.map(id => document.getElementById(id)).filter(Boolean);
+    const sidebarLinks = document.querySelectorAll('#sidebar-toc a');
+    const quickLinks = document.querySelectorAll('#quick-nav-bar a');
+
+    function setActive(activeId) {
+        sidebarLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === `#${activeId}`) {
+                link.classList.add('bg-cyan-950/80', 'text-cyan-300', 'border-cyan-500/50', 'shadow-sm');
+                link.classList.remove('text-slate-300', 'text-slate-400', 'border-transparent');
+            } else {
+                link.classList.remove('bg-cyan-950/80', 'text-cyan-300', 'border-cyan-500/50', 'shadow-sm');
+                if (link.classList.contains('pl-6')) {
+                    link.classList.add('text-slate-400', 'border-transparent');
+                } else {
+                    link.classList.add('text-slate-300', 'border-transparent');
+                }
+            }
+        });
+
+        quickLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === `#${activeId}`) {
+                link.classList.add('bg-cyan-500/30', 'text-cyan-300', 'border-cyan-400', 'shadow-sm');
+                link.classList.remove('bg-slate-800/80', 'text-slate-300');
+            } else {
+                link.classList.remove('bg-cyan-500/30', 'text-cyan-300', 'border-cyan-400', 'shadow-sm');
+                link.classList.add('bg-slate-800/80', 'text-slate-300');
+            }
+        });
+    }
+
+    if ('IntersectionObserver' in window && elements.length > 0) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setActive(entry.target.id);
+                }
+            });
+        }, {
+            rootMargin: '-100px 0px -65% 0px',
+            threshold: 0
+        });
+
+        elements.forEach(el => observer.observe(el));
+    }
 }
 
 // Font Size Adjuster
