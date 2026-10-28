@@ -97,87 +97,155 @@ include '../includes/header.php';
     <div class="container mx-auto px-4 md:px-6 mt-6 relative z-20 max-w-5xl">
         <div id="chapterContent" class="rounded-3xl shadow-2xl overflow-hidden border p-5 sm:p-8 md:p-12 bg-slate-900/95 backdrop-blur-3xl border-slate-800 space-y-12 transition-all">
 
-            <!-- Curriculum Planbox (แผนบริหารการสอนประจำบทที่ 1) -->
-            <div id="curriculum-plan" class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-900 border border-indigo-500/30 shadow-xl">
-                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-indigo-500/20">
-                    <div class="w-11 h-11 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 border border-indigo-500/30 shadow-inner">
-                        <i class="fa-solid fa-chalkboard-user text-xl"></i>
+            <!-- Curriculum Planbox (แผนบริหารการสอนประจำบทที่ 1 — 4 Card Grid) -->
+            <div id="curriculum-plan" class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-indigo-950/50 via-slate-900 to-slate-950 border border-indigo-500/30 shadow-2xl space-y-6">
+                <div class="flex items-center justify-between flex-wrap gap-4 pb-4 border-b border-indigo-500/20">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-purple-600/40 flex items-center justify-center text-indigo-300 border border-indigo-400/40 shadow-lg shadow-indigo-500/20 text-xl">
+                            <i class="fa-solid fa-chalkboard-user"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg md:text-xl font-extrabold text-white flex items-center gap-2.5">
+                                แผนบริหารการสอนประจำบทที่ 1
+                                <span class="text-xs px-3 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 font-mono font-bold shadow-sm">สัปดาห์ที่ 1</span>
+                            </h3>
+                            <p class="text-xs text-slate-400 font-mono mt-0.5">แผนการจัดการเรียนรู้บูรณาการ Outcome-Based Education (OBE มคอ.3) พ.ศ. 2569/2570</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="text-lg md:text-xl font-bold text-white flex items-center gap-2">
-                            แผนบริหารการสอนประจำบทที่ 1
-                            <span class="text-xs px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono">สัปดาห์ที่ 1</span>
-                        </h3>
-                        <p class="text-xs text-slate-400 font-mono">แผนการจัดการเรียนรู้บูรณาการ Outcome-Based Education (OBE มคอ.3) พ.ศ. 2569/2570</p>
-                    </div>
+                    <span class="text-[11px] font-mono text-cyan-400 bg-cyan-950/60 border border-cyan-500/30 px-3 py-1 rounded-full">Course Blueprint: 4 Modules</span>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-300">
-                    <!-- Column 1: Topics & CLOs -->
-                    <div class="space-y-4">
-                        <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800">
-                            <h4 class="text-xs font-bold font-mono uppercase text-indigo-300 tracking-wider mb-2 flex items-center gap-1.5">
-                                <i class="fa-solid fa-list-check"></i> 1. หัวข้อเนื้อหาประจำบท (บรรยาย 2 ชม. + ปฏิบัติการ 3 ชม.)
-                            </h4>
-                            <ul class="text-xs space-y-1.5 text-slate-300 list-disc list-inside">
-                                <li><strong>1.1</strong> ระบบหน่วยเอสไอและ 7 ค่าคงตัวพื้นฐานในงานจุลชีววิทยา</li>
-                                <li><strong>1.2</strong> การแปลงหน่วยเซลล์และปริมาตรด้วยเทคนิคบันไดเลื่อนจุดทศนิยม</li>
-                                <li><strong>1.3</strong> เลขนัยสำคัญ ความเที่ยง ความแม่น และการใช้ไมโครปิเปต</li>
-                                <li><strong>1.4</strong> ปฏิบัติการที่ 1 การวัดละเอียดและทักษะการใช้ไมโครปิเปต</li>
+                <!-- 4 Distinct Cards: 2x2 Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-sm">
+                    <!-- CARD 1 (Top-Left): Course Content Topics -->
+                    <div class="p-5 rounded-2xl bg-slate-900/90 border border-indigo-500/30 shadow-lg hover:border-indigo-400/50 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-800">
+                                <h4 class="text-xs sm:text-[13px] font-bold font-mono uppercase text-indigo-300 tracking-wider flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xs border border-indigo-500/30">1</span>
+                                    หัวข้อเนื้อหาประจำบท
+                                </h4>
+                                <span class="text-[11px] font-mono text-indigo-300 bg-indigo-950/80 px-2 py-0.5 rounded border border-indigo-500/30">บรรยาย 2 ชม. + ปฏิบัติการ 3 ชม.</span>
+                            </div>
+                            <ul class="text-xs sm:text-[13px] space-y-2.5 text-slate-300">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-cyan-400 font-mono font-bold mt-0.5">1.1</span>
+                                    <span>ระบบหน่วยเอสไอและ 7 ค่าคงตัวพื้นฐานในงานจุลชีววิทยา (SI 2019)</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-emerald-400 font-mono font-bold mt-0.5">1.2</span>
+                                    <span>การแปลงหน่วยเซลล์และปริมาตรด้วยเทคนิคบันไดเลื่อนจุดทศนิยม ($\text{mm} \leftrightarrow \mu\text{m} \leftrightarrow \text{nm}$)</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-amber-400 font-mono font-bold mt-0.5">1.3</span>
+                                    <span>เลขนนัยสำคัญ ความเที่ยง ความแม่น และฟิสิกส์การใช้ไมโครปิเปต</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-teal-400 font-mono font-bold mt-0.5">1.4</span>
+                                    <span>ปฏิบัติการที่ 1 การวัดละเอียดและทักษะการใช้ไมโครปิเปตสำหรับงานจุลชีววิทยา</span>
+                                </li>
                             </ul>
                         </div>
+                        <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-clock text-indigo-400"></i> รวมเวลาจัดการเรียนรู้ 5 คาบ/สัปดาห์
+                        </div>
+                    </div>
 
-                        <div class="p-4 rounded-xl bg-slate-950/60 border border-indigo-500/20">
-                            <h4 class="text-xs font-bold font-mono uppercase text-indigo-300 tracking-wider mb-2 flex items-center gap-1.5">
-                                <i class="fa-solid fa-bullseye"></i> 2. ผลลัพธ์การเรียนรู้รายวิชา (CLOs & PLOs)
-                            </h4>
-                            <ul class="text-xs space-y-2 text-slate-300">
-                                <li class="flex items-start gap-1.5">
-                                    <span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-mono font-bold shrink-0 mt-0.5">CLO1</span>
-                                    <span>อธิบายระบบหน่วยสากลเอสไอ 2019 และคำอุปสรรคสำหรับแบคทีเรีย ยีสต์ และไวรัสได้ถูกต้อง <em>(เชื่อมโยง PLO2)</em></span>
+                    <!-- CARD 3 (Top-Right): Active Learning Activities -->
+                    <div class="p-5 rounded-2xl bg-slate-900/90 border border-emerald-500/30 shadow-lg hover:border-emerald-400/50 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-800">
+                                <h4 class="text-xs sm:text-[13px] font-bold font-mono uppercase text-emerald-300 tracking-wider flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs border border-emerald-500/30">3</span>
+                                    กิจกรรมการเรียนรู้เชิงรุก (Active Learning)
+                                </h4>
+                                <span class="text-[11px] font-mono text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-500/30">Pedagogy</span>
+                            </div>
+                            <div class="space-y-2.5 text-xs sm:text-[13px] text-slate-300">
+                                <div class="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                                    <strong class="text-white flex items-center gap-1.5 mb-1">
+                                        <i class="fa-solid fa-flag text-rose-400 text-xs"></i> ขั้นนำเข้าสู่บทเรียน (Engagement):
+                                    </strong>
+                                    <p class="text-slate-300 leading-relaxed">ยกกรณีศึกษาแล็บจริง การดูดสารละลายผิดหน่วยระหว่าง $100\text{ }\mu\text{L}$ กับ $1\text{ mL}$ ที่ทำให้ความเข้มข้นเชื้อคลาดเคลื่อน 10 เท่า</p>
+                                </div>
+                                <div class="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                                    <strong class="text-white flex items-center gap-1.5 mb-1">
+                                        <i class="fa-solid fa-brain text-sky-400 text-xs"></i> ขั้นสอนและฝึกคิด (Practice):
+                                    </strong>
+                                    <p class="text-slate-300 leading-relaxed">ใช้แผนภาพบันไดคำอุปสรรค ($\times 1{,}000$ และ $\div 1{,}000$) พร้อมกิจกรรมใบงานคู่คิด (Think-Pair-Share)</p>
+                                </div>
+                                <div class="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                                    <strong class="text-white flex items-center gap-1.5 mb-1">
+                                        <i class="fa-solid fa-flask-vial text-emerald-400 text-xs"></i> ขั้นทดลองปฏิบัติการ (Hands-on Lab):
+                                    </strong>
+                                    <p class="text-slate-300 leading-relaxed">แบ่งกลุ่มฝึกใช้เวอร์เนียร์ ไมโครมิเตอร์ และทดสอบความแม่นของไมโครปิเปตผ่านการชั่งน้ำกลั่นบนเครื่องชั่ง 4 ตำแหน่ง</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CARD 2 (Bottom-Left): CLOs & PLOs Mapping -->
+                    <div class="p-5 rounded-2xl bg-slate-900/90 border border-cyan-500/30 shadow-lg hover:border-cyan-400/50 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-800">
+                                <h4 class="text-xs sm:text-[13px] font-bold font-mono uppercase text-cyan-300 tracking-wider flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs border border-cyan-500/30">2</span>
+                                    ผลลัพธ์การเรียนรู้รายวิชา (CLOs & PLOs)
+                                </h4>
+                                <span class="text-[11px] font-mono text-cyan-300 bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-500/30">OBE Mapping</span>
+                            </div>
+                            <ul class="text-xs sm:text-[13px] space-y-2.5 text-slate-300">
+                                <li class="flex items-start gap-2.5">
+                                    <span class="px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 text-[11px] font-mono font-bold shrink-0 mt-0.5 border border-cyan-500/40">CLO1</span>
+                                    <span>อธิบายระบบหน่วยสากลเอสไอ 2019 และคำอุปสรรคสำหรับแบคทีเรีย ยีสต์ และไวรัสได้ถูกต้อง <em class="text-slate-400 font-mono">(PLO2)</em></span>
                                 </li>
-                                <li class="flex items-start gap-1.5">
-                                    <span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold shrink-0 mt-0.5">CLO2</span>
-                                    <span>คำนวณแปลงหน่วยระหว่าง $\text{mm} \leftrightarrow \mu\text{m} \leftrightarrow \text{nm}$ และ $\text{mL} \leftrightarrow \mu\text{L}$ ได้คล่องแคล่ว <em>(เชื่อมโยง PLO2, PLO3)</em></span>
+                                <li class="flex items-start gap-2.5">
+                                    <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-[11px] font-mono font-bold shrink-0 mt-0.5 border border-emerald-500/40">CLO2</span>
+                                    <span>คำนวณแปลงหน่วยระหว่าง $\text{mm} \leftrightarrow \mu\text{m} \leftrightarrow \text{nm}$ และ $\text{mL} \leftrightarrow \mu\text{L}$ ได้คล่องแคล่ว <em class="text-slate-400 font-mono">(PLO2, PLO3)</em></span>
                                 </li>
-                                <li class="flex items-start gap-1.5">
-                                    <span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-mono font-bold shrink-0 mt-0.5">CLO3</span>
-                                    <span>มีทักษะการใช้เวอร์เนียร์ ไมโครมิเตอร์ เครื่องชั่งดิจิทัล และไมโครปิเปตอย่างถูกวิธี <em>(เชื่อมโยง PLO1)</em></span>
+                                <li class="flex items-start gap-2.5">
+                                    <span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[11px] font-mono font-bold shrink-0 mt-0.5 border border-amber-500/40">CLO3</span>
+                                    <span>มีทักษะการใช้เวอร์เนียร์ ไมโครมิเตอร์ เครื่องชั่งดิจิทัล และไมโครปิเปตอย่างถูกวิธี <em class="text-slate-400 font-mono">(PLO1)</em></span>
                                 </li>
-                                <li class="flex items-start gap-1.5">
-                                    <span class="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[10px] font-mono font-bold shrink-0 mt-0.5">CLO4</span>
-                                    <span>วิเคราะห์ความคลาดเคลื่อนของการวัดและเขียนรายงานผลการทดลองกลุ่มได้ถูกต้อง <em>(เชื่อมโยง PLO5, PLO6)</em></span>
+                                <li class="flex items-start gap-2.5">
+                                    <span class="px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 text-[11px] font-mono font-bold shrink-0 mt-0.5 border border-purple-500/40">CLO4</span>
+                                    <span>วิเคราะห์ความคลาดเคลื่อนของการวัดและเขียนรายงานผลการทดลองกลุ่มได้ถูกต้อง <em class="text-slate-400 font-mono">(PLO5, PLO6)</em></span>
                                 </li>
                             </ul>
                         </div>
                     </div>
 
-                    <!-- Column 2: Active Learning & Evaluation -->
-                    <div class="space-y-4">
-                        <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800">
-                            <h4 class="text-xs font-bold font-mono uppercase text-emerald-300 tracking-wider mb-2 flex items-center gap-1.5">
-                                <i class="fa-solid fa-users-gear"></i> 3. กิจกรรมการจัดการเรียนรู้เชิงรุก (Active Learning)
-                            </h4>
-                            <ul class="text-xs space-y-2 text-slate-300">
-                                <li>
-                                    <strong class="text-white">ขั้นนำเข้าสู่บทเรียน:</strong> ยกกรณีศึกษาแล็บจริง การดูดสารละลายผิดหน่วยระหว่าง $100\text{ }\mu\text{L}$ กับ $1\text{ mL}$ ที่ทำให้ความเข้มข้นเชื้อคลาดเคลื่อน 10 เท่า
-                                </li>
-                                <li>
-                                    <strong class="text-white">ขั้นสอนและฝึกคิดคำนวณ:</strong> ใช้แผนภาพบันไดคำอุปสรรค ($\times 1{,}000$ และ $\div 1{,}000$) พร้อมทำใบงานคู่คิด (Think-Pair-Share)
-                                </li>
-                                <li>
-                                    <strong class="text-white">ขั้นทดลองปฏิบัติการ:</strong> แบ่งกลุ่มฝึกใช้เครื่องมือวัดละเอียดและทดสอบความแม่นของการดูดน้ำกลั่นด้วยไมโครปิเปตบนเครื่องชั่ง 4 ตำแหน่ง
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800">
-                            <h4 class="text-xs font-bold font-mono uppercase text-amber-300 tracking-wider mb-2 flex items-center gap-1.5">
-                                <i class="fa-solid fa-chart-pie"></i> 4. การวัดและประเมินผล & สื่อการเรียนรู้
-                            </h4>
-                            <div class="text-xs space-y-1.5 text-slate-300">
-                                <p><strong>การประเมิน:</strong> แบบทดสอบก่อน-หลังเรียน (CLO1), สังเกตทักษะการใช้ไมโครปิเปต (CLO3), รายงานผลปฏิบัติการที่ 1 (CLO4)</p>
-                                <p><strong>สื่อนวัตกรรม:</strong> เอกสารคำสอน 3D AR ArUco ID: 0, 3D Virtual Lab Simulator, ชุดเครื่องมือวัดละเอียดจริง</p>
+                    <!-- CARD 4 (Bottom-Right): Assessment & Learning Media -->
+                    <div class="p-5 rounded-2xl bg-slate-900/90 border border-amber-500/30 shadow-lg hover:border-amber-400/50 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-800">
+                                <h4 class="text-xs sm:text-[13px] font-bold font-mono uppercase text-amber-300 tracking-wider flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs border border-amber-500/30">4</span>
+                                    การวัดและประเมินผล & สื่อการเรียนรู้
+                                </h4>
+                                <span class="text-[11px] font-mono text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-500/30">Evaluation & Media</span>
+                            </div>
+                            <div class="space-y-3 text-xs sm:text-[13px] text-slate-300">
+                                <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                                    <strong class="text-amber-300 flex items-center gap-1.5 mb-1.5">
+                                        <i class="fa-solid fa-clipboard-check"></i> วิธีการและเครื่องมือวัดผล:
+                                    </strong>
+                                    <ul class="space-y-1 text-slate-300 list-disc list-inside">
+                                        <li>แบบทดสอบก่อน-หลังเรียนประจำบท (CLO1, CLO2)</li>
+                                        <li>แบบประเมินรูบริกการใช้ไมโครปิเปตและเวอร์เนียร์ (CLO3)</li>
+                                        <li>รายงานผลปฏิบัติการที่ 1 พร้อมการวิเคราะห์ความคลาดเคลื่อน (CLO4)</li>
+                                    </ul>
+                                </div>
+                                <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                                    <strong class="text-cyan-300 flex items-center gap-1.5 mb-1.5">
+                                        <i class="fa-solid fa-cube"></i> สื่อนวัตกรรมการเรียนรู้:
+                                    </strong>
+                                    <ul class="space-y-1 text-slate-300 list-disc list-inside">
+                                        <li>เอกสารคำสอน 3D AR ArUco Marker ID: 0 (Interactive 3D Model)</li>
+                                        <li>เว็บแอปพลิเคชัน 3D Virtual Lab Simulator (Vernier, Micropipette)</li>
+                                        <li>ชุดอุปกรณ์วัดละเอียดและไมโครปิเปตจริงในห้องปฏิบัติการ</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -286,9 +354,87 @@ include '../includes/header.php';
                                 </div>
                             </div>
 
-                            <!-- Figure: Def Metre -->
-                            <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-2">
-                                <img src="../images/maintex/tikz/ch01_def_meter.svg" alt="วิวัฒนาการนิยาม 1 เมตร" class="w-full h-auto" loading="lazy">
+                            <!-- 3D Evolution Timeline: 1 Metre (Replacing flat 2D diagram) -->
+                            <div class="rounded-2xl border border-cyan-500/40 bg-gradient-to-br from-slate-950 via-slate-900 to-cyan-950/40 p-4 sm:p-5 shadow-2xl mt-4">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-cyan-500/20">
+                                    <span class="text-xs sm:text-sm font-bold text-cyan-300 flex items-center gap-2">
+                                        <i class="fa-solid fa-timeline text-cyan-400"></i> วิวัฒนาการ 3 มิตินิยาม 1 เมตร (3D Metre Evolution Timeline)
+                                    </span>
+                                    <span class="text-[11px] font-mono text-cyan-400 bg-cyan-950/80 px-2.5 py-0.5 rounded-full border border-cyan-500/30">1791 → ปัจจุบัน</span>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                                    <!-- Step 1: 1791 -->
+                                    <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-cyan-500/40 transition-all shadow-md relative overflow-hidden flex flex-col justify-between">
+                                        <div class="absolute top-0 right-0 w-12 h-12 bg-cyan-500/5 rounded-bl-full pointer-events-none"></div>
+                                        <div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono font-bold text-[11px]">ค.ศ. 1791</span>
+                                                <i class="fa-solid fa-earth-americas text-cyan-400 text-sm"></i>
+                                            </div>
+                                            <div class="font-bold text-white text-xs mb-1">เส้นเมอริเดียนโลก</div>
+                                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                                หนึ่งในสิบล้าน ($\frac{1}{10^7}$) ของระยะทางจากขั้วโลกเหนือถึงเส้นศูนย์สูตรผ่านปารีส
+                                            </p>
+                                        </div>
+                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[10px] font-mono text-slate-400">
+                                            ความไม่แน่นอน: $\approx 10^{-4}$
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 2: 1889 -->
+                                    <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-cyan-500/40 transition-all shadow-md relative overflow-hidden flex flex-col justify-between">
+                                        <div class="absolute top-0 right-0 w-12 h-12 bg-amber-500/5 rounded-bl-full pointer-events-none"></div>
+                                        <div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-[11px]">ค.ศ. 1889</span>
+                                                <i class="fa-solid fa-ruler-horizontal text-amber-400 text-sm"></i>
+                                            </div>
+                                            <div class="font-bold text-white text-xs mb-1">แท่งเมตร Tresca</div>
+                                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                                ระยะระหว่าง 2 รอยขีดบนแท่งโลหะผสม $\text{Pt-Ir}$ 90:10 หน้าตัดกากบาท Tresca ณ BIPM
+                                            </p>
+                                        </div>
+                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[10px] font-mono text-slate-400">
+                                            ความไม่แน่นอน: $\approx 10^{-7}$
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 3: 1960 -->
+                                    <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-cyan-500/40 transition-all shadow-md relative overflow-hidden flex flex-col justify-between">
+                                        <div class="absolute top-0 right-0 w-12 h-12 bg-sky-500/5 rounded-bl-full pointer-events-none"></div>
+                                        <div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-mono font-bold text-[11px]">ค.ศ. 1960</span>
+                                                <i class="fa-solid fa-atom text-sky-400 text-sm"></i>
+                                            </div>
+                                            <div class="font-bold text-white text-xs mb-1">คลื่นแสง $^{86}\text{Kr}$</div>
+                                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                                $1{,}650{,}763.73$ เท่าของความยาวคลื่นแสงส้ม-แดงที่แผ่จากอะตอมคริปทอน-86
+                                            </p>
+                                        </div>
+                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[10px] font-mono text-slate-400">
+                                            ความไม่แน่นอน: $\approx 10^{-9}$
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 4: 1983-Present -->
+                                    <div class="p-3.5 rounded-xl bg-gradient-to-br from-emerald-950/60 to-slate-900 border border-emerald-500/40 shadow-lg relative overflow-hidden flex flex-col justify-between">
+                                        <div class="absolute top-0 right-0 w-12 h-12 bg-emerald-500/10 rounded-bl-full pointer-events-none"></div>
+                                        <div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold text-[11px]">1983–ปัจจุบัน</span>
+                                                <i class="fa-solid fa-bolt-lightning text-emerald-400 text-sm"></i>
+                                            </div>
+                                            <div class="font-bold text-white text-xs mb-1">ความเร็วแสง $c$</div>
+                                            <p class="text-slate-200 text-[11px] leading-relaxed">
+                                                ระยะทางที่แสงเคลื่อนที่ในสุญญากาศ ในเวลา $\frac{1}{299{,}792{,}458}\text{ s}$
+                                            </p>
+                                        </div>
+                                        <div class="mt-2.5 pt-2 border-t border-emerald-500/20 text-[10px] font-mono text-emerald-300 font-bold">
+                                            ความไม่แน่นอน: $\Delta c = 0$ (แม่นตรงสัมบูรณ์)
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -339,9 +485,69 @@ include '../includes/header.php';
                                     </div>
                                 </div>
                             </div>
-                            <!-- Figure: Def Kilogram -->
-                            <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-2">
-                                <img src="../images/maintex/tikz/ch01_def_kilogram.svg" alt="วิวัฒนาการนิยาม 1 กิโลกรัม" class="w-full h-auto" loading="lazy">
+                            <!-- 3D Evolution Timeline: 1 Kilogram (Replacing flat 2D diagram) -->
+                            <div class="rounded-2xl border border-amber-500/40 bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950/40 p-4 sm:p-5 shadow-2xl mt-4">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-amber-500/20">
+                                    <span class="text-xs sm:text-sm font-bold text-amber-300 flex items-center gap-2">
+                                        <i class="fa-solid fa-timeline text-amber-400"></i> วิวัฒนาการ 3 มิตินิยาม 1 กิโลกรัม (3D Kilogram Evolution Timeline)
+                                    </span>
+                                    <span class="text-[11px] font-mono text-amber-400 bg-amber-950/80 px-2.5 py-0.5 rounded-full border border-amber-500/30">1795 → 2019</span>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                                    <!-- Epoch 1: 1795 -->
+                                    <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-amber-500/40 transition-all shadow-md relative overflow-hidden flex flex-col justify-between">
+                                        <div class="absolute top-0 right-0 w-12 h-12 bg-amber-500/5 rounded-bl-full pointer-events-none"></div>
+                                        <div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-[11px]">ค.ศ. 1795</span>
+                                                <i class="fa-solid fa-droplet text-blue-400 text-sm"></i>
+                                            </div>
+                                            <div class="font-bold text-white text-xs mb-1">น้ำบริสุทธิ์ 1 ลิตร</div>
+                                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                                มวลของน้ำกลั่นบริสุทธิ์ปริมาตร $1\text{ dm}^3$ ที่อุณหภูมิน้ำหนาแน่นสูงสุด ($4^\circ\text{C}$)
+                                            </p>
+                                        </div>
+                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[10px] font-mono text-slate-400">
+                                            ขึ้นกับความดันและไอโซโทปน้ำ
+                                        </div>
+                                    </div>
+
+                                    <!-- Epoch 2: 1889-2019 -->
+                                    <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-amber-500/40 transition-all shadow-md relative overflow-hidden flex flex-col justify-between">
+                                        <div class="absolute top-0 right-0 w-12 h-12 bg-amber-500/5 rounded-bl-full pointer-events-none"></div>
+                                        <div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-[11px]">ค.ศ. 1889–2019</span>
+                                                <i class="fa-solid fa-weight-hanging text-amber-400 text-sm"></i>
+                                            </div>
+                                            <div class="font-bold text-white text-xs mb-1">ก้อนมวล Le Grand K</div>
+                                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                                ทรงกระบอกโลหะผสม $\text{Pt-Ir}$ ต้นแบบนานาชาติ เก็บในครอบแก้วสุญญากาศ 3 ชั้น ณ BIPM
+                                            </p>
+                                        </div>
+                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[10px] font-mono text-amber-400/80">
+                                            มวลคลาดเคลื่อน $\approx 50\,\mu\text{g}$ ใน 100 ปี
+                                        </div>
+                                    </div>
+
+                                    <!-- Epoch 3: 2019-Present -->
+                                    <div class="p-3.5 rounded-xl bg-gradient-to-br from-emerald-950/60 to-slate-900 border border-emerald-500/40 shadow-lg relative overflow-hidden flex flex-col justify-between">
+                                        <div class="absolute top-0 right-0 w-12 h-12 bg-emerald-500/10 rounded-bl-full pointer-events-none"></div>
+                                        <div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold text-[11px]">2019–ปัจจุบัน</span>
+                                                <i class="fa-solid fa-scale-balanced text-emerald-400 text-sm"></i>
+                                            </div>
+                                            <div class="font-bold text-white text-xs mb-1">เครื่องชั่งคิบบิล ($h$)</div>
+                                            <p class="text-slate-200 text-[11px] leading-relaxed">
+                                                ตรึงค่าคงตัวพลังค์ $h = 6.626\,070\,15 \times 10^{-34}\text{ J}\cdot\text{s}$ ผ่านสมดุลแรงแม่เหล็กไฟฟ้าควอนตัม
+                                            </p>
+                                        </div>
+                                        <div class="mt-2.5 pt-2 border-t border-emerald-500/20 text-[10px] font-mono text-emerald-300 font-bold">
+                                            ความไม่แน่นอน: $\Delta h = 0$ (แม่นตรงสัมบูรณ์)
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -391,9 +597,69 @@ include '../includes/header.php';
                                 </div>
                             </div>
 
-                            <!-- Figure: Def Second -->
-                            <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-2">
-                                <img src="../images/maintex/tikz/ch01_def_second.svg" alt="วิวัฒนาการนิยาม 1 วินาที" class="w-full h-auto" loading="lazy">
+                            <!-- 3D Evolution Timeline: 1 Second (Replacing flat 2D diagram) -->
+                            <div class="rounded-2xl border border-sky-500/40 bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950/40 p-4 sm:p-5 shadow-2xl mt-4">
+                                <div class="flex items-center justify-between mb-4 pb-2.5 border-b border-sky-500/20">
+                                    <span class="text-xs sm:text-sm font-bold text-sky-300 flex items-center gap-2">
+                                        <i class="fa-solid fa-timeline text-sky-400"></i> วิวัฒนาการ 3 มิตินิยาม 1 วินาที (3D Second Evolution Timeline)
+                                    </span>
+                                    <span class="text-[11px] font-mono text-sky-400 bg-sky-950/80 px-2.5 py-0.5 rounded-full border border-sky-500/30">ดาราศาสตร์ → อะตอมควอนตัม</span>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                                    <!-- Epoch 1: Solar Day -->
+                                    <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-sky-500/40 transition-all shadow-md relative overflow-hidden flex flex-col justify-between">
+                                        <div class="absolute top-0 right-0 w-12 h-12 bg-sky-500/5 rounded-bl-full pointer-events-none"></div>
+                                        <div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-mono font-bold text-[11px]">ก่อน ค.ศ. 1956</span>
+                                                <i class="fa-solid fa-sun text-yellow-400 text-sm"></i>
+                                            </div>
+                                            <div class="font-bold text-white text-xs mb-1">วันสุริยคติเฉลี่ย</div>
+                                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                                $\frac{1}{86{,}400}$ ของวันสุริยคติเฉลี่ยจากการหมุนรอบตัวเองของโลก ($24 \times 3{,}600\text{ s}$)
+                                            </p>
+                                        </div>
+                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[10px] font-mono text-slate-400">
+                                            การหมุนของโลกช้าลง $\approx 2\text{ ms/ศตวรรษ}$
+                                        </div>
+                                    </div>
+
+                                    <!-- Epoch 2: Tropical Year -->
+                                    <div class="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-sky-500/40 transition-all shadow-md relative overflow-hidden flex flex-col justify-between">
+                                        <div class="absolute top-0 right-0 w-12 h-12 bg-sky-500/5 rounded-bl-full pointer-events-none"></div>
+                                        <div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-mono font-bold text-[11px]">ค.ศ. 1956–1967</span>
+                                                <i class="fa-solid fa-globe text-sky-400 text-sm"></i>
+                                            </div>
+                                            <div class="font-bold text-white text-xs mb-1">ปีทรอปิก (Ephemeris)</div>
+                                            <p class="text-slate-300 text-[11px] leading-relaxed">
+                                                เสี้ยวส่วน $\frac{1}{31{,}556{,}925.9747}$ ของปีทรอปิก ค.ศ. 1900 โดยอิงวงโคจรโลกรอบดวงอาทิตย์
+                                            </p>
+                                        </div>
+                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[10px] font-mono text-slate-400">
+                                            ความไม่แน่นอน: $\approx 10^{-9}$
+                                        </div>
+                                    </div>
+
+                                    <!-- Epoch 3: Cesium-133 -->
+                                    <div class="p-3.5 rounded-xl bg-gradient-to-br from-emerald-950/60 to-slate-900 border border-emerald-500/40 shadow-lg relative overflow-hidden flex flex-col justify-between">
+                                        <div class="absolute top-0 right-0 w-12 h-12 bg-emerald-500/10 rounded-bl-full pointer-events-none"></div>
+                                        <div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold text-[11px]">1967–ปัจจุบัน</span>
+                                                <i class="fa-solid fa-atom text-emerald-400 text-sm"></i>
+                                            </div>
+                                            <div class="font-bold text-white text-xs mb-1">นาฬิกาอะตอม $^{133}\text{Cs}$</div>
+                                            <p class="text-slate-200 text-[11px] leading-relaxed">
+                                                $9{,}192{,}631{,}770$ คาบของการแผ่รังสีทรานซิชันไฮเปอร์ไฟน์สถานะพื้นของ $^{133}\text{Cs}$
+                                            </p>
+                                        </div>
+                                        <div class="mt-2.5 pt-2 border-t border-emerald-500/20 text-[10px] font-mono text-emerald-300 font-bold">
+                                            ความไม่แน่นอน: $1\text{ s}$ ใน 100 ล้านปี ($\Delta\nu_{\text{Cs}}$ ตรึงแน่นอน)
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -485,80 +751,226 @@ include '../includes/header.php';
 
                     <!-- TABLE 1.1: 7 SI BASE UNITS -->
                     <div class="tex-tablefig mt-10 scroll-mt-20" id="tab-1.1">
-                        <div class="p-3 bg-gradient-to-r from-cyan-950/60 to-slate-900 rounded-t-xl border border-b-0 border-slate-700/80 flex items-center justify-between flex-wrap gap-2">
-                            <span class="text-xs sm:text-sm font-bold text-cyan-300 flex items-center gap-2">
-                                <i class="fa-solid fa-table-cells text-cyan-400"></i> ตารางที่ 1.1 สรุปคุณสมบัติ 7 หน่วยฐานเอสไอ (7 SI Base Units) นิยามอดีต-ปัจจุบัน ค่าคงตัวตรึง และการใช้งานในจุลชีววิทยา
+                        <div class="p-3.5 bg-gradient-to-r from-cyan-950/80 via-slate-900 to-slate-900 rounded-t-xl border border-b-0 border-cyan-500/30 flex items-center justify-between flex-wrap gap-2 shadow-lg">
+                            <span class="text-xs sm:text-sm font-bold text-cyan-300 flex items-center gap-2.5">
+                                <span class="w-7 h-7 rounded-lg bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-400 shadow-sm">
+                                    <i class="fa-solid fa-table-cells"></i>
+                                </span>
+                                ตารางที่ 1.1 สรุปคุณสมบัติ 7 หน่วยฐานเอสไอ (7 SI Base Units) นิยามอดีต-ปัจจุบัน ค่าคงตัวตรึง และการประยุกต์ใช้ในจุลชีววิทยา
                             </span>
-                            <span class="text-[11px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded">SI 2019 Standard</span>
+                            <span class="text-[11px] font-mono text-cyan-300 bg-cyan-950/90 border border-cyan-500/40 px-2.5 py-0.5 rounded-full shadow-inner">BIPM SI 2019 Standard</span>
                         </div>
-                        <div class="tex-table-wrap overflow-x-auto rounded-b-xl border border-slate-700/80 bg-slate-950/90 shadow-xl">
-                            <table class="tex-table w-full text-xs">
+                        <div class="tex-table-wrap overflow-x-auto rounded-b-xl border border-cyan-500/30 bg-slate-950/95 shadow-2xl">
+                            <table class="tex-table w-full text-xs sm:text-[13px] leading-relaxed">
                                 <thead>
-                                    <tr class="bg-slate-800/90 text-white border-b border-slate-700">
-                                        <th class="p-3 text-left">ปริมาณฐาน (Quantity)</th>
-                                        <th class="p-3 text-center">สัญลักษณ์ปริมาณ</th>
-                                        <th class="p-3 text-left">ชื่อหน่วยฐาน (Unit)</th>
-                                        <th class="p-3 text-center">สัญลักษณ์หน่วย</th>
-                                        <th class="p-3 text-left">ค่าคงตัวฟิสิกส์ที่ใช้ตรึง (Defining Constant)</th>
-                                        <th class="p-3 text-left">ตัวอย่างการใช้งานจริงในแล็บจุลชีววิทยา</th>
+                                    <tr class="bg-slate-900/90 text-slate-100 border-b border-slate-700/80">
+                                        <th class="p-3.5 text-left font-semibold min-w-[190px]">ปริมาณฐาน (Quantity)</th>
+                                        <th class="p-3.5 text-center font-semibold min-w-[70px]">สัญลักษณ์</th>
+                                        <th class="p-3.5 text-left font-semibold min-w-[130px]">ชื่อหน่วยฐาน (Unit)</th>
+                                        <th class="p-3.5 text-center font-semibold min-w-[80px]">สัญลักษณ์หน่วย</th>
+                                        <th class="p-3.5 text-left font-semibold min-w-[220px]">ค่าคงตัวฟิสิกส์ที่ใช้ตรึงนิยาม</th>
+                                        <th class="p-3.5 text-left font-semibold min-w-[280px]">ตัวอย่างการใช้งานจริงในงานจุลชีววิทยา</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-slate-800">
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ความยาว (Length)</td>
-                                        <td class="p-3 text-center font-mono">$l, x, r$</td>
-                                        <td class="p-3 text-cyan-300 font-semibold">เมตร (metre)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{m}$</td>
-                                        <td class="p-3 font-mono text-[11px] text-emerald-400">$c = 299\,792\,458\text{ m/s}$ (อัตราเร็วแสง)</td>
-                                        <td class="p-3">วัดขนาดเซลล์แบคทีเรีย ($\mu\text{m}$), ไวรัส ($\text{nm}$), ขนาดโคโลนีบนจานวุ้น ($\text{mm}$)</td>
+                                <tbody class="divide-y divide-slate-800/80 text-slate-300">
+                                    <!-- 1. Length (Cyan theme) -->
+                                    <tr class="border-l-4 border-cyan-400 bg-cyan-950/20 hover:bg-cyan-950/35 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400/30 to-blue-600/40 border border-cyan-400/50 text-cyan-300 shadow-md shadow-cyan-500/20 flex items-center justify-center flex-shrink-0 text-sm">
+                                                    <i class="fa-solid fa-ruler-combined"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white text-sm">ความยาว</div>
+                                                    <div class="text-[11px] text-cyan-300/80 font-mono">Length ($l, x, r$)</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono text-cyan-200">$l, x, r$</td>
+                                        <td class="p-3.5 text-cyan-300 font-semibold">เมตร (metre)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-300 bg-cyan-950/60 border border-cyan-500/30 rounded-lg py-1 px-2.5">$\text{m}$</td>
+                                        <td class="p-3.5 font-mono text-[11px] text-emerald-400">$c = 299\,792\,458\text{ m/s}$<br><span class="text-slate-400 font-sans text-[11px]">(อัตราเร็วแสงในสุญญากาศ)</span></td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <div class="flex flex-wrap gap-1.5 mb-2">
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-virus text-cyan-400"></i> ไวรัส T4 ($100\text{ nm}$)</span>
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-teal-500/20 text-teal-300 border border-teal-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-bacterium text-teal-400"></i> แบคทีเรีย <em>E. coli</em> ($2\text{ }\mu\text{m}$)</span>
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-circle-dot text-emerald-400"></i> โคโลนีวุ้น ($2\text{ mm}$)</span>
+                                            </div>
+                                            <div class="text-xs text-slate-300 leading-relaxed">
+                                                วัดขนาดเส้นผ่านศูนย์กลาง<span class="whitespace-nowrap font-medium text-white">เซลล์แบคทีเรีย</span>, อนุภาคไวรัส, และความหนาเยื่อหุ้มเซลล์
+                                            </div>
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">มวล (Mass)</td>
-                                        <td class="p-3 text-center font-mono">$m$</td>
-                                        <td class="p-3 text-amber-300 font-semibold">กิโลกรัม (kilogram)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{kg}$</td>
-                                        <td class="p-3 font-mono text-[11px] text-emerald-400">$h = 6.626\,070\,15 \times 10^{-34}\text{ J}\cdot\text{s}$ (พลังค์)</td>
-                                        <td class="p-3">ชั่งสารเคมีอาหารเลี้ยงเชื้อ ($\text{g, mg}$), สอบเทียบไมโครปิเปตผ่านน้ำกลั่น ($1\,\text{mL} = 1\text{ g}$)</td>
+
+                                    <!-- 2. Mass (Amber theme) -->
+                                    <tr class="border-l-4 border-amber-400 bg-amber-950/20 hover:bg-amber-950/35 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400/30 to-yellow-600/40 border border-amber-400/50 text-amber-300 shadow-md shadow-amber-500/20 flex items-center justify-center flex-shrink-0 text-sm">
+                                                    <i class="fa-solid fa-weight-hanging"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white text-sm">มวล</div>
+                                                    <div class="text-[11px] text-amber-300/80 font-mono">Mass ($m$)</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono text-amber-200">$m$</td>
+                                        <td class="p-3.5 text-amber-300 font-semibold">กิโลกรัม (kilogram)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-amber-300 bg-amber-950/60 border border-amber-500/30 rounded-lg py-1 px-2.5">$\text{kg}$</td>
+                                        <td class="p-3.5 font-mono text-[11px] text-emerald-400">$h = 6.626\,070\,15 \times 10^{-34}\text{ J}\cdot\text{s}$<br><span class="text-slate-400 font-sans text-[11px]">(ค่าคงตัวพลังค์ via Kibble)</span></td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <div class="flex flex-wrap gap-1.5 mb-2">
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-scale-balanced text-amber-400"></i> ผงอาหารวุ้น ($10\text{--}50\text{ g}$)</span>
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-eye-dropper text-yellow-400"></i> สอบเทียบปิเปต ($1\,\text{mL} = 1\text{ g}$)</span>
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-orange-500/20 text-orange-300 border border-orange-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-bacterium text-orange-400"></i> เซลล์แบคทีเรีย ($\approx 1\text{ pg}$)</span>
+                                            </div>
+                                            <div class="text-xs text-slate-300 leading-relaxed">
+                                                ชั่งสารเคมี<span class="whitespace-nowrap font-medium text-white">ผงอาหารเลี้ยงเชื้อ</span> และสอบเทียบความเที่ยงของไมโครปิเปตผ่านน้ำกลั่นบริสุทธิ์
+                                            </div>
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">เวลา (Time)</td>
-                                        <td class="p-3 text-center font-mono">$t$</td>
-                                        <td class="p-3 text-sky-300 font-semibold">วินาที (second)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-sky-400">$\text{s}$</td>
-                                        <td class="p-3 font-mono text-[11px] text-emerald-400">$\Delta\nu_{\text{Cs}} = 9\,192\,631\,770\text{ s}^{-1}$ (ไฮเปอร์ไฟน์ $^{133}\text{Cs}$)</td>
-                                        <td class="p-3">ระยะเวลาการแบ่งเซลล์ (Doubling time), เวลานึ่งฆ่าเชื้อ Autoclave ($15\text{--}20\text{ min}$)</td>
+
+                                    <!-- 3. Time (Sky Blue theme) -->
+                                    <tr class="border-l-4 border-sky-400 bg-sky-950/20 hover:bg-sky-950/35 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-400/30 to-indigo-600/40 border border-sky-400/50 text-sky-300 shadow-md shadow-sky-500/20 flex items-center justify-center flex-shrink-0 text-sm">
+                                                    <i class="fa-solid fa-stopwatch"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white text-sm">เวลา</div>
+                                                    <div class="text-[11px] text-sky-300/80 font-mono">Time ($t$)</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono text-sky-200">$t$</td>
+                                        <td class="p-3.5 text-sky-300 font-semibold">วินาที (second)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-sky-300 bg-sky-950/60 border border-sky-500/30 rounded-lg py-1 px-2.5">$\text{s}$</td>
+                                        <td class="p-3.5 font-mono text-[11px] text-emerald-400">$\Delta\nu_{\text{Cs}} = 9\,192\,631\,770\text{ s}^{-1}$<br><span class="text-slate-400 font-sans text-[11px]">(ไฮเปอร์ไฟน์อะตอม $^{133}\text{Cs}$)</span></td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <div class="flex flex-wrap gap-1.5 mb-2">
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-hourglass-half text-sky-400"></i> Doubling ($20\text{ min}$)</span>
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-temperature-arrow-up text-red-400"></i> Autoclave ($15\text{--}20\text{ min}$)</span>
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-rotate text-indigo-400"></i> Centrifuge ($5\text{--}10\text{ min}$)</span>
+                                            </div>
+                                            <div class="text-xs text-slate-300 leading-relaxed">
+                                                ระยะเวลาการแบ่งเซลล์ (<span class="whitespace-nowrap font-medium text-white">Doubling time</span>), รอบเวลานึ่งฆ่าเชื้อ Autoclave, และเวลาปั่นตกตะกอน
+                                            </div>
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">กระแสไฟฟ้า (Electric current)</td>
-                                        <td class="p-3 text-center font-mono">$I, i$</td>
-                                        <td class="p-3 text-rose-300 font-semibold">แอมแปร์ (ampere)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-rose-400">$\text{A}$</td>
-                                        <td class="p-3 font-mono text-[11px] text-emerald-400">$e = 1.602\,176\,634 \times 10^{-19}\text{ C}$ (ประจุมูลฐาน)</td>
-                                        <td class="p-3">กระแสแยก DNA ในเจลอิเล็กโทรโฟเรซิส ($50\text{--}100\text{ mA}$), การวัดศักย์ไฟฟ้าเยื่อหุ้มเซลล์</td>
+
+                                    <!-- 4. Electric current (Rose theme) -->
+                                    <tr class="border-l-4 border-rose-400 bg-rose-950/20 hover:bg-rose-950/35 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-400/30 to-pink-600/40 border border-rose-400/50 text-rose-300 shadow-md shadow-rose-500/20 flex items-center justify-center flex-shrink-0 text-sm">
+                                                    <i class="fa-solid fa-bolt-lightning"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white text-sm">กระแสไฟฟ้า</div>
+                                                    <div class="text-[11px] text-rose-300/80 font-mono">Electric current ($I$)</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono text-rose-200">$I, i$</td>
+                                        <td class="p-3.5 text-rose-300 font-semibold">แอมแปร์ (ampere)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-rose-300 bg-rose-950/60 border border-rose-500/30 rounded-lg py-1 px-2.5">$\text{A}$</td>
+                                        <td class="p-3.5 font-mono text-[11px] text-emerald-400">$e = 1.602\,176\,634 \times 10^{-19}\text{ C}$<br><span class="text-slate-400 font-sans text-[11px]">(ประจุอิเล็กตรอนมูลฐาน)</span></td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <div class="flex flex-wrap gap-1.5 mb-2">
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-dna text-purple-400"></i> Agarose gel ($80\text{--}100\text{ mA}$)</span>
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-pink-500/20 text-pink-300 border border-pink-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-wave-square text-rose-400"></i> Patch-clamp ($10\text{--}100\text{ pA}$)</span>
+                                            </div>
+                                            <div class="text-xs text-slate-300 leading-relaxed">
+                                                กระแสขับเคลื่อนแยก DNA ใน<span class="whitespace-nowrap font-medium text-white">เจลอิเล็กโทรโฟเรซิส</span> และตรวจวัดศักย์ไอออนเยื่อหุ้มเซลล์
+                                            </div>
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">อุณหภูมิอุณหพลวัต (Temperature)</td>
-                                        <td class="p-3 text-center font-mono">$T$</td>
-                                        <td class="p-3 text-orange-300 font-semibold">เคลวิน (kelvin)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-orange-400">$\text{K}$</td>
-                                        <td class="p-3 font-mono text-[11px] text-emerald-400">$k = 1.380\,649 \times 10^{-23}\text{ J/K}$ (บ็อลทซ์มัน)</td>
-                                        <td class="p-3">ตู้บ่มเชื้อ ($37^\circ\text{C} = 310.15\text{ K}$), หม้อนึ่งฆ่าเชื้อ ($121^\circ\text{C} = 394.15\text{ K}$), PCR ($95^\circ\text{C}$)</td>
+
+                                    <!-- 5. Thermodynamic temperature (Orange theme) -->
+                                    <tr class="border-l-4 border-orange-400 bg-orange-950/20 hover:bg-orange-950/35 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-400/30 to-red-600/40 border border-orange-400/50 text-orange-300 shadow-md shadow-orange-500/20 flex items-center justify-center flex-shrink-0 text-sm">
+                                                    <i class="fa-solid fa-temperature-high"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white text-sm">อุณหพลวัต</div>
+                                                    <div class="text-[11px] text-orange-300/80 font-mono">Temperature ($T$)</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono text-orange-200">$T$</td>
+                                        <td class="p-3.5 text-orange-300 font-semibold">เคลวิน (kelvin)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-orange-300 bg-orange-950/60 border border-orange-500/30 rounded-lg py-1 px-2.5">$\text{K}$</td>
+                                        <td class="p-3.5 font-mono text-[11px] text-emerald-400">$k = 1.380\,649 \times 10^{-23}\text{ J/K}$<br><span class="text-slate-400 font-sans text-[11px]">(ค่าคงตัวบ็อลทซ์มัน)</span></td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <div class="flex flex-wrap gap-1.5 mb-2">
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-orange-500/20 text-orange-300 border border-orange-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-temperature-arrow-up text-orange-400"></i> ตู้บ่มเชื้อ ($37^\circ\text{C} = 310.15\text{ K}$)</span>
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-red-500/20 text-red-300 border border-red-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-fire text-red-400"></i> Autoclave ($121^\circ\text{C}$)</span>
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-circle-nodes text-yellow-400"></i> PCR ($95^\circ\text{C}, 55^\circ\text{C}$)</span>
+                                            </div>
+                                            <div class="text-xs text-slate-300 leading-relaxed">
+                                                ควบคุม<span class="whitespace-nowrap font-medium text-white">ตู้บ่มเพาะเชื้อ</span> ($37^\circ\text{C}$), หม้อนึ่งฆ่าเชื้อ ($121^\circ\text{C}$), และรอบอุณหภูมิ PCR thermal cycler
+                                            </div>
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ปริมาณของสาร (Amount of substance)</td>
-                                        <td class="p-3 text-center font-mono">$n$</td>
-                                        <td class="p-3 text-purple-300 font-semibold">โมล (mole)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-purple-400">$\text{mol}$</td>
-                                        <td class="p-3 font-mono text-[11px] text-emerald-400">$N_{\text{A}} = 6.022\,140\,76 \times 10^{23}\text{ mol}^{-1}$ (อาโวกาโดร)</td>
-                                        <td class="p-3">ความเข้มข้นสารละลายบัฟเฟอร์ ($\text{mol/L}$ หรือ $\text{M}$), จำนวนโมเลกุลไพรเมอร์ใน PCR</td>
+
+                                    <!-- 6. Amount of substance (Purple theme) -->
+                                    <tr class="border-l-4 border-purple-400 bg-purple-950/20 hover:bg-purple-950/35 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-400/30 to-fuchsia-600/40 border border-purple-400/50 text-purple-300 shadow-md shadow-purple-500/20 flex items-center justify-center flex-shrink-0 text-sm">
+                                                    <i class="fa-solid fa-cubes-stacked"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white text-sm">ปริมาณของสาร</div>
+                                                    <div class="text-[11px] text-purple-300/80 font-mono">Substance ($n$)</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono text-purple-200">$n$</td>
+                                        <td class="p-3.5 text-purple-300 font-semibold">โมล (mole)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-purple-300 bg-purple-950/60 border border-purple-500/30 rounded-lg py-1 px-2.5">$\text{mol}$</td>
+                                        <td class="p-3.5 font-mono text-[11px] text-emerald-400">$N_{\text{A}} = 6.022\,140\,76 \times 10^{23}\text{ mol}^{-1}$<br><span class="text-slate-400 font-sans text-[11px]">(ค่าคงตัวอาโวกาโดร)</span></td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <div class="flex flex-wrap gap-1.5 mb-2">
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-500/20 text-purple-300 border border-purple-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-flask-vial text-purple-400"></i> บัฟเฟอร์ Tris-EDTA ($10\text{ mM}$)</span>
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-calculator text-blue-400"></i> พลาสมิด ($10^9\text{ copies}$)</span>
+                                            </div>
+                                            <div class="text-xs text-slate-300 leading-relaxed">
+                                                ความเข้มข้น<span class="whitespace-nowrap font-medium text-white">สารละลายบัฟเฟอร์</span> ($\text{mol/L}$ หรือ $\text{M}$) และคำนวณจำนวนโมเลกุลในปฏิกิริยา PCR
+                                            </div>
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ความเข้มของการส่องสว่าง (Luminous intensity)</td>
-                                        <td class="p-3 text-center font-mono">$I_v$</td>
-                                        <td class="p-3 text-yellow-300 font-semibold">แคนเดลา (candela)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-yellow-400">$\text{cd}$</td>
-                                        <td class="p-3 font-mono text-[11px] text-emerald-400">$K_{\text{cd}} = 683\text{ lm/W}$ ที่ความถี่ $540\text{ THz}$</td>
-                                        <td class="p-3">การให้แสงสว่างเพาะเลี้ยงสาหร่ายเซลล์เดียว, หลอดไฟฟลูออเรสเซนต์, การเรืองแสงแบคทีเรีย</td>
+
+                                    <!-- 7. Luminous intensity (Yellow theme) -->
+                                    <tr class="border-l-4 border-yellow-400 bg-yellow-950/20 hover:bg-yellow-950/35 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-yellow-400/30 to-amber-600/40 border border-yellow-400/50 text-yellow-300 shadow-md shadow-yellow-500/20 flex items-center justify-center flex-shrink-0 text-sm">
+                                                    <i class="fa-solid fa-lightbulb"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white text-sm">ความเข้มส่องสว่าง</div>
+                                                    <div class="text-[11px] text-yellow-300/80 font-mono">Luminous ($I_v$)</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono text-yellow-200">$I_v$</td>
+                                        <td class="p-3.5 text-yellow-300 font-semibold">แคนเดลา (candela)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-yellow-300 bg-yellow-950/60 border border-yellow-500/30 rounded-lg py-1 px-2.5">$\text{cd}$</td>
+                                        <td class="p-3.5 font-mono text-[11px] text-emerald-400">$K_{\text{cd}} = 683\text{ lm/W}$ ที่ความถี่ $540\text{ THz}$<br><span class="text-slate-400 font-sans text-[11px]">($\lambda \approx 555\text{ nm}$ แสงเขียว)</span></td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <div class="flex flex-wrap gap-1.5 mb-2">
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-sun text-yellow-400"></i> Photobioreactor ($3{,}000\text{ lx}$)</span>
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-wand-magic-sparkles text-emerald-400"></i> Bioluminescence</span>
+                                            </div>
+                                            <div class="text-xs text-slate-300 leading-relaxed">
+                                                เพาะเลี้ยง<span class="whitespace-nowrap font-medium text-white">สาหร่ายเซลล์เดียว</span>ใน Bioreactor และตรวจวัดการเรืองแสงชีวภาพ (Bioluminescence)
+                                            </div>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -566,129 +978,288 @@ include '../includes/header.php';
                     </div>
 
                     <!-- TABLE 1.2: SI DERIVED UNITS -->
-                    <div class="tex-tablefig mt-8 scroll-mt-20" id="tab-1.2">
-                        <div class="p-3 bg-gradient-to-r from-emerald-950/60 to-slate-900 rounded-t-xl border border-b-0 border-slate-700/80 flex items-center justify-between flex-wrap gap-2">
-                            <span class="text-xs sm:text-sm font-bold text-emerald-300 flex items-center gap-2">
-                                <i class="fa-solid fa-calculator text-emerald-400"></i> ตารางที่ 1.2 หน่วยอนุพันธ์เอสไอ (SI Derived Units) ที่สำคัญทางฟิสิกส์และการประยุกต์ใช้ในห้องปฏิบัติการจุลชีววิทยา
+                    <div class="tex-tablefig mt-10 scroll-mt-20" id="tab-1.2">
+                        <div class="p-3.5 bg-gradient-to-r from-emerald-950/80 via-slate-900 to-slate-900 rounded-t-xl border border-b-0 border-emerald-500/30 flex items-center justify-between flex-wrap gap-2 shadow-lg">
+                            <span class="text-xs sm:text-sm font-bold text-emerald-300 flex items-center gap-2.5">
+                                <span class="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-400 shadow-sm">
+                                    <i class="fa-solid fa-calculator"></i>
+                                </span>
+                                ตารางที่ 1.2 หน่วยอนุพันธ์เอสไอ (SI Derived Units) ที่สำคัญทางฟิสิกส์และการประยุกต์ใช้ในห้องปฏิบัติการจุลชีววิทยา
                             </span>
-                            <span class="text-[11px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Derived Quantities</span>
+                            <span class="text-[11px] font-mono text-emerald-300 bg-emerald-950/90 border border-emerald-500/40 px-2.5 py-0.5 rounded-full shadow-inner">Derived Quantities</span>
                         </div>
-                        <div class="tex-table-wrap overflow-x-auto rounded-b-xl border border-slate-700/80 bg-slate-950/90 shadow-xl">
-                            <table class="tex-table w-full text-xs">
+                        <div class="tex-table-wrap overflow-x-auto rounded-b-xl border border-emerald-500/30 bg-slate-950/95 shadow-2xl">
+                            <table class="tex-table w-full text-xs sm:text-[13px] leading-relaxed">
                                 <thead>
-                                    <tr class="bg-slate-800/90 text-white border-b border-slate-700">
-                                        <th class="p-3 text-left">ปริมาณอนุพันธ์ (Derived Quantity)</th>
-                                        <th class="p-3 text-left">ชื่อหน่วย</th>
-                                        <th class="p-3 text-center">สัญลักษณ์</th>
-                                        <th class="p-3 text-left">ความสัมพันธ์กับหน่วยอื่น</th>
-                                        <th class="p-3 text-left">ความสัมพันธ์กับหน่วยฐาน SI</th>
-                                        <th class="p-3 text-left">การประยุกต์ใช้ในงานจุลชีววิทยา</th>
+                                    <tr class="bg-slate-900/90 text-slate-100 border-b border-slate-700/80">
+                                        <th class="p-3.5 text-left font-semibold min-w-[190px]">ปริมาณอนุพันธ์ (Derived Quantity)</th>
+                                        <th class="p-3.5 text-left font-semibold min-w-[130px]">ชื่อหน่วย</th>
+                                        <th class="p-3.5 text-center font-semibold min-w-[80px]">สัญลักษณ์</th>
+                                        <th class="p-3.5 text-left font-semibold min-w-[140px]">ความสัมพันธ์หน่วยอื่น</th>
+                                        <th class="p-3.5 text-left font-semibold min-w-[140px]">หน่วยฐาน SI</th>
+                                        <th class="p-3.5 text-left font-semibold min-w-[280px]">การประยุกต์ใช้ในงานจุลชีววิทยา</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-slate-800">
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ความถี่ (Frequency)</td>
-                                        <td class="p-3">เฮิรตซ์ (hertz)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{Hz}$</td>
-                                        <td class="p-3 font-mono">$1/\text{s}$</td>
-                                        <td class="p-3 font-mono">$\text{s}^{-1}$</td>
-                                        <td class="p-3">ความถี่การแกว่งอัลตราโซนิกทำลายผนังเซลล์, ความถี่แสงส่องเซลล์</td>
+                                <tbody class="divide-y divide-slate-800/80 text-slate-300">
+                                    <tr class="hover:bg-cyan-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-wave-square"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">ความถี่</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Frequency</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-cyan-300 font-semibold">เฮิรตซ์ (hertz)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-400 bg-cyan-950/40 rounded-lg py-1 px-2">$\text{Hz}$</td>
+                                        <td class="p-3.5 font-mono">$1/\text{s}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$\text{s}^{-1}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-bullhorn text-cyan-400 mr-1.5"></i>คลื่นสั่นอัลตราโซนิก (<span class="whitespace-nowrap font-medium text-white">Ultrasonic sonication</span>) สลายผนังเซลล์, ความถี่แสงส่องเซลล์
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">แรง (Force)</td>
-                                        <td class="p-3">นิวตัน (newton)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{N}$</td>
-                                        <td class="p-3 font-mono">$\text{kg}\cdot\text{m/s}^2$</td>
-                                        <td class="p-3 font-mono">$\text{m}\cdot\text{kg}\cdot\text{s}^{-2}$</td>
-                                        <td class="p-3">แรงของแฟลกเจลลาขับเคลื่อนแบคทีเรีย ($\text{pN}$), แรงหนีศูนย์กลางในการปั่นตกตะกอน</td>
+                                    <tr class="hover:bg-blue-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-blue-500/20 border border-blue-400/40 text-blue-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-arrows-up-down-left-right"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">แรง</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Force</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-blue-300 font-semibold">นิวตัน (newton)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-400 bg-cyan-950/40 rounded-lg py-1 px-2">$\text{N}$</td>
+                                        <td class="p-3.5 font-mono">$\text{kg}\cdot\text{m/s}^2$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$\text{m}\cdot\text{kg}\cdot\text{s}^{-2}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-bacterium text-blue-400 mr-1.5"></i>แรงกลของแฟลกเจลลาขับเคลื่อนแบคทีเรีย ($\text{pN}$), <span class="whitespace-nowrap font-medium text-white">แรงหนีศูนย์กลาง</span>ในการปั่นตกตะกอน
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ความดัน (Pressure / Stress)</td>
-                                        <td class="p-3">พาสคาล (pascal)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{Pa}$</td>
-                                        <td class="p-3 font-mono">$\text{N/m}^2$</td>
-                                        <td class="p-3 font-mono">$\text{m}^{-1}\cdot\text{kg}\cdot\text{s}^{-2}$</td>
-                                        <td class="p-3">ความดันไอน้ำในหม้อนึ่งฆ่าเชื้อ Autoclave ($103\text{ kPa} \approx 15\text{ psi}$), ความดันออสโมซิส</td>
+                                    <tr class="hover:bg-teal-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-teal-500/20 border border-teal-400/40 text-teal-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-gauge-high"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">ความดันและความเค้น</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Pressure / Stress</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-teal-300 font-semibold">พาสคาล (pascal)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-400 bg-cyan-950/40 rounded-lg py-1 px-2">$\text{Pa}$</td>
+                                        <td class="p-3.5 font-mono">$\text{N/m}^2$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$\text{m}^{-1}\cdot\text{kg}\cdot\text{s}^{-2}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-temperature-arrow-up text-teal-400 mr-1.5"></i>ความดันไอน้ำใน<span class="whitespace-nowrap font-medium text-white">หม้อนึ่งฆ่าเชื้อ Autoclave</span> ($103\text{ kPa} \approx 15\text{ psi}$), <span class="whitespace-nowrap font-medium text-white">ความดันออสโมซิส</span>
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ความหนืดพลวัต (Dynamic Viscosity)</td>
-                                        <td class="p-3">พาสคาล-วินาที</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{Pa}\cdot\text{s}$</td>
-                                        <td class="p-3 font-mono">$\text{N}\cdot\text{s/m}^2$</td>
-                                        <td class="p-3 font-mono">$\text{m}^{-1}\cdot\text{kg}\cdot\text{s}^{-1}$</td>
-                                        <td class="p-3">ความหนืดของน้ำและอาหารเลี้ยงเชื้อจุลินทรีย์ ($\eta_{\text{water}} \approx 10^{-3}\text{ Pa}\cdot\text{s} = 1\text{ cP}$)</td>
+                                    <tr class="hover:bg-sky-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-sky-500/20 border border-sky-400/40 text-sky-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-droplet"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">ความหนืดพลวัต</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Dynamic Viscosity</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-sky-300 font-semibold">พาสคาล-วินาที</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-400 bg-cyan-950/40 rounded-lg py-1 px-2">$\text{Pa}\cdot\text{s}$</td>
+                                        <td class="p-3.5 font-mono">$\text{N}\cdot\text{s/m}^2$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$\text{m}^{-1}\cdot\text{kg}\cdot\text{s}^{-1}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-water text-sky-400 mr-1.5"></i>ความหนืดของน้ำและ<span class="whitespace-nowrap font-medium text-white">อาหารเลี้ยงเชื้อจุลินทรีย์</span> ($\eta_{\text{water}} \approx 10^{-3}\text{ Pa}\cdot\text{s} = 1\text{ cP}$)
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">พลังงาน งาน ความร้อน (Energy / Work)</td>
-                                        <td class="p-3">จูล (joule)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{J}$</td>
-                                        <td class="p-3 font-mono">$\text{N}\cdot\text{m}$</td>
-                                        <td class="p-3 font-mono">$\text{m}^2\cdot\text{kg}\cdot\text{s}^{-2}$</td>
-                                        <td class="p-3">พลังงานสลายพันธะไฮโดรเจนในดีเอ็นเอ, การปลดปล่อยพลังงานของ ATP ($30.5\text{ kJ/mol}$)</td>
+                                    <tr class="hover:bg-amber-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-400/40 text-amber-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-fire-flame-curved"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">พลังงาน งาน ความร้อน</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Energy / Work</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-amber-300 font-semibold">จูล (joule)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-400 bg-cyan-950/40 rounded-lg py-1 px-2">$\text{J}$</td>
+                                        <td class="p-3.5 font-mono">$\text{N}\cdot\text{m}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$\text{m}^2\cdot\text{kg}\cdot\text{s}^{-2}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-atom text-amber-400 mr-1.5"></i>พลังงานสลาย<span class="whitespace-nowrap font-medium text-white">พันธะไฮโดรเจนใน DNA</span>, การปลดปล่อยพลังงานของ ATP ($30.5\text{ kJ/mol}$)
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">กำลัง (Power)</td>
-                                        <td class="p-3">วัตต์ (watt)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{W}$</td>
-                                        <td class="p-3 font-mono">$\text{J/s}$</td>
-                                        <td class="p-3 font-mono">$\text{m}^2\cdot\text{kg}\cdot\text{s}^{-3}$</td>
-                                        <td class="p-3">กำลังไฟฟ้าของหม้อนึ่งฆ่าเชื้อ เครื่องปั่นเหวี่ยง และหลอดไฟตู้บ่มเชื้อ</td>
+                                    <tr class="hover:bg-yellow-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-yellow-500/20 border border-yellow-400/40 text-yellow-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-bolt"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">กำลังไฟฟ้า</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Power</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-yellow-300 font-semibold">วัตต์ (watt)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-400 bg-cyan-950/40 rounded-lg py-1 px-2">$\text{W}$</td>
+                                        <td class="p-3.5 font-mono">$\text{J/s}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$\text{m}^2\cdot\text{kg}\cdot\text{s}^{-3}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-plug text-yellow-400 mr-1.5"></i>กำลังไฟฟ้าของ<span class="whitespace-nowrap font-medium text-white">หม้อนึ่งฆ่าเชื้อ</span>, <span class="whitespace-nowrap font-medium text-white">เครื่องปั่นเหวี่ยง</span>, และหลอดไฟตู้บ่มเชื้อ
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ประจุไฟฟ้า (Electric charge)</td>
-                                        <td class="p-3">คูลอมบ์ (coulomb)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{C}$</td>
-                                        <td class="p-3 font-mono">$\text{A}\cdot\text{s}$</td>
-                                        <td class="p-3 font-mono">$\text{s}\cdot\text{A}$</td>
-                                        <td class="p-3">ประจุลบสุทธิบนสาย Phosphodiester ของ DNA และประจุโปรตีน</td>
+                                    <tr class="hover:bg-rose-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-rose-500/20 border border-rose-400/40 text-rose-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-atom"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">ประจุไฟฟ้า</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Electric charge</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-rose-300 font-semibold">คูลอมบ์ (coulomb)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-400 bg-cyan-950/40 rounded-lg py-1 px-2">$\text{C}$</td>
+                                        <td class="p-3.5 font-mono">$\text{A}\cdot\text{s}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$\text{s}\cdot\text{A}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-dna text-rose-400 mr-1.5"></i>ประจุลบสุทธิบนสาย <span class="whitespace-nowrap font-medium text-white">Phosphodiester</span> ของ DNA และประจุโปรตีน
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ความต่างศักย์ไฟฟ้า (Voltage / Potential)</td>
-                                        <td class="p-3">โวลต์ (volt)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{V}$</td>
-                                        <td class="p-3 font-mono">$\text{W/A}$</td>
-                                        <td class="p-3 font-mono">$\text{m}^2\cdot\text{kg}\cdot\text{s}^{-3}\cdot\text{A}^{-1}$</td>
-                                        <td class="p-3">แรงดันไฟฟ้าสำหรับแยกแถบ DNA ($100\text{ V}$), ศักย์ไฟฟ้าเยื่อหุ้มเซลล์ ($-70\text{ mV}$)</td>
+                                    <tr class="hover:bg-red-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-red-500/20 border border-red-400/40 text-red-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-car-battery"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">ความต่างศักย์ไฟฟ้า</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Voltage / Potential</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-red-300 font-semibold">โวลต์ (volt)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-400 bg-cyan-950/40 rounded-lg py-1 px-2">$\text{V}$</td>
+                                        <td class="p-3.5 font-mono">$\text{W/A}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$\text{m}^2\cdot\text{kg}\cdot\text{s}^{-3}\cdot\text{A}^{-1}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-bolt-lightning text-red-400 mr-1.5"></i>แรงดันไฟฟ้าสำหรับแยกแถบ DNA ($100\text{ V}$), <span class="whitespace-nowrap font-medium text-white">ศักย์ไฟฟ้าเยื่อหุ้มเซลล์</span> ($-70\text{ mV}$)
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ความต้านทานไฟฟ้า (Resistance)</td>
-                                        <td class="p-3">โอห์ม (ohm)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\Omega$</td>
-                                        <td class="p-3 font-mono">$\text{V/A}$</td>
-                                        <td class="p-3 font-mono">$\text{m}^2\cdot\text{kg}\cdot\text{s}^{-3}\cdot\text{A}^{-2}$</td>
-                                        <td class="p-3">ความต้านทานของเยื่อหุ้มเซลล์ (Trans-epithelial electrical resistance — TEER)</td>
+                                    <tr class="hover:bg-indigo-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-indigo-500/20 border border-indigo-400/40 text-indigo-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-microchip"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">ความต้านทานไฟฟ้า</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Resistance</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-indigo-300 font-semibold">โอห์ม (ohm)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-400 bg-cyan-950/40 rounded-lg py-1 px-2">$\Omega$</td>
+                                        <td class="p-3.5 font-mono">$\text{V/A}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$\text{m}^2\cdot\text{kg}\cdot\text{s}^{-3}\cdot\text{A}^{-2}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-shield text-indigo-400 mr-1.5"></i>ความต้านทานของเยื่อหุ้มเซลล์ (<span class="whitespace-nowrap font-medium text-white">TEER assay</span>), ความต้านทานสารละลาย
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">สภาพนำไฟฟ้า (Conductance)</td>
-                                        <td class="p-3">ซีเมนส์ (siemens)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{S}$</td>
-                                        <td class="p-3 font-mono">$\Omega^{-1}$</td>
-                                        <td class="p-3 font-mono">$\text{m}^{-2}\cdot\text{kg}^{-1}\cdot\text{s}^3\cdot\text{A}^2$</td>
-                                        <td class="p-3">การตรวจสอบความบริสุทธิ์ของน้ำกลั่นและระดับไอออนในอาหารเลี้ยงเชื้อ (EC Meter)</td>
+                                    <tr class="hover:bg-violet-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-violet-500/20 border border-violet-400/40 text-violet-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-water"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">สภาพนำไฟฟ้า</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Conductance</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-violet-300 font-semibold">ซีเมนส์ (siemens)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-400 bg-cyan-950/40 rounded-lg py-1 px-2">$\text{S}$</td>
+                                        <td class="p-3.5 font-mono">$\Omega^{-1}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$\text{m}^{-2}\cdot\text{kg}^{-1}\cdot\text{s}^3\cdot\text{A}^2$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-filter text-violet-400 mr-1.5"></i>ตรวจสอบความบริสุทธิ์ของ<span class="whitespace-nowrap font-medium text-white">น้ำกลั่น DI</span> และระดับไอออนในอาหารเลี้ยงเชื้อ (EC Meter)
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">กิจกรรมการเร่งปฏิกิริยา (Catalytic activity)</td>
-                                        <td class="p-3">คาทาล (katal)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{kat}$</td>
-                                        <td class="p-3 font-mono">$\text{mol/s}$</td>
-                                        <td class="p-3 font-mono">$\text{mol}\cdot\text{s}^{-1}$</td>
-                                        <td class="p-3">วัดอัตราการเร่งปฏิกิริยาของเอนไซม์จากจุลินทรีย์ (เช่น $\beta$-galactosidase, Taq Polymerase)</td>
+                                    <tr class="hover:bg-purple-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-purple-500/20 border border-purple-400/40 text-purple-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-dna"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">การเร่งปฏิกิริยา</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Catalytic activity</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-purple-300 font-semibold">คาทาล (katal)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-400 bg-cyan-950/40 rounded-lg py-1 px-2">$\text{kat}$</td>
+                                        <td class="p-3.5 font-mono">$\text{mol/s}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$\text{mol}\cdot\text{s}^{-1}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-vial-circle-check text-purple-400 mr-1.5"></i>วัดอัตราการเร่งปฏิกิริยาของเอนไซม์จากจุลินทรีย์ (เช่น $\beta$-galactosidase, Taq Polymerase)
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ฟลักซ์ส่องสว่าง & ความสว่าง</td>
-                                        <td class="p-3">ลูเมน (lm) / ลักซ์ (lx)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{lm / lx}$</td>
-                                        <td class="p-3 font-mono">$\text{cd}\cdot\text{sr} \text{ / } \text{lm/m}^2$</td>
-                                        <td class="p-3 font-mono">$\text{m}^{-2}\cdot\text{cd}$</td>
-                                        <td class="p-3">ความเข้มแสงบนโต๊ะเขี่ยเชื้อปลอดเชื้อ (Laminar Airflow) และตู้บ่มเพาะสาหร่าย</td>
+                                    <tr class="hover:bg-orange-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-orange-500/20 border border-orange-400/40 text-orange-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-sun"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">ฟลักซ์ส่องสว่าง & สว่าง</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Luminous Flux / Illum.</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-orange-300 font-semibold">ลูเมน / ลักซ์</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-400 bg-cyan-950/40 rounded-lg py-1 px-2">$\text{lm / lx}$</td>
+                                        <td class="p-3.5 font-mono">$\text{cd}\cdot\text{sr} \text{ / } \text{lm/m}^2$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$\text{m}^{-2}\cdot\text{cd}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-lightbulb text-orange-400 mr-1.5"></i>ความเข้มแสงบนโต๊ะเขี่ยเชื้อปลอดเชื้อ (<span class="whitespace-nowrap font-medium text-white">Laminar Clean Bench</span>) และตู้บ่มเพาะสาหร่าย
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ปริมาณรังสีดูดกลืน (Absorbed dose)</td>
-                                        <td class="p-3">เกรย์ (gray)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{Gy}$</td>
-                                        <td class="p-3 font-mono">$\text{J/kg}$</td>
-                                        <td class="p-3 font-mono">$\text{m}^2\cdot\text{s}^{-2}$</td>
-                                        <td class="p-3">การฉายรังสีแกมมาเพื่อทำหมันอุปกรณ์พลาสติกและฆ่าเชื้อในอาหาร (Food Irradiation)</td>
+                                    <tr class="hover:bg-pink-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-pink-500/20 border border-pink-400/40 text-pink-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-radiation"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">ปริมาณรังสีดูดกลืน</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Absorbed dose</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-pink-300 font-semibold">เกรย์ (gray)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-400 bg-cyan-950/40 rounded-lg py-1 px-2">$\text{Gy}$</td>
+                                        <td class="p-3.5 font-mono">$\text{J/kg}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$\text{m}^2\cdot\text{s}^{-2}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-shield-virus text-pink-400 mr-1.5"></i>การฉายรังสีแกมมาเพื่อทำหมัน<span class="whitespace-nowrap font-medium text-white">จานเพาะเชื้อพลาสติก</span>และฆ่าเชื้อในอาหาร (<span class="whitespace-nowrap">Food Irradiation</span>)
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -696,105 +1267,222 @@ include '../includes/header.php';
                     </div>
 
                     <!-- TABLE 1.3: SUPPLEMENTARY & NON-SI UNITS -->
-                    <div class="tex-tablefig mt-8 scroll-mt-20" id="tab-1.3">
-                        <div class="p-3 bg-gradient-to-r from-amber-950/60 to-slate-900 rounded-t-xl border border-b-0 border-slate-700/80 flex items-center justify-between flex-wrap gap-2">
-                            <span class="text-xs sm:text-sm font-bold text-amber-300 flex items-center gap-2">
-                                <i class="fa-solid fa-shapes text-amber-400"></i> ตารางที่ 1.3 หน่วยเสริมและหน่วยนอกระบบเอสไอที่ยอมรับให้ใช้ร่วมกับระบบเอสไอ (Supplementary & Accepted Non-SI Units) ในทางจุลชีววิทยา
+                    <div class="tex-tablefig mt-10 scroll-mt-20" id="tab-1.3">
+                        <div class="p-3.5 bg-gradient-to-r from-amber-950/80 via-slate-900 to-slate-900 rounded-t-xl border border-b-0 border-amber-500/30 flex items-center justify-between flex-wrap gap-2 shadow-lg">
+                            <span class="text-xs sm:text-sm font-bold text-amber-300 flex items-center gap-2.5">
+                                <span class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-400 shadow-sm">
+                                    <i class="fa-solid fa-shapes"></i>
+                                </span>
+                                ตารางที่ 1.3 หน่วยเสริมและหน่วยนอกระบบเอสไอที่ยอมรับให้ใช้ร่วมกับระบบเอสไอ (Supplementary & Accepted Non-SI Units) ในทางจุลชีววิทยา
                             </span>
-                            <span class="text-[11px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Accepted Units</span>
+                            <span class="text-[11px] font-mono text-amber-300 bg-amber-950/90 border border-amber-500/40 px-2.5 py-0.5 rounded-full shadow-inner">Accepted Units</span>
                         </div>
-                        <div class="tex-table-wrap overflow-x-auto rounded-b-xl border border-slate-700/80 bg-slate-950/90 shadow-xl">
-                            <table class="tex-table w-full text-xs">
+                        <div class="tex-table-wrap overflow-x-auto rounded-b-xl border border-amber-500/30 bg-slate-950/95 shadow-2xl">
+                            <table class="tex-table w-full text-xs sm:text-[13px] leading-relaxed">
                                 <thead>
-                                    <tr class="bg-slate-800/90 text-white border-b border-slate-700">
-                                        <th class="p-3 text-left">ปริมาณ (Quantity)</th>
-                                        <th class="p-3 text-left">ชื่อหน่วย</th>
-                                        <th class="p-3 text-center">สัญลักษณ์</th>
-                                        <th class="p-3 text-left">ค่าเทียบเท่าในหน่วยเอสไอ (SI Equivalent)</th>
-                                        <th class="p-3 text-left">ความสำคัญและการใช้งานจริงในงานจุลชีววิทยา</th>
+                                    <tr class="bg-slate-900/90 text-slate-100 border-b border-slate-700/80">
+                                        <th class="p-3.5 text-left font-semibold min-w-[190px]">ปริมาณ (Quantity)</th>
+                                        <th class="p-3.5 text-left font-semibold min-w-[140px]">ชื่อหน่วย</th>
+                                        <th class="p-3.5 text-center font-semibold min-w-[80px]">สัญลักษณ์</th>
+                                        <th class="p-3.5 text-left font-semibold min-w-[200px]">ค่าเทียบเท่าในหน่วยเอสไอ</th>
+                                        <th class="p-3.5 text-left font-semibold min-w-[280px]">ความสำคัญและการใช้งานจริงในงานจุลชีววิทยา</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-slate-800">
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white" rowspan="2">มุมระนาบและมุมตัน (Angles) <span class="text-amber-400 font-normal">(หน่วยเสริม)</span></td>
-                                        <td class="p-3">เรเดียน (radian)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{rad}$</td>
-                                        <td class="p-3 font-mono">$1\text{ rad} = \text{m/m} = 1$</td>
-                                        <td class="p-3">ความเร็วเชิงมุมในการหมุน ($\omega = \text{rad/s}$) ของหัวปั่นเหวี่ยง Centrifuge</td>
+                                <tbody class="divide-y divide-slate-800/80 text-slate-300">
+                                    <tr class="hover:bg-amber-950/20 transition-colors">
+                                        <td class="p-3.5" rowspan="2">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-400/40 text-amber-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-compass-drafting"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">มุมระนาบและมุมตัน</div>
+                                                    <div class="text-[11px] text-amber-400/80 font-mono">(หน่วยเสริม Supplementary)</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-amber-300 font-semibold">เรเดียน (radian)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-amber-400 bg-amber-950/40 rounded-lg py-1 px-2">$\text{rad}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$1\text{ rad} = \text{m/m} = 1$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-rotate text-amber-400 mr-1.5"></i>ความเร็วเชิงมุมในการหมุน ($\omega = \text{rad/s}$) คำนวณความเร่งหนีศูนย์กลาง ($g$-force, RCF) ของ<span class="whitespace-nowrap font-medium text-white">หัวปั่นเหวี่ยง Centrifuge</span>
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3">สเตอเรเดียน (steradian)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{sr}$</td>
-                                        <td class="p-3 font-mono">$1\text{ sr} = \text{m}^2/\text{m}^2 = 1$</td>
-                                        <td class="p-3">มุมตันของการกระจายแสงของหลอด LED กล้องจุลทรรศน์และเซ็นเซอร์วัดการกระเจิงแสง</td>
+                                    <tr class="hover:bg-amber-950/20 transition-colors">
+                                        <td class="p-3.5 text-amber-300 font-semibold">สเตอเรเดียน (steradian)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-amber-400 bg-amber-950/40 rounded-lg py-1 px-2">$\text{sr}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$1\text{ sr} = \text{m}^2/\text{m}^2 = 1$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-bullseye text-amber-400 mr-1.5"></i>มุมตันของการกระจายแสงหลอด LED กล้องจุลทรรศน์และเซ็นเซอร์วัดการกระเจิงแสงแบคทีเรีย
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ปริมาตร (Volume)</td>
-                                        <td class="p-3">ลิตร (litre)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{L, l}$</td>
-                                        <td class="p-3 font-mono">$1\text{ L} = 1\text{ dm}^3 = 10^{-3}\text{ m}^3 = 1{,}000\text{ mL}$</td>
-                                        <td class="p-3">ปริมาตรถังหมักอาหารเลี้ยงเชื้อ (Bioreactor) และปริมาตรของเหลวในห้องทดลอง</td>
+                                    <tr class="hover:bg-blue-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-blue-500/20 border border-blue-400/40 text-blue-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-flask"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">ปริมาตร</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Volume</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-blue-300 font-semibold">ลิตร (litre)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-amber-400 bg-amber-950/40 rounded-lg py-1 px-2">$\text{L, l}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$1\text{ L} = 1\text{ dm}^3 = 10^{-3}\text{ m}^3 = 1{,}000\text{ mL}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-flask-vial text-blue-400 mr-1.5"></i>ปริมาตรถังหมักอาหารเลี้ยงเชื้อ (<span class="whitespace-nowrap font-medium text-white">Bioreactor</span>) และปริมาตรของเหลวในห้องปฏิบัติการ
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ปริมาตรไมโครปิเปต (Microvolume)</td>
-                                        <td class="p-3">ไมโครลิตร (microlitre)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-amber-400">$\mu\text{L}$</td>
-                                        <td class="p-3 font-mono">$1\text{ }\mu\text{L} = 10^{-6}\text{ L} = 10^{-9}\text{ m}^3 = 1\text{ mm}^3$</td>
-                                        <td class="p-3">ปริมาตรมาตรฐานของการดูดจ่ายสารด้วยไมโครปิเปต P20, P200, P1000 และปฏิกิริยา PCR</td>
+                                    <tr class="hover:bg-cyan-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-eye-dropper"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">ปริมาตรไมโครปิเปต</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Microvolume</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-cyan-300 font-semibold">ไมโครลิตร (microlitre)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-amber-400 bg-amber-950/40 rounded-lg py-1 px-2">$\mu\text{L}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$1\text{ }\mu\text{L} = 10^{-6}\text{ L} = 10^{-9}\text{ m}^3 = 1\text{ mm}^3$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-vial text-cyan-400 mr-1.5"></i>ปริมาตรมาตรฐานของการดูดจ่ายสารด้วย<span class="whitespace-nowrap font-medium text-white">ไมโครปิเปต P20, P200, P1000</span> และปฏิกิริยา <span class="whitespace-nowrap font-medium text-white">PCR ($20\text{--}50\text{ }\mu\text{L}$)</span>
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white" rowspan="3">เวลาที่ไม่ใช่ SI (Non-SI Time)</td>
-                                        <td class="p-3">นาที (minute)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{min}$</td>
-                                        <td class="p-3 font-mono">$1\text{ min} = 60\text{ s}$</td>
-                                        <td class="p-3">เวลาปั่นเหวี่ยง ($5\text{--}10\text{ min}$), เวลานึ่งฆ่าเชื้อ Autoclave ($15\text{ min}$)</td>
+                                    <tr class="hover:bg-sky-950/20 transition-colors">
+                                        <td class="p-3.5" rowspan="3">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-sky-500/20 border border-sky-400/40 text-sky-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-clock"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">เวลาที่ไม่ใช่ SI</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Non-SI Time Units</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-sky-300 font-semibold">นาที (minute)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-amber-400 bg-amber-950/40 rounded-lg py-1 px-2">$\text{min}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$1\text{ min} = 60\text{ s}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-stopwatch text-sky-400 mr-1.5"></i>เวลาปั่นเหวี่ยงตกตะกอน ($5\text{--}10\text{ min}$), เวลานึ่งฆ่าเชื้อ <span class="whitespace-nowrap font-medium text-white">Autoclave ($15\text{--}20\text{ min}$)</span>
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3">ชั่วโมง (hour)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{h}$</td>
-                                        <td class="p-3 font-mono">$1\text{ h} = 60\text{ min} = 3{,}600\text{ s}$</td>
-                                        <td class="p-3">เวลาบ่มเชื้อแบคทีเรียข้ามคืน (Overnight incubation: $16\text{--}24\text{ h}$)</td>
+                                    <tr class="hover:bg-sky-950/20 transition-colors">
+                                        <td class="p-3.5 text-sky-300 font-semibold">ชั่วโมง (hour)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-amber-400 bg-amber-950/40 rounded-lg py-1 px-2">$\text{h}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$1\text{ h} = 60\text{ min} = 3{,}600\text{ s}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-bed text-indigo-400 mr-1.5"></i>เวลาบ่มเพาะเชื้อแบคทีเรียข้ามคืน (<span class="whitespace-nowrap font-medium text-white">Overnight incubation:</span> $16\text{--}24\text{ h}$)
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3">วัน (day)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{d}$</td>
-                                        <td class="p-3 font-mono">$1\text{ d} = 24\text{ h} = 86{,}400\text{ s}$</td>
-                                        <td class="p-3">การติดตามการเจริญของเชื้อราและแบคทีเรียที่โตช้า (เช่น <em>Mycobacterium</em> ใช้เวลาหลายวัน)</td>
+                                    <tr class="hover:bg-sky-950/20 transition-colors">
+                                        <td class="p-3.5 text-sky-300 font-semibold">วัน (day)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-amber-400 bg-amber-950/40 rounded-lg py-1 px-2">$\text{d}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$1\text{ d} = 24\text{ h} = 86{,}400\text{ s}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-calendar-check text-slate-400 mr-1.5"></i>การติดตามการเจริญของเชื้อราและแบคทีเรียที่โตช้า (เช่น <em>Mycobacterium tuberculosis</em> ต้องใช้เวลาหลายสัปดาห์)
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">อุณหภูมิ (Temperature)</td>
-                                        <td class="p-3">องศาเซลเซียส (degree Celsius)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-amber-400">$^\circ\text{C}$</td>
-                                        <td class="p-3 font-mono">$T_{^\circ\text{C}} = T_{\text{K}} - 273.15$</td>
-                                        <td class="p-3">หน่วยวัดอุณหภูมิที่แสดงบนหน้าปัดตู้บ่มเชื้อ ตู้เย็นเก็บตัวอย่าง และหม้อนึ่งฆ่าเชื้อ</td>
+                                    <tr class="hover:bg-orange-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-orange-500/20 border border-orange-400/40 text-orange-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-temperature-three-quarters"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">อุณหภูมิเซลเซียส</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Celsius Temperature</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-orange-300 font-semibold">องศาเซลเซียส</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-amber-400 bg-amber-950/40 rounded-lg py-1 px-2">$^\circ\text{C}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$T_{^\circ\text{C}} = T_{\text{K}} - 273.15$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-temperature-high text-orange-400 mr-1.5"></i>หน้าปัดแสดงผลของ<span class="whitespace-nowrap font-medium text-white">ตู้บ่มเชื้อ ($37^\circ\text{C}$)</span>, ตู้เย็นเก็บตัวอย่าง ($4^\circ\text{C}$), และตู้แช่แข็ง ($-80^\circ\text{C}$)
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">มวลชีวโมเลกุล (Molecular mass)</td>
-                                        <td class="p-3">ดาลตัน (dalton)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{Da, kDa}$</td>
-                                        <td class="p-3 font-mono">$1\text{ Da} \approx 1.660\,539 \times 10^{-27}\text{ kg}$</td>
-                                        <td class="p-3">น้ำหนักโมเลกุลของโปรตีนและสายกรดนิวคลีอิก (เช่น เอนไซม์ไลโซไซม์ $14.3\text{ kDa}$, BSA $66.5\text{ kDa}$)</td>
+                                    <tr class="hover:bg-purple-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-purple-500/20 border border-purple-400/40 text-purple-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-dna"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">มวลชีวโมเลกุล</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Molecular mass</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-purple-300 font-semibold">ดาลตัน (dalton)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-amber-400 bg-amber-950/40 rounded-lg py-1 px-2">$\text{Da, kDa}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$1\text{ Da} \approx 1.660\,539 \times 10^{-27}\text{ kg}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-atom text-purple-400 mr-1.5"></i>น้ำหนักโมเลกุลของโปรตีนและกรดนิวคลีอิก (เช่น ไลโซไซม์ $14.3\text{ kDa}$, BSA $66.5\text{ kDa}$)
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">พลังงานระดับโมเลกุล (Energy)</td>
-                                        <td class="p-3">อิเล็กตรอนโวลต์</td>
-                                        <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{eV}$</td>
-                                        <td class="p-3 font-mono">$1\text{ eV} \approx 1.602\,176 \times 10^{-19}\text{ J}$</td>
-                                        <td class="p-3">พลังงานโฟตอนของแสง UV สำหรับฆ่าเชื้อในตู้ Biosafety ($h\nu \approx 4.9\text{ eV}$ ที่ $\lambda = 254\text{ nm}$)</td>
+                                    <tr class="hover:bg-yellow-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-yellow-500/20 border border-yellow-400/40 text-yellow-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-bolt"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">พลังงานโมเลกุล</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Molecular Energy</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-yellow-300 font-semibold">อิเล็กตรอนโวลต์</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-amber-400 bg-amber-950/40 rounded-lg py-1 px-2">$\text{eV}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$1\text{ eV} \approx 1.602\,176 \times 10^{-19}\text{ J}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-sun text-yellow-400 mr-1.5"></i>พลังงานโฟตอนของแสง UV สำหรับฆ่าเชื้อในตู้ Biosafety ($h\nu \approx 4.9\text{ eV}$ ที่ $\lambda = 254\text{ nm}$)
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ระยะพันธะ/โครงสร้างผลึก (Length)</td>
-                                        <td class="p-3">อังสตรอม (ångström)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-amber-400">\AA</td>
-                                        <td class="p-3 font-mono">$1\text{ \AA} = 0.1\text{ nm} = 10^{-10}\text{ m}$</td>
-                                        <td class="p-3">ความยาวพันธะเคมี ระยะห่างเกลียวคู่ดีเอ็นเอ ($34\text{ \AA}$ ต่อรอบ) และความละเอียดกล้อง Cryo-EM</td>
+                                    <tr class="hover:bg-emerald-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-ruler"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">ระยะพันธะ/ผลึก</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Bond / Lattice Length</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-emerald-300 font-semibold">อังสตรอม (ångström)</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-amber-400 bg-amber-950/40 rounded-lg py-1 px-2">$\text{\AA}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$1\text{ \AA} = 0.1\text{ nm} = 10^{-10}\text{ m}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-microscope text-emerald-400 mr-1.5"></i>ความยาวพันธะเคมี ระยะห่างเกลียวคู่ดีเอ็นเอ ($34\text{ \AA}$ ต่อรอบ) และความละเอียดกล้อง Cryo-EM
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ความดันก๊าซและของเหลว (Pressure)</td>
-                                        <td class="p-3">มิลลิเมตรปรอท (millimetre of mercury)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{mmHg}$</td>
-                                        <td class="p-3 font-mono">$1\text{ mmHg} \approx 133.322\text{ Pa}$</td>
-                                        <td class="p-3">ความดันโลหิต การดูดสุญญากาศกรองอาหารเลี้ยงเชื้อ (Vacuum filtration) และความดันไอ</td>
+                                    <tr class="hover:bg-red-950/20 transition-colors">
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <span class="w-7 h-7 rounded-lg bg-red-500/20 border border-red-400/40 text-red-300 shadow-sm flex items-center justify-center flex-shrink-0 text-xs">
+                                                    <i class="fa-solid fa-compress"></i>
+                                                </span>
+                                                <div>
+                                                    <div class="font-bold text-white">ความดันก๊าซ/ของไหล</div>
+                                                    <div class="text-[11px] text-slate-400 font-mono">Fluid / Gas Pressure</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-red-300 font-semibold">มิลลิเมตรปรอท</td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-amber-400 bg-amber-950/40 rounded-lg py-1 px-2">$\text{mmHg}$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$1\text{ mmHg} \approx 133.322\text{ Pa}$</td>
+                                        <td class="p-3.5 text-slate-200">
+                                            <i class="fa-solid fa-filter text-red-400 mr-1.5"></i>ระบบดูดกรองสุญญากาศ (<span class="whitespace-nowrap font-medium text-white">Vacuum filtration</span>) อาหารเลี้ยงเชื้อ และความดันก๊าซในถังหมัก
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
