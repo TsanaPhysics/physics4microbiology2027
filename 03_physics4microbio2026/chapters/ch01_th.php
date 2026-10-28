@@ -375,11 +375,19 @@ include '../includes/header.php';
                                     </div>
                                 </div>
                             </div>
-                            <!-- 3D Close-up: Cesium Atomic Fountain Clock -->
-                            <div class="rounded-2xl overflow-hidden border border-sky-500/30 shadow-xl bg-slate-950 mt-3">
-                                <img src="../images/sec_3d/ch01_cesium_clock_3d.jpg" alt="หอนาฬิกาอะตอมน้ำพุซีเซียม NIST-F2" class="w-full h-auto object-cover" loading="lazy">
-                                <div class="p-3 bg-slate-950/90 text-xs text-slate-400 text-center border-t border-slate-800 font-mono">
-                                    <strong>ภาพ 3 มิติ:</strong> หอนาฬิกาอะตอมน้ำพุซีเซียม-133 (Cesium-133 Fountain Clock NIST-F2): ลำแสงเลเซอร์ทำให้อะตอมเย็นตัวยิ่งยวด (Laser cooling) ยิงผ่านโพรงคลื่นไมโครเวฟแรมซีย์ ตรึงความถี่ $\Delta\nu_{\text{Cs}} = 9{,}192{,}631{,}770\text{ Hz}$
+                            <!-- 3D Timeline & Cesium Fountain Clock Dual Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                                <div class="rounded-2xl overflow-hidden border border-sky-500/30 shadow-xl bg-slate-950 flex flex-col justify-between">
+                                    <img src="../images/sec_3d/ch01_def_second_3d.jpg" alt="ไทม์ไลน์ 3 มิติ วิวัฒนาการนิยาม 1 วินาที" class="w-full h-auto object-cover" loading="lazy">
+                                    <div class="p-2.5 bg-slate-950/90 text-[11px] text-slate-400 text-center border-t border-slate-800 font-mono">
+                                        <strong>ไทม์ไลน์ 3 มิติ:</strong> วิวัฒนาการนิยาม 1 วินาที จากการหมุนของโลก (วันสุริยคติเฉลี่ย) สู่วงโคจรโลก (ปีทรอปิก) สู่นาฬิกาอะตอมซีเซียม
+                                    </div>
+                                </div>
+                                <div class="rounded-2xl overflow-hidden border border-sky-500/30 shadow-xl bg-slate-950 flex flex-col justify-between">
+                                    <img src="../images/sec_3d/ch01_cesium_clock_3d.jpg" alt="หอนาฬิกาอะตอมน้ำพุซีเซียม NIST-F2" class="w-full h-auto object-cover" loading="lazy">
+                                    <div class="p-2.5 bg-slate-950/90 text-[11px] text-slate-400 text-center border-t border-slate-800 font-mono">
+                                        <strong>นาฬิกาอะตอมน้ำพุซีเซียม (NIST-F2):</strong> ลำแสงเลเซอร์ทำให้อะตอมเย็นจัด ยิงผ่านโพรงไมโครเวฟแรมซีย์ ตรึง $\Delta\nu_{\text{Cs}} = 9{,}192{,}631{,}770\text{ Hz}$
+                                    </div>
                                 </div>
                             </div>
 
