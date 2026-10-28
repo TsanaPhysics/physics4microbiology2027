@@ -409,3 +409,4 @@ with open(INDEX_PATH, "w", encoding="utf-8") as f:
     f.write(new_content)
 
 print("Root index.php successfully updated with main.tex alignment!")
+

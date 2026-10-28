@@ -165,6 +165,11 @@ class AppController {
       } else {
         simFullBtn.style.display = 'none';
       }
+
+      const l01SubTools = document.getElementById("lab01SubTools");
+      if (l01SubTools) {
+        l01SubTools.style.display = (labNum === 1) ? 'inline-flex' : 'none';
+      }
     }
 
     const formulaEl = document.getElementById("labFormulaLatex");

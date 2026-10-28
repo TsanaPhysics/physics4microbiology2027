@@ -907,3 +907,4 @@ if __name__ == "__main__":
     update_sim3d_engine()
     build_labs_config_js()
     print("ALL VIRTUAL LAB COMPONENTS SYNCHRONIZED SUCCESSFULLY!")
+

@@ -191,3 +191,4 @@ with open(SUB_INDEX, "w", encoding="utf-8") as f:
     f.write(new_content)
 
 print("03_physics4microbio2026/index.php successfully updated!")
+

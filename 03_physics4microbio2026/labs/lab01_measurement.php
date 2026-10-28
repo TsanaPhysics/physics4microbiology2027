@@ -64,17 +64,17 @@ include '../includes/header.php';
     </div>
 
     
-    <!-- Section 2: ห้องปฏิบัติการ 3D เสมือนจริง (Interactive Simulator Viewport) -->
+    <!-- Section 2: ห้องปฏิบัติการ 3D เสมือนจริง (Interactive Simulator Viewport with Multi-Instrument Switcher) -->
     <section class="bg-slate-900/90 backdrop-blur-md rounded-2xl border border-sky-500/40 p-4 sm:p-6 mb-8 shadow-2xl">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
             <div>
                 <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                     <i class="fa-solid fa-gamepad text-sky-400"></i> 2. ห้องปฏิบัติการ 3D เสมือนจริง (Interactive 3D PBR)
                 </h2>
-                <p class="text-xs text-slate-400 font-mono">Three.js PBR Simulation &bull; ควบคุมตัวแปรแบบอินเทอร์แอคทีฟ</p>
+                <p class="text-xs text-slate-400 font-mono">Three.js PBR Simulation &bull; เลือกเครื่องมือวัด 3 มิติประจำแล็บ 01</p>
             </div>
             <div class="flex items-center gap-2">
-                <a href="../simulations/sim_micropipette_3d.html" target="_blank" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 transition flex items-center gap-1.5 shadow">
+                <a id="btnCurrentFullscreen" href="../simulations/sim_micropipette_3d.html" target="_blank" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 transition flex items-center gap-1.5 shadow">
                     <i class="fa-solid fa-up-right-from-square"></i> <span>เปิดเต็มจอ ↗</span>
                 </a>
                 <a href="../webar/ar_aruco_textbook.html?lab=1&ar=1" target="_blank" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-purple-600/30 hover:bg-purple-600/40 text-purple-200 border border-purple-500/40 transition flex items-center gap-1.5 shadow">
@@ -83,11 +83,54 @@ include '../includes/header.php';
             </div>
         </div>
 
+        <!-- 🎛️ Multi-Instrument Selection Tabs (เครื่องมือวัด 3 ชนิดของ Lab 01) -->
+        <div class="flex flex-wrap items-center gap-2 p-1.5 bg-slate-950/80 rounded-xl border border-slate-800 mb-3">
+            <button onclick="switchSim('micropipette')" id="tab-micropipette" class="sim-tab-btn flex-1 min-w-[200px] py-2 px-3.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 bg-sky-500 text-slate-950 shadow-lg">
+                <i class="fa-solid fa-pipette"></i>
+                <span>ไมโครปิเปต P1000 & เครื่องชั่ง</span>
+            </button>
+            <button onclick="switchSim('vernier')" id="tab-vernier" class="sim-tab-btn flex-1 min-w-[200px] py-2 px-3.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80">
+                <i class="fa-solid fa-ruler-combined"></i>
+                <span>เวอร์เนียร์แคลิปเปอร์ (0.05 mm)</span>
+            </button>
+            <button onclick="switchSim('micrometer')" id="tab-micrometer" class="sim-tab-btn flex-1 min-w-[200px] py-2 px-3.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80">
+                <i class="fa-solid fa-microscope"></i>
+                <span>ไมโครมิเตอร์วัดนอก (0.01 mm)</span>
+            </button>
+        </div>
+
         <!-- Simulator Iframe Container -->
-        <div class="w-full h-[540px] sm:h-[620px] rounded-2xl overflow-hidden border border-slate-700/80 bg-slate-950 relative shadow-inner">
+        <div class="w-full h-[560px] sm:h-[640px] rounded-2xl overflow-hidden border border-slate-700/80 bg-slate-950 relative shadow-inner">
             <iframe id="simFrame" src="../simulations/sim_micropipette_3d.html" class="w-full h-full border-0" allow="camera; fullscreen; xr-spatial-tracking"></iframe>
         </div>
     </section>
+
+    <script>
+    const simFiles = {
+        micropipette: '../simulations/sim_micropipette_3d.html',
+        vernier: '../simulations/sim_vernier_caliper_3d.html',
+        micrometer: '../simulations/sim_micrometer_3d.html'
+    };
+
+    function switchSim(tool) {
+        const frame = document.getElementById('simFrame');
+        const fsBtn = document.getElementById('btnCurrentFullscreen');
+        const targetUrl = simFiles[tool];
+        if (targetUrl && frame) {
+            frame.src = targetUrl;
+            if (fsBtn) fsBtn.href = targetUrl;
+        }
+
+        // Update active tab styles
+        document.querySelectorAll('.sim-tab-btn').forEach(btn => {
+            btn.className = 'sim-tab-btn flex-1 min-w-[200px] py-2 px-3.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700/80';
+        });
+        const activeBtn = document.getElementById('tab-' + tool);
+        if (activeBtn) {
+            activeBtn.className = 'sim-tab-btn flex-1 min-w-[200px] py-2 px-3.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 bg-sky-500 text-slate-950 shadow-lg';
+        }
+    }
+    </script>
         
 
     <!-- Section: รายละเอียดขั้นตอนการทดลองและตารางบันทึกผล (จากเอกสารคำสอน) -->
