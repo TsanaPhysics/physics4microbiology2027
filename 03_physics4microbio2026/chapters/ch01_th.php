@@ -216,13 +216,23 @@ include '../includes/header.php';
                         </p>
                     </div>
 
+                    <!-- 3D Master Scene: Authentic Historical Physical Artifacts -->
+                    <figure class="tex-figure tex-figure-photo my-8" id="fig-historical-artifacts">
+                        <div class="rounded-2xl overflow-hidden border border-cyan-500/40 shadow-2xl bg-slate-950 group">
+                            <img src="../images/sec_3d/ch01_artifacts_pixar_3d.jpg" alt="วัตถุประดิษฐ์ต้นแบบประวัติศาสตร์ 3 มิติ (BIPM Historical Artifacts in 3D Pixar)" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
+                        </div>
+                        <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+                            <strong class="text-cyan-400">ภาพที่ 1.2</strong>&ensp;แบบจำลอง 3 มิติวัตถุประดิษฐ์ต้นแบบทางกายภาพในอดีต (Historical Physical Artifacts in 3D Pixar): แท่งเมตรมาตรฐานหน้าตัด Tresca (1889), ก้อนมวลกิโลกรัม Le Grand K (1889) ในครอบแก้วสุญญากาศ 3 ชั้น, และหอนาฬิกาอะตอมซีเซียม ณ ห้องนิรภัยมาตรวิทยา BIPM ก่อนการปฏิวัติสู่ 7 ค่าคงตัวพื้นฐาน ค.ศ. 2019
+                        </figcaption>
+                    </figure>
+
                     <!-- SVG Diagram 1: SI Network -->
                     <figure class="tex-figure tex-figure-diagram my-8" id="fig-si-network">
                         <div class="rounded-2xl overflow-hidden border border-slate-700/80 shadow-2xl bg-slate-950 p-3 sm:p-4">
                             <img src="../images/maintex/tikz/ch01_si_network.svg" alt="แผนผัง 7 ค่าคงตัวพื้นฐานกับ 7 หน่วยฐานเอสไอ" class="w-full h-auto" loading="lazy">
                         </div>
                         <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
-                            <strong class="text-cyan-400">ภาพที่ 1.2</strong>&ensp;แผนผังเครือข่ายความสัมพันธ์ระหว่าง 7 ค่าคงตัวพื้นฐานแห่งเอกภพ (Defining Constants) สู่ 7 หน่วยฐานเอสไอ (Revised SI 2019) ได้แก่ วินาที ($\text{s}$), เมตร ($\text{m}$), กิโลกรัม ($\text{kg}$), แอมแปร์ ($\text{A}$), เคลวิน ($\text{K}$), โมล ($\text{mol}$) และแคนเดลา ($\text{cd}$)
+                            <strong class="text-cyan-400">ภาพที่ 1.3</strong>&ensp;แผนผังเครือข่ายความสัมพันธ์ระหว่าง 7 ค่าคงตัวพื้นฐานแห่งเอกภพ (Defining Constants) สู่ 7 หน่วยฐานเอสไอ (Revised SI 2019) ได้แก่ วินาที ($\text{s}$), เมตร ($\text{m}$), กิโลกรัม ($\text{kg}$), แอมแปร์ ($\text{A}$), เคลวิน ($\text{K}$), โมล ($\text{mol}$) และแคนเดลา ($\text{cd}$)
                         </figcaption>
                     </figure>
 
@@ -263,6 +273,14 @@ include '../includes/header.php';
                                     </div>
                                 </div>
                             </div>
+                            <!-- 3D Close-up: Standard Metre Bar (Tresca Section) -->
+                            <div class="rounded-2xl overflow-hidden border border-cyan-500/30 shadow-xl bg-slate-950 mt-3">
+                                <img src="../images/sec_3d/ch01_metre_tresca_3d.jpg" alt="แบบจำลอง 3 มิติ แท่งเมตรมาตรฐานแพลทินัม-อิริเดียม 1889 หน้าตัดขวางแบบเทรสกา (Tresca X-section)" class="w-full h-auto object-cover" loading="lazy">
+                                <div class="p-3 bg-slate-950/90 text-xs text-slate-400 text-center border-t border-slate-800 font-mono">
+                                    <strong>ภาพ 3 มิติ:</strong> แท่งเมตรมาตรฐาน $\text{Pt-Ir}$ 1889 หน้าตัดขวางรูปกากบาทแบบเทรสกา (Tresca section) วางบนลูกกลิ้งจุดแอรี่ในกล่องไม้มะฮอกกานี พร้อมลำแสงเลเซอร์แสดงนิยามใหม่ผ่านความเร็วแสง $c = 299{,}792{,}458\text{ m/s}$
+                                </div>
+                            </div>
+
                             <!-- Figure: Def Metre -->
                             <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-2">
                                 <img src="../images/maintex/tikz/ch01_def_meter.svg" alt="วิวัฒนาการนิยาม 1 เมตร" class="w-full h-auto" loading="lazy">
@@ -282,11 +300,19 @@ include '../includes/header.php';
                                 <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 text-xs font-mono font-bold border border-amber-500/30">SI BASE: kg</span>
                             </div>
 
-                            <!-- 3D Render of Kibble Balance -->
-                            <div class="rounded-2xl overflow-hidden border border-amber-500/30 shadow-xl bg-slate-950">
-                                <img src="../images/sec_3d/ch01_kibble_balance_3d.jpg" alt="แบบจำลอง 3 มิติ เครื่องชั่งคิบบิล Kibble Balance สำหรับนิยาม 1 กิโลกรัมใหม่ผ่านค่าคงตัวพลังค์" class="w-full h-auto object-cover" loading="lazy">
-                                <div class="p-3 bg-slate-950/90 text-xs text-slate-400 text-center border-t border-slate-800 font-mono">
-                                    <strong>ภาพ 3 มิติ:</strong> สถาปัตยกรรมเครื่องชั่งคิบบิล (Kibble Balance) สร้างสมดุลแรงโน้มถ่วงทางกล ($mg$) กับแรงแม่เหล็กไฟฟ้าเสมือน ($BLI$) ในระดับควอนตัม
+                            <!-- 3D Dual Comparison: Le Grand K vs Kibble Balance -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="rounded-2xl overflow-hidden border border-amber-500/30 shadow-xl bg-slate-950 flex flex-col justify-between">
+                                    <img src="../images/sec_3d/ch01_ipk_grand_k_3d.jpg" alt="ก้อนกิโลกรัมต้นแบบนานาชาติ Le Grand K ในครอบแก้วสุญญากาศ 3 ชั้น" class="w-full h-auto object-cover" loading="lazy">
+                                    <div class="p-3 bg-slate-950/90 text-xs text-slate-400 text-center border-t border-slate-800 font-mono">
+                                        <strong>อดีต (1889–2019):</strong> ก้อนมวล 1 kg ต้นแบบนานาชาติ (Le Grand K / IPK) ทรงกระบอกโลหะผสม $\text{Pt-Ir}$ ในครอบแก้วสุญญากาศ 3 ชั้น ณ BIPM
+                                    </div>
+                                </div>
+                                <div class="rounded-2xl overflow-hidden border border-amber-500/30 shadow-xl bg-slate-950 flex flex-col justify-between">
+                                    <img src="../images/sec_3d/ch01_kibble_balance_3d.jpg" alt="เครื่องชั่งคิบบิล Kibble Balance 3 มิติ นิยาม 1 kg ใหม่" class="w-full h-auto object-cover" loading="lazy">
+                                    <div class="p-3 bg-slate-950/90 text-xs text-slate-400 text-center border-t border-slate-800 font-mono">
+                                        <strong>ปัจจุบัน (ตั้งแต่ 2019):</strong> เครื่องชั่งคิบบิล (Kibble Balance) สร้างสมดุลมวลด้วยแรงแม่เหล็กไฟฟ้าควอนตัมผ่านค่าคงตัวพลังค์ $h$
+                                    </div>
                                 </div>
                             </div>
 
@@ -344,6 +370,14 @@ include '../includes/header.php';
                                     </div>
                                 </div>
                             </div>
+                            <!-- 3D Close-up: Cesium Atomic Fountain Clock -->
+                            <div class="rounded-2xl overflow-hidden border border-sky-500/30 shadow-xl bg-slate-950 mt-3">
+                                <img src="../images/sec_3d/ch01_cesium_clock_3d.jpg" alt="หอนาฬิกาอะตอมน้ำพุซีเซียม NIST-F2" class="w-full h-auto object-cover" loading="lazy">
+                                <div class="p-3 bg-slate-950/90 text-xs text-slate-400 text-center border-t border-slate-800 font-mono">
+                                    <strong>ภาพ 3 มิติ:</strong> หอนาฬิกาอะตอมน้ำพุซีเซียม-133 (Cesium-133 Fountain Clock NIST-F2): ลำแสงเลเซอร์ทำให้อะตอมเย็นตัวยิ่งยวด (Laser cooling) ยิงผ่านโพรงคลื่นไมโครเวฟแรมซีย์ ตรึงความถี่ $\Delta\nu_{\text{Cs}} = 9{,}192{,}631{,}770\text{ Hz}$
+                                </div>
+                            </div>
+
                             <!-- Figure: Def Second -->
                             <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-2">
                                 <img src="../images/maintex/tikz/ch01_def_second.svg" alt="วิวัฒนาการนิยาม 1 วินาที" class="w-full h-auto" loading="lazy">
@@ -427,6 +461,14 @@ include '../includes/header.php';
                     </div>
 
                     <!-- ═════ 3 COMPREHENSIVE TABLES ═════ -->
+
+                    <!-- 3D Metrology Icons Showcase Card -->
+                    <div class="rounded-2xl overflow-hidden border border-slate-700/80 shadow-2xl bg-slate-950 my-8">
+                        <img src="../images/sec_3d/ch01_metrology_icons_3d.jpg" alt="ชุดไอคอน 3 มิติ มาตรวิทยาสากลและค่าคงตัวพื้นฐาน" class="w-full h-auto object-cover" loading="lazy">
+                        <div class="p-3 bg-slate-900/90 text-xs text-slate-300 text-center border-t border-slate-800 font-mono">
+                            <strong>ชุดไอคอน 3 มิติ มาตรวิทยา (3D Metrology Icons):</strong> ผสาน 4 สัญลักษณ์หลัก (Le Grand K & $h$, แท่งเมตร Tresca & $c$, นาฬิกาอะตอมซีเซียม & $\Delta\nu_{\text{Cs}}$, และเครื่องชั่งคิบบิล) เพื่อสรุปมโนทัศน์ก่อนเข้าสู่ตารางฐานข้อมูล 4 ตารางด้านล่าง
+                        </div>
+                    </div>
 
                     <!-- TABLE 1.1: 7 SI BASE UNITS -->
                     <div class="tex-tablefig mt-10 scroll-mt-20" id="tab-1.1">
