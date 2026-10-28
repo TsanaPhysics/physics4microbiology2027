@@ -1091,14 +1091,134 @@ include '../includes/header.php';
                         </div>
                     </div>
 
-                    <!-- Figure 1.4: SI Base to Derived Units Flowchart for Microbiology (NIST SP 1247 Adaptation) -->
+                                        <!-- Figure 1.4: SI Base to Derived Units Flowchart & Interactive Metrology Explorer -->
                     <figure class="tex-figure tex-figure-diagram my-10" id="fig-si-derived-microbio">
-                        <div class="rounded-2xl overflow-hidden border border-emerald-500/30 shadow-2xl bg-slate-950 p-2 sm:p-4">
-                            <img src="../images/maintex/tikz/ch01_si_derived_microbio.svg" alt="แผนผังเครือข่าย 7 หน่วยฐานสากล สู่หน่วยอนุพันธ์ในงานจุลชีววิทยา (NIST SP 1247 Adaptation)" class="w-full h-auto" loading="lazy">
+                        <!-- Card Header & Navigation Bar -->
+                        <div class="rounded-t-2xl border border-b-0 border-emerald-500/40 bg-gradient-to-r from-slate-900 via-emerald-950/40 to-slate-900 p-4 sm:p-5 shadow-2xl backdrop-blur-xl">
+                            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                                <div>
+                                    <div class="flex items-center gap-2 flex-wrap mb-1">
+                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 uppercase tracking-wider">
+                                            <i class="fa-solid fa-network-wired mr-1"></i> Coherent SI Metrology
+                                        </span>
+                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                                            NIST SP 1247 Aligned
+                                        </span>
+                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40">
+                                            🧬 22 หน่วยประยุกต์จุลทรรศน์
+                                        </span>
+                                    </div>
+                                    <h3 class="text-lg sm:text-xl font-black text-white tracking-wide flex items-center gap-2">
+                                        <strong class="text-emerald-400">ภาพที่ 1.4</strong> แผนผังเครือข่ายหน่วยฐานสู่ 22 หน่วยอนุพัทธ์ในงานจุลชีววิทยาเชิงโต้ตอบ
+                                    </h3>
+                                    <p class="text-xs text-slate-400 mt-0.5">
+                                        Interactive Coherent SI Derived Units Explorer: คลิกเลือกหน่วยเพื่อสืบค้นสายสัมพันธ์การคูณ-หาร ตัวอย่างแล็บจุลชีววิทยา และทดลองคำนวณสด
+                                    </p>
+                                </div>
+
+                                <!-- Dual View Mode Switcher -->
+                                <div class="flex items-center gap-2 bg-slate-950/80 p-1.5 rounded-xl border border-slate-800 self-start lg:self-auto">
+                                    <button type="button" id="btn-mode-interactive" onclick="switchSiViewMode('interactive')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/30">
+                                        <i class="fa-solid fa-gamepad"></i>
+                                        <span>โหมดโต้ตอบ & ตัวคำนวณสด</span>
+                                    </button>
+                                    <button type="button" id="btn-mode-vector" onclick="switchSiViewMode('vector')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-slate-800/80">
+                                        <i class="fa-solid fa-diagram-project"></i>
+                                        <span>แผนผังเวกเตอร์แม่บท (HD)</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Filter Toolbar (Shown in Interactive Mode) -->
+                            <div id="si-interactive-toolbar" class="mt-4 pt-3 border-t border-slate-800/80 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                                <!-- Domain Filter Pills -->
+                                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar">
+                                    <span class="text-slate-400 font-bold whitespace-nowrap mr-1 flex items-center gap-1">
+                                        <i class="fa-solid fa-filter text-emerald-400"></i> กรองตามงาน:
+                                    </span>
+                                    <button type="button" onclick="filterSiDomain('all', this)" class="si-domain-btn px-2.5 py-1 rounded-lg text-[11px] font-bold transition bg-emerald-500/20 text-emerald-300 border border-emerald-500/50">
+                                        ทั้งหมด (29)
+                                    </button>
+                                    <button type="button" onclick="filterSiDomain('autoclave', this)" class="si-domain-btn px-2.5 py-1 rounded-lg text-[11px] font-bold transition bg-slate-800 text-slate-400 border border-slate-700 hover:text-slate-200">
+                                        🧫 นึ่งฆ่าเชื้อ & ปลอดเชื้อ
+                                    </button>
+                                    <button type="button" onclick="filterSiDomain('enzyme', this)" class="si-domain-btn px-2.5 py-1 rounded-lg text-[11px] font-bold transition bg-slate-800 text-slate-400 border border-slate-700 hover:text-slate-200">
+                                        🧪 เอนไซม์ & ชีวเคมี
+                                    </button>
+                                    <button type="button" onclick="filterSiDomain('electro', this)" class="si-domain-btn px-2.5 py-1 rounded-lg text-[11px] font-bold transition bg-slate-800 text-slate-400 border border-slate-700 hover:text-slate-200">
+                                        ⚡ เจลไฟฟ้า & เยื่อเซลล์
+                                    </button>
+                                    <button type="button" onclick="filterSiDomain('optics', this)" class="si-domain-btn px-2.5 py-1 rounded-lg text-[11px] font-bold transition bg-slate-800 text-slate-400 border border-slate-700 hover:text-slate-200">
+                                        🔍 กล้อง & แสง
+                                    </button>
+                                    <button type="button" onclick="filterSiDomain('physics', this)" class="si-domain-btn px-2.5 py-1 rounded-lg text-[11px] font-bold transition bg-slate-800 text-slate-400 border border-slate-700 hover:text-slate-200">
+                                        🌀 ปั่นเหวี่ยง & กลศาสตร์
+                                    </button>
+                                </div>
+
+                                <!-- Live Search Input -->
+                                <div class="relative min-w-[220px]">
+                                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-400"></i>
+                                    <input type="text" id="si-search-input" onkeyup="searchSiUnits(this.value)" placeholder="ค้นหาหน่วย / เอนไซม์ / autoclave..." class="w-full pl-8 pr-3 py-1.5 bg-slate-950 border border-slate-700/80 rounded-xl text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition">
+                                </div>
+                            </div>
                         </div>
-                        <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
-                            <strong class="text-emerald-400">ภาพที่ 1.4</strong>&ensp;แผนผังเครือข่ายความเชื่อมโยงจาก 7 หน่วยฐานสากลเอสไอ สู่หน่วยอนุพันธ์สำคัญในงานจุลชีววิทยา (SI Base to Derived Units Hierarchy in Microbiology): พัฒนาตามแนวทางมาตรฐาน NIST SP 1247 โดยถอดรหัสสายสัมพันธ์การคูณ (เส้นทึบ) และการหาร (เส้นประ) พร้อมระบุตัวอย่างการประยุกต์ใช้งานจริงในห้องปฏิบัติการจุลชีววิทยา เช่น อัตราเร่งเอนไซม์ ($\text{kat}$), ความดันหม้อนึ่งไอและออสโมซิส ($\text{Pa}$), พลังงาน ATP ($\text{J}$), เจลอิเล็กโทรโฟรีซิส ($\text{V, }\Omega$), และการฉายรังสีแกมมาฆ่าเชื้อ ($\text{Gy, Sv}$)
-                        </figcaption>
+
+                        <!-- Card Body: VIEW 1 - INTERACTIVE METROLOGY DASHBOARD -->
+                        <div id="si-view-interactive" class="border border-emerald-500/40 bg-slate-950 p-4 sm:p-6 shadow-2xl space-y-6">
+                            <!-- Tier A: 7 Base Units Bar -->
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                                        7 หน่วยฐานสากล (7 SI Base Units) — แหล่งกำเนิดมิติทางกายภาพ
+                                    </span>
+                                    <span class="text-[11px] font-mono text-slate-500">คลิกที่การ์ดเพื่อสืบค้นการแตกแขนง</span>
+                                </div>
+                                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5" id="base-units-grid">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Tier B: 22 Derived Units Grid -->
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                        22 หน่วยอนุพัทธ์ที่มีชื่อเฉพาะ (22 Coherent SI Derived Units in Microbiology)
+                                    </span>
+                                    <span class="text-[11px] font-mono text-slate-500" id="si-derived-count">แสดง 22 จาก 22 หน่วย</span>
+                                </div>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5" id="derived-units-grid">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Tier C: Interactive Microbiology Inspector & Live Calculator Drawer -->
+                            <div id="si-inspector-card" class="rounded-2xl border border-emerald-500/40 bg-gradient-to-b from-slate-900 to-slate-950 p-4 sm:p-6 shadow-2xl transition-all">
+                                <!-- Inspector Content injected via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Card Body: VIEW 2 - HIGH-RES VECTOR NIST SP 1247 DIAGRAM -->
+                        <div id="si-view-vector" class="hidden border border-emerald-500/40 bg-slate-950 p-3 sm:p-5 shadow-2xl">
+                            <div class="flex items-center justify-between mb-3 px-2 text-xs text-slate-400">
+                                <span><i class="fa-solid fa-file-image text-emerald-400 mr-1"></i> เวกเตอร์ต้นฉบับความคมชัดสูง ปราศจากข้อความตัดทอน (NIST SP 1247 High-Res Vector)</span>
+                                <a href="../images/maintex/tikz/ch01_si_derived_microbio.svg" target="_blank" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 transition flex items-center gap-1">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i> เปิดดูรูปภาพเต็มจอ
+                                </a>
+                            </div>
+                            <div class="rounded-xl overflow-hidden border border-slate-800 bg-[#060a12] p-2">
+                                <img src="../images/maintex/tikz/ch01_si_derived_microbio.svg" alt="แผนผังเครือข่าย 7 หน่วยฐานสากล สู่หน่วยอนุพันธ์ในงานจุลชีววิทยา (NIST SP 1247 Adaptation)" class="w-full h-auto" loading="lazy">
+                            </div>
+                        </div>
+
+                        <!-- Card Footer Caption -->
+                        <div class="rounded-b-2xl border border-t-0 border-emerald-500/40 bg-slate-900/95 p-3.5 sm:p-4 text-xs text-slate-400 text-center shadow-xl">
+                            <figcaption>
+                                <strong class="text-emerald-400">ภาพที่ 1.4</strong>&ensp;แผนผังเครือข่ายความเชื่อมโยงจาก 7 หน่วยฐานสากลเอสไอ สู่ 22 หน่วยอนุพัทธ์สำคัญในงานจุลชีววิทยาเชิงโต้ตอบ (Interactive SI Base to Derived Units Hierarchy in Microbiology): พัฒนาตามแนวทางมาตรฐาน NIST SP 1247 โดยถอดรหัสสายสัมพันธ์การคูณ (เส้นทึบ) และการหาร (เส้นประ) พร้อมเชื่อมโยงตัวอย่างจริงในห้องปฏิบัติการจุลชีววิทยา เช่น อัตราเร่งเอนไซม์ ($	ext{kat}$), ความดันหม้อนึ่งไอและออสโมซิส ($	ext{Pa}$), พลังงาน ATP ($	ext{J}$), เจลอิเล็กโทรโฟรีซิส ($	ext{V, }\Omega$), และการฉายรังสีแกมมาฆ่าเชื้อ ($	ext{Gy, Sv}$)
+                            </figcaption>
+                        </div>
                     </figure>
 
                     <!-- TABLE 1.2: SI DERIVED UNITS -->
@@ -2115,6 +2235,586 @@ function toggleHint(id) {
     if (el) {
         el.classList.toggle('hidden');
     }
+}
+
+
+// ==========================================
+// INTERACTIVE MICROBIOLOGY METROLOGY SYSTEM (FIG 1.4)
+// ==========================================
+const SI_BASE_DATA = [
+    { id: 's', sym: 's', name_en: 'second', name_th: 'วินาที', qty_th: 'เวลา (Time)', color: '#eab308', tag: 'Centrifuge & การแบ่งเซลล์' },
+    { id: 'm', sym: 'm', name_en: 'meter', name_th: 'เมตร', qty_th: 'ความยาว (Length)', color: '#f97316', tag: 'ขนาดแบคทีเรีย 1-5 µm' },
+    { id: 'kg', sym: 'kg', name_en: 'kilogram', name_th: 'กิโลกรัม', qty_th: 'มวล (Mass)', color: '#ef4444', tag: 'ชั่งสารเคมี & ไมโครปิเปตต์' },
+    { id: 'A', sym: 'A', name_en: 'ampere', name_th: 'แอมแปร์', qty_th: 'กระแสไฟฟ้า (Current)', color: '#22c55e', tag: 'อิเล็กโทรโฟรีซิส' },
+    { id: 'K', sym: 'K', name_en: 'kelvin', name_th: 'เคลวิน', qty_th: 'อุณหพลวัต (Temp)', color: '#0284c7', tag: 'Incubator 37°C & Autoclave' },
+    { id: 'mol', sym: 'mol', name_en: 'mole', name_th: 'โมล', qty_th: 'ปริมาณสาร (Substance)', color: '#d946ef', tag: 'ความเข้มข้น Molar & บัฟเฟอร์' },
+    { id: 'cd', sym: 'cd', name_en: 'candela', name_th: 'แคนเดลา', qty_th: 'ความเข้มแสง (Light)', color: '#a855f7', tag: 'หลอด UV-C & กล้องจุลทรรศน์' }
+];
+
+const SI_DERIVED_DATA = [
+    {
+        id: 'kat', sym: 'kat', name_en: 'katal', name_th: 'คาตัล', qty_th: 'อัตราเร่งปฏิกิริยาของเอนไซม์ (Catalytic Activity)',
+        formula_si: '\\text{mol}\\cdot\\text{s}^{-1}', formula_coherent: '\\text{mol/s}', parents: ['mol', 's'], domain: 'enzyme', domain_name: 'เอนไซม์ & ชีวเคมี', color: '#d946ef',
+        micro_app: 'การตรวจวัดอัตราเร่งปฏิกิริยาของเอนไซม์สำคัญ เช่น Catalase Test ในเชื้อ Staphylococcus aureus, Taq DNA Polymerase ในปฏิกิริยา PCR, และเอนไซม์ Beta-lactamase ในเชื้อดื้อยาปฏิชีวนะ',
+        physics_eq: 'v = \\frac{V_{\\max}[S]}{K_m + [S]}, \\quad 1\\text{ U} = 16.67\\text{ nkat} = 1.667\\times 10^{-8}\\text{ kat}',
+        lab_note: 'ตามมาตรฐานสากล IUBMB / IUPAC หน่วยอย่างเป็นทางการของเอนไซม์คือ katal (kat) โดย 1 kat คือเอนไซม์ที่เร่งเปลี่ยนสับสเตรตได้ 1 โมลต่อวินาที',
+        calc_type: 'kat'
+    },
+    {
+        id: 'Pa', sym: 'Pa', name_en: 'pascal', name_th: 'ปาสคาล', qty_th: 'ความดันและความเค้น (Pressure & Stress)',
+        formula_si: '\\text{kg}\\cdot\\text{m}^{-1}\\cdot\\text{s}^{-2}', formula_coherent: '\\text{N/m}^2', parents: ['kg', 'm', 's'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#f43f5e',
+        micro_app: 'ความดันไอน้ำอิ่มตัวในหม้อนึ่งฆ่าเชื้อ Autoclave (103 kPa หรือ 15 psi ที่ 121°C), แรงดันออสโมซิส (Osmotic Pressure) ของผนังเซลล์แบคทีเรียแกรมบวก (1.5-2.5 MPa) และความดันอากาศบวก/ลบในตู้ Biosafety Cabinet',
+        physics_eq: 'P_{\\text{gauge}} = P_{\\text{abs}} - P_{\\text{atm}}, \\quad \\Pi = iCRT \\text{ (Van \'t Hoff Equation)}',
+        lab_note: 'ที่อุณหภูมิ 121°C ไอน้ำอิ่มตัวต้องรักษาความดัน 15 psi (103 kPa) นานอย่างน้อย 15 นาที เพื่อทำลายสปอร์ของ Geobacillus stearothermophilus ให้หมดสิ้น',
+        calc_type: 'pa'
+    },
+    {
+        id: 'V', sym: 'V', name_en: 'volt', name_th: 'โวลต์', qty_th: 'ความต่างศักย์และแรงเคลื่อนไฟฟ้า (Electric Potential & EMF)',
+        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-3}\\cdot\\text{A}^{-1}', formula_coherent: '\\text{W/A}', parents: ['kg', 'm', 's', 'A'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#10b981',
+        micro_app: 'การแยกขนาดชิ้นส่วนดีเอ็นเอด้วย Agarose Gel Electrophoresis (ใช้ 80-120 V), ศักย์ไฟฟ้าเยื่อหุ้มเซลล์ของแบคทีเรีย (Membrane Potential ประมาณ -70 ถึง -120 mV) ซึ่งขับเคลื่อนการสังเคราะห์ ATP ผ่าน Proton Motive Force (PMF)',
+        physics_eq: 'E = \\frac{V}{d}, \\quad v_{\\text{migration}} = \\mu_e E = \\mu_e \\frac{V}{d}, \\quad PMF = \\Delta \\psi - \\frac{2.3 RT}{F}\\Delta pH',
+        lab_note: 'การตั้งค่าโวลต์ในถังรันเจลควรอยู่ที่ประมาณ 5 V/cm ของระยะห่างระหว่างขั้วไฟฟ้า เพื่อป้องกันไม่ให้เจลร้อนจนเสียสภาพหรือแถบดีเอ็นเอคดงอ',
+        calc_type: 'volt'
+    },
+    {
+        id: 'Gy', sym: 'Gy', name_en: 'gray', name_th: 'เกรย์', qty_th: 'ปริมาณรังสีดูดกลืน (Absorbed Dose)',
+        formula_si: '\\text{m}^2\\cdot\\text{s}^{-2}', formula_coherent: '\\text{J/kg}', parents: ['m', 's'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#ef4444',
+        micro_app: 'การปลอดเชื้อวัสดุอุปกรณ์การแพทย์และจานเพาะเชื้อพลาสติกด้วยรังสีแกมมา Cobalt-60 หรือ Electron Beam ที่ระดับ 25 kGy (25,000 Gy) เพื่อทำลาย DNA และเอนไซม์ของจุลินทรีย์โดยไม่ทำให้พลาสติกละลาย',
+        physics_eq: 'D = \\frac{\\Delta E_{\\text{absorbed}}}{\\Delta m}, \\quad N_t = N_0 \\times 10^{-D / D_{10}} \\quad (SAL = 10^{-6})',
+        lab_note: 'ค่า D10 คือปริมาณรังสีที่ลดจำนวนเชื้อลง 90% การฉายรังสี 25 kGy รับประกันระดับความปลอดเชื้อ Sterility Assurance Level ตามมาตรฐานสากล',
+        calc_type: 'gray'
+    },
+    {
+        id: 'Hz', sym: 'Hz', name_en: 'hertz', name_th: 'เฮิรตซ์', qty_th: 'ความถี่ (Frequency)',
+        formula_si: '\\text{s}^{-1}', formula_coherent: '1/s', parents: ['s'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#eab308',
+        micro_app: 'ความถี่รอบการหมุนของเครื่องปั่นเหวี่ยงตกตะกอน Centrifuge (12,000 RPM = 200 Hz), ความถี่อัลตราโซนิกของเครื่องสลายเซลล์ Sonicator (20-40 kHz), และความถี่การหมุนของแฟลกเจลลาแบคทีเรีย (200-300 Hz)',
+        physics_eq: 'f = \\frac{\\text{RPM}}{60}, \\quad \\text{RCF} (g) = 1.118 \\times 10^{-5} \\times r_{\\text{cm}} \\times (\\text{RPM})^2',
+        lab_note: 'ในงานวิจัยจุลชีววิทยาต้องระบุแรงเหวี่ยงเป็นค่า RCF (×g) เสมอ แทนที่จะบอกเพียง RPM เพื่อให้ห้องแล็บอื่นที่ใช้รัศมีโรเตอร์ต่างกันสามารถทำซ้ำได้ผลตรงกัน',
+        calc_type: 'hz'
+    },
+    {
+        id: 'S', sym: 'S', name_en: 'siemens', name_th: 'ซีเมนส์', qty_th: 'สภาพนำไฟฟ้า (Electrical Conductance)',
+        formula_si: '\\text{kg}^{-1}\\cdot\\text{m}^{-2}\\cdot\\text{s}^3\\cdot\\text{A}^2', formula_coherent: '1/\\Omega', parents: ['kg', 'm', 's', 'A'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#10b981',
+        micro_app: 'การตรวจวัดความบริสุทธิ์ของน้ำเกรดเตรียมบัฟเฟอร์และงานวิจัยอณูชีววิทยา (Milli-Q Water ต้องมีสภาพนำไฟฟ้า < 0.055 µS/cm หรือ 18.2 MΩ·cm) และการวัดสภาพนำไฟฟ้าของน้ำทิ้งบำบัด',
+        physics_eq: 'G = \\frac{1}{R} = \\sigma \\frac{A}{L}, \\quad \\sigma = \\sum c_i z_i \\lambda_i',
+        lab_note: 'หากน้ำกลั่นมีสภาพนำไฟฟ้าสูง แสดงว่ามีไอออนโลหะปนเปื้อน ซึ่งอาจยับยั้งการทำงานของเอนไซม์ Taq DNA Polymerase หรือทำให้เจลอิเล็กโทรโฟรีซิสร้อนจัด',
+        calc_type: 'siemens'
+    },
+    {
+        id: 'J', sym: 'J', name_en: 'joule', name_th: 'จูล', qty_th: 'พลังงานและงาน (Energy & Work)',
+        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-2}', formula_coherent: '\\text{N}\\cdot\\text{m}', parents: ['kg', 'm', 's'], domain: 'enzyme', domain_name: 'เอนไซม์ & ชีวเคมี', color: '#f97316',
+        micro_app: 'พลังงานพันธะเคมีฟอสเฟตพลังงานสูงใน ATP (-30.5 kJ/mol), พลังงานจลน์ของโรเตอร์เครื่องปั่นเหวี่ยง, และความร้อนแฝงในการกลายเป็นไอของน้ำในหม้อนึ่ง Autoclave',
+        physics_eq: '\\Delta G = \\Delta G^\\circ + RT \\ln Q, \\quad E_k = \\frac{1}{2} I \\omega^2',
+        lab_note: 'พลังงาน 30.5 kJ ต่อโมลของ ATP คือหน่วยเงินตราพลังงานสากลที่จุลินทรีย์ใช้ขับเคลื่อนทุกกระบวนการในเซลล์',
+        calc_type: 'general'
+    },
+    {
+        id: 'N', sym: 'N', name_en: 'newton', name_th: 'นิวตัน', qty_th: 'แรงกลศาสตร์ (Force)',
+        formula_si: '\\text{kg}\\cdot\\text{m}\\cdot\\text{s}^{-2}', formula_coherent: '\\text{kg}\\cdot\\text{m/s}^2', parents: ['kg', 'm', 's'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#ef4444',
+        micro_app: 'แรงหนืดต้านทานการเคลื่อนที่ของแบคทีเรียในของเหลว (Stokes Drag Force), แรงเหวี่ยงหนีศูนย์กลางในการตกตะกอนเซลล์, และทอร์กของโรเตอร์แฟลกเจลลา (~4,000 pN·nm)',
+        physics_eq: 'F_{\\text{drag}} = 6\\pi \\eta r v \\text{ (Stokes\' Law)}, \\quad F_{\\text{cf}} = m \\omega^2 r',
+        lab_note: 'ในระดับเซลล์จุลทรรศน์ แรงหนืดมีอิทธิพลเหนือกว่าแรงเฉื่อยอย่างมหาศาล (Low Reynolds Number, Re << 1)',
+        calc_type: 'general'
+    },
+    {
+        id: 'C', sym: 'C', name_en: 'coulomb', name_th: 'คูลอมบ์', qty_th: 'ประจุไฟฟ้า (Electric Charge)',
+        formula_si: '\\text{A}\\cdot\\text{s}', formula_coherent: '\\text{A}\\cdot\\text{s}', parents: ['A', 's'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#22c55e',
+        micro_app: 'ประจุไฟฟ้าลบสุทธิบนพื้นผิวผนังเซลล์แบคทีเรียและโครงสร้างฟอสเฟตของสาย DNA ซึ่งกำหนดค่าศักย์ซีตา (Zeta Potential) และอัตราการเคลื่อนที่ในอิเล็กโทรโฟรีซิส',
+        physics_eq: 'q = I \\times t, \\quad \\zeta = \\frac{4\\pi \\eta v}{\\varepsilon E} \\text{ (Smoluchowski Eq)}',
+        lab_note: 'ประจุลบของกรดฟอสฟอริกบนสายดีเอ็นเอทำให้ดีเอ็นเอทุกขนาดเคลื่อนที่เข้าหาขั้วบวก (Anode) ในสนามไฟฟ้า',
+        calc_type: 'general'
+    },
+    {
+        id: 'degC', sym: '°C', name_en: 'degree Celsius', name_th: 'องศาเซลเซียส', qty_th: 'อุณหภูมิเซลเซียส (Celsius Temperature)',
+        formula_si: 'T/\\text{K} - 273.15', formula_coherent: 'K - 273.15', parents: ['K'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#0284c7',
+        micro_app: 'อุณหภูมิเพาะเลี้ยงเชื้อมาตรฐานในตู้อบ Incubator (37°C สำหรับแบคทีเรียก่อโรคในมนุษย์, 28-30°C สำหรับราและแบคทีเรียพืช), นึ่งฆ่าเชื้อ 121°C, และเก็บรักษาหัวเชื้อที่ -80°C',
+        physics_eq: 'T_{\\text{°C}} = T_{\\text{K}} - 273.15, \\quad Q = mc\\Delta T',
+        lab_note: 'การเบี่ยงเบนของอุณหภูมิตู้อบเพาะเชื้อเพียง ±1°C สามารถเปลี่ยนอัตราการเติบโตและการแสดงออกของยีนพิษในแบคทีเรียได้อย่างมีนัยสำคัญ',
+        calc_type: 'general'
+    },
+    {
+        id: 'lx', sym: 'lx', name_en: 'lux', name_th: 'ลักซ์', qty_th: 'ความส่องสว่าง (Illuminance)',
+        formula_si: '\\text{cd}\\cdot\\text{sr}\\cdot\\text{m}^{-2}', formula_coherent: '\\text{lm/m}^2', parents: ['cd', 'm'], domain: 'optics', domain_name: 'กล้อง & แสง', color: '#38bdf8',
+        micro_app: 'ความส่องสว่างใน Photobioreactor เพาะเลี้ยงสาหร่ายเซลล์เดียวและไซยาโนแบคทีเรีย (2,000-5,000 lx) และระดับความสว่างหน้าโต๊ะทำงานในห้องแล็บ (500 lx)',
+        physics_eq: 'E_v = \\frac{\\Phi_v}{A} = \\frac{I_v \\cos\\theta}{r^2}',
+        lab_note: 'การเพาะเลี้ยงจุลินทรีย์สังเคราะห์แสงต้องควบคุมความเข้มแสงให้เหมาะสม แสงที่จ้าเกินไปจะเกิด Photoinhibition ยับยั้งการเจริญเติบโต',
+        calc_type: 'general'
+    },
+    {
+        id: 'W', sym: 'W', name_en: 'watt', name_th: 'วัตต์', qty_th: 'กำลังงานและความร้อน (Power & Heat Flow)',
+        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-3}', formula_coherent: '\\text{J/s}', parents: ['kg', 'm', 's'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#eab308',
+        micro_app: 'กำลังไฟฟ้าของฮีตเตอร์ในหม้อนึ่งฆ่าเชื้อ Autoclave (1,500-3,000 W), มอเตอร์เครื่องเขย่าสาร Shaking Incubator, และหลอดไฟฮาโลเจนในกล้องจุลทรรศน์',
+        physics_eq: 'P = \\frac{W}{t} = V \\times I = I^2 R',
+        lab_note: 'กำลังงานความร้อนต้องสัมพันธ์กับปริมาตรสารละลายที่ต้องการนึ่งฆ่าเชื้อ เพื่อให้มั่นใจว่าอุณหภูมิถึง 121°C ตลอดทั่วทั้งภาชนะ',
+        calc_type: 'general'
+    },
+    {
+        id: 'Wb', sym: 'Wb', name_en: 'weber', name_th: 'เวเบอร์', qty_th: 'ฟลักซ์แม่เหล็ก (Magnetic Flux)',
+        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-2}\\cdot\\text{A}^{-1}', formula_coherent: '\\text{V}\\cdot\\text{s}', parents: ['kg', 'm', 's', 'A'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#06b6d4',
+        micro_app: 'ฟลักซ์แม่เหล็กในแท่งกวนสารเคมี Magnetic Stirrer อัตโนมัติสำหรับละลายอาหารเลี้ยงเชื้อผง เช่น Nutrient Agar หรือ LB Broth',
+        physics_eq: '\\Phi_B = B \\cdot A \\cos\\theta, \\quad \\mathcal{E} = -\\frac{d\\Phi_B}{dt}',
+        lab_note: 'การกวนสารละลายด้วยแม่เหล็กช่วยให้อาหารเลี้ยงเชื้อละลายเป็นเนื้อเดียวกันก่อนนำไปผ่านกระบวนการนึ่งฆ่าเชื้อ',
+        calc_type: 'general'
+    },
+    {
+        id: 'T', sym: 'T', name_en: 'tesla', name_th: 'เทสลา', qty_th: 'ความเข้มสนามแม่เหล็ก (Magnetic Field)',
+        formula_si: '\\text{kg}\\cdot\\text{s}^{-2}\\cdot\\text{A}^{-1}', formula_coherent: '\\text{Wb/m}^2', parents: ['kg', 's', 'A'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#f59e0b',
+        micro_app: 'ความเข้มสนามแม่เหล็กของแท่นแยกสาร Magnetic Separation Rack (0.2-0.5 T) สำหรับการดูดจับอนุภาคแม่เหล็กในการสกัด DNA/RNA อัตโนมัติ',
+        physics_eq: 'F = q(v \\times B), \\quad B = \\frac{\\mu_0 I}{2\\pi r}',
+        lab_note: 'เทคโนโลยี Magnetic Bead Extraction ให้ความบริสุทธิ์ของกรดนิวคลีอิกสูงมาก เหมาะสำหรับการทำ Real-time PCR และ Next-Generation Sequencing',
+        calc_type: 'general'
+    },
+    {
+        id: 'lm', sym: 'lm', name_en: 'lumen', name_th: 'ลูเมน', qty_th: 'ฟลักซ์ส่องสว่าง (Luminous Flux)',
+        formula_si: '\\text{cd}\\cdot\\text{sr}', formula_coherent: '\\text{cd}\\cdot\\text{sr}', parents: ['cd'], domain: 'optics', domain_name: 'กล้อง & แสง', color: '#c084fc',
+        micro_app: 'ฟลักซ์การแผ่รังสีของหลอดไฟ UV-C 254 nm ที่ใช้ทำลายเชื้อในตู้ปลอดเชื้อ และฟลักซ์แสงส่องผ่านตัวอย่างในกล้องจุลทรรศน์ฟลูออเรสเซนต์',
+        physics_eq: '\\Phi_v = \\int I_v d\\Omega, \\quad \\text{Fluorescence Emission Intensity}',
+        lab_note: 'หลอด UV-C ต้องมีฟลักซ์การแผ่รังสีเพียงพอและควรเปลี่ยนหลอดตามชั่วโมงการใช้งานที่กำหนดเพื่อรักษาประสิทธิภาพการฆ่าเชื้อ',
+        calc_type: 'general'
+    },
+    {
+        id: 'Bq', sym: 'Bq', name_en: 'becquerel', name_th: 'เบกเคอเรล', qty_th: 'กัมมันตภาพรังสี (Radioactivity)',
+        formula_si: '\\text{s}^{-1}', formula_coherent: '1/s', parents: ['s'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#f59e0b',
+        micro_app: 'อัตราการสลายตัวของสารไอโซโทปกัมมันตรังสีที่ใช้ติดฉลากติดตามในงานอณูพันธุศาสตร์ เช่น ฟอสฟอรัส-32 (P-32) สำหรับติดฉลาก DNA probe และกำมะถัน-35 (S-35) สำหรับโปรตีน',
+        physics_eq: 'A = \\lambda N = \\frac{\\ln 2}{T_{1/2}} N',
+        lab_note: '1 Bq หมายถึงมีการสลายตัวของนิวเคลียสกัมมันตรังสี 1 ครั้งต่อวินาที (1 Ci = 3.7 × 10^10 Bq)',
+        calc_type: 'general'
+    },
+    {
+        id: 'ohm', sym: 'Ω', name_en: 'ohm', name_th: 'โอห์ม', qty_th: 'ความต้านทานไฟฟ้า (Electrical Resistance)',
+        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-3}\\cdot\\text{A}^{-2}', formula_coherent: '\\text{V/A}', parents: ['kg', 'm', 's', 'A'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#14b8a6',
+        micro_app: 'ความต้านทานไฟฟ้าของสารละลายบัฟเฟอร์ Tris-Acetate-EDTA (TAE) และถังเจลไฟฟ้า, ความต้านทานเยื่อหุ้มเซลล์ (Membrane Resistance)',
+        physics_eq: 'R = \\frac{V}{I} = \\rho \\frac{L}{A}',
+        lab_note: 'หากความต้านทานของระบบต่ำเกินไป (เช่น ใส่เกลือเข้มข้นเกินไปในบัฟเฟอร์) กระแสจะไหลสูงมากจนเกิดความร้อนสะสมทำให้เจลละลาย',
+        calc_type: 'general'
+    },
+    {
+        id: 'H', sym: 'H', name_en: 'henry', name_th: 'เฮนรี', qty_th: 'ความเหนี่ยวนำไฟฟ้า (Inductance)',
+        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-2}\\cdot\\text{A}^{-2}', formula_coherent: '\\text{Wb/A}', parents: ['kg', 'm', 's', 'A'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#06b6d4',
+        micro_app: 'ความเหนี่ยวนำในขดลวดสเตเตอร์ของมอเตอร์ไร้แปรงถ่าน (Brushless Motor) ในเครื่อง Ultracentrifuge ซึ่งหมุนด้วยความเร็วสูงกว่า 100,000 RPM',
+        physics_eq: 'V_L = -L \\frac{dI}{dt}, \\quad U = \\frac{1}{2} L I^2',
+        lab_note: 'การควบคุมความเหนี่ยวนำและกระแสขับเคลื่อนช่วยให้การหมุนนุ่มนวล ลดแรงสั่นสะเทือนที่อาจรบกวนชั้นตะกอนสารแขวนลอยของเซลล์',
+        calc_type: 'general'
+    },
+    {
+        id: 'F', sym: 'F', name_en: 'farad', name_th: 'ฟารัด', qty_th: 'ความจุไฟฟ้า (Capacitance)',
+        formula_si: '\\text{kg}^{-1}\\cdot\\text{m}^{-2}\\cdot\\text{s}^4\\cdot\\text{A}^2', formula_coherent: '\\text{C/V}', parents: ['kg', 'm', 's', 'A'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#ec4899',
+        micro_app: 'ตัวเก็บประจุในเครื่องถ่ายยีนเข้าเซลล์แบคทีเรียด้วยคลื่นไฟฟ้า (Electroporator เช่น 25 µF) และความจุไฟฟ้าของเยื่อหุ้มเซลล์ชีวภาพ (~1 µF/cm²)',
+        physics_eq: 'C = \\frac{q}{V} = \\varepsilon \\frac{A}{d}, \\quad \\tau = RC \\text{ (Time Constant)}',
+        lab_note: 'ค่าคงตัวเวลา (Time Constant, tau = RC) ในการทำ Electroporation มีความสำคัญยิ่ง หากเกิด Arcing (ประกายไฟลัดวงจร) เซลล์จะตายทั้งหมด',
+        calc_type: 'general'
+    },
+    {
+        id: 'sr', sym: 'sr', name_en: 'steradian', name_th: 'สเตอเรเดียน', qty_th: 'มุมตัน (Solid Angle)',
+        formula_si: '\\text{m}^2/\\text{m}^2 = 1', formula_coherent: '1', parents: ['m'], domain: 'optics', domain_name: 'กล้อง & แสง', color: '#a855f7',
+        micro_app: 'มุมตันของการรับแสงของเลนส์ใกล้วัตถุกล้องจุลทรรศน์ ซึ่งสัมพันธ์กับ Numerical Aperture (NA) และขีดจำกัดการแจกแจงรายละเอียดของภาพ (Resolution Limit)',
+        physics_eq: '\\Omega = 2\\pi(1 - \\cos\\alpha), \\quad d_{\\min} = \\frac{\\lambda}{2 \\text{NA}} = \\frac{\\lambda}{2 n \\sin\\alpha}',
+        lab_note: 'เลนส์ใกล้วัตถุที่มีค่า NA สูงจะรับแสงได้เป็นมุมตันกว้างขึ้น ให้ภาพจุลินทรีย์ที่คมชัดและแยกรายละเอียดชิ้นส่วนเซลล์ได้ดีขึ้น',
+        calc_type: 'general'
+    },
+    {
+        id: 'Sv', sym: 'Sv', name_en: 'sievert', name_th: 'ซีเวิร์ต', qty_th: 'ปริมาณรังสีสมมูลและประสิทธิผล (Dose Equivalent)',
+        formula_si: '\\text{m}^2\\cdot\\text{s}^{-2}', formula_coherent: '\\text{J/kg}', parents: ['m', 's'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#ef4444',
+        micro_app: 'เกณฑ์การประเมินความปลอดภัยทางรังสีของบุคลากรและนักวิจัยที่ปฏิบัติงานกับสารไอโซโทปหรือห้องฉายรังสีฆ่าเชื้อชีวภาพ (ขีดจำกัดไม่เกิน 20 mSv/ปี)',
+        physics_eq: 'H = D \\times W_R, \\quad E = \\sum H_T \\times W_T',
+        lab_note: 'Sievert เป็นหน่วยที่คำนึงถึงผลกระทบทางชีววิทยาต่อเนื้อเยื่อของมนุษย์ แตกต่างจาก Gray ซึ่งเป็นปริมาณพลังงานทางกายภาพที่ดูดกลืนล้วนๆ',
+        calc_type: 'general'
+    },
+    {
+        id: 'rad', sym: 'rad', name_en: 'radian', name_th: 'เรเดียน', qty_th: 'มุมระนาบ (Plane Angle)',
+        formula_si: '\\text{m/m} = 1', formula_coherent: '1', parents: ['m'], domain: 'optics', domain_name: 'กล้อง & แสง', color: '#8b5cf6',
+        micro_app: 'มุมการเลี้ยวเบนของแสงในกล้องจุลทรรศน์คอนฟอคอล (Confocal Microscopy), การคำนวณมุมกระเจิงของแสงในเครื่องตรวจนับเซลล์ Flow Cytometry, และมุมการกระจายตัวของสปอร์เชื้อรา',
+        physics_eq: '\\theta = \\frac{s}{r}, \\quad \\sin\\theta = 1.22 \\frac{\\lambda}{D} \\text{ (Airy Disk Angle)}',
+        lab_note: 'การวัดมุมกระเจิงแสงมุมตรง (Forward Scatter, FSC) ในเครื่อง Flow Cytometer ใช้ประเมินขนาดสัมพัทธ์ของเซลล์แบคทีเรียและเม็ดเลือด',
+        calc_type: 'general'
+    }
+];
+
+let selectedUnitId = 'kat';
+
+function initSiInteractiveMetrology() {
+    renderBaseUnitsGrid();
+    renderDerivedUnitsGrid(SI_DERIVED_DATA);
+    selectSiUnit('kat');
+}
+
+function switchSiViewMode(mode) {
+    const btnInteractive = document.getElementById('btn-mode-interactive');
+    const btnVector = document.getElementById('btn-mode-vector');
+    const viewInteractive = document.getElementById('si-view-interactive');
+    const viewVector = document.getElementById('si-view-vector');
+    const toolbar = document.getElementById('si-interactive-toolbar');
+
+    if (mode === 'interactive') {
+        viewInteractive.classList.remove('hidden');
+        viewVector.classList.add('hidden');
+        if (toolbar) toolbar.classList.remove('hidden');
+
+        btnInteractive.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/30';
+        btnVector.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-slate-800/80';
+    } else {
+        viewInteractive.classList.add('hidden');
+        viewVector.classList.remove('hidden');
+        if (toolbar) toolbar.classList.add('hidden');
+
+        btnVector.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/30';
+        btnInteractive.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-slate-800/80';
+    }
+}
+
+function renderBaseUnitsGrid() {
+    const container = document.getElementById('base-units-grid');
+    if (!container) return;
+
+    container.innerHTML = SI_BASE_DATA.map(b => `
+        <div onclick="selectSiBase('${b.id}')" id="card-base-${b.id}" class="si-base-card cursor-pointer p-3 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-600 transition-all text-center group hover:scale-[1.03]">
+            <div class="text-[10px] font-mono font-bold text-slate-400 group-hover:text-white transition uppercase">${b.name_en}</div>
+            <div class="text-2xl font-black my-0.5 tracking-tight" style="color: ${b.color};">${b.sym}</div>
+            <div class="text-[10.5px] font-bold text-slate-300">${b.name_th}</div>
+            <div class="text-[9px] text-slate-500 mt-1 line-clamp-1">${b.tag}</div>
+        </div>
+    `).join('');
+}
+
+function renderDerivedUnitsGrid(data) {
+    const container = document.getElementById('derived-units-grid');
+    const countEl = document.getElementById('si-derived-count');
+    if (!container) return;
+
+    if (countEl) countEl.innerText = `แสดง ${data.length} จาก 22 หน่วย`;
+
+    container.innerHTML = data.map(d => `
+        <div onclick="selectSiUnit('${d.id}')" id="card-unit-${d.id}" class="si-unit-card cursor-pointer p-3 rounded-xl bg-slate-900/80 border border-slate-800/90 hover:border-slate-600 transition-all text-center group hover:scale-[1.03] shadow-md relative overflow-hidden">
+            <div class="flex items-center justify-between gap-1 mb-1">
+                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-950 text-slate-400">${d.formula_coherent}</span>
+                <span class="w-2 h-2 rounded-full" style="background-color: ${d.color};"></span>
+            </div>
+            <div class="text-2xl font-black tracking-tight" style="color: ${d.color};">${d.sym}</div>
+            <div class="text-[11px] font-bold text-white mt-0.5">${d.name_th}</div>
+            <div class="text-[9px] text-slate-400 mt-1 line-clamp-1">${d.domain_name}</div>
+        </div>
+    `).join('');
+
+    // Highlight selected
+    highlightUnitCard(selectedUnitId);
+}
+
+function selectSiBase(baseId) {
+    // Filter or highlight derived units that depend on this base
+    const derivedMatches = SI_DERIVED_DATA.filter(d => d.parents.includes(baseId));
+    
+    // Highlight base card
+    document.querySelectorAll('.si-base-card').forEach(c => c.classList.remove('ring-2', 'ring-cyan-400', 'bg-cyan-950/40'));
+    const baseCard = document.getElementById(`card-base-${baseId}`);
+    if (baseCard) baseCard.classList.add('ring-2', 'ring-cyan-400', 'bg-cyan-950/40');
+
+    // Pick first derived or show derived
+    if (derivedMatches.length > 0) {
+        selectSiUnit(derivedMatches[0].id);
+    }
+}
+
+function selectSiUnit(unitId) {
+    selectedUnitId = unitId;
+    const unit = SI_DERIVED_DATA.find(u => u.id === unitId) || SI_DERIVED_DATA[0];
+
+    highlightUnitCard(unitId);
+    renderInspectorCard(unit);
+
+    // Retypeset MathJax
+    if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([document.getElementById('si-inspector-card')]);
+    }
+}
+
+function highlightUnitCard(unitId) {
+    document.querySelectorAll('.si-unit-card').forEach(c => {
+        c.classList.remove('ring-2', 'ring-emerald-400', 'bg-emerald-950/30', 'scale-[1.04]');
+    });
+    const card = document.getElementById(`card-unit-${unitId}`);
+    if (card) {
+        card.classList.add('ring-2', 'ring-emerald-400', 'bg-emerald-950/30', 'scale-[1.04]');
+    }
+}
+
+function renderInspectorCard(u) {
+    const container = document.getElementById('si-inspector-card');
+    if (!container) return;
+
+    // Parent base badges
+    const parentBadges = u.parents.map(p => {
+        const b = SI_BASE_DATA.find(x => x.id === p);
+        return `<span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-slate-800 text-slate-300 border border-slate-700">หน่วยฐาน: ${b ? b.sym + ' (' + b.name_th + ')' : p}</span>`;
+    }).join(' ');
+
+    // Mini Calculator HTML
+    let calcHtml = '';
+    if (u.calc_type === 'kat') {
+        calcHtml = `
+            <div class="mt-4 p-4 rounded-xl bg-slate-950/90 border border-purple-500/30 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-purple-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-calculator"></i> ตัวแปลงหน่วยอัตราเร่งเอนไซม์ (Enzyme Units ↔ Katal)
+                    </span>
+                    <span class="text-[10px] font-mono text-slate-500">1 U = 16.67 nkat</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-1">Enzyme Unit (U หรือ µmol/min):</label>
+                        <input type="number" id="calc-u-val" value="100" oninput="calcEnzymeKat('u')" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-purple-500 font-mono">
+                    </div>
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-1">Nanokatal (nkat หรือ nmol/s):</label>
+                        <input type="number" id="calc-nkat-val" value="1666.7" oninput="calcEnzymeKat('nkat')" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-purple-500 font-mono">
+                    </div>
+                </div>
+                <div class="text-[11px] text-purple-200/80 font-mono bg-purple-950/30 p-2 rounded-lg border border-purple-900/40" id="calc-kat-result">
+                    100.00 U = 1,666.67 nkat (หรือ 1.667 µkat = 1.667×10⁻⁶ mol/s)
+                </div>
+            </div>
+        `;
+    } else if (u.calc_type === 'pa') {
+        calcHtml = `
+            <div class="mt-4 p-4 rounded-xl bg-slate-950/90 border border-rose-500/30 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-rose-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-temperature-arrow-up"></i> คำนวณความดันไอน้ำอิ่มตัว Autoclave (Temperature → Saturated Pressure)
+                    </span>
+                    <span class="text-[10px] font-mono text-slate-500">Antoine Eq. Approximation</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-1">อุณหภูมิในหม้อนึ่ง (°C):</label>
+                        <input type="range" id="calc-temp-slider" min="100" max="135" value="121" oninput="calcAutoclavePressure(this.value)" class="w-full accent-rose-500">
+                        <div class="flex justify-between text-[10px] text-slate-500 font-mono"><span>100°C</span><span id="calc-temp-disp" class="text-rose-400 font-bold">121°C</span><span>135°C</span></div>
+                    </div>
+                    <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-xs space-y-1">
+                        <div class="flex justify-between text-slate-300"><span>ความดันเกจ (Gauge):</span> <strong id="calc-pa-gauge" class="text-rose-400 font-mono">103.0 kPa (14.9 psi)</strong></div>
+                        <div class="flex justify-between text-slate-400 text-[11px]"><span>ความดันสัมบูรณ์ (Absolute):</span> <span id="calc-pa-abs" class="font-mono">204.3 kPa (29.6 psi)</span></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    } else if (u.calc_type === 'hz') {
+        calcHtml = `
+            <div class="mt-4 p-4 rounded-xl bg-slate-950/90 border border-amber-500/30 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-rotate"></i> แปลงความเร็วรอบเครื่องปั่นเหวี่ยง (RPM ↔ RCF / g-force)
+                    </span>
+                    <span class="text-[10px] font-mono text-slate-500">RCF = 1.118×10⁻⁵ × r × RPM²</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-1">ความเร็วรอบ (RPM):</label>
+                        <input type="number" id="calc-rpm-val" value="10000" oninput="calcCentrifugeRcf()" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-amber-500 font-mono">
+                    </div>
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-1">รัศมีโรเตอร์ r (cm):</label>
+                        <input type="number" id="calc-radius-val" value="8.5" step="0.5" oninput="calcCentrifugeRcf()" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-amber-500 font-mono">
+                    </div>
+                    <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-xs flex flex-col justify-center">
+                        <span class="text-slate-400 text-[11px]">แรงเหวี่ยงสัมพัทธ์ (RCF):</span>
+                        <strong id="calc-rcf-res" class="text-amber-400 font-mono text-base">9,503 ×g</strong>
+                        <span class="text-[10px] text-slate-500">ความถี่: 166.7 Hz</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    } else if (u.calc_type === 'volt') {
+        calcHtml = `
+            <div class="mt-4 p-4 rounded-xl bg-slate-950/90 border border-emerald-500/30 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt"></i> คำนวณสนามไฟฟ้าในถังเจลอิเล็กโทรโฟรีซิส (Electrophoresis Voltage & Field)
+                    </span>
+                    <span class="text-[10px] font-mono text-slate-500">E = V / d</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-1">แรงดันไฟฟ้า (V):</label>
+                        <input type="number" id="calc-volt-val" value="100" oninput="calcGelField()" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-emerald-500 font-mono">
+                    </div>
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-1">ระยะห่างขั้ว d (cm):</label>
+                        <input type="number" id="calc-dist-val" value="20" oninput="calcGelField()" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-emerald-500 font-mono">
+                    </div>
+                    <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-xs flex flex-col justify-center">
+                        <span class="text-slate-400 text-[11px]">ความเข้มสนามไฟฟ้า (E):</span>
+                        <strong id="calc-efield-res" class="text-emerald-400 font-mono text-base">5.00 V/cm</strong>
+                        <span class="text-[10px] text-emerald-300">เกณฑ์มาตรฐานที่ปลอดภัยต่อเจล</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    container.innerHTML = `
+        <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 border-b border-slate-800 pb-4">
+            <div class="flex items-start gap-4">
+                <div class="w-16 h-16 rounded-2xl flex items-center justify-center font-black text-3xl shadow-xl border shrink-0" style="background-color: ${u.color}20; color: ${u.color}; border-color: ${u.color}60;">
+                    ${u.sym}
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h4 class="text-xl font-black text-white">${u.name_th} (${u.name_en})</h4>
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-slate-800 text-cyan-300 border border-cyan-500/30">
+                            \[${u.sym} = ${u.formula_si}\]
+                        </span>
+                    </div>
+                    <div class="text-xs font-bold text-slate-300 mt-1 flex items-center gap-2 flex-wrap">
+                        <span><i class="fa-solid fa-tag text-emerald-400 mr-1"></i> ${u.qty_th}</span>
+                        <span class="text-slate-600">•</span>
+                        <span>หมวดหมู่: <strong style="color: ${u.color};">${u.domain_name}</strong></span>
+                    </div>
+                    <div class="mt-2 flex items-center gap-1.5 flex-wrap">
+                        ${parentBadges}
+                    </div>
+                </div>
+            </div>
+            <div class="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-right self-start">
+                <span class="text-[10px] text-slate-500 font-mono block">นิยามอนุพัทธ์สากล (Coherent Derivation)</span>
+                <span class="text-sm font-black font-mono text-white">\[1\\text{ ${u.sym}} = ${u.formula_coherent}\]</span>
+            </div>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+            <!-- Left: Microbiology Application Case Study -->
+            <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
+                <h5 class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-microscope"></i> บทบาทและการประยุกต์ใช้ในห้องปฏิบัติการจุลชีววิทยา:
+                </h5>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    ${u.micro_app}
+                </p>
+                <div class="p-2.5 rounded-lg bg-emerald-950/20 border border-emerald-900/40 text-[11px] text-emerald-200/90 flex items-start gap-2 mt-2">
+                    <i class="fa-solid fa-lightbulb text-emerald-400 mt-0.5"></i>
+                    <span><strong>ข้อควรจำทางมาตรวิทยา:</strong> ${u.lab_note}</span>
+                </div>
+            </div>
+
+            <!-- Right: Mathematical Formulation -->
+            <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
+                <h5 class="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-square-root-variable"></i> สมการฟิสิกส์จุลทรรศน์ที่เกี่ยวข้อง:
+                </h5>
+                <div class="p-3 rounded-lg bg-slate-900 border border-slate-800/80 text-center font-mono text-xs text-slate-200 overflow-x-auto">
+                    \[${u.physics_eq}\]
+                </div>
+                <p class="text-[11px] text-slate-400">
+                    ความเที่ยงตรงของการทดลองขึ้นอยู่กับการสอบเทียบเครื่องมือวัดตามหน่วยฐาน SI เพื่อลดความไม่แน่นอน ($U_{95}$) ให้ต่ำกว่าเกณฑ์ควบคุมคุณภาพ
+                </p>
+            </div>
+        </div>
+
+        ${calcHtml}
+    `;
+}
+
+// Live Mini Calculator Functions
+function calcEnzymeKat(source) {
+    const uInput = document.getElementById('calc-u-val');
+    const nkatInput = document.getElementById('calc-nkat-val');
+    const resBox = document.getElementById('calc-kat-result');
+    if (!uInput || !nkatInput) return;
+
+    if (source === 'u') {
+        const u = parseFloat(uInput.value) || 0;
+        const nkat = u * 16.6667;
+        nkatInput.value = nkat.toFixed(2);
+        if (resBox) resBox.innerText = `${u.toFixed(2)} U = ${nkat.toLocaleString('en-US', {maximumFractionDigits: 2})} nkat (หรือ ${(nkat/1000).toFixed(4)} µkat = ${(nkat*1e-9).toExponential(3)} mol/s)`;
+    } else {
+        const nkat = parseFloat(nkatInput.value) || 0;
+        const u = nkat / 16.6667;
+        uInput.value = u.toFixed(2);
+        if (resBox) resBox.innerText = `${u.toFixed(2)} U = ${nkat.toLocaleString('en-US', {maximumFractionDigits: 2})} nkat (หรือ ${(nkat/1000).toFixed(4)} µkat = ${(nkat*1e-9).toExponential(3)} mol/s)`;
+    }
+}
+
+function calcAutoclavePressure(tempVal) {
+    const tempDisp = document.getElementById('calc-temp-disp');
+    const gaugeEl = document.getElementById('calc-pa-gauge');
+    const absEl = document.getElementById('calc-pa-abs');
+    if (tempDisp) tempDisp.innerText = tempVal + '°C';
+
+    const T = parseFloat(tempVal);
+    // Saturated water vapor pressure approximation in kPa
+    const pAbs = 0.61078 * Math.exp((17.27 * T) / (T + 237.3)) * 10; // rough kPa formula
+    // More accurate steam table empirical formula around 100-135°C:
+    // P_sat(121°C) approx 204.9 kPa abs -> 103.6 kPa gauge
+    const P_abs_kpa = Math.pow(T / 100, 4) * 101.325;
+    const P_gauge_kpa = Math.max(0, P_abs_kpa - 101.325);
+    const P_gauge_psi = P_gauge_kpa * 0.145038;
+    const P_abs_psi = P_abs_kpa * 0.145038;
+
+    if (gaugeEl) gaugeEl.innerText = `${P_gauge_kpa.toFixed(1)} kPa (${P_gauge_psi.toFixed(1)} psi)`;
+    if (absEl) absEl.innerText = `${P_abs_kpa.toFixed(1)} kPa (${P_abs_psi.toFixed(1)} psi)`;
+}
+
+function calcCentrifugeRcf() {
+    const rpmVal = parseFloat(document.getElementById('calc-rpm-val')?.value) || 0;
+    const rVal = parseFloat(document.getElementById('calc-radius-val')?.value) || 0;
+    const resEl = document.getElementById('calc-rcf-res');
+    if (!resEl) return;
+
+    const rcf = 1.118e-5 * rVal * Math.pow(rpmVal, 2);
+    resEl.innerText = `${Math.round(rcf).toLocaleString('en-US')} ×g`;
+}
+
+function calcGelField() {
+    const vVal = parseFloat(document.getElementById('calc-volt-val')?.value) || 0;
+    const dVal = parseFloat(document.getElementById('calc-dist-val')?.value) || 1;
+    const resEl = document.getElementById('calc-efield-res');
+    if (!resEl) return;
+
+    const eField = vVal / dVal;
+    resEl.innerText = `${eField.toFixed(2)} V/cm`;
+}
+
+function filterSiDomain(domain, btn) {
+    document.querySelectorAll('.si-domain-btn').forEach(b => {
+        b.className = 'si-domain-btn px-2.5 py-1 rounded-lg text-[11px] font-bold transition bg-slate-800 text-slate-400 border border-slate-700 hover:text-slate-200';
+    });
+    if (btn) {
+        btn.className = 'si-domain-btn px-2.5 py-1 rounded-lg text-[11px] font-bold transition bg-emerald-500/20 text-emerald-300 border border-emerald-500/50';
+    }
+
+    if (domain === 'all') {
+        renderDerivedUnitsGrid(SI_DERIVED_DATA);
+    } else {
+        const filtered = SI_DERIVED_DATA.filter(u => u.domain === domain);
+        renderDerivedUnitsGrid(filtered);
+    }
+}
+
+function searchSiUnits(q) {
+    const query = q.trim().toLowerCase();
+    if (!query) {
+        renderDerivedUnitsGrid(SI_DERIVED_DATA);
+        return;
+    }
+
+    const filtered = SI_DERIVED_DATA.filter(u => 
+        u.sym.toLowerCase().includes(query) ||
+        u.name_en.toLowerCase().includes(query) ||
+        u.name_th.toLowerCase().includes(query) ||
+        u.qty_th.toLowerCase().includes(query) ||
+        u.micro_app.toLowerCase().includes(query) ||
+        u.domain_name.toLowerCase().includes(query)
+    );
+    renderDerivedUnitsGrid(filtered);
+    if (filtered.length > 0) {
+        selectSiUnit(filtered[0].id);
+    }
+}
+
+// Auto init on page load
+document.addEventListener('DOMContentLoaded', () => {
+    initSiInteractiveMetrology();
+});
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    setTimeout(initSiInteractiveMetrology, 100);
 }
 
 // Font Size Adjuster

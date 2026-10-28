@@ -1,755 +1,623 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1420" width="100%" height="100%" style="background:#070b14; font-family:'Prompt',system-ui,-apple-system,sans-serif;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1480" width="100%" height="100%" style="background:#060a12; font-family:'Prompt',system-ui,-apple-system,sans-serif;">
   <defs>
-    <filter id="glowCard" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.6"/>
+    <filter id="glowCard" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000000" flood-opacity="0.75"/>
     </filter>
-    <filter id="nodeGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="4" result="blur"/>
-      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    <filter id="glowUnit" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.6"/>
     </filter>
-    <!-- Arrowhead markers -->
-    <marker id="arrowSolid" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-      <path d="M 0 1 L 7 4 L 0 7 Z" fill="#94a3b8"/>
-    </marker>
-    <marker id="arrowAmber" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-      <path d="M 0 1 L 7 4 L 0 7 Z" fill="#eab308"/>
-    </marker>
-    <marker id="arrowOrange" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-      <path d="M 0 1 L 7 4 L 0 7 Z" fill="#f97316"/>
-    </marker>
-    <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-      <path d="M 0 1 L 7 4 L 0 7 Z" fill="#ef4444"/>
-    </marker>
-    <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-      <path d="M 0 1 L 7 4 L 0 7 Z" fill="#22c55e"/>
-    </marker>
-    <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-      <path d="M 0 1 L 7 4 L 0 7 Z" fill="#3b82f6"/>
-    </marker>
-    <marker id="arrowPurple" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-      <path d="M 0 1 L 7 4 L 0 7 Z" fill="#d946ef"/>
-    </marker>
-    <marker id="arrowIndigo" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-      <path d="M 0 1 L 7 4 L 0 7 Z" fill="#6366f1"/>
-    </marker>
-    
-    <!-- Background grid pattern -->
-    <pattern id="bgGrid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.7" opacity="0.4"/>
-    </pattern>
+    <radialGradient id="bgGlowTop" cx="50%" cy="15%" r="55%">
+      <stop offset="0%" stop-color="#0369a1" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#060a12" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bgGlowBio" cx="80%" cy="45%" r="45%">
+      <stop offset="0%" stop-color="#a21caf" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#060a12" stop-opacity="0"/>
+    </radialGradient>
   </defs>
 
-  <!-- Background -->
-  <rect width="1100" height="1420" fill="#070b14"/>
-  <rect width="1100" height="1420" fill="url(#bgGrid)"/>
+  <!-- Ambient Laboratory Background Glows -->
+  <rect width="1200" height="1480" fill="#060a12"/>
+  <circle cx="600" cy="200" r="550" fill="url(#bgGlowTop)"/>
+  <circle cx="880" cy="650" r="450" fill="url(#bgGlowBio)"/>
 
-  <!-- Top Decorative Header Banner -->
-  <rect x="0" y="0" width="1100" height="100" fill="#0f172a" fill-opacity="0.9"/>
-  <rect x="0" y="98" width="1100" height="2" fill="#38bdf8" opacity="0.8"/>
-
-  <!-- Title &amp; Logo -->
-  <g transform="translate(50, 30)">
-    <text fill="#38bdf8" font-size="12" font-weight="700" letter-spacing="2.5" font-family="'JetBrains Mono',monospace">PHYSICS FOR MICROBIOLOGY • COHERENT METROLOGY SYSTEM</text>
+  <!-- Top Title &amp; Accreditation Header -->
+  <g transform="translate(50, 45)">
+    <text fill="#38bdf8" font-size="12" font-weight="800" letter-spacing="3" font-family="'JetBrains Mono',monospace">PHYSICS FOR MICROBIOLOGY • COHERENT METROLOGY SYSTEM</text>
     <text y="34" fill="#ffffff" font-size="28" font-weight="900" letter-spacing="1">SI BASE UNITS &amp; DERIVED UNITS IN MICROBIOLOGY</text>
-    <text y="54" fill="#94a3b8" font-size="12">แผนผังเครือข่าย 7 หน่วยฐานสากล สู่หน่วยอนุพัทธ์ในห้องปฏิบัติการจุลชีววิทยา (อิงมาตรฐาน NIST SP 1247)</text>
+    <text y="58" fill="#94a3b8" font-size="14">แผนผังเครือข่าย 7 หน่วยฐานสากล สู่ 22 หน่วยอนุพัทธ์ในห้องปฏิบัติการจุลชีววิทยา (อิงมาตรฐาน NIST SP 1247)</text>
   </g>
 
-  <!-- Legend Box (Top-Right) -->
-  <g transform="translate(740, 15)">
-    <rect width="310" height="72" rx="12" fill="#0b1120" stroke="#334155" stroke-width="1.2"/>
-    <text x="15" y="20" fill="#e2e8f0" font-size="11" font-weight="700">สัญลักษณ์สายสัมพันธ์ (Relationships)</text>
-    <!-- Solid: Multiplication -->
-    <line x1="20" y1="38" x2="65" y2="38" stroke="#38bdf8" stroke-width="2.5"/>
-    <text x="75" y="42" fill="#cbd5e1" font-size="10">เส้นทึบ: การคูณ (×) เช่น N·m</text>
-    <!-- Dashed: Division -->
-    <line x1="20" y1="56" x2="65" y2="56" stroke="#f43f5e" stroke-width="2" stroke-dasharray="4,4"/>
-    <text x="75" y="60" fill="#cbd5e1" font-size="10">เส้นประ: การหาร (÷) เช่น N/m²</text>
+  <!-- Legend Box (Top Right) -->
+  <g transform="translate(880, 40)">
+    <rect width="270" height="75" rx="14" fill="#0b1329" stroke="#1e293b" stroke-width="1.5"/>
+    <text x="16" y="22" fill="#e2e8f0" font-size="12" font-weight="800">สัญลักษณ์สายสัมพันธ์ (Relationships)</text>
+    
+    <line x1="20" y1="42" x2="60" y2="42" stroke="#38bdf8" stroke-width="3"/>
+    <text x="70" y="46" fill="#94a3b8" font-size="11.5">เส้นทึบ: การคูณ (×) เช่น N·m</text>
+    
+    <line x1="20" y1="62" x2="60" y2="62" stroke="#f87171" stroke-width="2.5" stroke-dasharray="5,3"/>
+    <text x="70" y="65" fill="#94a3b8" font-size="11.5">เส้นประ: การหาร (÷) เช่น N/m²</text>
   </g>
 
+  <line x1="50" y1="125" x2="1150" y2="125" stroke="#1e293b" stroke-width="1.2"/>
 
+  <!-- Connection Lines between Base and Derived Units -->
+  <g opacity="0.75">
+    <path d="M 150 230 C 150 585.0, 180 585.0, 180 900" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 150 230 C 150 585.0, 320 585.0, 320 900" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 150 230 C 150 320.0, 880 320.0, 880 370" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 150 230 C 150 320.0, 600 320.0, 600 370" fill="none" stroke="#22c55e" stroke-width="2.5"  opacity="0.65"/>
+    <path d="M 150 230 C 150 320.0, 460 320.0, 460 370" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 310 230 C 310 320.0, 460 320.0, 460 370" fill="none" stroke="#f97316" stroke-width="2.5"  opacity="0.65"/>
+    <path d="M 310 230 C 310 585.0, 1040 585.0, 1040 900" fill="none" stroke="#a855f7" stroke-width="2.5"  opacity="0.65"/>
+    <path d="M 310 230 C 310 720.0, 1040 720.0, 1040 1170" fill="none" stroke="#8b5cf6" stroke-width="2.5"  opacity="0.65"/>
+    <path d="M 470 230 C 470 320.0, 460 320.0, 460 370" fill="none" stroke="#ef4444" stroke-width="2.5"  opacity="0.65"/>
+    <path d="M 630 230 C 630 320.0, 600 320.0, 600 370" fill="none" stroke="#22c55e" stroke-width="2.5"  opacity="0.65"/>
+    <path d="M 790 230 C 790 320.0, 740 320.0, 740 370" fill="none" stroke="#0284c7" stroke-width="2.5"  opacity="0.65"/>
+    <path d="M 950 230 C 950 320.0, 880 320.0, 880 370" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 1110 230 C 1110 450.0, 1040 450.0, 1040 630" fill="none" stroke="#a855f7" stroke-width="2.5"  opacity="0.65"/>
+    <path d="M 460 410 C 460 410.0, 320 410.0, 320 370" fill="none" stroke="#f97316" stroke-width="2.5"  opacity="0.65"/>
+    <path d="M 460 410 C 460 540.0, 460 540.0, 460 630" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 320 410 C 320 540.0, 320 540.0, 320 630" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 320 410 C 320 675.0, 460 675.0, 460 900" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 320 670 C 320 670.0, 600 670.0, 600 630" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 600 670 C 600 670.0, 740 670.0, 740 630" fill="none" stroke="#06b6d4" stroke-width="2.5"  opacity="0.65"/>
+    <path d="M 600 670 C 600 805.0, 600 805.0, 600 900" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 600 410 C 600 675.0, 880 675.0, 880 900" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 740 670 C 740 670.0, 880 670.0, 880 630" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 740 670 C 740 805.0, 740 805.0, 740 900" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 1040 670 C 1040 540.0, 1040 540.0, 1040 370" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 460 940 C 460 1075.0, 460 1075.0, 460 1170" fill="none" stroke="#ef4444" stroke-width="2.5"  opacity="0.65"/>
+    <path d="M 600 940 C 600 1075.0, 600 1075.0, 600 1170" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="5,4" opacity="0.65"/>
+    <path d="M 1040 940 C 1040 805.0, 1040 805.0, 1040 630" fill="none" stroke="#c084fc" stroke-width="2.5"  opacity="0.65"/>
+  </g>
+
+  <!-- 7 SI BASE UNITS (TOP TIER) -->
+  <g>
     <!-- Base Unit: s -->
-    <g transform="translate(55.0, 130)" filter="url(#glowCard)">
-      <rect width="110" height="80" rx="14" fill="#eab308" stroke="#ca8a04" stroke-width="2.5"/>
-      <text x="55.0" y="20" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800" font-family="'JetBrains Mono',monospace">second</text>
-      <text x="55.0" y="52" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="900" font-family="'Outfit',sans-serif">s</text>
-      <text x="55.0" y="70" text-anchor="middle" fill="#ffffff" font-size="9" font-weight="700">วินาที</text>
+    <g transform="translate(100, 145)" filter="url(#glowCard)">
+      <rect width="112" height="82" rx="16" fill="#eab308" stroke="#ca8a04" stroke-width="2.5"/>
+      <text x="56" y="22" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800" font-family="'JetBrains Mono',monospace">second</text>
+      <text x="56" y="54" text-anchor="middle" fill="#ffffff" font-size="32" font-weight="900" font-family="'Outfit',sans-serif">s</text>
+      <text x="56" y="72" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="700">วินาที</text>
     </g>
-    <!-- Microbio Application Pill for Base Unit -->
-    <g transform="translate(110, 222)">
-      <rect x="-56" y="0" width="112" height="32" rx="8" fill="#0f172a" stroke="#eab308" stroke-width="1.2" opacity="0.95"/>
-      <text x="0" y="13" text-anchor="middle" fill="#eab308" font-size="8" font-weight="800">เวลา (Time)</text>
-      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">รอบปั่นเหวี่ยง &amp; เวลาแ...</text>
+    <!-- Microbiology Application Tag -->
+    <g transform="translate(90, 235)">
+      <rect width="132" height="36" rx="10" fill="#0b1329" stroke="#eab308" stroke-width="1.5" opacity="0.95"/>
+      <text x="66" y="15" text-anchor="middle" fill="#eab308" font-size="8.5" font-weight="800">จุลชีววิทยาประยุกต์</text>
+      <text x="66" y="28" text-anchor="middle" fill="#e2e8f0" font-size="7.5" font-weight="600">เวลา • Centrifuge &amp; การแบ่งเซลล์</text>
     </g>
-
-
     <!-- Base Unit: m -->
-    <g transform="translate(190.0, 130)" filter="url(#glowCard)">
-      <rect width="110" height="80" rx="14" fill="#f97316" stroke="#ea580c" stroke-width="2.5"/>
-      <text x="55.0" y="20" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800" font-family="'JetBrains Mono',monospace">meter</text>
-      <text x="55.0" y="52" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="900" font-family="'Outfit',sans-serif">m</text>
-      <text x="55.0" y="70" text-anchor="middle" fill="#ffffff" font-size="9" font-weight="700">เมตร</text>
+    <g transform="translate(260, 145)" filter="url(#glowCard)">
+      <rect width="112" height="82" rx="16" fill="#f97316" stroke="#ea580c" stroke-width="2.5"/>
+      <text x="56" y="22" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800" font-family="'JetBrains Mono',monospace">meter</text>
+      <text x="56" y="54" text-anchor="middle" fill="#ffffff" font-size="32" font-weight="900" font-family="'Outfit',sans-serif">m</text>
+      <text x="56" y="72" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="700">เมตร</text>
     </g>
-    <!-- Microbio Application Pill for Base Unit -->
-    <g transform="translate(245, 222)">
-      <rect x="-56" y="0" width="112" height="32" rx="8" fill="#0f172a" stroke="#f97316" stroke-width="1.2" opacity="0.95"/>
-      <text x="0" y="13" text-anchor="middle" fill="#f97316" font-size="8" font-weight="800">ความยาว (Length)</text>
-      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">ขนาดเซลล์ (1 µm) &amp; ...</text>
+    <!-- Microbiology Application Tag -->
+    <g transform="translate(250, 235)">
+      <rect width="132" height="36" rx="10" fill="#0b1329" stroke="#f97316" stroke-width="1.5" opacity="0.95"/>
+      <text x="66" y="15" text-anchor="middle" fill="#f97316" font-size="8.5" font-weight="800">จุลชีววิทยาประยุกต์</text>
+      <text x="66" y="28" text-anchor="middle" fill="#e2e8f0" font-size="7.5" font-weight="600">ความยาว • ขนาดแบคทีเรีย 1-5 µm</text>
     </g>
-
-
     <!-- Base Unit: kg -->
-    <g transform="translate(325.0, 130)" filter="url(#glowCard)">
-      <rect width="110" height="80" rx="14" fill="#ef4444" stroke="#dc2626" stroke-width="2.5"/>
-      <text x="55.0" y="20" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800" font-family="'JetBrains Mono',monospace">kilogram</text>
-      <text x="55.0" y="52" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="900" font-family="'Outfit',sans-serif">kg</text>
-      <text x="55.0" y="70" text-anchor="middle" fill="#ffffff" font-size="9" font-weight="700">กิโลกรัม</text>
+    <g transform="translate(420, 145)" filter="url(#glowCard)">
+      <rect width="112" height="82" rx="16" fill="#ef4444" stroke="#dc2626" stroke-width="2.5"/>
+      <text x="56" y="22" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800" font-family="'JetBrains Mono',monospace">kilogram</text>
+      <text x="56" y="54" text-anchor="middle" fill="#ffffff" font-size="32" font-weight="900" font-family="'Outfit',sans-serif">kg</text>
+      <text x="56" y="72" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="700">กิโลกรัม</text>
     </g>
-    <!-- Microbio Application Pill for Base Unit -->
-    <g transform="translate(380, 222)">
-      <rect x="-56" y="0" width="112" height="32" rx="8" fill="#0f172a" stroke="#ef4444" stroke-width="1.2" opacity="0.95"/>
-      <text x="0" y="13" text-anchor="middle" fill="#ef4444" font-size="8" font-weight="800">มวล (Mass)</text>
-      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">ชั่งสารเคมี &amp; สอบเทียบ...</text>
+    <!-- Microbiology Application Tag -->
+    <g transform="translate(410, 235)">
+      <rect width="132" height="36" rx="10" fill="#0b1329" stroke="#ef4444" stroke-width="1.5" opacity="0.95"/>
+      <text x="66" y="15" text-anchor="middle" fill="#ef4444" font-size="8.5" font-weight="800">จุลชีววิทยาประยุกต์</text>
+      <text x="66" y="28" text-anchor="middle" fill="#e2e8f0" font-size="7.5" font-weight="600">มวล • ชั่งสารเคมี &amp; ไมโครปิเปตต์</text>
     </g>
-
-
     <!-- Base Unit: A -->
-    <g transform="translate(460.0, 130)" filter="url(#glowCard)">
-      <rect width="110" height="80" rx="14" fill="#22c55e" stroke="#16a34a" stroke-width="2.5"/>
-      <text x="55.0" y="20" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800" font-family="'JetBrains Mono',monospace">ampere</text>
-      <text x="55.0" y="52" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="900" font-family="'Outfit',sans-serif">A</text>
-      <text x="55.0" y="70" text-anchor="middle" fill="#ffffff" font-size="9" font-weight="700">แอมแปร์</text>
+    <g transform="translate(580, 145)" filter="url(#glowCard)">
+      <rect width="112" height="82" rx="16" fill="#22c55e" stroke="#16a34a" stroke-width="2.5"/>
+      <text x="56" y="22" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800" font-family="'JetBrains Mono',monospace">ampere</text>
+      <text x="56" y="54" text-anchor="middle" fill="#ffffff" font-size="32" font-weight="900" font-family="'Outfit',sans-serif">A</text>
+      <text x="56" y="72" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="700">แอมแปร์</text>
     </g>
-    <!-- Microbio Application Pill for Base Unit -->
-    <g transform="translate(515, 222)">
-      <rect x="-56" y="0" width="112" height="32" rx="8" fill="#0f172a" stroke="#22c55e" stroke-width="1.2" opacity="0.95"/>
-      <text x="0" y="13" text-anchor="middle" fill="#22c55e" font-size="8" font-weight="800">กระแสไฟฟ้า (Current)</text>
-      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">กระแสอิเล็กโทรโฟรีซิส ...</text>
+    <!-- Microbiology Application Tag -->
+    <g transform="translate(570, 235)">
+      <rect width="132" height="36" rx="10" fill="#0b1329" stroke="#22c55e" stroke-width="1.5" opacity="0.95"/>
+      <text x="66" y="15" text-anchor="middle" fill="#22c55e" font-size="8.5" font-weight="800">จุลชีววิทยาประยุกต์</text>
+      <text x="66" y="28" text-anchor="middle" fill="#e2e8f0" font-size="7.5" font-weight="600">กระแสไฟฟ้า • อิเล็กโทรโฟรีซิส</text>
     </g>
-
-
     <!-- Base Unit: K -->
-    <g transform="translate(595.0, 130)" filter="url(#glowCard)">
-      <rect width="110" height="80" rx="14" fill="#3b82f6" stroke="#2563eb" stroke-width="2.5"/>
-      <text x="55.0" y="20" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800" font-family="'JetBrains Mono',monospace">kelvin</text>
-      <text x="55.0" y="52" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="900" font-family="'Outfit',sans-serif">K</text>
-      <text x="55.0" y="70" text-anchor="middle" fill="#ffffff" font-size="9" font-weight="700">เคลวิน</text>
+    <g transform="translate(740, 145)" filter="url(#glowCard)">
+      <rect width="112" height="82" rx="16" fill="#0284c7" stroke="#0369a1" stroke-width="2.5"/>
+      <text x="56" y="22" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800" font-family="'JetBrains Mono',monospace">kelvin</text>
+      <text x="56" y="54" text-anchor="middle" fill="#ffffff" font-size="32" font-weight="900" font-family="'Outfit',sans-serif">K</text>
+      <text x="56" y="72" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="700">เคลวิน</text>
     </g>
-    <!-- Microbio Application Pill for Base Unit -->
-    <g transform="translate(650, 222)">
-      <rect x="-56" y="0" width="112" height="32" rx="8" fill="#0f172a" stroke="#3b82f6" stroke-width="1.2" opacity="0.95"/>
-      <text x="0" y="13" text-anchor="middle" fill="#3b82f6" font-size="8" font-weight="800">อุณหภูมิ (Temp)</text>
-      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">Incubator 37°C &amp; A...</text>
+    <!-- Microbiology Application Tag -->
+    <g transform="translate(730, 235)">
+      <rect width="132" height="36" rx="10" fill="#0b1329" stroke="#0284c7" stroke-width="1.5" opacity="0.95"/>
+      <text x="66" y="15" text-anchor="middle" fill="#0284c7" font-size="8.5" font-weight="800">จุลชีววิทยาประยุกต์</text>
+      <text x="66" y="28" text-anchor="middle" fill="#e2e8f0" font-size="7.5" font-weight="600">อุณหภูมิ • Incubator 37°C &amp; Autoclave</text>
     </g>
-
-
     <!-- Base Unit: mol -->
-    <g transform="translate(730.0, 130)" filter="url(#glowCard)">
-      <rect width="110" height="80" rx="14" fill="#d946ef" stroke="#c026d3" stroke-width="2.5"/>
-      <text x="55.0" y="20" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800" font-family="'JetBrains Mono',monospace">mole</text>
-      <text x="55.0" y="52" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="900" font-family="'Outfit',sans-serif">mol</text>
-      <text x="55.0" y="70" text-anchor="middle" fill="#ffffff" font-size="9" font-weight="700">โมล</text>
+    <g transform="translate(900, 145)" filter="url(#glowCard)">
+      <rect width="112" height="82" rx="16" fill="#d946ef" stroke="#c026d3" stroke-width="2.5"/>
+      <text x="56" y="22" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800" font-family="'JetBrains Mono',monospace">mole</text>
+      <text x="56" y="54" text-anchor="middle" fill="#ffffff" font-size="32" font-weight="900" font-family="'Outfit',sans-serif">mol</text>
+      <text x="56" y="72" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="700">โมล</text>
     </g>
-    <!-- Microbio Application Pill for Base Unit -->
-    <g transform="translate(785, 222)">
-      <rect x="-56" y="0" width="112" height="32" rx="8" fill="#0f172a" stroke="#d946ef" stroke-width="1.2" opacity="0.95"/>
-      <text x="0" y="13" text-anchor="middle" fill="#d946ef" font-size="8" font-weight="800">ปริมาณสาร (Amount)</text>
-      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">ความเข้มข้นโมลาร์ M &amp; ...</text>
+    <!-- Microbiology Application Tag -->
+    <g transform="translate(890, 235)">
+      <rect width="132" height="36" rx="10" fill="#0b1329" stroke="#d946ef" stroke-width="1.5" opacity="0.95"/>
+      <text x="66" y="15" text-anchor="middle" fill="#d946ef" font-size="8.5" font-weight="800">จุลชีววิทยาประยุกต์</text>
+      <text x="66" y="28" text-anchor="middle" fill="#e2e8f0" font-size="7.5" font-weight="600">ปริมาณสาร • ความเข้มข้น Molar</text>
     </g>
-
-
     <!-- Base Unit: cd -->
-    <g transform="translate(865.0, 130)" filter="url(#glowCard)">
-      <rect width="110" height="80" rx="14" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2.5"/>
-      <text x="55.0" y="20" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800" font-family="'JetBrains Mono',monospace">candela</text>
-      <text x="55.0" y="52" text-anchor="middle" fill="#ffffff" font-size="30" font-weight="900" font-family="'Outfit',sans-serif">cd</text>
-      <text x="55.0" y="70" text-anchor="middle" fill="#ffffff" font-size="9" font-weight="700">แคนเดลา</text>
+    <g transform="translate(1060, 145)" filter="url(#glowCard)">
+      <rect width="112" height="82" rx="16" fill="#a855f7" stroke="#9333ea" stroke-width="2.5"/>
+      <text x="56" y="22" text-anchor="middle" fill="#0f172a" font-size="11" font-weight="800" font-family="'JetBrains Mono',monospace">candela</text>
+      <text x="56" y="54" text-anchor="middle" fill="#ffffff" font-size="32" font-weight="900" font-family="'Outfit',sans-serif">cd</text>
+      <text x="56" y="72" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="700">แคนเดลา</text>
     </g>
-    <!-- Microbio Application Pill for Base Unit -->
-    <g transform="translate(920, 222)">
-      <rect x="-56" y="0" width="112" height="32" rx="8" fill="#0f172a" stroke="#8b5cf6" stroke-width="1.2" opacity="0.95"/>
-      <text x="0" y="13" text-anchor="middle" fill="#8b5cf6" font-size="8" font-weight="800">ความเข้มแสง (Light)</text>
-      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">หลอดส่องกล้อง &amp; หลอด U...</text>
+    <!-- Microbiology Application Tag -->
+    <g transform="translate(1050, 235)">
+      <rect width="132" height="36" rx="10" fill="#0b1329" stroke="#a855f7" stroke-width="1.5" opacity="0.95"/>
+      <text x="66" y="15" text-anchor="middle" fill="#a855f7" font-size="8.5" font-weight="800">จุลชีววิทยาประยุกต์</text>
+      <text x="66" y="28" text-anchor="middle" fill="#e2e8f0" font-size="7.5" font-weight="600">ความเข้มแสง • หลอด UV-C &amp; กล้อง</text>
     </g>
-
-  <!-- Interconnecting Relationship Arrows -->
-  <g opacity="0.65">
-    <path d="M 380 254 C 380 284.5, 380 284.5, 380 315" fill="none" stroke="#ef4444" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 245 254 C 245 284.5, 380 284.5, 380 315" fill="none" stroke="#f97316" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 110 254 C 110 284.5, 380 284.5, 380 315" fill="none" stroke="#eab308" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowSolid)"/>
-    <path d="M 380 405 C 380 360.0, 245 360.0, 245 315" fill="none" stroke="#ef4444" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 245 254 C 245 284.5, 245 284.5, 245 315" fill="none" stroke="#f97316" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 515 254 C 515 284.5, 515 284.5, 515 315" fill="none" stroke="#22c55e" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 110 254 C 110 284.5, 515 284.5, 515 315" fill="none" stroke="#eab308" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 650 254 C 650 284.5, 650 284.5, 650 315" fill="none" stroke="#3b82f6" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 785 254 C 785 284.5, 785 284.5, 785 315" fill="none" stroke="#d946ef" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 110 254 C 110 284.5, 785 284.5, 785 315" fill="none" stroke="#eab308" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowSolid)"/>
-    <path d="M 920 615 C 920 465.0, 920 465.0, 920 315" fill="none" stroke="#8b5cf6" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 245 254 C 245 284.5, 920 284.5, 920 315" fill="none" stroke="#f97316" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowSolid)"/>
-    <path d="M 245 405 C 245 465.0, 245 465.0, 245 525" fill="none" stroke="#f97316" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 110 254 C 110 389.5, 245 389.5, 245 525" fill="none" stroke="#eab308" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowSolid)"/>
-    <path d="M 380 405 C 380 465.0, 380 465.0, 380 525" fill="none" stroke="#ef4444" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 245 254 C 245 389.5, 380 389.5, 380 525" fill="none" stroke="#f97316" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowSolid)"/>
-    <path d="M 245 615 C 245 570.0, 515 570.0, 515 525" fill="none" stroke="#f97316" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 515 254 C 515 389.5, 515 389.5, 515 525" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowSolid)"/>
-    <path d="M 515 615 C 515 570.0, 650 570.0, 650 525" fill="none" stroke="#22c55e" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 110 254 C 110 389.5, 650 389.5, 650 525" fill="none" stroke="#eab308" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 650 615 C 650 570.0, 785 570.0, 785 525" fill="none" stroke="#06b6d4" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 245 254 C 245 389.5, 785 389.5, 785 525" fill="none" stroke="#f97316" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowSolid)"/>
-    <path d="M 920 254 C 920 389.5, 920 389.5, 920 525" fill="none" stroke="#8b5cf6" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 920 845 C 920 685.0, 920 685.0, 920 525" fill="none" stroke="#8b5cf6" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 110 254 C 110 504.5, 110 504.5, 110 755" fill="none" stroke="#eab308" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowSolid)"/>
-    <path d="M 110 254 C 110 504.5, 245 504.5, 245 755" fill="none" stroke="#eab308" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowSolid)"/>
-    <path d="M 245 405 C 245 580.0, 380 580.0, 380 755" fill="none" stroke="#f97316" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 380 254 C 380 504.5, 380 504.5, 380 755" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowSolid)"/>
-    <path d="M 515 615 C 515 685.0, 515 685.0, 515 755" fill="none" stroke="#22c55e" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 515 254 C 515 504.5, 515 504.5, 515 755" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowSolid)"/>
-    <path d="M 650 615 C 650 685.0, 650 685.0, 650 755" fill="none" stroke="#06b6d4" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 515 254 C 515 504.5, 650 504.5, 650 755" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowSolid)"/>
-    <path d="M 515 405 C 515 580.0, 785 580.0, 785 755" fill="none" stroke="#22c55e" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 515 615 C 515 685.0, 785 685.0, 785 755" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowSolid)"/>
-    <path d="M 380 845 C 380 920.0, 380 920.0, 380 995" fill="none" stroke="#ef4444" stroke-width="2"  marker-end="url(#arrowSolid)"/>
-    <path d="M 515 845 C 515 920.0, 515 920.0, 515 995" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowSolid)"/>
   </g>
 
-    <!-- Derived Unit: N -->
-    <g transform="translate(380, 360)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#ef4444" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+  <!-- 22 SI DERIVED UNITS WITH MICROBIOLOGY LAB CONTEXT -->
+  <g>
+    <!-- Unit Node: J -->
+    <g transform="translate(320, 410)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#f97316" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">N</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#ef4444" font-size="9" font-weight="700">newton</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(kg·m/s²)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">J</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#f97316" font-size="9" font-weight="800">joule</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(N·m)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#ef4444" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#ef4444" font-size="7.5" font-weight="800">FORCE (แรง)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 แรงหนืด Stokes Drag &amp; ทอร์</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">กแส้แฟลกเจลลัม</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#f97316" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#f97316" font-size="7.5" font-weight="800">ENERGY / WORK (งาน &amp; พลังงาน)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 พลังงาน ATP (30.5 kJ/mol) &amp; งานปั่นเหวี่ยง</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: J -->
-    <g transform="translate(245, 360)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#f97316" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: N -->
+    <g transform="translate(460, 410)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#ef4444" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">J</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#f97316" font-size="9" font-weight="700">joule</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(N·m)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">N</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#ef4444" font-size="9" font-weight="800">newton</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(kg·m/s²)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#f97316" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#f97316" font-size="7.5" font-weight="800">ENERGY / WORK (งาน &amp; พลังงาน)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 พลังงาน ATP Hydrolysis (30</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">.5 kJ) &amp; งานปั่นเซลล์</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#ef4444" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#ef4444" font-size="7.5" font-weight="800">FORCE (แรงกลศาสตร์)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 แรงหนืด Stokes Drag &amp; ทอร์กของแฟลกเจลลา</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: C -->
-    <g transform="translate(515, 360)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#22c55e" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: C -->
+    <g transform="translate(600, 410)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#22c55e" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">C</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#22c55e" font-size="9" font-weight="700">coulomb</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(A·s)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">C</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#22c55e" font-size="9" font-weight="800">coulomb</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(A·s)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#22c55e" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#22c55e" font-size="7.5" font-weight="800">ELECTRIC CHARGE (ประจุไฟฟ้า)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 ประจุผิวเซลล์แบคทีเรียกลไก</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">ย้อมสีแกรม</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#22c55e" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#22c55e" font-size="7.5" font-weight="800">ELECTRIC CHARGE (ประจุไฟฟ้า)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 ประจุผิวเยื่อหุ้มแบคทีเรีย &amp; ดีเอ็นเอ (Zeta)</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: °C -->
-    <g transform="translate(650, 360)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#3b82f6" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: °C -->
+    <g transform="translate(740, 410)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#0284c7" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">°C</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#3b82f6" font-size="9" font-weight="700">degree Celsius</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(K - 273.15)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">°C</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#0284c7" font-size="9" font-weight="800">degree Celsius</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(K - 273.15)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#3b82f6" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#3b82f6" font-size="7.5" font-weight="800">CELSIUS TEMP (อุณหภูมิ)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 ตู้อบ Incubator 37°C &amp; นึ่</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">ง Autoclave 121°C</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#0284c7" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#0284c7" font-size="7.5" font-weight="800">CELSIUS TEMP (อุณหภูมิเซลเซียส)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 ตู้อบ 37°C, แช่แข็ง -80°C &amp; นึ่งฆ่าเชื้อ 121°C</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: kat -->
-    <g transform="translate(785, 360)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#d946ef" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: kat -->
+    <g transform="translate(880, 410)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#d946ef" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">kat</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#d946ef" font-size="9" font-weight="700">katal</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(mol/s)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">kat</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#d946ef" font-size="9" font-weight="800">katal</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(mol/s)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#d946ef" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#d946ef" font-size="7.5" font-weight="800">CATALYTIC ACTIVITY (อัตราเร่งเอนไซม์)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 อัตราเร่งเอนไซม์ Catalase </text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">/ Taq Polymerase</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#d946ef" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#d946ef" font-size="7.5" font-weight="800">CATALYTIC ACTIVITY (อัตราเร่งเอนไซม์)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 อัตราเร่งเอนไซม์ Catalase, Taq Polymerase</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: lx -->
-    <g transform="translate(920, 360)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#8b5cf6" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: lx -->
+    <g transform="translate(1040, 410)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#38bdf8" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">lx</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#8b5cf6" font-size="9" font-weight="700">lux</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(lm/m²)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">lx</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#38bdf8" font-size="9" font-weight="800">lux</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(lm/m²)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#8b5cf6" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#8b5cf6" font-size="7.5" font-weight="800">ILLUMINANCE (ความส่องสว่าง)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 ความส่องสว่างโคมไฟกล้องจุล</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">ทรรศน์คอนเดนเซอร์</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#38bdf8" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="800">ILLUMINANCE (ความส่องสว่าง)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 ความสว่างเพาะเลี้ยงสาหร่าย Photobioreactor</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: W -->
-    <g transform="translate(245, 570)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#f97316" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: W -->
+    <g transform="translate(320, 670)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#eab308" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">W</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#f97316" font-size="9" font-weight="700">watt</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(J/s)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">W</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#eab308" font-size="9" font-weight="800">watt</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(J/s)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#f97316" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#f97316" font-size="7.5" font-weight="800">POWER / HEAT RATE (กำลังงาน)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 กำลังความร้อนตู้อบ Incubat</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">or &amp; เครื่องเขย่า Shaker</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#eab308" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#eab308" font-size="7.5" font-weight="800">POWER / HEAT (กำลังความร้อน)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 กำลังความร้อนตู้อบ &amp; เครื่องเขย่า Shaker</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: Pa -->
-    <g transform="translate(380, 570)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#ef4444" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: Pa -->
+    <g transform="translate(460, 670)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#f43f5e" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">Pa</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#ef4444" font-size="9" font-weight="700">pascal</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(N/m²)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">Pa</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#f43f5e" font-size="9" font-weight="800">pascal</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(N/m²)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#ef4444" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#ef4444" font-size="7.5" font-weight="800">PRESSURE / STRESS (ความดัน)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 ความดัน Autoclave 15 psi &amp;</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7"> Osmotic Pressure</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#f43f5e" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#f43f5e" font-size="7.5" font-weight="800">PRESSURE / STRESS (ความดัน)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 ความดันหม้อนึ่ง 15 psi &amp; แรงดันออสโมซิสเซลล์</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: V -->
-    <g transform="translate(515, 570)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#22c55e" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: V -->
+    <g transform="translate(600, 670)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#10b981" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">V</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#22c55e" font-size="9" font-weight="700">volt</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(W/A)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">V</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#10b981" font-size="9" font-weight="800">volt</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(W/A)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#22c55e" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#22c55e" font-size="7.5" font-weight="800">VOLTAGE / EMF (ความต่างศักย์)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 เจลอิเล็กโทรโฟรีซิส DNA 10</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">0V &amp; ศักย์เยื่อเซลล์</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#10b981" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#10b981" font-size="7.5" font-weight="800">VOLTAGE / EMF (ความต่างศักย์)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 Agarose Gel 100V &amp; ศักย์เยื่อหุ้มเซลล์ -70 mV</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: Wb -->
-    <g transform="translate(650, 570)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#06b6d4" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: Wb -->
+    <g transform="translate(740, 670)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#06b6d4" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">Wb</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#06b6d4" font-size="9" font-weight="700">weber</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(V·s)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">Wb</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#06b6d4" font-size="9" font-weight="800">weber</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(V·s)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#06b6d4" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#06b6d4" font-size="7.5" font-weight="800">MAGNETIC FLUX (ฟลักซ์แม่เหล็ก)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 แม่เหล็กกวนอาหารเลี้ยงเชื้</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">อ Magnetic Stirrer</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#06b6d4" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#06b6d4" font-size="7.5" font-weight="800">MAGNETIC FLUX (ฟลักซ์แม่เหล็ก)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 แท่งแม่เหล็กกวนสารละลายเคมี Magnetic Stirrer</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: T -->
-    <g transform="translate(785, 570)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#f59e0b" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: T -->
+    <g transform="translate(880, 670)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#f59e0b" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">T</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#f59e0b" font-size="9" font-weight="700">tesla</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(Wb/m²)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">T</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#f59e0b" font-size="9" font-weight="800">tesla</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(Wb/m²)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#f59e0b" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#f59e0b" font-size="7.5" font-weight="800">MAGNETIC FIELD (สนามแม่เหล็ก)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 สนามแม่เหล็กแยกเม็ดเซลล์ M</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">agnetic Beads</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#f59e0b" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#f59e0b" font-size="7.5" font-weight="800">MAGNETIC FIELD (สนามแม่เหล็ก)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 ความเข้มแม่เหล็กสกัดดีเอ็นเอ Magnetic Beads</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: lm -->
-    <g transform="translate(920, 570)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#8b5cf6" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: lm -->
+    <g transform="translate(1040, 670)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#c084fc" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">lm</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#8b5cf6" font-size="9" font-weight="700">lumen</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(cd·sr)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">lm</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#c084fc" font-size="9" font-weight="800">lumen</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(cd·sr)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#8b5cf6" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#8b5cf6" font-size="7.5" font-weight="800">LUMINOUS FLUX (ฟลักซ์ส่องสว่าง)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 ฟลักซ์การแผ่รังสีหลอดฆ่าเช</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">ื้อ UV-C 254 nm</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#c084fc" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#c084fc" font-size="7.5" font-weight="800">LUMINOUS FLUX (ฟลักซ์ส่องสว่าง)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 ฟลักซ์แสงหลอดฆ่าเชื้อโรค UV-C 254 nm</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: Hz -->
-    <g transform="translate(110, 800)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#eab308" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: Hz -->
+    <g transform="translate(180, 940)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#eab308" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">Hz</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#eab308" font-size="9" font-weight="700">hertz</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(1/s)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">Hz</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#eab308" font-size="9" font-weight="800">hertz</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(1/s)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#eab308" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#eab308" font-size="7.5" font-weight="800">FREQUENCY (ความถี่)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 รอบปั่นเหวี่ยง Centrifuge </text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">RPM &amp; แฟลกเจลลา 300Hz</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#eab308" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#eab308" font-size="7.5" font-weight="800">FREQUENCY (ความถี่)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 รอบปั่นเหวี่ยง RPM &amp; แฟลกเจลลาหมุน 300 Hz</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: Bq -->
-    <g transform="translate(245, 800)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#eab308" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: Bq -->
+    <g transform="translate(320, 940)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#f59e0b" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">Bq</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#eab308" font-size="9" font-weight="700">becquerel</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(1/s)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">Bq</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#f59e0b" font-size="9" font-weight="800">becquerel</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(1/s)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#eab308" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#eab308" font-size="7.5" font-weight="800">RADIOACTIVITY (กัมมันตภาพรังสี)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 ไอโซโทปติดตามรอย P-32, S-3</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">5 ในกรดนิวคลีอิก</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#f59e0b" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#f59e0b" font-size="7.5" font-weight="800">RADIOACTIVITY (กัมมันตภาพรังสี)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 ไอโซโทปติดตาม P-32, S-35 ในงานอณูพันธุศาสตร์</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: Gy -->
-    <g transform="translate(380, 800)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#ef4444" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: Gy -->
+    <g transform="translate(460, 940)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#f43f5e" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">Gy</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#ef4444" font-size="9" font-weight="700">gray</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(J/kg)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">Gy</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#f43f5e" font-size="9" font-weight="800">gray</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(J/kg)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#ef4444" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#ef4444" font-size="7.5" font-weight="800">ABSORBED DOSE (รังสีดูดกลืน)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 ปริมาณรังสีแกมมา Co-60 ฉาย</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">ฆ่าเชื้อจานเพาะเชื้อ</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#f43f5e" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#f43f5e" font-size="7.5" font-weight="800">ABSORBED DOSE (รังสีดูดกลืน)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 ปริมาณรังสี Co-60 ฆ่าเชื้ออุปกรณ์การแพทย์ 25 kGy</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: Ω -->
-    <g transform="translate(515, 800)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#22c55e" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: Ω -->
+    <g transform="translate(600, 940)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#14b8a6" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">Ω</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#22c55e" font-size="9" font-weight="700">ohm</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(V/A)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">Ω</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#14b8a6" font-size="9" font-weight="800">ohm</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(V/A)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#22c55e" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#22c55e" font-size="7.5" font-weight="800">RESISTANCE (ความต้านทาน)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 ความต้านทานเจลอะกาโรส Gel </text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">Electrophoresis</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#14b8a6" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#14b8a6" font-size="7.5" font-weight="800">RESISTANCE (ความต้านทาน)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 ความต้านทานบัฟเฟอร์ Tris-EDTA &amp; เจลไฟฟ้า</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: H -->
-    <g transform="translate(650, 800)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#06b6d4" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: H -->
+    <g transform="translate(740, 940)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#06b6d4" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">H</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#06b6d4" font-size="9" font-weight="700">henry</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(Wb/A)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">H</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#06b6d4" font-size="9" font-weight="800">henry</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(Wb/A)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#06b6d4" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#06b6d4" font-size="7.5" font-weight="800">INDUCTANCE (ความเหนี่ยวนำ)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 มอเตอร์เหนี่ยวนำเครื่องปั่</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">นความเร็วสูง High-speed</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#06b6d4" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#06b6d4" font-size="7.5" font-weight="800">INDUCTANCE (ความเหนี่ยวนำ)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 มอเตอร์ไร้แปรงถ่านเครื่อง Ultracentrifuge</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: F -->
-    <g transform="translate(785, 800)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#d946ef" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: F -->
+    <g transform="translate(880, 940)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#ec4899" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">F</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#d946ef" font-size="9" font-weight="700">farad</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(C/V)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">F</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#ec4899" font-size="9" font-weight="800">farad</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(C/V)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#d946ef" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#d946ef" font-size="7.5" font-weight="800">CAPACITANCE (ความจุไฟฟ้า)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 อิเล็กโทรโพเรชันเจาะผนังเซ</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">ลล์ Electroporation</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#ec4899" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#ec4899" font-size="7.5" font-weight="800">CAPACITANCE (ความจุไฟฟ้า)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 เครื่องถ่ายยีนด้วยคลื่นไฟฟ้า Electroporation 25 µF</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: sr -->
-    <g transform="translate(920, 800)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#8b5cf6" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: sr -->
+    <g transform="translate(1040, 940)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#a855f7" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">sr</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#8b5cf6" font-size="9" font-weight="700">steradian</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(m²/m²)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">sr</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#a855f7" font-size="9" font-weight="800">steradian</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(m²/m²)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#8b5cf6" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#8b5cf6" font-size="7.5" font-weight="800">SOLID ANGLE (มุมตัน)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 มุมเปิดรับแสงเลนส์ใกล้วัตถ</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">ุ Numerical Aperture NA</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#a855f7" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#a855f7" font-size="7.5" font-weight="800">SOLID ANGLE (มุมตัน)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 มุมรับแสงเลนส์ใกล้วัตถุกล้องจุลทรรศน์ (NA)</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: Sv -->
-    <g transform="translate(380, 1040)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#ef4444" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: Sv -->
+    <g transform="translate(460, 1210)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#ef4444" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">Sv</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#ef4444" font-size="9" font-weight="700">sievert</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(J/kg)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">Sv</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#ef4444" font-size="9" font-weight="800">sievert</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(J/kg)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#ef4444" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#ef4444" font-size="7.5" font-weight="800">DOSE EQUIVALENT (รังสีสมมูล)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 เกณฑ์ความปลอดภัยรังสีห้องแ</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">ล็บจุลชีววิทยา</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#ef4444" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#ef4444" font-size="7.5" font-weight="800">DOSE EQUIVALENT (รังสีสมมูล)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 เกณฑ์ความปลอดภัยรังสีนักวิจัย &lt; 20 mSv/ปี</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: S -->
-    <g transform="translate(515, 1040)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#22c55e" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: S -->
+    <g transform="translate(600, 1210)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#10b981" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">S</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#22c55e" font-size="9" font-weight="700">siemens</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(1/Ω)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">S</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#10b981" font-size="9" font-weight="800">siemens</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(1/Ω)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#22c55e" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#22c55e" font-size="7.5" font-weight="800">CONDUCTANCE (ความนำไฟฟ้า)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 ความนำไฟฟ้าอาหารเลี้ยงเชื้</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">อ &amp; ความเค็มสารละลาย</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#10b981" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#10b981" font-size="7.5" font-weight="800">CONDUCTANCE (สภาพนำไฟฟ้า)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 สภาพนำไฟฟ้าอาหารเลี้ยงเชื้อ &amp; น้ำบริสุทธิ์เตรียมบัฟเฟอร์</text>
+      </g>
     </g>
-
-
-    <!-- Derived Unit: rad -->
-    <g transform="translate(920, 1040)" filter="url(#glowCard)">
-      <!-- Outer Circle Card -->
-      <circle r="38" fill="#0f172a" stroke="#8b5cf6" stroke-width="3"/>
-      <circle r="34" fill="#1e293b" fill-opacity="0.8"/>
-      
+    <!-- Unit Node: rad -->
+    <g transform="translate(1040, 1210)" filter="url(#glowUnit)">
+      <!-- Outer Glow Ring -->
+      <circle r="38" fill="#0b1329" stroke="#8b5cf6" stroke-width="3.5"/>
+      <!-- Inner Fill -->
+      <circle r="33" fill="#090d16"/>
       <!-- Symbol -->
-      <text y="-8" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="900" font-family="'Outfit',sans-serif">rad</text>
-      <!-- English Name -->
-      <text y="8" text-anchor="middle" fill="#8b5cf6" font-size="9" font-weight="700">radian</text>
-      <!-- Base Formula -->
-      <text y="21" text-anchor="middle" fill="#94a3b8" font-size="8.5" font-family="'JetBrains Mono',monospace">(m/m)</text>
+      <text y="-6" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="900" font-family="'Outfit',sans-serif">rad</text>
+      <!-- Name -->
+      <text y="11" text-anchor="middle" fill="#8b5cf6" font-size="9" font-weight="800">radian</text>
+      <!-- SI Equivalent Base Formula -->
+      <text y="24" text-anchor="middle" fill="#94a3b8" font-size="8" font-family="'JetBrains Mono',monospace">(m/m)</text>
       
-      <!-- Quantity Category Pill (Above/Below) -->
-      <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#8b5cf6" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#8b5cf6" font-size="7.5" font-weight="800">PLANE ANGLE (มุมระนาบ)</text>
-      
-      <!-- Microbiology Application Tag -->
-      <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 มุมการหมุนของโรเตอร์เครื่อ</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">งปั่น &amp; แฟลกเจลลัม</text>
+      <!-- Microbiology Application Card (Below Circle) -->
+      <g transform="translate(0, 48)">
+        <rect x="-76" y="0" width="152" height="44" rx="10" fill="#080e1e" stroke="#8b5cf6" stroke-width="1" opacity="0.92"/>
+        <text y="14" text-anchor="middle" fill="#8b5cf6" font-size="7.5" font-weight="800">PLANE ANGLE (มุมระนาบ)</text>
+        <text y="28" text-anchor="middle" fill="#cbd5e1" font-size="7" font-weight="600">🔬 มุมการเลี้ยวเบนแสง &amp; องศากระจายตัวของสปอร์</text>
+      </g>
     </g>
-
+  </g>
 
   <!-- Bottom University &amp; Course Attribution Footer -->
-  <g transform="translate(50, 1290)">
-    <rect width="1000" height="90" rx="18" fill="#0f172a" stroke="#1e293b" stroke-width="2" filter="url(#glowCard)"/>
-    
-    <!-- Left Icon -->
-    <circle cx="50" cy="45" r="28" fill="#0284c7" fill-opacity="0.15" stroke="#38bdf8" stroke-width="2"/>
-    <text x="50" y="52" text-anchor="middle" fill="#38bdf8" font-size="20">🔬</text>
-    
-    <!-- Text -->
-    <text x="95" y="34" fill="#f8fafc" font-size="14" font-weight="800">หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาจุลชีววิทยา • รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา</text>
-    <text x="95" y="54" fill="#94a3b8" font-size="11">คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี (RBRU) • แผนภาพความสอดคล้องเชิงมาตรวิทยา (BIPM / NIST SP 1247 Aligned)</text>
-    <text x="95" y="72" fill="#38bdf8" font-size="10" font-family="'JetBrains Mono',monospace">• 7 Base Units → 22 Derived Units with Microbiology Contextual Annotations (OBE 2569/2570)</text>
+  <g transform="translate(50, 1400)">
+    <rect width="1100" height="55" rx="16" fill="#0b1329" stroke="#1e293b" stroke-width="1.5"/>
+    <circle cx="35" cy="27" r="16" fill="#0284c7" opacity="0.25"/>
+    <text x="35" y="33" text-anchor="middle" fill="#38bdf8" font-size="14">🔬</text>
+    <text x="65" y="24" fill="#ffffff" font-size="12" font-weight="800">หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาจุลชีววิทยา • รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา (PHYSICS FOR MICROBIOLOGY)</text>
+    <text x="65" y="42" fill="#94a3b8" font-size="10.5">คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี • แผนภาพความสอดคล้องเชิงมาตรวิทยา (BIPM / NIST SP 1247 Coherent Metrology Standard)</text>
   </g>
 </svg>
