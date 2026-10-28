@@ -2514,17 +2514,34 @@ function selectSiBase(baseId) {
     }
 }
 
+let mathJaxQueue = Promise.resolve();
+function retypesetMathJax(container) {
+    if (!container) return;
+    if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
+        mathJaxQueue = mathJaxQueue.then(() => {
+            if (typeof MathJax.typesetClear === 'function') {
+                MathJax.typesetClear([container]);
+            }
+            return MathJax.typesetPromise([container]);
+        }).catch(err => {
+            console.warn('MathJax typesetting queue caught:', err);
+        });
+    } else if (window.MathJax && MathJax.startup && MathJax.startup.promise) {
+        MathJax.startup.promise.then(() => {
+            retypesetMathJax(container);
+        });
+    } else {
+        setTimeout(() => retypesetMathJax(container), 250);
+    }
+}
+
 function selectSiUnit(unitId) {
     selectedUnitId = unitId;
     const unit = SI_DERIVED_DATA.find(u => u.id === unitId) || SI_DERIVED_DATA[0];
 
     highlightUnitCard(unitId);
     renderInspectorCard(unit);
-
-    // Retypeset MathJax
-    if (window.MathJax && MathJax.typesetPromise) {
-        MathJax.typesetPromise([document.getElementById('si-inspector-card')]);
-    }
+    retypesetMathJax(document.getElementById('si-inspector-card'));
 }
 
 function highlightUnitCard(unitId) {
@@ -2650,59 +2667,68 @@ function renderInspectorCard(u) {
     }
 
     container.innerHTML = `
-        <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 border-b border-slate-800 pb-4">
+        <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 border-b border-slate-800 pb-5">
             <div class="flex items-start gap-4">
-                <div class="w-16 h-16 rounded-2xl flex items-center justify-center font-black text-3xl shadow-xl border shrink-0" style="background-color: ${u.color}20; color: ${u.color}; border-color: ${u.color}60;">
+                <div class="w-16 h-16 rounded-2xl flex items-center justify-center font-black text-3xl shadow-xl border shrink-0 backdrop-blur-sm transition-transform duration-300 hover:scale-105" style="background-color: ${u.color}20; color: ${u.color}; border-color: ${u.color}60;">
                     ${u.sym}
                 </div>
                 <div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <h4 class="text-xl font-black text-white">${u.name_th} (${u.name_en})</h4>
-                        <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-slate-800 text-cyan-300 border border-cyan-500/30">
-                            \[${u.sym} = ${u.formula_si}\]
-                        </span>
+                    <div class="flex items-center gap-2.5 flex-wrap">
+                        <h4 class="text-xl sm:text-2xl font-black text-white tracking-tight">${u.name_th} (${u.name_en})</h4>
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-500/40 shadow-inner">
+                            <i class="fa-solid fa-atom text-[10px] text-cyan-400"></i>
+                            <span>$\\mathrm{${u.sym}} = ${u.formula_si}$</span>
+                        </div>
                     </div>
-                    <div class="text-xs font-bold text-slate-300 mt-1 flex items-center gap-2 flex-wrap">
+                    <div class="text-xs font-bold text-slate-300 mt-1.5 flex items-center gap-2.5 flex-wrap">
                         <span><i class="fa-solid fa-tag text-emerald-400 mr-1"></i> ${u.qty_th}</span>
                         <span class="text-slate-600">•</span>
                         <span>หมวดหมู่: <strong style="color: ${u.color};">${u.domain_name}</strong></span>
                     </div>
-                    <div class="mt-2 flex items-center gap-1.5 flex-wrap">
+                    <div class="mt-2.5 flex items-center gap-1.5 flex-wrap">
+                        <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider mr-1">ประกอบจาก:</span>
                         ${parentBadges}
                     </div>
                 </div>
             </div>
-            <div class="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-right self-start">
-                <span class="text-[10px] text-slate-500 font-mono block">นิยามอนุพัทธ์สากล (Coherent Derivation)</span>
-                <span class="text-sm font-black font-mono text-white">\[1\\text{ ${u.sym}} = ${u.formula_coherent}\]</span>
+            <div class="px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-right self-start shadow-lg backdrop-blur-sm min-w-[200px]">
+                <span class="text-[10px] text-slate-400 font-mono font-semibold block uppercase tracking-wider mb-1">
+                    <i class="fa-solid fa-link text-indigo-400 mr-1"></i> นิยามอนุพัทธ์สากล (Coherent)
+                </span>
+                <div class="text-sm sm:text-base font-black font-mono text-emerald-300 overflow-x-auto">
+                    $1\\text{ ${u.sym}} = ${u.formula_coherent}$
+                </div>
             </div>
         </div>
 
         <!-- Details Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-5">
             <!-- Left: Microbiology Application Case Study -->
-            <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
+            <div class="p-4 sm:p-5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5">
                 <h5 class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
-                    <i class="fa-solid fa-microscope"></i> บทบาทและการประยุกต์ใช้ในห้องปฏิบัติการจุลชีววิทยา:
+                    <i class="fa-solid fa-microscope text-emerald-400"></i> บทบาทและการประยุกต์ใช้ในห้องปฏิบัติการจุลชีววิทยา:
                 </h5>
-                <p class="text-xs text-slate-300 leading-relaxed">
+                <p class="text-xs sm:text-[13px] text-slate-300 leading-relaxed">
                     ${u.micro_app}
                 </p>
-                <div class="p-2.5 rounded-lg bg-emerald-950/20 border border-emerald-900/40 text-[11px] text-emerald-200/90 flex items-start gap-2 mt-2">
-                    <i class="fa-solid fa-lightbulb text-emerald-400 mt-0.5"></i>
+                <div class="p-3 rounded-lg bg-emerald-950/25 border border-emerald-900/50 text-[11px] sm:text-xs text-emerald-200/90 flex items-start gap-2.5 mt-2">
+                    <i class="fa-solid fa-lightbulb text-amber-400 mt-0.5 text-xs shrink-0"></i>
                     <span><strong>ข้อควรจำทางมาตรวิทยา:</strong> ${u.lab_note}</span>
                 </div>
             </div>
 
             <!-- Right: Mathematical Formulation -->
-            <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
-                <h5 class="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
-                    <i class="fa-solid fa-square-root-variable"></i> สมการฟิสิกส์จุลทรรศน์ที่เกี่ยวข้อง:
-                </h5>
-                <div class="p-3 rounded-lg bg-slate-900 border border-slate-800/80 text-center font-mono text-xs text-slate-200 overflow-x-auto">
-                    \[${u.physics_eq}\]
+            <div class="p-4 sm:p-5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <h5 class="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-square-root-variable text-cyan-400"></i> สมการฟิสิกส์จุลทรรศน์ที่เกี่ยวข้อง:
+                    </h5>
+                    <span class="text-[10px] font-mono text-slate-500">Biophysical Formula</span>
                 </div>
-                <p class="text-[11px] text-slate-400">
+                <div class="p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-900 border border-cyan-500/30 text-center font-mono text-sm sm:text-base text-cyan-200 overflow-x-auto min-h-[62px] flex items-center justify-center shadow-inner">
+                    $$${u.physics_eq}$$
+                </div>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
                     ความเที่ยงตรงของการทดลองขึ้นอยู่กับการสอบเทียบเครื่องมือวัดตามหน่วยฐาน SI เพื่อลดความไม่แน่นอน ($U_{95}$) ให้ต่ำกว่าเกณฑ์ควบคุมคุณภาพ
                 </p>
             </div>
@@ -2814,7 +2840,13 @@ document.addEventListener('DOMContentLoaded', () => {
     initSiInteractiveMetrology();
 });
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    setTimeout(initSiInteractiveMetrology, 100);
+    setTimeout(initSiInteractiveMetrology, 50);
+}
+if (window.MathJax && MathJax.startup && MathJax.startup.promise) {
+    MathJax.startup.promise.then(() => {
+        const card = document.getElementById('si-inspector-card');
+        if (card) retypesetMathJax(card);
+    });
 }
 
 // Font Size Adjuster
