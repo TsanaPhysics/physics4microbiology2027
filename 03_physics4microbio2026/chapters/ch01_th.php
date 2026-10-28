@@ -33,6 +33,11 @@ include '../includes/header.php';
                 ระบบหน่วยและการวัดในโลกจุลทรรศน์
             </h1>
 
+            <!-- 3D Pixar Hero Cinematic Artwork -->
+            <div class="my-6 rounded-2xl overflow-hidden border border-cyan-500/30 shadow-2xl bg-slate-950/80 max-w-3xl mx-auto group">
+                <img src="../images/sec_3d/ch01_hero_banner_3d.jpg" alt="แบนเนอร์ 3 มิติ สไตล์พิกซาร์ บทที่ 1: ระบบหน่วยและการวัดในโลกจุลทรรศน์" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
+            </div>
+
             <p class="text-sm md:text-base text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
                 เอกสารคำสอนมาตรฐานฉบับ 3D AR ArUco &bull; รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา (สัปดาห์ที่ 1)
             </p>
@@ -998,13 +1003,23 @@ include '../includes/header.php';
                             <img src="../images/sec_3d/ch01_micropipette_3d.jpg" alt="ภาพที่ 1.5 ภาพตัดขวาง 3 มิติแสดงกลไกลูกสูบไมโครปิเปต 2 จังหวะ" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
                         </div>
                         <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
-                            <strong class="text-amber-400">ภาพที่ 1.5</strong>&ensp;แบบจำลอง 3 มิติเชิงเทคนิคแสดงภาพตัดขวางของไมโครปิเปต P1000: แสดงกลไกปุ่มกด 2 จังหวะ (First Stop สำหรับดูดสาร และ Second Stop สำหรับเป่าสารออกให้หมด), สปริงสอบเทียบ, แกนลูกสูบ, หน้าปัดดิจิทัล $1{,}000\text{ }\mu\text{L}$ และหยดของเหลวที่ปลายทิป
+                            <strong class="text-amber-400">ภาพที่ 1.6</strong>&ensp;แบบจำลอง 3 มิติเชิงเทคนิคแสดงภาพตัดขวางของไมโครปิเปต P1000: แสดงกลไกปุ่มกด 2 จังหวะ (First Stop สำหรับดูดสาร และ Second Stop สำหรับเป่าสารออกให้หมด), สปริงสอบเทียบ, แกนลูกสูบ, หน้าปัดดิจิทัล $1{,}000\text{ }\mu\text{L}$ และหยดของเหลวที่ปลายทิป
                         </figcaption>
                     </figure>
 
                     <p class="text-[15px] sm:text-base leading-relaxed">
                         ในการบันทึกผลการทดลองทางวิทยาศาสตร์ ตัวเลขทุกตัวที่เขียนลงในตารางบันทึกผลต้องสะท้อนความละเอียดของเครื่องมือวัดจริง ซึ่งเรียกว่า <strong>เลขนัยสำคัญ</strong> (<strong>Significant Figures</strong>) โดยประกอบด้วยตัวเลขที่อ่านได้แน่นอนจากขีดสเกลรวมกับตัวเลขประมาณค่าอีก 1 ตำแหน่ง นอกจากนี้ นักจุลชีววิทยาต้องแยกแยะความแตกต่างระหว่าง <strong>ความแม่น</strong> (<strong>Accuracy</strong> คือความใกล้เคียงกับค่าจริงมาตรฐาน) และ <strong>ความเที่ยง</strong> (<strong>Precision</strong> คือความสม่ำเสมอหรือการซ้ำรอยเดิมเมื่อวัดซ้ำหลายครั้ง)
                     </p>
+
+                    <!-- 3D Target: Accuracy vs Precision -->
+                    <figure class="tex-figure tex-figure-photo my-8" id="fig-accuracy-precision">
+                        <div class="rounded-2xl overflow-hidden border border-amber-500/30 shadow-2xl bg-slate-950 group">
+                            <img src="../images/sec_3d/ch01_accuracy_precision_3d.jpg" alt="เปรียบเทียบความแม่นยำและความเที่ยงตรง 3 มิติ (Accuracy vs Precision Targets)" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
+                        </div>
+                        <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+                            <strong class="text-amber-400">ภาพที่ 1.5</strong>&ensp;แบบจำลอง 3 มิติเปรียบเทียบความแตกต่างระหว่างความแม่น (Accuracy) และความเที่ยง (Precision) ผ่านเป้ายิง 4 รูปแบบ: (1) แม่นสูง-เที่ยงสูง เกาะกลุ่มตรงกลางเป้า (2) แม่นต่ำ-เที่ยงสูง เกาะกลุ่มแน่นแต่นอกเป้า (3) แม่นสูง-เที่ยงต่ำ กระจายรอบจุดกึ่งกลาง (4) แม่นต่ำ-เที่ยงต่ำ กระจายไร้ทิศทาง
+                        </figcaption>
+                    </figure>
 
                     <p class="text-[15px] sm:text-base leading-relaxed">
                         หากเราต้องการตรวจสอบว่าไมโครปิเปตในห้องปฏิบัติการยังมีความแม่นยำหรือไม่ เราสามารถใช้วิธีชั่งมวลของน้ำกลั่นที่ดูดออกมา เนื่องจากน้ำบริสุทธิ์ที่อุณหภูมิห้องมีความหนาแน่นประมาณ $1\text{ g/mL}$ หรือกล่าวได้ว่า <strong>น้ำกลั่นปริมาตร $1{,}000\text{ }\mu\text{L}$ ($1\text{ mL}$) จะมีมวลเท่ากับ $1.0000\text{ g}$ และน้ำกลั่น $100\text{ }\mu\text{L}$ จะมีมวลเท่ากับ $0.1000\text{ g}$</strong> โดยคำนวณเปอร์เซ็นต์ความคลาดเคลื่อนสัมพัทธ์ได้จากสมการที่ (1.1)
@@ -1040,13 +1055,13 @@ include '../includes/header.php';
                 </div>
 
                 <div class="tex-article leading-relaxed space-y-6 text-slate-200">
-                    <!-- Figure 1.6: Lab Materials Photo -->
-                    <figure class="tex-figure tex-figure-photo my-8" id="fig-1.6">
-                        <div class="rounded-2xl overflow-hidden border border-teal-500/30 shadow-2xl bg-slate-950">
-                            <img src="../images/sec_3d/ch01_s4.jpg" alt="ภาพที่ 1.6 ชุดอุปกรณ์ปฏิบัติการที่ 1" class="w-full h-auto object-cover" loading="lazy">
+                    <!-- Figure 1.7: Lab Materials 3D Pixar Render -->
+                    <figure class="tex-figure tex-figure-photo my-8" id="fig-1.7">
+                        <div class="rounded-2xl overflow-hidden border border-teal-500/30 shadow-2xl bg-slate-950 group">
+                            <img src="../images/sec_3d/ch01_lab_apparatus_3d.jpg" alt="ภาพที่ 1.7 ชุดอุปกรณ์ปฏิบัติการที่ 1 แบบจำลอง 3 มิติ" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
                         </div>
                         <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
-                            <strong class="text-teal-400">ภาพที่ 1.6</strong>&ensp;ชุดอุปกรณ์ปฏิบัติการที่ 1: เวอร์เนียร์คาลิปเปอร์วัดมิติจานเพาะเชื้อ, ไมโครมิเตอร์วัดความหนาสไลด์แก้ว, ไมโครปิเปต P1000 และเครื่องชั่งดิจิทัลทศนิยม 4 ตำแหน่ง
+                            <strong class="text-teal-400">ภาพที่ 1.7</strong>&ensp;แบบจำลอง 3 มิติชุดอุปกรณ์ปฏิบัติการที่ 1 (3D Pixar Style): เวอร์เนียร์คาลิปเปอร์วัดมิติจานเพาะเชื้อแก้ว, ไมโครมิเตอร์วัดความหนาแผ่นสไลด์, ไมโครปิเปต P1000 พร้อมทิปสีฟ้า และเครื่องชั่งดิจิทัลวิเคราะห์ทศนิยม 4 ตำแหน่ง ($0.0001\text{ g}$)
                         </figcaption>
                     </figure>
 

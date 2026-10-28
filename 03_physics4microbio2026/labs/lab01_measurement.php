@@ -128,6 +128,32 @@ include '../includes/header.php';
                     </p>
                 </div>
             </div>
+
+            <!-- 3D Card 5: Accuracy vs Precision -->
+            <div class="rounded-xl overflow-hidden bg-slate-950/80 border border-slate-800 hover:border-rose-500/40 transition-all flex flex-col shadow-lg">
+                <div class="aspect-video overflow-hidden">
+                    <img src="../images/sec_3d/ch01_accuracy_precision_3d.jpg" alt="เปรียบเทียบความแม่นและความเที่ยง 3 มิติ" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy">
+                </div>
+                <div class="p-3.5 space-y-1">
+                    <strong class="text-xs sm:text-sm text-rose-300 block font-bold">🎯 ความแม่น (Accuracy) เทียบกับ ความเที่ยง (Precision)</strong>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        เปรียบเทียบ 4 รูปแบบการกระจายตัวของค่าการวัดสำหรับการประเมินทักษะการดูดจ่ายสารด้วยไมโครปิเปต
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3D Card 6: Lab 01 Complete Apparatus Set -->
+            <div class="rounded-xl overflow-hidden bg-slate-950/80 border border-slate-800 hover:border-teal-500/40 transition-all flex flex-col shadow-lg">
+                <div class="aspect-video overflow-hidden">
+                    <img src="../images/sec_3d/ch01_lab_apparatus_3d.jpg" alt="ชุดอุปกรณ์ปฏิบัติการที่ 1 ฉบับ 3 มิติ" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy">
+                </div>
+                <div class="p-3.5 space-y-1">
+                    <strong class="text-xs sm:text-sm text-teal-300 block font-bold">🧰 ชุดเครื่องมือและอุปกรณ์ประจำโต๊ะปฏิบัติการที่ 1</strong>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        จำลอง 3 มิติของเวอร์เนียร์คาลิปเปอร์ ไมโครมิเตอร์ จานเพาะเชื้อ สไลด์แก้ว ไมโครปิเปต และเครื่องชั่งดิจิทัล
+                    </p>
+                </div>
+            </div>
         </div>
     </section>
 
