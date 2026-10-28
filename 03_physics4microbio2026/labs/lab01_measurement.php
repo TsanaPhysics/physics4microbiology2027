@@ -64,6 +64,73 @@ include '../includes/header.php';
     </div>
 
     
+    <!-- Section 1: แกลเลอรีภาพจำลอง 3 มิติเชิงเทคนิค (3D Metrology Visuals) -->
+    <section class="bg-slate-900/90 backdrop-blur-md rounded-2xl border border-emerald-500/30 p-5 sm:p-6 mb-8 shadow-xl">
+        <div class="flex items-center justify-between flex-wrap gap-2 mb-4 pb-3 border-b border-slate-800">
+            <div>
+                <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-cube text-emerald-400"></i> 1. ภาพจำลอง 3 มิติเชิงเทคนิคประจำปฏิบัติการที่ 1
+                </h2>
+                <p class="text-xs text-slate-400 font-mono">โครงสร้างเครื่องมือวัดละเอียด กลไกลูกสูบไมโครปิเปต และเทคนิคการเจือจางเชื้อ 10 เท่า</p>
+            </div>
+            <span class="text-xs font-mono text-emerald-300 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/30">3D Photorealistic Models</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- 3D Card 1: Micropipette Mechanism -->
+            <div class="rounded-xl overflow-hidden bg-slate-950/80 border border-slate-800 hover:border-amber-500/40 transition-all flex flex-col shadow-lg">
+                <div class="aspect-video overflow-hidden">
+                    <img src="../images/sec_3d/ch01_micropipette_3d.jpg" alt="กลไกภาพตัดขวาง 3 มิติ ไมโครปิเปต P1000" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy">
+                </div>
+                <div class="p-3.5 space-y-1">
+                    <strong class="text-xs sm:text-sm text-amber-300 block font-bold">🔬 กลไกลูกสูบ 2 จังหวะของไมโครปิเปต P1000</strong>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        แสดงภาพตัดขวาง First Stop (จังหวะดูดสาร) และ Second Stop (จังหวะเป่าสารออกหมดจด) พร้อมแกนสปริงสอบเทียบความเที่ยงตรง
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3D Card 2: Serial Dilution -->
+            <div class="rounded-xl overflow-hidden bg-slate-950/80 border border-slate-800 hover:border-emerald-500/40 transition-all flex flex-col shadow-lg">
+                <div class="aspect-video overflow-hidden">
+                    <img src="../images/sec_3d/ch01_serial_dilution_3d.jpg" alt="การเจือจางเชื้อแบบลำดับส่วน 10 เท่า 3 มิติ" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy">
+                </div>
+                <div class="p-3.5 space-y-1">
+                    <strong class="text-xs sm:text-sm text-emerald-300 block font-bold">🧪 การเจือจางแบบลำดับส่วน 10 เท่า (10-Fold Serial Dilution)</strong>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        ทักษะการใช้ไมโครปิเปตดูดสาร $100\text{ }\mu\text{L}$ ถ่ายทอดสารละลายเชื้อ 5 หลอด ($10^{-1}$ ถึง $10^{-5}$) และการนับโคโลนี CFU
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3D Card 3: Scale Comparison -->
+            <div class="rounded-xl overflow-hidden bg-slate-950/80 border border-slate-800 hover:border-cyan-500/40 transition-all flex flex-col shadow-lg">
+                <div class="aspect-video overflow-hidden">
+                    <img src="../images/sec_3d/ch01_scale_3d.jpg" alt="สเกลขนาดในโลกจุลชีววิทยา 3 มิติ" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy">
+                </div>
+                <div class="p-3.5 space-y-1">
+                    <strong class="text-xs sm:text-sm text-cyan-300 block font-bold">📏 สเกลขนาดในโลกจุลชีววิทยาและการวัดละเอียด</strong>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        เปรียบเทียบสเกลโคโลนี ($\text{mm}$), เซลล์แบคทีเรีย ($\mu\text{m}$), และอนุภาคไวรัส/DNA ($\text{nm}$) สำหรับการเลือกเครื่องมือวัด
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3D Card 4: Kibble Balance -->
+            <div class="rounded-xl overflow-hidden bg-slate-950/80 border border-slate-800 hover:border-purple-500/40 transition-all flex flex-col shadow-lg">
+                <div class="aspect-video overflow-hidden">
+                    <img src="../images/sec_3d/ch01_kibble_balance_3d.jpg" alt="เครื่องชั่งคิบบิล Kibble Balance 3 มิติ" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy">
+                </div>
+                <div class="p-3.5 space-y-1">
+                    <strong class="text-xs sm:text-sm text-purple-300 block font-bold">⚖️ มาตรฐานมวลควอนตัม เครื่องชั่งคิบบิล (Kibble Balance)</strong>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        ต้นแบบการนิยาม 1 กิโลกรัมผ่านค่าคงตัวของพลังค์ ($h$) เชื่อมโยงสู่การสอบเทียบเครื่องชั่งดิจิทัล 4 ตำแหน่งในห้องแล็บ
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Section 2: ห้องปฏิบัติการ 3D เสมือนจริง (Interactive Simulator Viewport with Multi-Instrument Switcher) -->
     <section class="bg-slate-900/90 backdrop-blur-md rounded-2xl border border-sky-500/40 p-4 sm:p-6 mb-8 shadow-2xl">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
