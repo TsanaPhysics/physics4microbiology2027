@@ -1958,18 +1958,18 @@ include '../includes/header.php';
                     </figure>
 
                     <p class="text-[15px] sm:text-base leading-relaxed">
-                        หากเราต้องการตรวจสอบว่าไมโครปิเปตในห้องปฏิบัติการยังมีความแม่นยำหรือไม่ เราสามารถใช้วิธีชั่งมวลของน้ำกลั่นที่ดูดออกมา เนื่องจากน้ำบริสุทธิ์ที่อุณหภูมิห้องมีความหนาแน่นประมาณ $1\text{ g/mL}$ หรือกล่าวได้ว่า <strong>น้ำกลั่นปริมาตร $1{,}000\text{ }\mu\text{L}$ ($1\text{ mL}$) จะมีมวลเท่ากับ $1.0000\text{ g}$ และน้ำกลั่น $100\text{ }\mu\text{L}$ จะมีมวลเท่ากับ $0.1000\text{ g}$</strong> โดยคำนวณเปอร์เซ็นต์ความคลาดเคลื่อนสัมพัทธ์ได้จากสมการที่ (1.1)
+                        หากเราต้องการตรวจสอบว่าไมโครปิเปตในห้องปฏิบัติการยังมีความแม่นยำหรือไม่ เราสามารถใช้วิธีชั่งมวลของน้ำกลั่นที่ดูดออกมา เนื่องจากน้ำบริสุทธิ์ที่อุณหภูมิห้องมีความหนาแน่นประมาณ $1\text{ g/mL}$ หรือกล่าวได้ว่า <strong>น้ำกลั่นปริมาตร $1{,}000\text{ }\mu\text{L}$ ($1\text{ mL}$) จะมีมวลเท่ากับ $1.0000\text{ g}$ และน้ำกลั่น $100\text{ }\mu\text{L}$ จะมีมวลเท่ากับ $0.1000\text{ g}$</strong> โดยคำนวณเปอร์เซ็นต์ความคลาดเคลื่อนสัมพัทธ์ได้ดังนี้
                     </p>
 
                     <!-- Formula Highlight Card: Responsive & Overflow-Safe -->
                     <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border border-cyan-500/30 text-center shadow-xl space-y-3">
                         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-xs font-mono text-cyan-300 font-bold uppercase tracking-wider">
-                            <i class="fa-solid fa-square-root-variable text-cyan-400"></i> สมการที่ (1.1) เปอร์เซ็นต์ความคลาดเคลื่อนสัมพัทธ์ (Relative Error)
+                            <i class="fa-solid fa-square-root-variable text-cyan-400"></i> เปอร์เซ็นต์ความคลาดเคลื่อนสัมพัทธ์ (Relative Error)
                         </div>
                         
                         <!-- Responsive Equation Box with overflow-x-auto -->
                         <div class="overflow-x-auto py-3 px-2 scrollbar-thin text-base sm:text-lg md:text-xl text-amber-300 font-mono">
-                            $$\% \text{Relative Error} = \frac{\left| x_{\text{measured}} - x_{\text{true}} \right|}{x_{\text{true}}} \times 100\% \tag{1.1}$$
+                            $$\% \text{Relative Error} = \frac{\left| x_{\text{measured}} - x_{\text{true}} \right|}{x_{\text{true}}} \times 100\%$$
                         </div>
 
                         <!-- Thai Formula & Variable Definitions Sub-Card -->
