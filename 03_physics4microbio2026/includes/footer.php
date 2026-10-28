@@ -47,12 +47,12 @@
             <ul class="space-y-3">
                 <li><a href="<?php echo $basePath ?? ''; ?>index.php" class="text-gray-400 hover:text-orange-500 flex items-center transition-colors font-light">
                     <i class="fas fa-chevron-right text-xs text-orange-500/60 mr-2"></i> หน้าแรก (Home)</a></li>
-                <li><a href="#" class="text-gray-400 hover:text-orange-500 flex items-center transition-colors font-light">
-                    <i class="fas fa-chevron-right text-xs text-orange-500/60 mr-2"></i> เอกสารคำสอน</a></li>
-                <li><a href="#" class="text-gray-400 hover:text-orange-500 flex items-center transition-colors font-light">
-                    <i class="fas fa-chevron-right text-xs text-orange-500/60 mr-2"></i> คลังความรู้ AI</a></li>
-                <li><a href="xrlab/index.php" class="text-gray-400 hover:text-orange-500 flex items-center transition-colors font-light">
-                    <i class="fas fa-flask text-xs text-orange-500/60 mr-2"></i> XR Lab Simulator</a></li>
+                <li><a href="<?php echo $basePath ?? ''; ?>chapters/ch01_th.php" class="text-gray-400 hover:text-orange-500 flex items-center transition-colors font-light">
+                    <i class="fas fa-chevron-right text-xs text-orange-500/60 mr-2"></i> 📖 12 บทเรียนฟิสิกส์</a></li>
+                <li><a href="<?php echo $basePath ?? ''; ?>../virtual_lab/index.html" class="text-gray-400 hover:text-orange-500 flex items-center transition-colors font-light">
+                    <i class="fas fa-flask text-xs text-orange-500/60 mr-2"></i> 🥽 3D Virtual Lab Hub</a></li>
+                <li><a href="<?php echo $basePath ?? ''; ?>webar/ar_aruco_textbook.html?ar=1" target="_blank" class="text-gray-400 hover:text-orange-500 flex items-center transition-colors font-light">
+                    <i class="fas fa-camera text-xs text-orange-500/60 mr-2"></i> 📱 3D WebAR ArUco</a></li>
             </ul>
         </div>
 
@@ -88,13 +88,13 @@
             <span class="text-[10px] font-bold">Home</span>
             <div class="absolute -bottom-3 w-1/2 h-1 bg-orange-500 rounded-t-full shadow-[0_0_10px_#f97316]"></div>
         </a>
-        <a href="#" class="flex flex-col items-center text-gray-400 hover:text-orange-500 transition-colors">
+        <a href="<?php echo $basePath ?? ''; ?>chapters/ch01_th.php" class="flex flex-col items-center text-gray-400 hover:text-orange-500 transition-colors">
             <i class="fas fa-book-open text-xl mb-1"></i>
             <span class="text-[10px] font-medium">Lessons</span>
         </a>
-        <a href="#" class="flex flex-col items-center text-gray-400 hover:text-orange-500 transition-colors">
+        <a href="<?php echo $basePath ?? ''; ?>../virtual_lab/index.html" class="flex flex-col items-center text-gray-400 hover:text-orange-500 transition-colors">
             <i class="fas fa-flask text-xl mb-1"></i>
-            <span class="text-[10px] font-medium">Lab AI</span>
+            <span class="text-[10px] font-medium">Virtual Lab</span>
         </a>
         <a href="#" class="flex flex-col items-center text-gray-400 hover:text-orange-500 transition-colors">
             <i class="fas fa-user-graduate text-xl mb-1"></i>
