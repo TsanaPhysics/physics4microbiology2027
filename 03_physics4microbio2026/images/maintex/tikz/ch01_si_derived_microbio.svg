@@ -47,9 +47,9 @@
   <rect x="0" y="0" width="1100" height="100" fill="#0f172a" fill-opacity="0.9"/>
   <rect x="0" y="98" width="1100" height="2" fill="#38bdf8" opacity="0.8"/>
 
-  <!-- Title & Logo -->
+  <!-- Title &amp; Logo -->
   <g transform="translate(50, 30)">
-    <text fill="#38bdf8" font-size="12" font-weight="700" letter-spacing="2.5" font-family="'JetBrains Mono',monospace">PHYSICS FOR MICROBIOLOGY &bull; COHERENT METROLOGY SYSTEM</text>
+    <text fill="#38bdf8" font-size="12" font-weight="700" letter-spacing="2.5" font-family="'JetBrains Mono',monospace">PHYSICS FOR MICROBIOLOGY • COHERENT METROLOGY SYSTEM</text>
     <text y="34" fill="#ffffff" font-size="28" font-weight="900" letter-spacing="1">SI BASE UNITS &amp; DERIVED UNITS IN MICROBIOLOGY</text>
     <text y="54" fill="#94a3b8" font-size="12">แผนผังเครือข่าย 7 หน่วยฐานสากล สู่หน่วยอนุพัทธ์ในห้องปฏิบัติการจุลชีววิทยา (อิงมาตรฐาน NIST SP 1247)</text>
   </g>
@@ -60,10 +60,10 @@
     <text x="15" y="20" fill="#e2e8f0" font-size="11" font-weight="700">สัญลักษณ์สายสัมพันธ์ (Relationships)</text>
     <!-- Solid: Multiplication -->
     <line x1="20" y1="38" x2="65" y2="38" stroke="#38bdf8" stroke-width="2.5"/>
-    <text x="75" y="42" fill="#cbd5e1" font-size="10">เส้นทึบ: การคูณ (&times;) เช่น N&middot;m</text>
+    <text x="75" y="42" fill="#cbd5e1" font-size="10">เส้นทึบ: การคูณ (×) เช่น N·m</text>
     <!-- Dashed: Division -->
     <line x1="20" y1="56" x2="65" y2="56" stroke="#f43f5e" stroke-width="2" stroke-dasharray="4,4"/>
-    <text x="75" y="60" fill="#cbd5e1" font-size="10">เส้นประ: การหาร (&divide;) เช่น N/m&sup2;</text>
+    <text x="75" y="60" fill="#cbd5e1" font-size="10">เส้นประ: การหาร (÷) เช่น N/m²</text>
   </g>
 
 
@@ -78,7 +78,7 @@
     <g transform="translate(110, 222)">
       <rect x="-56" y="0" width="112" height="32" rx="8" fill="#0f172a" stroke="#eab308" stroke-width="1.2" opacity="0.95"/>
       <text x="0" y="13" text-anchor="middle" fill="#eab308" font-size="8" font-weight="800">เวลา (Time)</text>
-      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">รอบปั่นเหวี่ยง & เวลาแ...</text>
+      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">รอบปั่นเหวี่ยง &amp; เวลาแ...</text>
     </g>
 
 
@@ -93,7 +93,7 @@
     <g transform="translate(245, 222)">
       <rect x="-56" y="0" width="112" height="32" rx="8" fill="#0f172a" stroke="#f97316" stroke-width="1.2" opacity="0.95"/>
       <text x="0" y="13" text-anchor="middle" fill="#f97316" font-size="8" font-weight="800">ความยาว (Length)</text>
-      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">ขนาดเซลล์ (1 &mu;m) & ...</text>
+      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">ขนาดเซลล์ (1 µm) &amp; ...</text>
     </g>
 
 
@@ -108,7 +108,7 @@
     <g transform="translate(380, 222)">
       <rect x="-56" y="0" width="112" height="32" rx="8" fill="#0f172a" stroke="#ef4444" stroke-width="1.2" opacity="0.95"/>
       <text x="0" y="13" text-anchor="middle" fill="#ef4444" font-size="8" font-weight="800">มวล (Mass)</text>
-      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">ชั่งสารเคมี & สอบเทียบ...</text>
+      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">ชั่งสารเคมี &amp; สอบเทียบ...</text>
     </g>
 
 
@@ -138,7 +138,7 @@
     <g transform="translate(650, 222)">
       <rect x="-56" y="0" width="112" height="32" rx="8" fill="#0f172a" stroke="#3b82f6" stroke-width="1.2" opacity="0.95"/>
       <text x="0" y="13" text-anchor="middle" fill="#3b82f6" font-size="8" font-weight="800">อุณหภูมิ (Temp)</text>
-      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">Incubator 37&deg;C & A...</text>
+      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">Incubator 37°C &amp; A...</text>
     </g>
 
 
@@ -153,7 +153,7 @@
     <g transform="translate(785, 222)">
       <rect x="-56" y="0" width="112" height="32" rx="8" fill="#0f172a" stroke="#d946ef" stroke-width="1.2" opacity="0.95"/>
       <text x="0" y="13" text-anchor="middle" fill="#d946ef" font-size="8" font-weight="800">ปริมาณสาร (Amount)</text>
-      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">ความเข้มข้นโมลาร์ M & ...</text>
+      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">ความเข้มข้นโมลาร์ M &amp; ...</text>
     </g>
 
 
@@ -168,7 +168,7 @@
     <g transform="translate(920, 222)">
       <rect x="-56" y="0" width="112" height="32" rx="8" fill="#0f172a" stroke="#8b5cf6" stroke-width="1.2" opacity="0.95"/>
       <text x="0" y="13" text-anchor="middle" fill="#8b5cf6" font-size="8" font-weight="800">ความเข้มแสง (Light)</text>
-      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">หลอดส่องกล้อง & หลอด U...</text>
+      <text x="0" y="25" text-anchor="middle" fill="#94a3b8" font-size="7.5" font-weight="600">หลอดส่องกล้อง &amp; หลอด U...</text>
     </g>
 
   <!-- Interconnecting Relationship Arrows -->
@@ -230,7 +230,7 @@
       
       <!-- Microbiology Application Tag -->
       <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 แรงหนืด Stokes Drag & ทอร์</text>
+      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 แรงหนืด Stokes Drag &amp; ทอร์</text>
       <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">กแส้แฟลกเจลลัม</text>
     </g>
 
@@ -250,12 +250,12 @@
       
       <!-- Quantity Category Pill (Above/Below) -->
       <rect x="-65" y="44" width="130" height="18" rx="6" fill="#0b1120" stroke="#f97316" stroke-width="1" opacity="0.95"/>
-      <text y="56" text-anchor="middle" fill="#f97316" font-size="7.5" font-weight="800">ENERGY / WORK (งาน & พลังงาน)</text>
+      <text y="56" text-anchor="middle" fill="#f97316" font-size="7.5" font-weight="800">ENERGY / WORK (งาน &amp; พลังงาน)</text>
       
       <!-- Microbiology Application Tag -->
       <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
       <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 พลังงาน ATP Hydrolysis (30</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">.5 kJ) & งานปั่นเซลล์</text>
+      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">.5 kJ) &amp; งานปั่นเซลล์</text>
     </g>
 
 
@@ -302,7 +302,7 @@
       
       <!-- Microbiology Application Tag -->
       <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 ตู้อบ Incubator 37°C & นึ่</text>
+      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 ตู้อบ Incubator 37°C &amp; นึ่</text>
       <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">ง Autoclave 121°C</text>
     </g>
 
@@ -375,7 +375,7 @@
       <!-- Microbiology Application Tag -->
       <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
       <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 กำลังความร้อนตู้อบ Incubat</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">or & เครื่องเขย่า Shaker</text>
+      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">or &amp; เครื่องเขย่า Shaker</text>
     </g>
 
 
@@ -398,7 +398,7 @@
       
       <!-- Microbiology Application Tag -->
       <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
-      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 ความดัน Autoclave 15 psi &</text>
+      <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 ความดัน Autoclave 15 psi &amp;</text>
       <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7"> Osmotic Pressure</text>
     </g>
 
@@ -423,7 +423,7 @@
       <!-- Microbiology Application Tag -->
       <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
       <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 เจลอิเล็กโทรโฟรีซิส DNA 10</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">0V & ศักย์เยื่อเซลล์</text>
+      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">0V &amp; ศักย์เยื่อเซลล์</text>
     </g>
 
 
@@ -519,7 +519,7 @@
       <!-- Microbiology Application Tag -->
       <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
       <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 รอบปั่นเหวี่ยง Centrifuge </text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">RPM & แฟลกเจลลา 300Hz</text>
+      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">RPM &amp; แฟลกเจลลา 300Hz</text>
     </g>
 
 
@@ -711,7 +711,7 @@
       <!-- Microbiology Application Tag -->
       <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
       <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 ความนำไฟฟ้าอาหารเลี้ยงเชื้</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">อ & ความเค็มสารละลาย</text>
+      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">อ &amp; ความเค็มสารละลาย</text>
     </g>
 
 
@@ -735,11 +735,11 @@
       <!-- Microbiology Application Tag -->
       <rect x="-85" y="65" width="170" height="24" rx="7" fill="#020617" stroke="#334155" stroke-width="0.8"/>
       <text y="77" text-anchor="middle" fill="#38bdf8" font-size="7.5" font-weight="700">🔬 มุมการหมุนของโรเตอร์เครื่อ</text>
-      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">งปั่น & แฟลกเจลลัม</text>
+      <text y="86" text-anchor="middle" fill="#cbd5e1" font-size="7">งปั่น &amp; แฟลกเจลลัม</text>
     </g>
 
 
-  <!-- Bottom University & Course Attribution Footer -->
+  <!-- Bottom University &amp; Course Attribution Footer -->
   <g transform="translate(50, 1290)">
     <rect width="1000" height="90" rx="18" fill="#0f172a" stroke="#1e293b" stroke-width="2" filter="url(#glowCard)"/>
     
@@ -748,8 +748,8 @@
     <text x="50" y="52" text-anchor="middle" fill="#38bdf8" font-size="20">🔬</text>
     
     <!-- Text -->
-    <text x="95" y="34" fill="#f8fafc" font-size="14" font-weight="800">หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาจุลชีววิทยา &bull; รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา</text>
-    <text x="95" y="54" fill="#94a3b8" font-size="11">คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี (RBRU) &bull; แผนภาพความสอดคล้องเชิงมาตรวิทยา (BIPM / NIST SP 1247 Aligned)</text>
-    <text x="95" y="72" fill="#38bdf8" font-size="10" font-family="'JetBrains Mono',monospace">&bull; 7 Base Units &rarr; 22 Derived Units with Microbiology Contextual Annotations (OBE 2569/2570)</text>
+    <text x="95" y="34" fill="#f8fafc" font-size="14" font-weight="800">หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาจุลชีววิทยา • รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา</text>
+    <text x="95" y="54" fill="#94a3b8" font-size="11">คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี (RBRU) • แผนภาพความสอดคล้องเชิงมาตรวิทยา (BIPM / NIST SP 1247 Aligned)</text>
+    <text x="95" y="72" fill="#38bdf8" font-size="10" font-family="'JetBrains Mono',monospace">• 7 Base Units → 22 Derived Units with Microbiology Contextual Annotations (OBE 2569/2570)</text>
   </g>
 </svg>

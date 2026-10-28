@@ -20,7 +20,7 @@
   <!-- Top Title Header -->
   <g transform="translate(500, 60)">
     <text text-anchor="middle" fill="#38bdf8" font-size="13" font-weight="700" letter-spacing="3" font-family="'JetBrains Mono', monospace">INTERNATIONAL SYSTEM OF UNITS (BIPM 2019)</text>
-    <text y="32" text-anchor="middle" fill="#ffffff" font-size="32" font-weight="800" letter-spacing="1">SI Base Units &bull; 7 หน่วยฐานสากล</text>
+    <text y="32" text-anchor="middle" fill="#ffffff" font-size="32" font-weight="800" letter-spacing="1">SI Base Units • 7 หน่วยฐานสากล</text>
     <text y="56" text-anchor="middle" fill="#94a3b8" font-size="14">รากฐานการวัดทางฟิสิกส์สำหรับการสอบเทียบและการทดลองในห้องปฏิบัติการจุลชีววิทยา</text>
   </g>
 
@@ -117,7 +117,7 @@
         </g>
         <!-- Badge label -->
         <rect x="-48" y="48" width="96" height="24" rx="8" fill="#0f172a" stroke="#ef4444" stroke-width="1.2"/>
-        <text y="64" text-anchor="middle" fill="#fca5a5" font-size="10" font-weight="700">มวล &bull; Mass</text>
+        <text y="64" text-anchor="middle" fill="#fca5a5" font-size="10" font-weight="700">มวล • Mass</text>
       </g>
     
   <line x1="715.79" y1="347.92" x2="753.31" y2="317.99" stroke="#0284c7" stroke-width="2" stroke-dasharray="4,4" opacity="0.8"/>
@@ -138,7 +138,7 @@
         <line x1="29" y1="-13" x2="31" y2="-17" stroke="#0284c7" stroke-width="1.5"/>
         <!-- Badge label -->
         <rect x="-52" y="48" width="104" height="24" rx="8" fill="#0f172a" stroke="#0284c7" stroke-width="1.2"/>
-        <text y="64" text-anchor="middle" fill="#bae6fd" font-size="10" font-weight="700">ความยาว &bull; Length</text>
+        <text y="64" text-anchor="middle" fill="#bae6fd" font-size="10" font-weight="700">ความยาว • Length</text>
       </g>
     
   <line x1="769.08" y1="581.42" x2="815.88" y2="592.10" stroke="#22c55e" stroke-width="2" stroke-dasharray="4,4" opacity="0.8"/>
@@ -162,7 +162,7 @@
         <circle cx="-17" cy="2" r="1.5" fill="#4ade80"/>
         <!-- Badge label -->
         <rect x="-48" y="48" width="96" height="24" rx="8" fill="#0f172a" stroke="#22c55e" stroke-width="1.2"/>
-        <text y="64" text-anchor="middle" fill="#bbf7d0" font-size="10" font-weight="700">เวลา &bull; Time</text>
+        <text y="64" text-anchor="middle" fill="#bbf7d0" font-size="10" font-weight="700">เวลา • Time</text>
       </g>
     
   <line x1="619.75" y1="768.67" x2="640.58" y2="811.91" stroke="#eab308" stroke-width="2" stroke-dasharray="4,4" opacity="0.8"/>
@@ -185,7 +185,7 @@
         <circle cx="0" cy="17" r="1.5" fill="#ffffff"/>
         <!-- Badge label -->
         <rect x="-56" y="48" width="112" height="24" rx="8" fill="#0f172a" stroke="#eab308" stroke-width="1.2"/>
-        <text y="64" text-anchor="middle" fill="#fef08a" font-size="10" font-weight="700">กระแสไฟฟ้า &bull; Current</text>
+        <text y="64" text-anchor="middle" fill="#fef08a" font-size="10" font-weight="700">กระแสไฟฟ้า • Current</text>
       </g>
     
   <line x1="380.25" y1="768.67" x2="359.42" y2="811.91" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,4" opacity="0.8"/>
@@ -208,7 +208,7 @@
         <line x1="8" y1="-2" x2="12" y2="-2" stroke="#60a5fa" stroke-width="1.5"/>
         <!-- Badge label -->
         <rect x="-50" y="48" width="100" height="24" rx="8" fill="#0f172a" stroke="#2563eb" stroke-width="1.2"/>
-        <text y="64" text-anchor="middle" fill="#bfdbfe" font-size="10" font-weight="700">อุณหภูมิ &bull; Temp</text>
+        <text y="64" text-anchor="middle" fill="#bfdbfe" font-size="10" font-weight="700">อุณหภูมิ • Temp</text>
       </g>
     
   <line x1="230.92" y1="581.42" x2="184.12" y2="592.10" stroke="#d946ef" stroke-width="2" stroke-dasharray="4,4" opacity="0.8"/>
@@ -232,7 +232,7 @@
         <circle cx="-22" cy="8" r="5" fill="#f472b6" stroke="#ffffff" stroke-width="1.5"/>
         <!-- Badge label -->
         <rect x="-56" y="48" width="112" height="24" rx="8" fill="#0f172a" stroke="#d946ef" stroke-width="1.2"/>
-        <text y="64" text-anchor="middle" fill="#f5d0fe" font-size="10" font-weight="700">ปริมาณสาร &bull; Mole</text>
+        <text y="64" text-anchor="middle" fill="#f5d0fe" font-size="10" font-weight="700">ปริมาณสาร • Mole</text>
       </g>
     
   <line x1="284.21" y1="347.92" x2="246.69" y2="317.99" stroke="#f97316" stroke-width="2" stroke-dasharray="4,4" opacity="0.8"/>
@@ -256,7 +256,7 @@
         <rect x="-6" y="21" width="12" height="4" rx="1.5" fill="#475569"/>
         <!-- Badge label -->
         <rect x="-56" y="48" width="112" height="24" rx="8" fill="#0f172a" stroke="#f97316" stroke-width="1.2"/>
-        <text y="64" text-anchor="middle" fill="#fed7aa" font-size="10" font-weight="700">ความเข้มแสง &bull; Light</text>
+        <text y="64" text-anchor="middle" fill="#fed7aa" font-size="10" font-weight="700">ความเข้มแสง • Light</text>
       </g>
     
   <!-- Bottom Metrology Summary Panel -->
