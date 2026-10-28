@@ -416,7 +416,7 @@ include '../includes/header.php';
                     <!-- SVG Diagram 1: SI Network -->
                     <figure class="tex-figure tex-figure-diagram my-8" id="fig-si-network">
                         <div class="rounded-2xl overflow-hidden border border-slate-700/80 shadow-2xl bg-slate-950 p-3 sm:p-4">
-                            <img src="../images/maintex/tikz/ch01_si_network.svg" alt="แผนผัง 7 ค่าคงตัวพื้นฐานกับ 7 หน่วยฐานเอสไอ" class="w-full h-auto" loading="lazy">
+                            <img src="../images/maintex/tikz/ch01_si_network.svg" alt="ภาพที่ 1.3 แผนภาพวงล้อ 7 หน่วยฐานสากลเอสไอ (The 7 SI Base Units Wheel)" class="w-full h-auto" loading="lazy">
                         </div>
                         <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
                             <strong class="text-cyan-400">ภาพที่ 1.3</strong>&ensp;แผนภาพวงล้อ 7 หน่วยฐานสากลเอสไอ (The 7 SI Base Units Wheel): ได้แก่ กิโลกรัม ($\text{kg}$), เมตร ($\text{m}$), วินาที ($\text{s}$), แอมแปร์ ($\text{A}$), เคลวิน ($\text{K}$), โมล ($\text{mol}$) และแคนเดลา ($\text{cd}$) พร้อมไอคอนเครื่องมือวัดประจำแต่ละหน่วย และนิยามสากลระบบเอสไอใหม่ (Revised SI 2019)
