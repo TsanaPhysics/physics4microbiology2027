@@ -50,7 +50,7 @@
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
       <!-- Brand & Course Details -->
       <div class="flex items-center gap-3">
-        <a href="../index.html" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 p-0.5 shadow-lg shadow-emerald-950/60 flex items-center justify-center shrink-0 hover:scale-105 transition-transform" title="กลับหน้าพอร์ทัลหลัก">
+        <a href="../index.php" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 p-0.5 shadow-lg shadow-emerald-950/60 flex items-center justify-center shrink-0 hover:scale-105 transition-transform" title="กลับหน้าพอร์ทัลหลัก 2027">
           <div class="w-full h-full bg-[#0a1124] rounded-[10px] flex items-center justify-center">
             <i class="fa-solid fa-microscope text-emerald-400 text-lg"></i>
           </div>
@@ -58,7 +58,7 @@
         <div>
           <div class="flex items-center gap-2">
             <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-[10px] tracking-wider uppercase font-mono">
-              4011111 OBE Lab
+              4011111 OBE Lab Hub
             </span>
             <span class="text-xs text-slate-400 hidden sm:inline">มหาวิทยาลัยราชภัฏรำไพพรรณี</span>
           </div>
@@ -66,6 +66,19 @@
             ห้องปฏิบัติการฟิสิกส์สำหรับจุลชีววิทยา 3 มิติ
           </h1>
         </div>
+      </div>
+
+      <!-- Quick Nav Links -->
+      <div class="hidden xl:flex items-center gap-3 text-xs font-semibold">
+        <a href="../index.php" class="text-slate-300 hover:text-cyan-400 transition flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/60 border border-white/5">
+          <i class="fa-solid fa-house text-cyan-400"></i> พอร์ทัลหลัก
+        </a>
+        <a href="../03_physics4microbio2026/index.php" class="text-slate-300 hover:text-amber-400 transition flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/60 border border-white/5">
+          <i class="fa-solid fa-book-open text-amber-400"></i> 13 บทเรียนทฤษฎี
+        </a>
+        <a href="../03_physics4microbio2026/webar/ar_aruco_textbook.html?ar=1" target="_blank" class="text-slate-300 hover:text-purple-400 transition flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/60 border border-white/5">
+          <i class="fa-solid fa-camera-rotate text-purple-400"></i> 3D WebAR
+        </a>
       </div>
 
       <!-- User Authentication & Action Buttons -->
@@ -127,14 +140,22 @@
           Basic Measurement & P1000 Micropipette Gravimetric Calibration
         </div>
 
-        <div class="pt-2 text-xs text-slate-300 flex flex-wrap items-center justify-between gap-2">
+        <div class="pt-2 text-xs text-slate-300 flex flex-wrap items-center justify-between gap-2 border-t border-white/10 mt-2">
           <div class="flex items-center gap-2">
             <span class="text-slate-400">เครื่องมือจำลอง:</span>
-            <span id="labInstrument" class="font-semibold text-emerald-300">Micropipette P1000 & Analytical Balance 0.0001 g</span>
+            <span id="labInstrument" class="font-semibold text-emerald-300">Micropipette P1000 & Analytical Balance</span>
           </div>
-          <a href="sim_vernier_caliper_3d.html" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition">
-            <i class="fa-solid fa-up-right-from-square"></i> 3D Vernier Caliper &amp; Quiz Suite ↗
-          </a>
+          <div class="flex flex-wrap items-center gap-2">
+            <a id="btnTheoryLink" href="../03_physics4microbio2026/chapters/ch01_th.php" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition">
+              <i class="fa-solid fa-book-bookmark"></i> <span>📖 อ่านทฤษฎีบทที่ 1</span>
+            </a>
+            <a id="btnReportLink" href="../03_physics4microbio2026/labs/lab01_measurement.php" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 text-xs font-bold transition">
+              <i class="fa-solid fa-file-pen"></i> <span>📝 ส่งรายงาน Lab 01</span>
+            </a>
+            <a id="btnSimFullscreen" href="sim_micropipette_3d.html" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold transition">
+              <i class="fa-solid fa-expand"></i> <span>🥽 เปิด 3D เต็มจอ ↗</span>
+            </a>
+          </div>
         </div>
       </div>
 

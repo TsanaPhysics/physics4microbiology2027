@@ -242,7 +242,8 @@ function speakCurrentChapter() {
 if (!('speechSynthesis' in window)) return;
 window.speechSynthesis.cancel();
 const cfg = CHAPTER_MODELS[currentMarkerId];
-const u = new SpeechSynthesisUtterance(cfg.voice);
+const voiceText = (cfg.voice || '').replace(/4011111/g, 'สี่ ศูนย์ หนึ่ง หนึ่ง หนึ่ง หนึ่ง หนึ่ง');
+const u = new SpeechSynthesisUtterance(voiceText);
 u.lang = 'th-TH';
 u.rate = 0.98;
 u.pitch = 0.96;

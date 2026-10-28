@@ -171,6 +171,192 @@ $labs = [
         'summary' => 'การสลายตัวของกัมมันตรังสี กฎกำลังสองผกผัน การลดทอนของตะกั่ว และค่ารังสีฆ่าเชื้อ D10'
     ]
 ];
+
+// 13 Theory Chapters Master Catalog (Aligned with OBE Course Syllabus)
+$chapters = [
+    [
+        'num' => '01',
+        'icon' => 'fa-ruler-combined',
+        'title_th' => 'ระบบหน่วยและการวัดระดับจุลภาค',
+        'title_en' => 'Units & Microscale Measurements',
+        'title_zh' => '单位系统与微观测量',
+        'anchor' => 'P1000 Micropipette & Balance',
+        'summary' => 'บันไดคำอุปสรรค x1000, การแปลงหน่วย Serial Dilution, ความหนาแน่นน้ำ 1.000 g/mL และการสอบเทียบปิเปต',
+        'ch_file' => '03_physics4microbio2026/chapters/ch01_th.php',
+        'sim_file' => '03_physics4microbio2026/simulations/sim_micropipette_3d.html',
+        'lab_file' => '03_physics4microbio2026/labs/lab01_measurement.php',
+        'aruco_id' => 0,
+        'color' => '#f97316'
+    ],
+    [
+        'num' => '02',
+        'icon' => 'fa-arrows-split-up-and-left',
+        'title_th' => 'เวกเตอร์และแรงในระบบชีวภาพ',
+        'title_en' => 'Vectors & Biomechanical Forces',
+        'title_zh' => '矢量与生物力学力',
+        'anchor' => 'Chemotaxis vs Brownian Motion',
+        'summary' => 'การรวมเวกเตอร์แรง, เปรียบเทียบการว่ายน้ำหาอาหาร Chemotaxis กับการชนแบบสุ่ม Brownian Motion',
+        'ch_file' => '03_physics4microbio2026/chapters/ch02_th.php',
+        'sim_file' => '03_physics4microbio2026/simulations/sim02_force_vectors_3d.html',
+        'lab_file' => '03_physics4microbio2026/labs/lab02_vectors.php',
+        'aruco_id' => 1,
+        'color' => '#fbbf24'
+    ],
+    [
+        'num' => '03',
+        'icon' => 'fa-person-running',
+        'title_th' => 'จลนศาสตร์และความหนืดของของไหล',
+        'title_en' => 'Kinematics & Fluid Viscosity',
+        'title_zh' => '流体运动学与粘度',
+        'anchor' => 'Broth Viscosity & Stokes Sedimentation',
+        'summary' => 'กฎของสโตกส์เชิงเปรียบเทียบ เซลล์ใหญ่ขึ้น 2 เท่า ตกเร็ว 4 เท่า และความหนืดของอาหารเลี้ยงเชื้อ',
+        'ch_file' => '03_physics4microbio2026/chapters/ch03_th.php',
+        'sim_file' => '03_physics4microbio2026/simulations/sim03_viscometer_3d.html',
+        'lab_file' => '03_physics4microbio2026/labs/lab03_motion.php',
+        'aruco_id' => 2,
+        'color' => '#10b981'
+    ],
+    [
+        'num' => '04',
+        'icon' => 'fa-rotate',
+        'title_th' => 'กฎของนิวตันและเครื่องปั่นเหวี่ยง',
+        'title_en' => 'Newton Laws & Centrifugation',
+        'title_zh' => '牛顿定律与离心技术',
+        'anchor' => 'High-Speed Centrifuge RCF',
+        'summary' => 'การแปลงรอบ RPM สู่แรงเหวี่ยง RCF (xg), กฎการอนุรักษ์โมเมนตัม และกฎเหล็ก Rotor Balancing',
+        'ch_file' => '03_physics4microbio2026/chapters/ch04_th.php',
+        'sim_file' => '03_physics4microbio2026/simulations/sim04_centrifuge_3d.html',
+        'lab_file' => '03_physics4microbio2026/labs/lab04_newton.php',
+        'aruco_id' => 3,
+        'color' => '#3b82f6'
+    ],
+    [
+        'num' => '05',
+        'icon' => 'fa-bowling-ball',
+        'title_th' => 'โมเมนตัม การดล และการชนในระดับเซลล์',
+        'title_en' => 'Momentum & Cellular Collisions',
+        'title_zh' => '动量与细胞微观碰撞',
+        'anchor' => 'Vortex Mixer & Cell Lysis',
+        'summary' => 'การอนุรักษ์โมเมนตัมระดับโมเลกุล การถ่ายทอดพลังงานจลน์สู่ผนังเซลล์ และการแตกสลายเซลล์',
+        'ch_file' => '03_physics4microbio2026/chapters/ch05_th.php',
+        'sim_file' => '03_physics4microbio2026/simulations/sim05_momentum_3d.html',
+        'lab_file' => '03_physics4microbio2026/labs/lab05_momentum.php',
+        'aruco_id' => 4,
+        'color' => '#8b5cf6'
+    ],
+    [
+        'num' => '06',
+        'icon' => 'fa-scale-balanced',
+        'title_th' => 'สมดุลกล ความดันของไหล และออสโมซิส',
+        'title_en' => 'Equilibrium, Pressure & Osmosis',
+        'title_zh' => '流体静力平衡与渗透压',
+        'anchor' => 'Osmometer & Turgor Pressure',
+        'summary' => 'สมดุลไฮโดรสแตติก ความดันออสโมติกแวนต์ฮอฟฟ์ สภาวะเซลล์เต่ง/เหี่ยว และแรงตึงผนังเซลล์',
+        'ch_file' => '03_physics4microbio2026/chapters/ch06_th.php',
+        'sim_file' => '03_physics4microbio2026/simulations/sim06_osmosis_3d.html',
+        'lab_file' => '03_physics4microbio2026/labs/lab06_equilibrium.php',
+        'aruco_id' => 5,
+        'color' => '#ec4899'
+    ],
+    [
+        'num' => '07',
+        'icon' => 'fa-bolt',
+        'title_th' => 'งาน พลังงาน และมอเตอร์โมเลกุลชีวภาพ',
+        'title_en' => 'Work, Energy & ATP Synthase',
+        'title_zh' => '功、能量与ATP合成酶分子马达',
+        'anchor' => 'F0F1 ATP Synthase Rotary Engine',
+        'summary' => 'พลังขับเคลื่อนโปรตอน (PMF), การเปลี่ยนรูปพลังงานไฟฟ้าเคมีสู่พลังงานกลหมุนสร้างโมเลกุล ATP',
+        'ch_file' => '03_physics4microbio2026/chapters/ch07_th.php',
+        'sim_file' => '03_physics4microbio2026/simulations/sim07_molecular_motors_3d.html',
+        'lab_file' => '03_physics4microbio2026/labs/lab07_energy.php',
+        'aruco_id' => 6,
+        'color' => '#f43f5e'
+    ],
+    [
+        'num' => '08',
+        'icon' => 'fa-gears',
+        'title_th' => 'การหมุนและกลศาสตร์นาโนของแส้เซลล์',
+        'title_en' => 'Rotational Dynamics & Flagella',
+        'title_zh' => '旋转力学与细菌鞭毛纳米机械',
+        'anchor' => 'Bacterial Flagellar Motor (300 Hz)',
+        'summary' => 'ทอร์ก โมเมนต์ความเฉื่อย กำลังกลศาสตร์นาโนของการหมุนแส้แฟลกเจลลาขับเคลื่อนเซลล์แบคทีเรีย',
+        'ch_file' => '03_physics4microbio2026/chapters/ch08_th.php',
+        'sim_file' => '03_physics4microbio2026/simulations/sim08_nanomechanics_3d.html',
+        'lab_file' => '03_physics4microbio2026/labs/lab08_machines.php',
+        'aruco_id' => 7,
+        'color' => '#06b6d4'
+    ],
+    [
+        'num' => '09',
+        'icon' => 'fa-fire-flame-curved',
+        'title_th' => 'อุณหพลศาสตร์และหม้อนึ่ง Autoclave / PCR',
+        'title_en' => 'Thermodynamics & Autoclave / PCR',
+        'title_zh' => '热力学、高压灭菌器与PCR仪',
+        'anchor' => 'Autoclave 121°C & PCR Cycler',
+        'summary' => 'ความร้อนแฝง 2260 J/g ไอน้ำอิ่มตัวฆ่าสปอร์ที่ 121°C 15 psi และ 3 ขั้นตอนวัฏจักรความร้อน PCR',
+        'ch_file' => '03_physics4microbio2026/chapters/ch09_th.php',
+        'sim_file' => '03_physics4microbio2026/simulations/sim09_pcr_thermal_3d.html',
+        'lab_file' => '03_physics4microbio2026/labs/lab09_heat.php',
+        'aruco_id' => 8,
+        'color' => '#f97316'
+    ],
+    [
+        'num' => '10',
+        'icon' => 'fa-bolt-lightning',
+        'title_th' => 'ไฟฟ้าและเจลอิเล็กโทรโฟเรซิส',
+        'title_en' => 'Electricity & Gel Electrophoresis',
+        'title_zh' => '电学与凝胶电泳技术',
+        'anchor' => 'Agarose Gel Tank & UV Box',
+        'summary' => 'สามเหลี่ยมกฎของโอห์ม V=IR, ประจุลบฟอสเฟตบน DNA วิ่งหาขั้วบวก และแบคทีเรียแม่เหล็ก',
+        'ch_file' => '03_physics4microbio2026/chapters/ch10_th.php',
+        'sim_file' => '03_physics4microbio2026/simulations/sim10_electrophoresis_3d.html',
+        'lab_file' => '03_physics4microbio2026/labs/lab10_electricity.php',
+        'aruco_id' => 9,
+        'color' => '#eab308'
+    ],
+    [
+        'num' => '11',
+        'icon' => 'fa-microscope',
+        'title_th' => 'ทัศนศาสตร์ กล้องจุลทรรศน์ และสเปกโทรโฟโตเมตรี',
+        'title_en' => 'Optics, Microscopy & Spectroscopy',
+        'title_zh' => '光学、显微技术与生物分光光度法',
+        'anchor' => '100x Oil Immersion & OD600',
+        'summary' => 'ขีดจำกัดแอบบี, น้ำมันแช่เลนส์ n=1.518, กฎเบียร์-แลมเบิร์ตวัดความขุ่น OD600 และโปรตีน',
+        'ch_file' => '03_physics4microbio2026/chapters/ch11_th.php',
+        'sim_file' => '03_physics4microbio2026/simulations/sim11_optics_3d.html',
+        'lab_file' => '03_physics4microbio2026/labs/lab11_optics.php',
+        'aruco_id' => 10,
+        'color' => '#6366f1'
+    ],
+    [
+        'num' => '12',
+        'icon' => 'fa-radiation',
+        'title_th' => 'ฟิสิกส์นิวเคลียร์และการทำลายเชื้อจุลินทรีย์',
+        'title_en' => 'Nuclear Physics & Radiosterilization',
+        'title_zh' => '核物理与微生物辐射灭菌',
+        'anchor' => 'Co-60 Gamma Chamber & D10-value',
+        'summary' => 'การนับรอบครึ่งชีวิต, กฎกำลังสองผกผัน, ค่ารังสีลดเชื้อ 90% (D10) และความหนาครึ่งค่าของตะกั่ว',
+        'ch_file' => '03_physics4microbio2026/chapters/ch12_th.php',
+        'sim_file' => '03_physics4microbio2026/simulations/sim12_radioactivity_3d.html',
+        'lab_file' => '03_physics4microbio2026/labs/lab12_radioactivity.php',
+        'aruco_id' => 11,
+        'color' => '#ef4444'
+    ],
+    [
+        'num' => '13',
+        'icon' => 'fa-cubes-stacked',
+        'title_th' => 'โครงงานบูรณาการชีวฟิสิกส์และการเกษตรอัจฉริยะ',
+        'title_en' => 'Capstone Mini-Project: Smart Bio-AI',
+        'title_zh' => '生物物理综合项目与智能农业',
+        'anchor' => 'AIoT Sensors & Biosystems',
+        'summary' => 'การบูรณาการหลักฟิสิกส์ 8 หมวด สู่นวัตกรรมเครื่องมือแพทย์ เซนเซอร์ชีวภาพ และการเกษตรแม่นยำ',
+        'ch_file' => '03_physics4microbio2026/chapters/ch13_th.php',
+        'sim_file' => '../virtual_lab/index.html',
+        'lab_file' => '../virtual_lab/index.html',
+        'aruco_id' => 'Hub',
+        'color' => '#10b981'
+    ]
+];
 ?>
 <!DOCTYPE html>
 <html lang="th" class="scroll-smooth">
@@ -230,25 +416,22 @@ $labs = [
                 </div>
             </a>
 
-            <!-- Nav Links -->
-            <div class="hidden lg:flex items-center gap-6 text-xs font-semibold">
-                <a href="#labs" class="text-slate-300 hover:text-cyan-400 transition flex items-center gap-1.5">
+            <!-- Nav Links (Unified Two-Way Navigation) -->
+            <div class="hidden lg:flex items-center gap-4 text-xs font-semibold">
+                <button onclick="switchMainTab('labs'); document.getElementById('course-modules').scrollIntoView({behavior:'smooth'});" class="text-slate-300 hover:text-cyan-400 transition flex items-center gap-1.5 cursor-pointer py-1.5 px-2.5 rounded-lg hover:bg-white/5">
                     <i class="fa-solid fa-flask text-cyan-400"></i> 12 ปฏิบัติการ 3D
-                </a>
-                <a href="03_physics4microbio2026/index.php" class="text-slate-300 hover:text-cyan-400 transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-book-open text-amber-400"></i> 12 บทเรียนทฤษฎี
-                </a>
-                <a href="แผนการสอน 2027/เอกสารคำสอน_3D_AR_ArUco/webar_aruco/ar_aruco_textbook.html?ar=1" target="_blank" class="text-slate-300 hover:text-emerald-400 transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-camera-rotate text-emerald-400"></i> ส่องกล้อง 3D WebAR
-                </a>
-                <a href="#student-lookup" class="text-slate-300 hover:text-purple-400 transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-magnifying-glass text-purple-400"></i> ตรวจสอบคะแนน
-                </a>
-                <a href="virtual_lab/index.html" class="text-slate-300 hover:text-cyan-400 transition flex items-center gap-1.5">
+                </button>
+                <button onclick="switchMainTab('chapters'); document.getElementById('course-modules').scrollIntoView({behavior:'smooth'});" class="text-slate-300 hover:text-amber-400 transition flex items-center gap-1.5 cursor-pointer py-1.5 px-2.5 rounded-lg hover:bg-white/5">
+                    <i class="fa-solid fa-book-open text-amber-400"></i> 13 บทเรียนทฤษฎี
+                </button>
+                <a href="virtual_lab/index.html" class="text-slate-300 hover:text-cyan-400 transition flex items-center gap-1.5 py-1.5 px-2.5 rounded-lg hover:bg-white/5">
                     <i class="fa-solid fa-cubes text-cyan-400"></i> Virtual Lab Hub
                 </a>
-                <a href="fui_cyber_showcase.php" class="text-amber-300 hover:text-amber-200 transition flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30">
-                    <i class="fa-solid fa-microchip text-amber-400"></i> FUI Cyber Design
+                <a href="แผนการสอน 2027/เอกสารคำสอน_3D_AR_ArUco/webar_aruco/ar_aruco_textbook.html?ar=1" target="_blank" class="text-slate-300 hover:text-purple-400 transition flex items-center gap-1.5 py-1.5 px-2.5 rounded-lg hover:bg-white/5">
+                    <i class="fa-solid fa-camera-rotate text-purple-400"></i> ส่องกล้อง 3D WebAR
+                </a>
+                <a href="#student-lookup" class="text-slate-300 hover:text-emerald-400 transition flex items-center gap-1.5 py-1.5 px-2.5 rounded-lg hover:bg-white/5">
+                    <i class="fa-solid fa-magnifying-glass text-emerald-400"></i> ตรวจสอบคะแนน
                 </a>
             </div>
 
@@ -350,7 +533,7 @@ $labs = [
                     <div class="aspect-[4/3.6] rounded-2xl overflow-hidden relative bg-slate-900 border border-cyan-500/30">
                         <img src="cover_ar_physics4microbio2027.jpg" alt="4011111 ฟิสิกส์สำหรับจุลชีววิทยา 2027"
                              class="w-full h-full object-cover hero-float"
-                             onerror="this.src='03_physics4microbio2026/images/cover_3d_pixar_4011111_v1.png'">
+                             onerror="this.src='03_physics4microbio2026/images/cover/book_cover.png'">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent pointer-events-none"></div>
 
                         <!-- Badge Overlay -->
@@ -382,88 +565,213 @@ $labs = [
         </div>
     </header>
 
-    <!-- ─── 12 LABS INTERACTIVE HUB GRID ──────────────────────────────────────── -->
-    <section id="labs" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-10">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800 pb-6">
+    <!-- ─── UNIFIED COURSE MODULES & LABS HUB ──────────────────────────────────────── -->
+    <section id="course-modules" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
+        
+        <!-- Header & Dual Tab Navigation -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-800 pb-6">
             <div>
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono font-bold uppercase mb-2">
-                    <i class="fa-solid fa-flask"></i> 12 Virtual Biophysics Laboratories
+                    <i class="fa-solid fa-layer-group"></i> Unified Course Architecture 2026/2027
                 </div>
-                <h2 class="text-3xl sm:text-4xl font-bold text-white">สารบัญ 12 ปฏิบัติการชีวฟิสิกส์เสมือนจริง</h2>
-                <p class="text-xs sm:text-sm text-slate-400 mt-1">
-                    ทุกปฏิบัติการเชื่อมโยง 3D Interactive Simulator, เลนส์ส่องเรติเคิล 2D Loupe, Web Audio Synthesizer, และแบบรายงานผลการทดลองดิจิทัล
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">ศูนย์รวมบทเรียนและปฏิบัติการฟิสิกส์สำหรับจุลชีววิทยา</h2>
+                <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
+                    เรียนรู้ฟิสิกส์ผ่านเครื่องมือห้องแล็บจริง เชื่อมโยง 13 บทเรียนทฤษฎีแบบ Low-Math สู่ 12 ปฏิบัติการเสมือนจริง 3 มิติ และโมเดล 3D WebAR
                 </p>
             </div>
-            <div class="flex items-center gap-2">
-                <a href="virtual_lab/index.html" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-500/30 text-xs font-bold transition flex items-center gap-2">
-                    <i class="fa-solid fa-cubes"></i>
-                    <span>เปิดรวมหน้า Virtual Lab Sandbox</span>
-                </a>
+            
+            <!-- Dual Mode Tab Switcher -->
+            <div class="flex items-center p-1.5 rounded-2xl bg-slate-900 border border-white/10 shadow-2xl shrink-0">
+                <button id="tabBtnLabs" onclick="switchMainTab('labs')" class="px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-gradient-to-r from-cyan-600 to-teal-600 text-white shadow-lg shadow-cyan-950/60 border border-cyan-400/40 flex items-center gap-2 transition active:scale-95">
+                    <i class="fa-solid fa-flask"></i>
+                    <span>12 ปฏิบัติการ 3D (Labs)</span>
+                </button>
+                <button id="tabBtnChapters" onclick="switchMainTab('chapters')" class="px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-slate-400 hover:text-white flex items-center gap-2 transition active:scale-95">
+                    <i class="fa-solid fa-book-open text-amber-400"></i>
+                    <span>13 บทเรียนทฤษฎี (Chapters)</span>
+                </button>
             </div>
         </div>
 
-        <!-- Cards Grid with FUI Cybernetic Styling -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <?php foreach ($labs as $lab): ?>
-                <div class="fui-card-amber p-6 flex flex-col justify-between space-y-4 hover:border-cyan-400 group">
-                    <div class="space-y-3 pt-2">
-                        <!-- Card Header -->
-                        <div class="flex items-start justify-between gap-3">
-                            <span class="px-3 py-1 rounded-xl bg-gradient-to-r <?= $lab['color'] ?> text-white font-mono font-bold text-xs shadow-md">
-                                LAB <?= $lab['num'] ?>
-                            </span>
-                            <div class="flex items-center gap-2">
-                                <span class="px-2.5 py-0.5 rounded-full bg-slate-900 border border-white/10 text-slate-400 text-[11px] font-mono">
-                                    <?= htmlspecialchars($lab['badge']) ?>
+        <!-- 🧪 TAB 1: 12 LABS GRID -->
+        <div id="tabContentLabs" class="space-y-6">
+            <div class="flex items-center justify-between text-xs text-slate-400">
+                <span class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                    <span>คลิกเพื่อเปิดเครื่องมือจำลอง 3 มิติ หรือทำรายงานผลการทดลอง</span>
+                </span>
+                <a href="virtual_lab/index.html" class="text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1 transition">
+                    <i class="fa-solid fa-cubes"></i> เปิด Virtual Lab Hub รวม ↗
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <?php foreach ($labs as $lab): ?>
+                    <div class="fui-card-amber p-6 flex flex-col justify-between space-y-4 hover:border-cyan-400 group">
+                        <div class="space-y-3 pt-2">
+                            <!-- Card Header -->
+                            <div class="flex items-start justify-between gap-3">
+                                <span class="px-3 py-1 rounded-xl bg-gradient-to-r <?= $lab['color'] ?> text-white font-mono font-bold text-xs shadow-md">
+                                    LAB <?= $lab['num'] ?>
                                 </span>
-                                <div class="fui-dot-matrix">
-                                    <span></span><span></span><span></span>
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2.5 py-0.5 rounded-full bg-slate-900 border border-white/10 text-slate-400 text-[11px] font-mono">
+                                        <?= htmlspecialchars($lab['badge']) ?>
+                                    </span>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Titles -->
-                        <div>
-                            <h3 class="text-base font-bold text-white group-hover:text-cyan-300 transition leading-snug">
-                                <?= htmlspecialchars($lab['title_th']) ?>
-                            </h3>
-                            <div class="text-xs text-slate-400 font-mono mt-1">
-                                <?= htmlspecialchars($lab['title_en']) ?>
+                            <!-- Titles -->
+                            <div>
+                                <h3 class="text-base font-bold text-white group-hover:text-cyan-300 transition leading-snug">
+                                    <?= htmlspecialchars($lab['title_th']) ?>
+                                </h3>
+                                <div class="text-xs text-slate-400 font-mono mt-1">
+                                    <?= htmlspecialchars($lab['title_en']) ?>
+                                </div>
+                            </div>
+
+                            <!-- Summary -->
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                <?= htmlspecialchars($lab['summary']) ?>
+                            </p>
+
+                            <!-- Two-Way Link to Theory Chapter -->
+                            <div class="pt-1">
+                                <a href="03_physics4microbio2026/chapters/ch<?= $lab['num'] ?>_th.php" class="inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-semibold transition hover:underline">
+                                    <i class="fa-solid fa-book-bookmark"></i>
+                                    <span>อ่านทฤษฎีและสูตรคำนวณบทที่ <?= intval($lab['num']) ?> →</span>
+                                </a>
                             </div>
                         </div>
 
-                        <!-- Summary -->
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            <?= htmlspecialchars($lab['summary']) ?>
-                        </p>
-                    </div>
+                        <!-- Tech vent divider & Dual Action Buttons -->
+                        <div class="space-y-3 pt-2 border-t border-slate-800">
+                            <div class="flex items-center justify-between text-[10px] font-mono text-slate-500">
+                                <div class="w-16 h-2 fui-vent-stripes rounded-sm opacity-60"></div>
+                                <span class="text-cyan-400/80">3D SIMULATOR &bull; PBR</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <a href="<?= $lab['sim_file'] ?>" target="_blank"
+                                   class="py-2 px-3 rounded-xl bg-slate-900 hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-200 border border-cyan-500/30 hover:border-cyan-400 text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                                    <i class="fa-solid fa-cube text-xs"></i>
+                                    <span>3D Simulator</span>
+                                </a>
 
-                    <!-- Tech vent divider & Dual Action Buttons -->
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between text-[10px] font-mono text-slate-500 pt-2 border-t border-slate-800">
-                            <div class="w-20 h-2.5 fui-vent-stripes rounded-sm opacity-60"></div>
-                            <span class="text-amber-400/80">3D // WEBAR READY</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <a href="<?= $lab['sim_file'] ?>" target="_blank"
-                               class="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-cyan-500/20 text-cyan-300 hover:text-cyan-200 border border-cyan-500/30 hover:border-cyan-400 text-xs font-bold flex items-center justify-center gap-1.5 transition">
-                                <i class="fa-solid fa-cube text-xs"></i>
-                                <span>3D Simulator</span>
-                            </a>
-
-                            <a href="<?= $lab['lab_file'] ?>"
-                               class="py-2.5 px-3 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold text-xs shadow hover:scale-[1.02] flex items-center justify-center gap-1.5 transition">
-                                <i class="fa-solid fa-file-pen text-xs"></i>
-                                <span>คู่มือ & E-Report</span>
-                            </a>
+                                <a href="<?= $lab['lab_file'] ?>"
+                                   class="py-2 px-3 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold text-xs shadow hover:scale-[1.02] flex items-center justify-center gap-1.5 transition">
+                                    <i class="fa-solid fa-file-pen text-xs"></i>
+                                    <span>คู่มือ & E-Report</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <!-- 📚 TAB 2: 13 THEORY CHAPTERS GRID -->
+        <div id="tabContentChapters" class="space-y-6 hidden">
+            <div class="flex items-center justify-between text-xs text-slate-400">
+                <span class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                    <span>บทเรียนแนวคิด Low-Math, High-Intuition เน้นเครื่องมือจริงและการแปรผัน</span>
+                </span>
+                <a href="03_physics4microbio2026/index.php" class="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 transition">
+                    <i class="fa-solid fa-book-open"></i> เปิดคลังบทเรียนเต็มรูปแบบ ↗
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <?php foreach ($chapters as $ch): ?>
+                    <div class="glass-card p-6 flex flex-col justify-between space-y-4 border border-amber-500/20 hover:border-amber-400 group rounded-3xl bg-slate-900/80 backdrop-blur-xl transition shadow-xl">
+                        <div class="space-y-3 pt-2">
+                            <!-- Card Header -->
+                            <div class="flex items-start justify-between gap-3">
+                                <span class="px-3 py-1 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 text-white font-mono font-bold text-xs shadow-md">
+                                    CHAPTER <?= $ch['num'] ?>
+                                </span>
+                                <span class="px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] font-semibold">
+                                    <i class="fa-solid fa-microscope text-[10px] mr-1"></i> <?= htmlspecialchars($ch['anchor']) ?>
+                                </span>
+                            </div>
+
+                            <!-- Titles -->
+                            <div>
+                                <h3 class="text-base font-bold text-white group-hover:text-amber-300 transition leading-snug">
+                                    <?= htmlspecialchars($ch['title_th']) ?>
+                                </h3>
+                                <div class="text-xs text-slate-400 font-mono mt-1">
+                                    <?= htmlspecialchars($ch['title_en']) ?>
+                                </div>
+                            </div>
+
+                            <!-- Summary -->
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                <?= htmlspecialchars($ch['summary']) ?>
+                            </p>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="space-y-2 pt-2 border-t border-slate-800">
+                            <div class="grid grid-cols-2 gap-2">
+                                <a href="<?= $ch['ch_file'] ?>"
+                                   class="py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs shadow flex items-center justify-center gap-1.5 transition hover:scale-[1.02]">
+                                    <i class="fa-solid fa-book-bookmark text-xs"></i>
+                                    <span>อ่านบทเรียน</span>
+                                </a>
+
+                                <?php if (!empty($ch['lab_file'])): ?>
+                                    <a href="<?= $ch['lab_file'] ?>"
+                                       class="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-emerald-500/20 text-emerald-300 hover:text-emerald-200 border border-emerald-500/30 hover:border-emerald-400 text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                                        <i class="fa-solid fa-flask text-xs"></i>
+                                        <span>ทำ Lab <?= $ch['num'] ?></span>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="แผนการสอน 2027/เอกสารคำสอน_3D_AR_ArUco/webar_aruco/ar_aruco_textbook.html?marker=<?= $ch['aruco_id'] ?? 0 ?>" target="_blank"
+                                       class="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-purple-500/20 text-purple-300 hover:text-purple-200 border border-purple-500/30 text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                                        <i class="fa-solid fa-camera text-xs"></i>
+                                        <span>ส่อง AR</span>
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1 font-mono">
+                                <a href="<?= $ch['sim_file'] ?>" target="_blank" class="hover:text-cyan-300 transition flex items-center gap-1">
+                                    <i class="fa-solid fa-cube text-cyan-400"></i> เปิด 3D Sim ↗
+                                </a>
+                                <a href="แผนการสอน 2027/เอกสารคำสอน_3D_AR_ArUco/webar_aruco/ar_aruco_textbook.html?marker=<?= $ch['aruco_id'] ?? 0 ?>" target="_blank" class="hover:text-purple-300 transition flex items-center gap-1">
+                                    <i class="fa-solid fa-vr-cardboard text-purple-400"></i> ArUco ID <?= $ch['aruco_id'] ?? 0 ?>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
         </div>
     </section>
 
-    <!-- ─── STUDENT SELF-CHECK SCORE LOOKUP WIDGET ────────────────────────────── -->
+    <script>
+    function switchMainTab(tab) {
+        const labsContainer = document.getElementById('tabContentLabs');
+        const chsContainer = document.getElementById('tabContentChapters');
+        const btnLabs = document.getElementById('tabBtnLabs');
+        const btnChs = document.getElementById('tabBtnChapters');
+
+        if (tab === 'chapters') {
+            labsContainer.classList.add('hidden');
+            chsContainer.classList.remove('hidden');
+            btnLabs.className = 'px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-slate-400 hover:text-white flex items-center gap-2 transition active:scale-95';
+            btnChs.className = 'px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-lg shadow-amber-950/60 border border-amber-400/40 flex items-center gap-2 transition active:scale-95';
+        } else {
+            labsContainer.classList.remove('hidden');
+            chsContainer.classList.add('hidden');
+            btnLabs.className = 'px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-gradient-to-r from-cyan-600 to-teal-600 text-white shadow-lg shadow-cyan-950/60 border border-cyan-400/40 flex items-center gap-2 transition active:scale-95';
+            btnChs.className = 'px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm text-slate-400 hover:text-white flex items-center gap-2 transition active:scale-95';
+        }
+    }
+    </script>
+<!-- ─── STUDENT SELF-CHECK SCORE LOOKUP WIDGET ────────────────────────────── -->
     <section id="student-lookup" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div class="glass-panel p-8 rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-900/90 to-purple-950/30 space-y-6">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -604,7 +912,8 @@ $labs = [
                 return;
             }
             window.speechSynthesis.cancel();
-            const text = "สวัสดีครับนักศึกษาทุกคน ขอต้อนรับสู่รายวิชา ฟิสิกส์สำหรับจุลชีววิทยา มหาวิทยาลัยราชภัฏรำไพพรรณี มาเรียนรู้ฟิสิกส์ผ่านเครื่องมือจำลอง 3 มิติ ทั้ง 12 ปฏิบัติการด้วยกันนะครับ";
+            const rawText = "สวัสดีครับนักศึกษาทุกคน ขอต้อนรับสู่รายวิชา สี่ ศูนย์ หนึ่ง หนึ่ง หนึ่ง หนึ่ง หนึ่ง ฟิสิกส์สำหรับจุลชีววิทยา มหาวิทยาลัยราชภัฏรำไพพรรณี มาเรียนรู้ฟิสิกส์ผ่านเครื่องมือจำลอง 3 มิติ ทั้ง 12 ปฏิบัติการด้วยกันนะครับ";
+            const text = rawText.replace(/4011111/g, 'สี่ ศูนย์ หนึ่ง หนึ่ง หนึ่ง หนึ่ง หนึ่ง');
             const ut = new SpeechSynthesisUtterance(text);
             ut.lang = 'th-TH';
             ut.rate = 1.0;

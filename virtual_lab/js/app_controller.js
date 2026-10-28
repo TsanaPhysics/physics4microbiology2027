@@ -115,6 +115,48 @@ class AppController {
     document.getElementById("labDescription").textContent = lab.description;
     document.getElementById("labFormulaDesc").textContent = lab.formulaDesc;
 
+    // Update Two-Way Navigation Links to Chapters, Labs & Standalone 3D Simulators
+    const labNum = lab.num;
+    const numStr = String(labNum).padStart(2, '0');
+    
+    const theoryBtn = document.getElementById("btnTheoryLink");
+    if (theoryBtn) {
+      theoryBtn.href = `../03_physics4microbio2026/chapters/ch${numStr}_th.php`;
+      theoryBtn.innerHTML = `<i class="fa-solid fa-book-bookmark"></i> <span>📖 อ่านทฤษฎีบทที่ ${labNum}</span>`;
+    }
+
+    const reportBtn = document.getElementById("btnReportLink");
+    if (reportBtn) {
+      const labFiles = [
+        'lab01_measurement.php', 'lab02_vectors.php', 'lab03_motion.php', 'lab04_newton.php',
+        'lab05_momentum.php', 'lab06_equilibrium.php', 'lab07_energy.php', 'lab08_machines.php',
+        'lab09_heat.php', 'lab10_electricity.php', 'lab11_optics.php', 'lab12_radioactivity.php'
+      ];
+      if (labNum <= 12) {
+        reportBtn.style.display = 'inline-flex';
+        reportBtn.href = `../03_physics4microbio2026/labs/${labFiles[labNum - 1]}`;
+        reportBtn.innerHTML = `<i class="fa-solid fa-file-pen"></i> <span>📝 ส่งรายงาน Lab ${numStr}</span>`;
+      } else {
+        reportBtn.style.display = 'none';
+      }
+    }
+
+    const simFullBtn = document.getElementById("btnSimFullscreen");
+    if (simFullBtn) {
+      const simFiles = [
+        'sim_micropipette_3d.html', 'sim02_force_vectors_3d.html', 'sim03_viscometer_3d.html', 'sim04_centrifuge_3d.html',
+        'sim05_momentum_3d.html', 'sim06_osmosis_3d.html', 'sim07_molecular_motors_3d.html', 'sim08_nanomechanics_3d.html',
+        'sim09_pcr_thermal_3d.html', 'sim10_electrophoresis_3d.html', 'sim11_optics_3d.html', 'sim12_radioactivity_3d.html'
+      ];
+      if (labNum <= 12) {
+        simFullBtn.style.display = 'inline-flex';
+        simFullBtn.href = simFiles[labNum - 1];
+        simFullBtn.innerHTML = `<i class="fa-solid fa-expand"></i> <span>🥽 เปิด 3D เต็มจอ ↗</span>`;
+      } else {
+        simFullBtn.style.display = 'none';
+      }
+    }
+
     const formulaEl = document.getElementById("labFormulaLatex");
     if (formulaEl) {
       formulaEl.innerHTML = `\\[ ${lab.formulaLatex} \\]`;

@@ -4,6 +4,39 @@ $basePath = '../';
 include '../includes/header.php';
 ?>
 
+    <!-- 🧭 Standardized Breadcrumb & Two-Way Course Navigation Bar -->
+    <div class="standardized-lab-breadcrumb max-w-7xl mx-auto px-4 sm:px-6 mb-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 border border-emerald-500/30 rounded-2xl px-5 py-3.5 shadow-2xl backdrop-blur-xl">
+            <div class="flex items-center flex-wrap gap-2 text-xs font-mono text-slate-300">
+                <a href="../../index.php" class="text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-house"></i> พอร์ทัลหลัก 2027
+                </a>
+                <span class="text-slate-600">/</span>
+                <a href="../index.php" class="text-amber-400 hover:text-amber-300 transition flex items-center gap-1 font-semibold">
+                    <i class="fa-solid fa-book-open"></i> สารบัญหลักสูตร
+                </a>
+                <span class="text-slate-600">/</span>
+                <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40">LAB 05</span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <a href="../chapters/ch05_th.php" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition flex items-center gap-1.5 shadow-md hover:scale-105">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <span>📖 อ่านทฤษฎีบทที่ 5</span>
+                </a>
+                <a href="../../virtual_lab/index.html?lab=5" target="_blank" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition flex items-center gap-1.5 shadow-md hover:scale-105">
+                    <i class="fa-solid fa-flask"></i>
+                    <span>🥽 Virtual Lab Hub</span>
+                </a>
+                <a href="../webar/ar_aruco_textbook.html?lab=5&ar=1" target="_blank" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 transition flex items-center gap-1.5 shadow-md hover:scale-105">
+                    <i class="fa-solid fa-camera-rotate"></i>
+                    <span>📱 3D WebAR (Marker 4)</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
 <!-- MathJax 3 Configuration for Academic Equation Rendering -->
 <script>
 window.MathJax = {
@@ -136,6 +169,9 @@ window.MathJax = {
             </div>
 
             <div class="flex items-center gap-2">
+                <a href="../webar/ar_aruco_textbook.html?lab=5&ar=1" target="_blank" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-950/40 transition flex items-center gap-2 active:scale-95" title="เปิดกล้องส่อง 3D WebAR ArUco Marker ID 4">
+                    <i class="fa-solid fa-vr-cardboard text-sm"></i> <span>📱 ส่องกล้อง 3D WebAR</span>
+                </a>
                 <button type="button" onclick="capture3dSimulator()" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-400 hover:from-amber-400 text-slate-950 shadow-lg shadow-amber-950/40 transition flex items-center gap-2 active:scale-95">
                     <i class="fa-solid fa-camera-retro text-sm"></i> 📸 แคปหน้าจอ 3D เพื่อแนบเป็นหลักฐานการทดลอง
                 </button>
@@ -153,7 +189,7 @@ window.MathJax = {
 
         <!-- Iframe Viewer Container -->
         <div id="simFrameContainer" class="relative w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-slate-950">
-            <iframe id="simViewerFrame" src="../simulations/sim05_momentum_3d.html" class="w-full h-[680px] sm:h-[720px] lg:h-[760px] border-0" allow="camera; microphone; fullscreen; autoplay"></iframe>
+            <iframe id="simViewerFrame" src="../simulations/sim05_momentum_3d.html" class="w-full h-[680px] sm:h-[720px] lg:h-[760px] border-0" allow="camera; microphone; fullscreen; autoplay; xr-spatial-tracking; display-capture"></iframe>
         </div>
 
         <!-- Instructional Card / Quick Tips -->

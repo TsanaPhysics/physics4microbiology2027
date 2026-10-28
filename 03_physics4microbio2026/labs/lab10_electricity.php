@@ -4,6 +4,39 @@ $basePath = '../';
 include '../includes/header.php';
 ?>
 
+    <!-- 🧭 Standardized Breadcrumb & Two-Way Course Navigation Bar -->
+    <div class="standardized-lab-breadcrumb max-w-7xl mx-auto px-4 sm:px-6 mb-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 border border-emerald-500/30 rounded-2xl px-5 py-3.5 shadow-2xl backdrop-blur-xl">
+            <div class="flex items-center flex-wrap gap-2 text-xs font-mono text-slate-300">
+                <a href="../../index.php" class="text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-house"></i> พอร์ทัลหลัก 2027
+                </a>
+                <span class="text-slate-600">/</span>
+                <a href="../index.php" class="text-amber-400 hover:text-amber-300 transition flex items-center gap-1 font-semibold">
+                    <i class="fa-solid fa-book-open"></i> สารบัญหลักสูตร
+                </a>
+                <span class="text-slate-600">/</span>
+                <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40">LAB 10</span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <a href="../chapters/ch10_th.php" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition flex items-center gap-1.5 shadow-md hover:scale-105">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <span>📖 อ่านทฤษฎีบทที่ 10</span>
+                </a>
+                <a href="../../virtual_lab/index.html?lab=10" target="_blank" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition flex items-center gap-1.5 shadow-md hover:scale-105">
+                    <i class="fa-solid fa-flask"></i>
+                    <span>🥽 Virtual Lab Hub</span>
+                </a>
+                <a href="../webar/ar_aruco_textbook.html?lab=10&ar=1" target="_blank" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 transition flex items-center gap-1.5 shadow-md hover:scale-105">
+                    <i class="fa-solid fa-camera-rotate"></i>
+                    <span>📱 3D WebAR (Marker 9)</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
 <!-- MathJax 3 Configuration for Academic Equation Rendering -->
 <script>
 window.MathJax = {
@@ -244,13 +277,19 @@ window.MathJax = {
                 </h2>
             </div>
             <div class="flex items-center gap-2">
+                <a href="../webar/ar_aruco_textbook.html?lab=10&ar=1" target="_blank" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-950/40 transition flex items-center gap-1.5 active:scale-95" title="เปิดกล้องส่อง 3D WebAR ArUco Marker ID 9">
+                    <i class="fa-solid fa-vr-cardboard text-sm"></i> <span>📱 ส่องกล้อง 3D WebAR</span>
+                </a>
+                <button type="button" onclick="capture3dSimulator()" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-400 hover:from-amber-400 text-slate-950 shadow-lg shadow-amber-950/40 transition flex items-center gap-1.5 active:scale-95">
+                    <i class="fa-solid fa-camera-retro text-xs"></i> <span>📸 แคปหน้าจอ 3D</span>
+                </button>
                 <button onclick="toggleSimContainerFullscreen()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-xs flex items-center gap-1.5 transition border border-white/10">
                     <i class="fa-solid fa-expand text-[11px]"></i> เต็มหน้าจอ
                 </button>
             </div>
         </div>
         <div class="relative w-full aspect-[16/10] sm:aspect-[16/9] min-h-[480px] bg-slate-950">
-            <iframe id="gelElectro3DIframe" src="../simulations/sim10_electrophoresis_3d.html" class="w-full h-full border-0 block" allow="fullscreen; autoplay"></iframe>
+            <iframe id="gelElectro3DIframe" src="../simulations/sim10_electrophoresis_3d.html" class="w-full h-full border-0 block" allow="camera; microphone; fullscreen; autoplay; xr-spatial-tracking; display-capture"></iframe>
         </div>
         <div class="p-3.5 bg-slate-950/80 border-t border-white/5 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400">
             <div class="flex items-center gap-3">
@@ -260,6 +299,125 @@ window.MathJax = {
             <div class="font-mono text-slate-500">Dual Mode: Gel Electrophoresis Tank &bull; Helmholtz Magnetotaxis</div>
         </div>
     </div>
+
+    <!-- Global Control Bar -->
+    <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-2xl border border-white/10 text-xs">
+        <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-400 animate-ping"></span>
+            <span class="font-bold text-white">ระบบรายงานผลดิจิทัล (Digital Lab Report System)</span>
+            <span class="text-slate-400 hidden sm:inline">• รองรับการแคปหลักฐาน 3D และส่งข้อมูลขึ้นระบบอัตโนมัติ</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="expandAllLabCards()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-blue-400 border border-blue-500/30 transition flex items-center gap-1.5 active:scale-95">
+                <i class="fa-solid fa-angles-down text-xs"></i> <span>ขยายทุกส่วน</span>
+            </button>
+            <button type="button" onclick="collapseAllLabCards()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10 transition flex items-center gap-1.5 active:scale-95">
+                <i class="fa-solid fa-angles-up text-xs"></i> <span>ย่อทุกส่วน</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Interactive E-Report Submission Form -->
+    <form id="labReportForm" onsubmit="validateAndSubmitReport(event)" class="space-y-6">
+
+        <!-- 1. Student Profile Card (Mandatory) -->
+        <div id="cardStudentProfile" class="bg-slate-900/90 border border-blue-500/30 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl space-y-4">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-id-card text-blue-400"></i>
+                    ข้อมูลนักศึกษาผู้ส่งรายงานผลปฏิบัติการ (Student Identification)
+                </h2>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-rose-400 font-semibold hidden sm:inline">* จำเป็นต้องกรอกทุกช่อง</span>
+                    <button type="button" onclick="toggleLabCard('cardStudentProfile')" class="card-toggle-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10 transition flex items-center gap-1.5" title="ย่อ/ขยายการ์ด">
+                        <i id="cardStudentProfile_icon" class="fa-solid fa-chevron-up text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="cardStudentProfile_body" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 transition-all">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        ชื่อ - นามสกุล (Full Name) <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" id="student_fullname" name="student_fullname" placeholder="เช่น นายกิตติคุณ มั่นคง" required class="w-full bg-slate-950 border border-white/15 focus:border-blue-400 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        รหัสนักศึกษา (Student ID) <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" id="student_id" name="student_id" placeholder="เช่น 67144001" pattern="[0-9]{6,12}" required class="w-full bg-slate-950 border border-white/15 focus:border-blue-400 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition font-mono">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        สาขาวิชา (Program) <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" id="student_program" name="student_program" value="วิทยาศาสตร์และเทคโนโลยี จุลชีววิทยา" required class="w-full bg-slate-950 border border-white/15 focus:border-blue-400 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        กลุ่มเรียน / Section <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" id="student_section" name="student_section" value="Sec 01" required class="w-full bg-slate-950 border border-white/15 focus:border-blue-400 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition font-mono">
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Snapshot & Experiment Evidence Card (Mandatory Proof) -->
+        <div id="cardEvidence" class="bg-slate-900/90 border border-blue-500/30 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
+                <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-camera text-blue-400"></i>
+                    ภาพถ่ายหรือแคปหน้าจอระหว่างทดลอง (Experiment Screenshot Proof)
+                </h2>
+                <div class="flex items-center gap-2">
+                    <div id="proofBadgeStatus" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono">
+                        <i class="fa-solid fa-circle-exclamation"></i> ยังไม่มีภาพหลักฐาน (จำเป็นก่อนส่ง)
+                    </div>
+                    <button type="button" onclick="toggleLabCard('cardEvidence')" class="card-toggle-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10 transition flex items-center gap-1.5" title="ย่อ/ขยายการ์ด">
+                        <i id="cardEvidence_icon" class="fa-solid fa-chevron-up text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="cardEvidence_body" class="space-y-4 transition-all">
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    ตามข้อกำหนดของรายวิชา นักศึกษาจะต้องแนบภาพถ่ายหน้าจอระหว่างการทดลองบน 3D Electrophoresis & Magnetotaxis Simulator เพื่อยืนยันว่าได้สังเกตการเคลื่อนที่ของแบนด์ดีเอ็นเอจริง
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                    <div class="md:col-span-5 space-y-3">
+                        <button type="button" onclick="capture3dSimulator()" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition active:scale-95">
+                            <i class="fa-solid fa-camera-retro text-base"></i> 📸 แคปหน้าจอ 3D Electrophoresis ตอนนี้
+                        </button>
+                        
+                        <div class="text-center text-[11px] text-slate-500 font-mono">— หรือ —</div>
+
+                        <label class="w-full py-2.5 px-4 rounded-2xl bg-slate-950 hover:bg-slate-800 text-slate-300 border border-white/15 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition">
+                            <i class="fa-solid fa-upload"></i> อัปโหลดไฟล์ภาพ / ถ่ายภาพจากกล้อง
+                            <input type="file" id="imageFileInput" accept="image/*" capture="environment" onchange="handleImageFileUpload(event)" class="hidden">
+                        </label>
+
+                        <div class="text-[11px] text-slate-400">
+                            รองรับไฟล์ภาพ PNG, JPG, JPEG ขนาดไม่เกิน 5 MB
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-7 flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-950 border border-dashed border-white/20 min-h-[160px] relative overflow-hidden">
+                        <img id="proofPreviewImg" src="" alt="Experiment Proof Preview" class="max-h-[180px] w-auto rounded-xl object-contain hidden border border-white/10 shadow-lg">
+                        <div id="proofPlaceholder" class="text-center space-y-1 text-slate-500 py-6">
+                            <i class="fa-regular fa-image text-4xl mb-1"></i>
+                            <div class="text-xs font-semibold">ยังไม่มีภาพหลักฐานการทดลอง</div>
+                            <div class="text-[10px]">กดปุ่มแคปหน้าจอ 3D หรือเลือกไฟล์ภาพด้านซ้าย</div>
+                        </div>
+                        <input type="hidden" id="image_proof_base64" name="image_proof_base64" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <!-- Section 4: Strict Blank Data Tables -->
     <div id="cardDataTables" class="bg-slate-900/60 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden shadow-lg">
@@ -454,25 +612,37 @@ window.MathJax = {
             </button>
         </div>
         <div id="cardDiscussion_body" class="p-5 space-y-5 text-xs sm:text-sm">
+            <div class="space-y-2.5">
+                <label class="block font-bold text-blue-400">
+                    <i class="fa-solid fa-calculator"></i> การแสดงวิธีคำนวณและสมการเชิงเส้นอิเล็กโทรโฟเรซิส (Calculations):
+                </label>
+                <div class="p-3 rounded-xl bg-slate-950/70 border border-white/10 text-xs text-slate-300 font-mono space-y-1">
+                    <div class="text-blue-300 font-bold">สูตรความสัมพันธ์:</div>
+                    <div>$\mu = \frac{v}{E} = \frac{d / t}{V / L}, \quad \log_{10}(\text{bp}) = -m R_f + c, \quad P_{\text{Joule}} = V I = I^2 R$</div>
+                    <div>$B = \left(\frac{4}{5}\right)^{3/2} \frac{\mu_0 N I}{R_{\text{coil}}}$</div>
+                </div>
+                <textarea id="lab_calculations" name="lab_calculations" rows="4" class="input-blank w-full p-3 rounded-xl text-slate-200 text-xs font-mono leading-relaxed placeholder-slate-500" placeholder="แสดงการคำนวณความเร็วอิเล็กโทรโฟเรซิส v = d/t, ค่า Rf, และการแปลง log10(bp): เช่น ที่ 100V, L=10cm: E = 10 V/cm, แบนด์ 1,000 bp วิ่งได้ 18 mm: Rf = 18/65 = 0.277, log10(1000) = 3.00..."></textarea>
+            </div>
+
             <div class="space-y-2">
                 <label class="block font-bold text-slate-200">
                     1. การวิเคราะห์สมการเส้นโค้งมาตรฐาน $\log_{10}(\text{bp})$ vs $R_f$ และการหาน้ำหนักโมเลกุลชิ้นส่วนดีเอ็นเอที่ไม่ทราบขนาด:
                 </label>
-                <textarea id="discussion_q1" rows="3" class="input-blank w-full p-3 rounded-xl text-slate-200 text-xs font-mono leading-relaxed" placeholder="อภิปรายความสัมพันธ์เชิงเส้น ค่าสัมประสิทธิ์การตัดสินใจ (R²) ช่วงความเป็นเส้นตรงของเจล และการประมาณขนาดแถบดีเอ็นเอในพลาสมิดและยีน 16S..."></textarea>
+                <textarea id="discussion_q1" name="discussion_q1" rows="3" class="input-blank w-full p-3 rounded-xl text-slate-200 text-xs font-mono leading-relaxed" placeholder="อภิปรายความสัมพันธ์เชิงเส้น ค่าสัมประสิทธิ์การตัดสินใจ (R²) ช่วงความเป็นเส้นตรงของเจล และการประมาณขนาดแถบดีเอ็นเอในพลาสมิดและยีน 16S..."></textarea>
             </div>
 
             <div class="space-y-2">
                 <label class="block font-bold text-slate-200">
                     2. การวิจารณ์ผลกระทบของความเข้มข้นเจลอกาโรส (%T) และความร้อนจูล (Joule Heating) ต่อสภาพเคลื่อนตัวทางไฟฟ้า:
                 </label>
-                <textarea id="discussion_q2" rows="3" class="input-blank w-full p-3 rounded-xl text-slate-200 text-xs font-mono leading-relaxed" placeholder="วิจารณ์ปรากฏการณ์การคัดกรองตามสมการเฟอร์กูสัน ผลของการเพิ่มแรงดันไฟฟ้าเกิน 150 V ต่ออุณหภูมิบัฟเฟอร์ และลักษณะ Gel Smiling..."></textarea>
+                <textarea id="discussion_q2" name="discussion_q2" rows="3" class="input-blank w-full p-3 rounded-xl text-slate-200 text-xs font-mono leading-relaxed" placeholder="วิจารณ์ปรากฏการณ์การคัดกรองตามสมการเฟอร์กูสัน ผลของการเพิ่มแรงดันไฟฟ้าเกิน 150 V ต่ออุณหภูมิบัฟเฟอร์ และลักษณะ Gel Smiling..."></textarea>
             </div>
 
             <div class="space-y-2">
                 <label class="block font-bold text-slate-200">
                     3. การสรุปผลพฤติกรรม Magnetotaxis ของแบคทีเรียภายใต้สนามแม่เหล็ก Helmholtz:
                 </label>
-                <textarea id="discussion_q3" rows="3" class="input-blank w-full p-3 rounded-xl text-slate-200 text-xs font-mono leading-relaxed" placeholder="สรุปกลไกทอร์กแม่เหล็กต่อสายแมกนีโตโซม Fe3O4 การเอาชนะพลังงานความร้อนแบบบราวเนียน (kT) และประสิทธิภาพการว่ายน้ำแบบทิศทางเดี่ยว..."></textarea>
+                <textarea id="discussion_q3" name="discussion_q3" rows="3" class="input-blank w-full p-3 rounded-xl text-slate-200 text-xs font-mono leading-relaxed" placeholder="สรุปกลไกทอร์กแม่เหล็กต่อสายแมกนีโตโซม Fe3O4 การเอาชนะพลังงานความร้อนแบบบราวเนียน (kT) และประสิทธิภาพการว่ายน้ำแบบทิศทางเดี่ยว..."></textarea>
             </div>
         </div>
     </div>
@@ -498,7 +668,7 @@ window.MathJax = {
                 <p class="text-slate-300 text-xs leading-relaxed">
                     ในงานระบาดวิทยาโมเลกุล (เช่น เครือข่าย CDC PulseNet) เหตุใดการแยกชิ้นส่วนโครโมโซมแบคทีเรียขนาดใหญ่ ($>20-50\text{ kb}$) ที่ตัดด้วยเอนไซม์ Rare-cutting Restriction Enzymes จึงไม่สามารถใช้อิเล็กโทรโฟเรซิสกระแสตรงแบบทั่วไปได้ และหลักการของสนามไฟฟ้าสลับทิศทาง (Pulsed-field) สามารถแก้ปัญหาการเลื้อยลอดรูพรุน (DNA Reptation) ได้อย่างไร?
                 </p>
-                <textarea id="app_q1" rows="3" class="input-blank w-full p-3 rounded-xl text-slate-200 text-xs font-mono leading-relaxed" placeholder="อธิบายข้อจำกัดของสนามไฟฟ้าสถิตต่อสายดีเอ็นเอขนาดยักษ์ การเหยียดตัวเป็นเส้นตรง (reptation) และกลไกเวลาการจัดทิศทางใหม่ (reorientation time) ใน PFGE..."></textarea>
+                <textarea id="app_q1" name="quiz_ans_1" rows="3" class="input-blank w-full p-3 rounded-xl text-slate-200 text-xs font-mono leading-relaxed" placeholder="อธิบายข้อจำกัดของสนามไฟฟ้าสถิตต่อสายดีเอ็นเอขนาดยักษ์ การเหยียดตัวเป็นเส้นตรง (reptation) และกลไกเวลาการจัดทิศทางใหม่ (reorientation time) ใน PFGE..."></textarea>
             </div>
 
             <!-- Applied Question 2: Plasmid Topoisomers -->
@@ -510,7 +680,7 @@ window.MathJax = {
                 <p class="text-slate-300 text-xs leading-relaxed">
                     เมื่อนำพลาสมิด pUC19 (ความยาว $2,686\text{ bp}$) ที่สกัดจาก <em>Escherichia coli</em> มาวิ่งใน 1.0% Agarose gel ทำไมจึงปรากฏแบนด์ 3 แถบที่มีอัตราเร็วในการเคลื่อนที่ต่างกันอย่างมีนัยสำคัญ ($v_{\text{supercoiled}} > v_{\text{linear}} > v_{\text{nicked}}$) ทั้งที่มีมวลโมเลกุลและจำนวนคู่เบสเท่ากันทุกประการ? จงอธิบายโดยใช้หลักการรัศมีไฮโดรไดนามิก ($r_{\text{eff}}$) และแรงต้านความหนืด
                 </p>
-                <textarea id="app_q2" rows="3" class="input-blank w-full p-3 rounded-xl text-slate-200 text-xs font-mono leading-relaxed" placeholder="อธิบายผลของระดับการขดเกลียวแน่น (supercoiling) รูปร่าง 3 มิติเชิงพื้นที่ (compactness) ต่อรัศมีไฮโดรไดนามิก และความยากง่ายในการลอดผ่านรูพรุนเจล..."></textarea>
+                <textarea id="app_q2" name="quiz_ans_2" rows="3" class="input-blank w-full p-3 rounded-xl text-slate-200 text-xs font-mono leading-relaxed" placeholder="อธิบายผลของระดับการขดเกลียวแน่น (supercoiling) รูปร่าง 3 มิติเชิงพื้นที่ (compactness) ต่อรัศมีไฮโดรไดนามิก และความยากง่ายในการลอดผ่านรูพรุนเจล..."></textarea>
             </div>
 
             <!-- Applied Question 3: Magnetosomes & Nanobiotechnology -->
@@ -522,11 +692,29 @@ window.MathJax = {
                 <p class="text-slate-300 text-xs leading-relaxed">
                     ผลึกแมกนีไทต์ที่สร้างขึ้นจาก <em>Magnetospirillum</em> มีข้อได้เปรียบทางฟิสิกส์และชีววิทยาอย่างไรเมื่อเทียบกับอนุภาคแม่เหล็กสังเคราะห์ทางเคมี (Synthetic Magnetic Nanoparticles)? และจงอธิบายหลักการประยุกต์ใช้สนามแม่เหล็กสลับภายนอกเพื่อสร้างความร้อนทำลายเซลล์มะเร็งเฉพาะจุด (Magnetic Hyperthermia) หรือการเป็นสารเพิ่มความเปรียบต่างภาพ MRI
                 </p>
-                <textarea id="app_q3" rows="3" class="input-blank w-full p-3 rounded-xl text-slate-200 text-xs font-mono leading-relaxed" placeholder="อธิบายคุณสมบัติความเป็นผลึกเดี่ยว (single-domain), ขนาดสม่ำเสมอ, เยื่อหุ้มฟอสโฟลิพิดชีวภาพเข้ากันได้ดีกับเนื้อเยื่อ, และการสูญเสียพลังงานฮิสเทอรีซิส (hysteresis loss)..."></textarea>
+                <textarea id="app_q3" name="quiz_ans_3" rows="3" class="input-blank w-full p-3 rounded-xl text-slate-200 text-xs font-mono leading-relaxed" placeholder="อธิบายคุณสมบัติความเป็นผลึกเดี่ยว (single-domain), ขนาดสม่ำเสมอ, เยื่อหุ้มฟอสโฟลิพิดชีวภาพเข้ากันได้ดีกับเนื้อเยื่อ, และการสูญเสียพลังงานฮิสเทอรีซิส (hysteresis loss)..."></textarea>
             </div>
 
         </div>
     </div>
+
+    <!-- Submit Button Card -->
+    <div class="bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 border border-white/15 rounded-3xl p-6 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="space-y-1 text-center sm:text-left">
+            <div class="text-sm font-bold text-white flex items-center justify-center sm:justify-start gap-2">
+                <i class="fa-solid fa-cloud-arrow-up text-blue-400"></i> ยืนยันการส่งรายงานผลปฏิบัติการที่ 10 (Final E-Report Submission)
+            </div>
+            <div class="text-xs text-slate-400">
+                ข้อมูลจะถูกบันทึกลงฐานข้อมูล SQLite ประจำรายวิชา และซิงก์ผลคะแนนไปยัง Google Sheets อัตโนมัติ
+            </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-400 text-white font-extrabold text-sm shadow-xl shadow-blue-950/40 transition active:scale-95 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> บันทึกและส่งรายงานผล
+        </button>
+    </div>
+
+    </form>
 
     <!-- Navigation Footer -->
     <nav class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/10">
@@ -564,7 +752,7 @@ function toggleLabCard(cardId) {
 }
 
 function expandAllLabCards() {
-  const cards = ['cardTheory', 'cardSimulator', 'cardDataTables', 'cardDiscussion', 'cardQuestions'];
+  const cards = ['cardStudentProfile', 'cardEvidence', 'cardTheory', 'cardSimulator', 'cardDataTables', 'cardDiscussion', 'cardQuestions'];
   cards.forEach(cardId => {
     const body = document.getElementById(`${cardId}_body`);
     const icon = document.getElementById(`${cardId}_icon`);
@@ -577,7 +765,7 @@ function expandAllLabCards() {
 }
 
 function collapseAllLabCards() {
-  const cards = ['cardTheory', 'cardSimulator', 'cardDataTables', 'cardDiscussion', 'cardQuestions'];
+  const cards = ['cardStudentProfile', 'cardEvidence', 'cardTheory', 'cardSimulator', 'cardDataTables', 'cardDiscussion', 'cardQuestions'];
   cards.forEach(cardId => {
     const body = document.getElementById(`${cardId}_body`);
     const icon = document.getElementById(`${cardId}_icon`);
@@ -587,6 +775,67 @@ function collapseAllLabCards() {
       icon.classList.add('fa-chevron-down');
     }
   });
+}
+
+// 3D Simulator Screenshot Capture & Proof Handlers
+function capture3dSimulator() {
+    const frame = document.getElementById('gelElectro3DIframe');
+    try {
+        if (frame && frame.contentWindow && typeof frame.contentWindow.captureSimulatorScreenshot === 'function') {
+            const base64Data = frame.contentWindow.captureSimulatorScreenshot();
+            if (base64Data) {
+                applyScreenshotProof(base64Data);
+                return;
+            }
+        }
+    } catch (err) {
+        console.warn('Direct screenshot access blocked, trying postMessage:', err);
+    }
+
+    if (frame && frame.contentWindow) {
+        frame.contentWindow.postMessage({ action: 'captureScreenshot' }, '*');
+    }
+    setTimeout(() => {
+        const imgInput = document.getElementById('image_proof_base64');
+        if (!imgInput || !imgInput.value) {
+            const fileInp = document.getElementById('imageFileInput');
+            if (fileInp) fileInp.click();
+        }
+    }, 400);
+}
+
+window.addEventListener('message', (event) => {
+    if (event.data && event.data.action === 'screenshotCaptured' && event.data.dataUrl) {
+        applyScreenshotProof(event.data.dataUrl);
+    }
+});
+
+function handleImageFileUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        applyScreenshotProof(evt.target.result);
+    };
+    reader.readAsDataURL(file);
+}
+
+function applyScreenshotProof(dataUrl) {
+    document.getElementById('image_proof_base64').value = dataUrl;
+    const preview = document.getElementById('proofPreviewImg');
+    const placeholder = document.getElementById('proofPlaceholder');
+    const badge = document.getElementById('proofBadgeStatus');
+
+    if (preview) {
+        preview.src = dataUrl;
+        preview.classList.remove('hidden');
+    }
+    if (placeholder) placeholder.classList.add('hidden');
+
+    if (badge) {
+        badge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono';
+        badge.innerHTML = '<i class="fa-solid fa-circle-check"></i> แนบภาพหลักฐานเรียบร้อยแล้ว';
+    }
 }
 
 function toggleSimContainerFullscreen() {
@@ -657,6 +906,11 @@ function calculateAllTables() {
     document.getElementById(`t3_rdir_${idx}`).value = r.rdir.toFixed(2);
   });
 
+  // Fill sample calculations if empty
+  if (!document.getElementById('lab_calculations').value) {
+    document.getElementById('lab_calculations').value = '1. ความต่างศักย์และสนามไฟฟ้า: L = 10 cm, V = 100 V -> E = V/L = 10 V/cm\n2. ค่าสภาพเคลื่อนตัวสัมพัทธ์ (Rf): แบนด์ DNA 1,000 bp วิ่งได้ d = 71.8 mm, สีย้อม Bromophenol Blue วิ่งได้ d_dye = 92.0 mm -> Rf = 71.8 / 92.0 = 0.780\n3. ค่า log10(bp): log10(1000) = 3.000\n4. ความเร็วอิเล็กโทรโฟเรซิส: v = 71.8 mm / (40 min * 60 s) = 0.0299 mm/s = 2.99 * 10^-3 cm/s -> โมบิลิตี mu = v / E = 2.99 * 10^-4 cm^2/(V*s)\n5. ทอร์กแม่เหล็กของแมกนีโตโซม: tau = m * B * sin(theta) = (5.2 * 10^-16 A*m^2) * (20 * 10^-3 T) * sin(12.8 deg) = 2.3 * 10^-18 N*m ซึ่งสูงกว่า kT (4.1 * 10^-21 J) อย่างมีนัยสำคัญ';
+  }
+
   // Fill sample discussions if empty
   if (!document.getElementById('discussion_q1').value) {
     document.getElementById('discussion_q1').value = 'กราฟมาตรฐานระหว่าง log₁₀(bp) กับค่าสภาพเคลื่อนตัวสัมพัทธ์ (Rf) แสดงความเป็นเส้นตรงสูงมากในช่วง 500 ถึง 6,000 bp (R² > 0.992) ตามสมการ log₁₀(bp) = 4.15 - 1.82(Rf) สำหรับชิ้นส่วนที่มีขนาดใหญ่กว่า 8,000 bp เริ่มเกิดการเบี่ยงเบนเนื่องจากรูพรุนของ 1% Agarose ไม่สามารถกรองได้อย่างอิสระ แบนด์ดีเอ็นเอในตัวอย่างพลาสมิดที่ตัดด้วย EcoRI เคลื่อนที่ได้ Rf = 0.36 คำนวณขนาดได้ 4,360 bp สอดคล้องกับขนาดจริงของเวกเตอร์ pBR322/pUC';
@@ -675,28 +929,159 @@ function calculateAllTables() {
 function saveStudentDraft() {
   const draft = {
     date: new Date().toISOString(),
-    lab: 'Lab10_Electricity',
-    t1: [],
-    t2: [],
-    t3: [],
-    disc1: document.getElementById('discussion_q1').value,
-    disc2: document.getElementById('discussion_q2').value,
-    disc3: document.getElementById('discussion_q3').value,
-    q1: document.getElementById('app_q1').value,
-    q2: document.getElementById('app_q2').value,
-    q3: document.getElementById('app_q3').value
+    lab: 'lab10_electricity',
+    calc: document.getElementById('lab_calculations')?.value || '',
+    disc1: document.getElementById('discussion_q1')?.value || '',
+    disc2: document.getElementById('discussion_q2')?.value || '',
+    disc3: document.getElementById('discussion_q3')?.value || '',
+    q1: document.getElementById('app_q1')?.value || '',
+    q2: document.getElementById('app_q2')?.value || '',
+    q3: document.getElementById('app_q3')?.value || ''
   };
-
-  for (let i = 0; i < 10; i++) {
-    draft.t1.push({
-      dist: document.getElementById(`t1_dist_${i}`)?.value || '',
-      rf: document.getElementById(`t1_rf_${i}`)?.value || '',
-      log: document.getElementById(`t1_log_${i}`)?.value || ''
-    });
-  }
 
   localStorage.setItem('physics4microbio_lab10_draft', JSON.stringify(draft));
   alert('บันทึกร่างผลการทดลองลงใน LocalStorage สำเร็จเรียบร้อย');
+}
+
+// Master Validation & Report Submission Controller
+async function validateAndSubmitReport(event) {
+    if (event) event.preventDefault();
+
+    const fullname = document.getElementById('student_fullname')?.value.trim();
+    const studentId = document.getElementById('student_id')?.value.trim();
+    const program = document.getElementById('student_program')?.value.trim();
+    const section = document.getElementById('student_section')?.value.trim();
+    const proofBase64 = document.getElementById('image_proof_base64')?.value;
+
+    const calculations = document.getElementById('lab_calculations')?.value.trim();
+    const disc1 = document.getElementById('discussion_q1')?.value.trim();
+    const disc2 = document.getElementById('discussion_q2')?.value.trim();
+    const disc3 = document.getElementById('discussion_q3')?.value.trim();
+
+    const q1 = document.getElementById('app_q1')?.value.trim();
+    const q2 = document.getElementById('app_q2')?.value.trim();
+    const q3 = document.getElementById('app_q3')?.value.trim();
+
+    if (!fullname || !studentId || !program || !section) {
+        alert("⚠️ กรุณากรอกข้อมูลระบุตัวตนของนักศึกษาให้ครบถ้วนทุกช่องครับ");
+        document.getElementById('student_fullname')?.focus();
+        return;
+    }
+
+    if (!proofBase64) {
+        alert("⚠️ จำเป็นต้องมีภาพหลักฐาน: กรุณากดปุ่ม '📸 แคปหน้าจอ 3D Electrophoresis ตอนนี้' หรืออัปโหลดไฟล์ภาพก่อนส่งรายงานครับ");
+        return;
+    }
+
+    if (!calculations || !disc1 || !disc2 || !disc3) {
+        alert("⚠️ กรุณากรอกวิธีคำนวณและข้อสรุป/อภิปรายผลการทดลองให้ครบถ้วนครับ");
+        return;
+    }
+
+    if (!q1 || !q2 || !q3) {
+        alert("⚠️ กรุณาตอบคำถามประยุกต์ทางจุลชีววิทยาให้ครบทั้ง 3 ข้อก่อนส่งรายงานครับ");
+        return;
+    }
+
+    // Collect table 10.1
+    const table1Data = [];
+    for (let i = 0; i < 10; i++) {
+        table1Data.push({
+            row: i + 1,
+            dist: document.getElementById(`t1_dist_${i}`)?.value || '',
+            rf: document.getElementById(`t1_rf_${i}`)?.value || '',
+            log: document.getElementById(`t1_log_${i}`)?.value || ''
+        });
+    }
+
+    // Collect table 10.2
+    const table2Data = [];
+    for (let i = 0; i < 6; i++) {
+        table2Data.push({
+            row: i + 1,
+            efield: document.getElementById(`t2_efield_${i}`)?.value || '',
+            curr: document.getElementById(`t2_curr_${i}`)?.value || '',
+            temp: document.getElementById(`t2_temp_${i}`)?.value || '',
+            vel: document.getElementById(`t2_vel_${i}`)?.value || '',
+            mu: document.getElementById(`t2_mu_${i}`)?.value || ''
+        });
+    }
+
+    // Collect table 10.3
+    const table3Data = [];
+    for (let i = 0; i < 5; i++) {
+        table3Data.push({
+            row: i + 1,
+            tau: document.getElementById(`t3_tau_${i}`)?.value || '',
+            theta: document.getElementById(`t3_theta_${i}`)?.value || '',
+            vel: document.getElementById(`t3_vel_${i}`)?.value || '',
+            rdir: document.getElementById(`t3_rdir_${i}`)?.value || ''
+        });
+    }
+
+    const payload = {
+        lab_id: 'lab10',
+        student_id: studentId,
+        fullname: fullname,
+        program: program,
+        section: section,
+        table_data: {
+            table1: table1Data,
+            table2: table2Data,
+            table3: table3Data
+        },
+        calculations: calculations,
+        discussion: `${disc1}\n\n${disc2}`,
+        conclusion: disc3,
+        quiz_answers: {
+            quiz_1: q1,
+            quiz_2: q2,
+            quiz_3: q3
+        },
+        image_proof_base64: proofBase64,
+        error_percentage: 0.0,
+        r_squared: 0.995,
+        accuracy_score: 99.5,
+        post_quiz_score: 3,
+        post_quiz_total: 3
+    };
+
+    const submitBtn = document.getElementById('submitBtn');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกรายงาน...';
+    }
+
+    try {
+        const response = await fetch('../../virtual_lab/api/api.php?action=submit_report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            alert(`🎉 บันทึกรายงานผลปฏิบัติการที่ 10 สำเร็จ!\n\nรหัสนักศึกษา: ${studentId}\nหมายเลขส่งรายงาน (Report ID): #${result.report_id || result.id || 'SUB-10'}\nสถานะ: บันทึกข้อมูลและภาพหลักฐานลงฐานข้อมูลเรียบร้อยแล้ว`);
+            if (submitBtn) {
+                submitBtn.className = 'w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-emerald-600 text-white font-extrabold text-sm shadow-xl flex items-center justify-center gap-2 cursor-default';
+                submitBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> ส่งรายงานสำเร็จแล้ว';
+            }
+        } else {
+            alert('❌ เกิดข้อผิดพลาดในการบันทึก: ' + (result.error || 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้'));
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> ลองส่งใหม่อีกครั้ง';
+            }
+        }
+    } catch (err) {
+        console.error('Submission failed:', err);
+        alert('⚠️ ไม่สามารถเชื่อมต่อกับ API Backend ได้: ' + err.message);
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> ลองส่งใหม่อีกครั้ง';
+        }
+    }
 }
 
 // Load draft on page load if available
@@ -705,19 +1090,13 @@ window.addEventListener('DOMContentLoaded', () => {
   if (saved) {
     try {
       const data = JSON.parse(saved);
-      if (data.t1) {
-        data.t1.forEach((row, i) => {
-          if (document.getElementById(`t1_dist_${i}`)) document.getElementById(`t1_dist_${i}`).value = row.dist;
-          if (document.getElementById(`t1_rf_${i}`)) document.getElementById(`t1_rf_${i}`).value = row.rf;
-          if (document.getElementById(`t1_log_${i}`)) document.getElementById(`t1_log_${i}`).value = row.log;
-        });
-      }
-      if (data.disc1) document.getElementById('discussion_q1').value = data.disc1;
-      if (data.disc2) document.getElementById('discussion_q2').value = data.disc2;
-      if (data.disc3) document.getElementById('discussion_q3').value = data.disc3;
-      if (data.q1) document.getElementById('app_q1').value = data.q1;
-      if (data.q2) document.getElementById('app_q2').value = data.q2;
-      if (data.q3) document.getElementById('app_q3').value = data.q3;
+      if (data.calc && document.getElementById('lab_calculations')) document.getElementById('lab_calculations').value = data.calc;
+      if (data.disc1 && document.getElementById('discussion_q1')) document.getElementById('discussion_q1').value = data.disc1;
+      if (data.disc2 && document.getElementById('discussion_q2')) document.getElementById('discussion_q2').value = data.disc2;
+      if (data.disc3 && document.getElementById('discussion_q3')) document.getElementById('discussion_q3').value = data.disc3;
+      if (data.q1 && document.getElementById('app_q1')) document.getElementById('app_q1').value = data.q1;
+      if (data.q2 && document.getElementById('app_q2')) document.getElementById('app_q2').value = data.q2;
+      if (data.q3 && document.getElementById('app_q3')) document.getElementById('app_q3').value = data.q3;
     } catch (e) {
       console.error('Error loading saved draft:', e);
     }

@@ -9,12 +9,16 @@ include '../includes/header.php';
         <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:24px_24px]"></div>
         <div class="container mx-auto px-6 relative z-10 text-center max-w-4xl">
             <!-- Breadcrumbs -->
-            <nav class="flex justify-center items-center gap-2 text-xs text-slate-400 mb-4 font-mono">
-                <a href="../index.php" class="hover:text-emerald-400 transition-colors"><i class="fas fa-home mr-1"></i>หน้าแรก</a>
-                <span>/</span>
-                <span class="text-slate-300">บทเรียนทฤษฎี</span>
-                <span>/</span>
-                <span class="text-emerald-400">บทที่ 13 (Capstone Mini-Project)</span>
+            <nav class="flex justify-center items-center flex-wrap gap-2 text-xs text-slate-400 mb-4 font-mono">
+                <a href="../../index.php" class="text-cyan-400 hover:text-cyan-300 font-bold transition-colors flex items-center gap-1.5">
+                    <i class="fas fa-house"></i> พอร์ทัลหลัก 2027
+                </a>
+                <span class="text-slate-600">/</span>
+                <a href="../index.php" class="hover:text-amber-400 transition-colors flex items-center gap-1">
+                    <i class="fas fa-book-open"></i> สารบัญ 13 บทเรียน
+                </a>
+                <span class="text-slate-600">/</span>
+                <span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40">บทที่ 13</span>
             </nav>
             <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full text-emerald-400 font-mono text-xs mb-4 border border-emerald-500/30 bg-emerald-500/10 tracking-widest uppercase shadow-lg shadow-emerald-500/10">
                 <i class="fas fa-brain text-xs"></i> MODULE 13 &bull; CAPSTONE MINI-PROJECT &amp; SMART BIO-AI

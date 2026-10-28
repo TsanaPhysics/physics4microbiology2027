@@ -23,7 +23,7 @@
       title: "สวัสดีครับ! ยินดีต้อนรับสู่ฟิสิกส์สำหรับจุลชีววิทยา ✨",
       text: "สวัสดีครับนักศึกษาทุกคน อาจารย์ชีวะ (ผศ.ดร.ชีวะ ทัศนา) ขอต้อนรับเข้าสู่รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา 3(2-3-4) รายวิชานี้ออกแบบด้วยแนวคิด Low-Math, High-Intuition เรียนฟิสิกส์ให้เข้าใจง่ายผ่านเครื่องมือห้องแล็บจุลชีววิทยาจริงครับ",
       audio: "audio/intro_slide_1.mp3",
-      voice: "สวัสดีครับนักศึกษาทุกคน อาจารย์ชีวะ ทัศนา ขอต้อนรับเข้าสู่รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา จำนวน 3 หน่วยกิต ครับ รายวิชานี้ออกแบบด้วยแนวคิด โลว์แมท ไฮอินทูอิชัน เรียนฟิสิกส์ให้เข้าใจง่ายผ่านเครื่องมือห้องแล็บจุลชีววิทยาจริงทั้งสิบสองบทครับ"
+      voice: "สวัสดีครับนักศึกษาทุกคน อาจารย์ชีวะ ทัศนา ขอต้อนรับเข้าสู่รายวิชา สี่ ศูนย์ หนึ่ง หนึ่ง หนึ่ง หนึ่ง หนึ่ง ฟิสิกส์สำหรับจุลชีววิทยา จำนวน 3 หน่วยกิต ครับ รายวิชานี้ออกแบบด้วยแนวคิด โลว์แมท ไฮอินทูอิชัน เรียนฟิสิกส์ให้เข้าใจง่ายผ่านเครื่องมือห้องแล็บจุลชีววิทยาจริงทั้งสิบสองบทครับ"
     },
     {
       tab: "🔬 12 บท & แล็บ",
@@ -736,7 +736,8 @@
     activeAudioEl.onerror = () => {
       // Fallback to browser SpeechSynthesis if MP3 fails to load
       if ("speechSynthesis" in window && fallbackText) {
-        const utter = new SpeechSynthesisUtterance(fallbackText);
+        const spokenText = fallbackText.replace(/4011111/g, "สี่ ศูนย์ หนึ่ง หนึ่ง หนึ่ง หนึ่ง หนึ่ง");
+        const utter = new SpeechSynthesisUtterance(spokenText);
         utter.lang = "th-TH";
         utter.rate = 1.02;
         utter.onend = () => {
@@ -755,7 +756,8 @@
       playPromise.catch(() => {
         // If autoplay blocked or fallback needed
         if ("speechSynthesis" in window && fallbackText) {
-          const utter = new SpeechSynthesisUtterance(fallbackText);
+          const spokenText = fallbackText.replace(/4011111/g, "สี่ ศูนย์ หนึ่ง หนึ่ง หนึ่ง หนึ่ง หนึ่ง");
+          const utter = new SpeechSynthesisUtterance(spokenText);
           utter.lang = "th-TH";
           utter.rate = 1.02;
           utter.onend = () => {

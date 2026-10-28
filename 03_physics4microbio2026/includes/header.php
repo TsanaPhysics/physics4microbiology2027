@@ -110,79 +110,127 @@ elseif (strpos($currentFilename, '_zh.php') !== false) $currentLang = 'zh';
 ?>
 <body class="lang-<?php echo $currentLang; ?> pt-32 pb-16 min-h-screen">
 
-<nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl glass-nav rounded-2xl px-6 py-3 shadow-2xl">
-    <div class="flex items-center justify-between">
-        <!-- Logo -->
-        <a href="<?php echo $basePath ?? ''; ?>index.php" class="flex items-center space-x-3 group">
-            <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                <i class="fas fa-atom text-white text-xl animate-spin-slow"></i>
+<nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[96%] max-w-7xl glass-nav rounded-2xl px-5 py-3 shadow-2xl">
+    <div class="flex items-center justify-between gap-2">
+        <!-- Logo (Links back to Master Unified Course Portal) -->
+        <a href="<?php echo $basePath ?? ''; ?>../index.php" class="flex items-center space-x-3 group" title="กลับหน้าพอร์ทัลหลัก 4011111 ฟิสิกส์สำหรับจุลชีววิทยา">
+            <div class="w-10 h-10 bg-gradient-to-br from-cyan-500 via-teal-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform text-slate-950 font-bold">
+                <i class="fas fa-microscope text-lg"></i>
             </div>
-            <div class="hidden md:block">
-                <span class="block text-sm font-bold tracking-wider text-white">PHYSICS 2026</span>
-                <span class="block text-[10px] text-emerald-400 uppercase tracking-widest leading-none">Microbiology</span>
+            <div>
+                <span class="block text-sm font-bold tracking-wider text-white group-hover:text-cyan-300 transition-colors">PHYSICS 2027</span>
+                <span class="block text-[10px] text-emerald-400 uppercase tracking-widest leading-none">RBRU Microbiology</span>
             </div>
         </a>
 
         <!-- Desktop Menu -->
         <div class="hidden lg:flex items-center space-x-1">
-            <a href="<?php echo $basePath ?? ''; ?>index.php" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-emerald-400 transition-colors rounded-xl hover:bg-white/5">
-                <span class="lang-block" lang="th">หน้าแรก</span>
-                <span class="lang-block" lang="en">Home</span>
-                <span class="lang-block" lang="zh">首页</span>
+            <a href="<?php echo $basePath ?? ''; ?>../index.php" class="px-3.5 py-2 text-xs font-semibold text-gray-300 hover:text-cyan-400 transition-colors rounded-xl hover:bg-white/5 flex items-center gap-1.5" title="พอร์ทัลรวมหลักสูตร">
+                <i class="fa-solid fa-house text-cyan-400"></i>
+                <span>พอร์ทัลหลัก</span>
             </a>
             
+            <!-- Chapters Dropdown -->
             <div class="relative group py-2">
-                <button class="px-4 py-2 text-sm font-medium text-gray-300 group-hover:text-emerald-400 flex items-center space-x-1 transition-colors">
-                    <span class="lang-block" lang="th">บทเรียน</span>
-                    <span class="lang-block" lang="en">Chapters</span>
-                    <span class="lang-block" lang="zh">章节</span>
+                <a href="<?php echo $basePath ?? ''; ?>index.php" class="px-3.5 py-2 text-xs font-semibold text-gray-300 group-hover:text-amber-400 flex items-center space-x-1 transition-colors rounded-xl hover:bg-white/5">
+                    <i class="fa-solid fa-book-open text-amber-400"></i>
+                    <span>13 บทเรียน</span>
                     <i class="fas fa-chevron-down text-[10px] ml-1 opacity-50"></i>
-                </button>
-                <div class="absolute top-full left-0 w-64 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all shadow-2xl -translate-y-2 group-hover:translate-y-1">
-                    <div class="grid grid-cols-1 gap-1 max-h-[400px] overflow-y-auto pr-1">
+                </a>
+                <div class="absolute top-full left-0 w-72 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all shadow-2xl -translate-y-2 group-hover:translate-y-1 z-50">
+                    <div class="grid grid-cols-1 gap-1 max-h-[420px] overflow-y-auto pr-1">
                         <?php 
                         $navModules = [
-                            ['01', 'Unit Systems', 'ระบบหน่วย', '01'],
-                            ['02', 'Vectors', 'เวกเตอร์', '02'],
-                            ['03', 'Motion', 'การเคลื่อนที่', '03'],
-                            ['04', 'Newton\'s Laws', 'กฎนิวตัน', '04'],
-                            ['05', 'Momentum', 'โมเมนตัม', '05'],
-                            ['06', 'Equilibrium', 'สมดุล', '06'],
-                            ['07', 'Work & Energy', 'งานและพลังงาน', '07'],
-                            ['08', 'Simple Machines', 'เครื่องกล', '08'],
-                            ['09', 'Thermodynamics', 'อุณหพลศาสตร์', '09'],
-                            ['10', 'Electricity', 'ไฟฟ้า', '10'],
-                            ['11', 'Optics', 'ทัศนศาสตร์', '11'],
-                            ['12', 'Radioactivity', 'กัมมันตภาพรังสี', '12'],
-                            ['13', 'Modern Microbio', 'จุลชีววิทยาฯ', '13'],
+                            ['01', 'ระบบหน่วยและการวัดระดับจุลภาค', 'ch01_th.php'],
+                            ['02', 'เวกเตอร์และแรงในระบบชีวภาพ', 'ch02_th.php'],
+                            ['03', 'จลนศาสตร์และความหนืดของของไหล', 'ch03_th.php'],
+                            ['04', 'กฎของนิวตันและเครื่องปั่นเหวี่ยง', 'ch04_th.php'],
+                            ['05', 'โมเมนตัม การดล และการชนในระดับเซลล์', 'ch05_th.php'],
+                            ['06', 'สมดุลกล ความดันของไหล และออสโมซิส', 'ch06_th.php'],
+                            ['07', 'งาน พลังงาน และมอเตอร์โมเลกุล', 'ch07_th.php'],
+                            ['08', 'การหมุนและกลศาสตร์นาโนของแฟลกเจลลา', 'ch08_th.php'],
+                            ['09', 'อุณหพลศาสตร์และ PCR Thermocycler', 'ch09_th.php'],
+                            ['10', 'ไฟฟ้าและเจลอิเล็กโทรโฟรีซิส', 'ch10_th.php'],
+                            ['11', 'ทัศนศาสตร์ กล้อง 100x และสเปกโทรฯ', 'ch11_th.php'],
+                            ['12', 'ฟิสิกส์นิวเคลียร์และรังสีทำลายเชื้อ', 'ch12_th.php'],
+                            ['13', 'โครงงานจุลชีววิทยาอัจฉริยะ (Capstone)', 'ch13_th.php'],
                         ];
                         foreach($navModules as $nm):
-                            // Point to Master file for dropdown as well
-                            $targetFile = "ch" . $nm[3] . "_" . $nm[3] . ".php";
                         ?>
-                        <a href="<?php echo $basePath ?? ''; ?>chapters/<?php echo $targetFile; ?>" class="flex items-center space-x-3 p-3 rounded-xl hover:bg-emerald-500/10 transition-colors group/item">
-                            <span class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-emerald-400 group-hover/item:bg-emerald-500 group-hover/item:text-white"><?php echo $nm[0]; ?></span>
-                            <div>
-                                <span class="block text-xs font-semibold text-white"><?php echo $nm[1]; ?></span>
-                                <span class="block text-[10px] text-gray-400"><?php echo $nm[2]; ?></span>
-                            </div>
+                        <a href="<?php echo $basePath ?? ''; ?>chapters/<?php echo $nm[2]; ?>" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-amber-500/10 transition-colors group/item">
+                            <span class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-amber-400 group-hover/item:bg-amber-500 group-hover/item:text-slate-950"><?php echo $nm[0]; ?></span>
+                            <span class="block text-xs font-medium text-slate-200 group-hover/item:text-white truncate"><?php echo $nm[1]; ?></span>
                         </a>
                         <?php endforeach; ?>
                     </div>
                 </div>
             </div>
 
-            <a href="#" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-emerald-400 transition-colors rounded-xl hover:bg-white/5">
-                <span class="lang-block" lang="th">ติดต่อ</span>
-                <span class="lang-block" lang="en">Contact</span>
-                <span class="lang-block" lang="zh">联系</span>
+            <!-- Labs Dropdown -->
+            <div class="relative group py-2">
+                <a href="<?php echo $basePath ?? ''; ?>../virtual_lab/index.html" class="px-3.5 py-2 text-xs font-semibold text-gray-300 group-hover:text-emerald-400 flex items-center space-x-1 transition-colors rounded-xl hover:bg-white/5">
+                    <i class="fa-solid fa-flask text-emerald-400"></i>
+                    <span>12 ปฏิบัติการ</span>
+                    <i class="fas fa-chevron-down text-[10px] ml-1 opacity-50"></i>
+                </a>
+                <div class="absolute top-full left-0 w-80 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all shadow-2xl -translate-y-2 group-hover:translate-y-1 z-50">
+                    <div class="grid grid-cols-1 gap-1 max-h-[420px] overflow-y-auto pr-1">
+                        <?php 
+                        $navLabs = [
+                            ['01', 'การวัดละเอียด & สอบเทียบไมโครปิเปต', 'lab01_measurement.php'],
+                            ['02', 'เวกเตอร์และแรงในระบบชีวภาพ', 'lab02_vectors.php'],
+                            ['03', 'จลนศาสตร์ ความหนืด & กฎสโตกส์', 'lab03_motion.php'],
+                            ['04', 'กฎนิวตันและการปั่นเหวี่ยง Centrifuge', 'lab04_newton.php'],
+                            ['05', 'โมเมนตัมและการชนระดับเซลล์ Lysis', 'lab05_momentum.php'],
+                            ['06', 'สมดุลกล ความดัน & ปรากฏการณ์ออสโมซิส', 'lab06_equilibrium.php'],
+                            ['07', 'งาน พลังงาน & ATP Synthase', 'lab07_energy.php'],
+                            ['08', 'การหมุนและกลศาสตร์นาโนแฟลกเจลลา', 'lab08_machines.php'],
+                            ['09', 'อุณหพลศาสตร์และ PCR Thermal Cycler', 'lab09_heat.php'],
+                            ['10', 'ไฟฟ้า & เจลอิเล็กโทรโฟเรซิส', 'lab10_electricity.php'],
+                            ['11', 'ทัศนศาสตร์ กล้อง 100x Oil & OD600', 'lab11_optics.php'],
+                            ['12', 'ฟิสิกส์นิวเคลียร์ & รังสีทำลายเชื้อ', 'lab12_radioactivity.php'],
+                        ];
+                        foreach($navLabs as $nl):
+                        ?>
+                        <a href="<?php echo $basePath ?? ''; ?>labs/<?php echo $nl[2]; ?>" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-emerald-500/10 transition-colors group/item">
+                            <span class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-emerald-400 group-hover/item:bg-emerald-500 group-hover/item:text-slate-950">L<?php echo $nl[0]; ?></span>
+                            <span class="block text-xs font-medium text-slate-200 group-hover/item:text-white truncate"><?php echo $nl[1]; ?></span>
+                        </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Virtual Lab Hub -->
+            <a href="<?php echo $basePath ?? ''; ?>../virtual_lab/index.html" class="px-3.5 py-2 text-xs font-semibold text-gray-300 hover:text-cyan-400 transition-colors rounded-xl hover:bg-white/5 flex items-center gap-1.5" title="ห้องแล็บ 3D เสมือนจริง">
+                <i class="fa-solid fa-cubes text-cyan-400"></i>
+                <span>Virtual Lab Hub</span>
+            </a>
+
+            <!-- 3D WebAR Scanner -->
+            <a href="<?php echo $basePath ?? ''; ?>webar/ar_aruco_textbook.html?ar=1" target="_blank" class="px-3.5 py-2 text-xs font-semibold text-gray-300 hover:text-purple-400 transition-colors rounded-xl hover:bg-white/5 flex items-center gap-1.5" title="ส่องมาร์กเกอร์ ArUco ในหนังสือ">
+                <i class="fa-solid fa-camera-rotate text-purple-400"></i>
+                <span>3D WebAR</span>
             </a>
         </div>
 
-        <!-- Language & Action -->
-        <div class="flex items-center space-x-4">
+        <!-- Language & Admin Action -->
+        <div class="flex items-center space-x-3">
+            <a href="<?php echo $basePath ?? ''; ?>../admin/index.php" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5" title="เข้าสู่ระบบอาจารย์ผู้สอน">
+                <i class="fa-solid fa-user-shield"></i>
+                <span class="hidden sm:inline">อาจารย์</span>
+            </a>
             <div class="flex items-center bg-white/5 rounded-xl p-1 border border-white/10">
-                <button onclick="handleLangChange('th')" class="lang-btn w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold transition-all hover:bg-white/10" id="btn-th">TH</button>
+                <button onclick="handleLangChange('th')" class="lang-btn w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold transition-all hover:bg-white/10" id="btn-th">TH</button>
+                <button onclick="handleLangChange('en')" class="lang-btn w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold transition-all hover:bg-white/10" id="btn-en">EN</button>
+                <button onclick="handleLangChange('zh')" class="lang-btn w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold transition-all hover:bg-white/10" id="btn-zh">ZH</button>
+            </div>
+            <button class="lg:hidden w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white">
+                <i class="fas fa-bars text-xs"></i>
+            </button>
+        </div>
+    </div>
+</nav>
                 <button onclick="handleLangChange('en')" class="lang-btn w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold transition-all hover:bg-white/10" id="btn-en">EN</button>
                 <button onclick="handleLangChange('zh')" class="lang-btn w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold transition-all hover:bg-white/10" id="btn-zh">ZH</button>
             </div>

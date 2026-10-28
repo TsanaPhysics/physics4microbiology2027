@@ -166,7 +166,7 @@ class Sim3DEngine {
       this.apparatusGroup.remove(obj);
     }
 
-    // Build specific 3D model according to Lab Number
+    // Build specific 3D model according to Master Plan 2026/2027
     switch (labId) {
       case "lab01":
         this.buildLab01Micropipette(params);
@@ -181,28 +181,28 @@ class Sim3DEngine {
         this.buildLab04Centrifuge(params);
         break;
       case "lab05":
-        this.buildLab05IncubatorPCR(params);
+        this.buildLab05Momentum(params);
         break;
       case "lab06":
-        this.buildLab06Autoclave(params);
+        this.buildLab06Osmosis(params);
         break;
       case "lab07":
-        this.buildLab07GramStain(params);
+        this.buildLab07ATPSynthase(params);
         break;
       case "lab08":
-        this.buildLab08GelElectrophoresis(params);
+        this.buildLab08Flagella(params);
         break;
       case "lab09":
-        this.buildLab09OpticsRefraction(params);
+        this.buildLab05IncubatorPCR(params);
         break;
       case "lab10":
-        this.buildLab10Microscope(params);
+        this.buildLab08GelElectrophoresis(params);
         break;
       case "lab11":
-        this.buildLab11UVSterilization(params);
+        this.buildLab10Microscope(params);
         break;
       case "lab12":
-        this.buildLab12Spectrophotometer(params);
+        this.buildLab11UVSterilization(params);
         break;
       case "lab13":
       default:
@@ -910,6 +910,153 @@ class Sim3DEngine {
   /* -------------------------------------------------------------
    * Lab 13: Integrated Smart Microbiology Sensor Rig Sandbox
    * ------------------------------------------------------------- */
+
+  /* -------------------------------------------------------------
+   * Lab 05: Microscopic Collision Air Track & Momentum Stage 3D
+   * ------------------------------------------------------------- */
+  buildLab05Momentum(p) {
+    const group = new THREE.Group();
+    // Air track rail
+    const railGeo = new THREE.BoxGeometry(7.0, 0.25, 0.8);
+    const railMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.85, roughness: 0.2 });
+    const rail = new THREE.Mesh(railGeo, railMat);
+    rail.position.set(0, 1.2, 0);
+    rail.castShadow = true;
+    group.add(rail);
+
+    // Glider Cart 1 (Amber)
+    const cart1Geo = new THREE.BoxGeometry(0.8, 0.45, 0.6);
+    const cart1Mat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.5, roughness: 0.3 });
+    const cart1 = new THREE.Mesh(cart1Geo, cart1Mat);
+    cart1.position.set(-1.2, 1.55, 0);
+    cart1.castShadow = true;
+    group.add(cart1);
+
+    // Glider Cart 2 (Cyan)
+    const cart2Geo = new THREE.BoxGeometry(0.8, 0.45, 0.6);
+    const cart2Mat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, metalness: 0.5, roughness: 0.3 });
+    const cart2 = new THREE.Mesh(cart2Geo, cart2Mat);
+    cart2.position.set(1.2, 1.55, 0);
+    cart2.castShadow = true;
+    group.add(cart2);
+
+    this.dynamicObjects.push({ type: "collision_cart1", obj: cart1 });
+    this.dynamicObjects.push({ type: "collision_cart2", obj: cart2 });
+
+    this.apparatusGroup.add(group);
+  }
+
+  /* -------------------------------------------------------------
+   * Lab 06: Osmometer & U-Tube Hydrostatic Stage 3D
+   * ------------------------------------------------------------- */
+  buildLab06Osmosis(p) {
+    const group = new THREE.Group();
+    // U-Tube glass geometry
+    const tubeMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.6, roughness: 0.1, transmission: 0.9 });
+    
+    // Left column
+    const leftCol = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 4.0, 24), tubeMat);
+    leftCol.position.set(-1.2, 2.2, 0);
+    group.add(leftCol);
+
+    // Right column
+    const rightCol = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 4.0, 24), tubeMat);
+    rightCol.position.set(1.2, 2.2, 0);
+    group.add(rightCol);
+
+    // Bottom connecting tube
+    const botTube = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 2.4, 24), tubeMat);
+    botTube.rotation.z = Math.PI / 2;
+    botTube.position.set(0, 0.35, 0);
+    group.add(botTube);
+
+    // Semipermeable membrane disc in the middle
+    const memMat = new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x10b981, emissiveIntensity: 0.5 });
+    const mem = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.08, 24), memMat);
+    mem.rotation.z = Math.PI / 2;
+    mem.position.set(0, 0.35, 0);
+    group.add(mem);
+
+    // Solution Liquid in Right Tube (Hypertonic level rises)
+    const liqMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.75 });
+    const liqRight = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 2.8, 24), liqMat);
+    liqRight.position.set(1.2, 1.6, 0);
+    group.add(liqRight);
+
+    this.apparatusGroup.add(group);
+  }
+
+  /* -------------------------------------------------------------
+   * Lab 07: F0F1 ATP Synthase Rotary Motor 3D
+   * ------------------------------------------------------------- */
+  buildLab07ATPSynthase(p) {
+    const group = new THREE.Group();
+    // Membrane lipid bilayer slab
+    const memGeo = new THREE.BoxGeometry(5.0, 0.5, 4.0);
+    const memMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.6 });
+    const membrane = new THREE.Mesh(memGeo, memMat);
+    membrane.position.set(0, 1.2, 0);
+    group.add(membrane);
+
+    // F0 c-ring rotor in membrane
+    const f0Geo = new THREE.CylinderGeometry(0.8, 0.8, 0.9, 16);
+    const f0Mat = new THREE.MeshStandardMaterial({ color: 0x10b981, metalness: 0.4, roughness: 0.3 });
+    const f0 = new THREE.Mesh(f0Geo, f0Mat);
+    f0.position.set(0, 1.2, 0);
+    group.add(f0);
+
+    // Central stalk shaft (gamma subunit)
+    const stalkGeo = new THREE.CylinderGeometry(0.18, 0.18, 1.8, 16);
+    const stalkMat = new THREE.MeshStandardMaterial({ color: 0xec4899, metalness: 0.7 });
+    const stalk = new THREE.Mesh(stalkGeo, stalkMat);
+    stalk.position.set(0, 2.2, 0);
+    group.add(stalk);
+
+    // F1 hexamer head (alpha3 beta3)
+    const f1Geo = new THREE.SphereGeometry(1.0, 24, 24);
+    const f1Mat = new THREE.MeshStandardMaterial({ color: 0x6366f1, roughness: 0.3 });
+    const f1 = new THREE.Mesh(f1Geo, f1Mat);
+    f1.position.set(0, 2.9, 0);
+    group.add(f1);
+
+    this.dynamicObjects.push({ type: "atp_rotor", obj: f0 });
+    this.dynamicObjects.push({ type: "atp_stalk", obj: stalk });
+
+    this.apparatusGroup.add(group);
+  }
+
+  /* -------------------------------------------------------------
+   * Lab 08: Bacterial Flagellar Rotary Motor 3D
+   * ------------------------------------------------------------- */
+  buildLab08Flagella(p) {
+    const group = new THREE.Group();
+    // Bacterial cell body (Rod-shaped bacillus)
+    const bodyGeo = new THREE.CapsuleGeometry ? new THREE.CapsuleGeometry(1.0, 2.5, 16, 24) : new THREE.CylinderGeometry(1.0, 1.0, 2.5, 24);
+    const bodyMat = new THREE.MeshStandardMaterial({ color: 0x14b8a6, roughness: 0.4 });
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.rotation.z = Math.PI / 2;
+    body.position.set(0, 2.0, 0);
+    group.add(body);
+
+    // Flagellar Hook & Filament (Helical coil)
+    const curvePoints = [];
+    for (let t = 0; t <= 4 * Math.PI; t += 0.2) {
+      curvePoints.push(new THREE.Vector3(
+        -1.4 - (t * 0.25),
+        2.0 + Math.sin(t) * 0.35,
+        Math.cos(t) * 0.35
+      ));
+    }
+    const curve = new THREE.CatmullRomCurve3(curvePoints);
+    const tubeGeo = new THREE.TubeGeometry(curve, 64, 0.08, 12, false);
+    const tubeMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.3 });
+    const filament = new THREE.Mesh(tubeGeo, tubeMat);
+    group.add(filament);
+
+    this.dynamicObjects.push({ type: "flagella_filament", obj: filament });
+    this.apparatusGroup.add(group);
+  }
+
   buildLab13SmartSensorSandbox(p) {
     const group = new THREE.Group();
 

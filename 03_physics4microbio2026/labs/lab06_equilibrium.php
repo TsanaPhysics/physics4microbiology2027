@@ -4,6 +4,39 @@ $basePath = '../';
 include '../includes/header.php';
 ?>
 
+    <!-- 🧭 Standardized Breadcrumb & Two-Way Course Navigation Bar -->
+    <div class="standardized-lab-breadcrumb max-w-7xl mx-auto px-4 sm:px-6 mb-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 border border-emerald-500/30 rounded-2xl px-5 py-3.5 shadow-2xl backdrop-blur-xl">
+            <div class="flex items-center flex-wrap gap-2 text-xs font-mono text-slate-300">
+                <a href="../../index.php" class="text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-house"></i> พอร์ทัลหลัก 2027
+                </a>
+                <span class="text-slate-600">/</span>
+                <a href="../index.php" class="text-amber-400 hover:text-amber-300 transition flex items-center gap-1 font-semibold">
+                    <i class="fa-solid fa-book-open"></i> สารบัญหลักสูตร
+                </a>
+                <span class="text-slate-600">/</span>
+                <span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40">LAB 06</span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <a href="../chapters/ch06_th.php" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition flex items-center gap-1.5 shadow-md hover:scale-105">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <span>📖 อ่านทฤษฎีบทที่ 6</span>
+                </a>
+                <a href="../../virtual_lab/index.html?lab=6" target="_blank" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition flex items-center gap-1.5 shadow-md hover:scale-105">
+                    <i class="fa-solid fa-flask"></i>
+                    <span>🥽 Virtual Lab Hub</span>
+                </a>
+                <a href="../webar/ar_aruco_textbook.html?lab=6&ar=1" target="_blank" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 transition flex items-center gap-1.5 shadow-md hover:scale-105">
+                    <i class="fa-solid fa-camera-rotate"></i>
+                    <span>📱 3D WebAR (Marker 5)</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
 <!-- MathJax 3 Configuration for Academic Equation Rendering -->
 <script>
 window.MathJax = {
@@ -231,6 +264,12 @@ window.MathJax = {
                 </div>
             </div>
             <div class="flex items-center gap-2" onclick="event.stopPropagation()">
+                <a href="../webar/ar_aruco_textbook.html?lab=6&ar=1" target="_blank" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-950/40 transition flex items-center gap-1.5 active:scale-95" title="เปิดกล้องส่อง 3D WebAR ArUco Marker ID 5">
+                    <i class="fa-solid fa-vr-cardboard text-sm"></i> <span>📱 ส่องกล้อง 3D WebAR</span>
+                </a>
+                <button type="button" onclick="capture3dSimulator()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-400 hover:from-amber-400 text-slate-950 shadow-lg shadow-amber-950/40 transition flex items-center gap-1.5 active:scale-95">
+                    <i class="fa-solid fa-camera-retro text-xs"></i> <span>📸 แคปหน้าจอ 3D</span>
+                </button>
                 <button onclick="toggleSimContainerFullscreen()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-400 text-xs font-mono transition flex items-center gap-1">
                     <i class="fa-solid fa-up-right-from-square text-[10px]"></i> เปิดเต็มหน้าต่าง
                 </button>
@@ -243,7 +282,7 @@ window.MathJax = {
         <div id="cardSimulator_body" class="p-0 border-t border-white/5 relative">
             <!-- Iframe Container -->
             <div id="simIframeWrapper" class="w-full h-[620px] bg-slate-950 relative">
-                <iframe id="osmosis3DIframe" src="../simulations/sim06_osmosis_3d.html" class="w-full h-full border-0"></iframe>
+                <iframe id="osmosis3DIframe" src="../simulations/sim06_osmosis_3d.html" class="w-full h-full border-0" allow="camera; microphone; fullscreen; autoplay; xr-spatial-tracking; display-capture"></iframe>
             </div>
             
             <!-- Quick Simulator Helper Bar -->
@@ -260,6 +299,125 @@ window.MathJax = {
             </div>
         </div>
     </div>
+
+    <!-- Global Control Bar -->
+    <div class="flex items-center justify-between bg-slate-900/60 p-4 rounded-2xl border border-white/10 text-xs">
+        <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-ping"></span>
+            <span class="font-bold text-white">ระบบรายงานผลดิจิทัล (Digital Lab Report System)</span>
+            <span class="text-slate-400 hidden sm:inline">• รองรับการแคปหลักฐาน 3D และส่งข้อมูลขึ้นระบบอัตโนมัติ</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button type="button" onclick="expandAllLabCards()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-sky-400 border border-sky-500/30 transition flex items-center gap-1.5 active:scale-95">
+                <i class="fa-solid fa-angles-down text-xs"></i> <span>ขยายทุกส่วน</span>
+            </button>
+            <button type="button" onclick="collapseAllLabCards()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10 transition flex items-center gap-1.5 active:scale-95">
+                <i class="fa-solid fa-angles-up text-xs"></i> <span>ย่อทุกส่วน</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Interactive E-Report Submission Form -->
+    <form id="labReportForm" onsubmit="validateAndSubmitReport(event)" class="space-y-6">
+
+        <!-- 1. Student Profile Card (Mandatory) -->
+        <div id="cardStudentProfile" class="bg-slate-900/90 border border-sky-500/30 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl space-y-4">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-id-card text-sky-400"></i>
+                    ข้อมูลนักศึกษาผู้ส่งรายงานผลปฏิบัติการ (Student Identification)
+                </h2>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-rose-400 font-semibold hidden sm:inline">* จำเป็นต้องกรอกทุกช่อง</span>
+                    <button type="button" onclick="toggleLabCard('cardStudentProfile')" class="card-toggle-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10 transition flex items-center gap-1.5" title="ย่อ/ขยายการ์ด">
+                        <i id="cardStudentProfile_icon" class="fa-solid fa-chevron-up text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="cardStudentProfile_body" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 transition-all">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        ชื่อ - นามสกุล (Full Name) <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" id="student_fullname" name="student_fullname" placeholder="เช่น นายกิตติคุณ มั่นคง" required class="w-full bg-slate-950 border border-white/15 focus:border-sky-400 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        รหัสนักศึกษา (Student ID) <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" id="student_id" name="student_id" placeholder="เช่น 67144001" pattern="[0-9]{6,12}" required class="w-full bg-slate-950 border border-white/15 focus:border-sky-400 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition font-mono">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        สาขาวิชา (Program) <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" id="student_program" name="student_program" value="วิทยาศาสตร์และเทคโนโลยี จุลชีววิทยา" required class="w-full bg-slate-950 border border-white/15 focus:border-sky-400 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-300">
+                        กลุ่มเรียน / Section <span class="text-rose-400">*</span>
+                    </label>
+                    <input type="text" id="student_section" name="student_section" value="Sec 01" required class="w-full bg-slate-950 border border-white/15 focus:border-sky-400 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none transition font-mono">
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Snapshot & Experiment Evidence Card (Mandatory Proof) -->
+        <div id="cardEvidence" class="bg-slate-900/90 border border-sky-500/30 rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-xl space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
+                <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-camera text-sky-400"></i>
+                    ภาพถ่ายหรือแคปหน้าจอระหว่างทดลอง (Experiment Screenshot Proof)
+                </h2>
+                <div class="flex items-center gap-2">
+                    <div id="proofBadgeStatus" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 font-mono">
+                        <i class="fa-solid fa-circle-exclamation"></i> ยังไม่มีภาพหลักฐาน (จำเป็นก่อนส่ง)
+                    </div>
+                    <button type="button" onclick="toggleLabCard('cardEvidence')" class="card-toggle-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10 transition flex items-center gap-1.5" title="ย่อ/ขยายการ์ด">
+                        <i id="cardEvidence_icon" class="fa-solid fa-chevron-up text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="cardEvidence_body" class="space-y-4 transition-all">
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    ตามข้อกำหนดของรายวิชา นักศึกษาจะต้องแนบภาพถ่ายหน้าจอระหว่างการทดลองบน 3D U-Tube Osmometer & Cell Membrane Simulator เพื่อยืนยันว่าได้สังเกตปรากฏการณ์จริง
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                    <div class="md:col-span-5 space-y-3">
+                        <button type="button" onclick="capture3dSimulator()" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-400 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition active:scale-95">
+                            <i class="fa-solid fa-camera-retro text-base"></i> 📸 แคปหน้าจอ 3D Osmometer ตอนนี้
+                        </button>
+                        
+                        <div class="text-center text-[11px] text-slate-500 font-mono">— หรือ —</div>
+
+                        <label class="w-full py-2.5 px-4 rounded-2xl bg-slate-950 hover:bg-slate-800 text-slate-300 border border-white/15 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition">
+                            <i class="fa-solid fa-upload"></i> อัปโหลดไฟล์ภาพ / ถ่ายภาพจากกล้อง
+                            <input type="file" id="imageFileInput" accept="image/*" capture="environment" onchange="handleImageFileUpload(event)" class="hidden">
+                        </label>
+
+                        <div class="text-[11px] text-slate-400">
+                            รองรับไฟล์ภาพ PNG, JPG, JPEG ขนาดไม่เกิน 5 MB
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-7 flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-950 border border-dashed border-white/20 min-h-[160px] relative overflow-hidden">
+                        <img id="proofPreviewImg" src="" alt="Experiment Proof Preview" class="max-h-[180px] w-auto rounded-xl object-contain hidden border border-white/10 shadow-lg">
+                        <div id="proofPlaceholder" class="text-center space-y-1 text-slate-500 py-6">
+                            <i class="fa-regular fa-image text-4xl mb-1"></i>
+                            <div class="text-xs font-semibold">ยังไม่มีภาพหลักฐานการทดลอง</div>
+                            <div class="text-[10px]">กดปุ่มแคปหน้าจอ 3D หรือเลือกไฟล์ภาพด้านซ้าย</div>
+                        </div>
+                        <input type="hidden" id="image_proof_base64" name="image_proof_base64" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <!-- Section 3: Data Recording Tables (Strict Blank with interactive auto-calculate helper) -->
     <div id="cardDataTables" class="bg-slate-900/80 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl overflow-hidden transition-all duration-300">
@@ -536,18 +694,30 @@ window.MathJax = {
         </div>
 
         <div id="cardDiscussion_body" class="p-6 space-y-6 border-t border-white/5">
+            <div class="space-y-2.5">
+                <label class="text-xs font-bold text-sky-400 flex items-center gap-2">
+                    <i class="fa-solid fa-calculator"></i> 1. การแสดงวิธีคำนวณความดันออสโมซิสและสมการ van 't Hoff (Calculations):
+                </label>
+                <div class="p-3 rounded-xl bg-slate-950/70 border border-white/10 text-xs text-slate-300 font-mono space-y-1">
+                    <div class="text-sky-300 font-bold">สูตรความสัมพันธ์:</div>
+                    <div>$\Pi_{\text{theor}} = i C R T = i \left(\frac{n}{V}\right) R T, \quad \Pi_{\text{exp}} = \rho g \Delta h$</div>
+                    <div>$\%\text{Error} = \frac{|\Pi_{\text{exp}} - \Pi_{\text{theor}}|}{\Pi_{\text{theor}}} \times 100\%$</div>
+                </div>
+                <textarea id="lab_calculations" name="lab_calculations" rows="4" class="input-blank w-full p-3 rounded-xl text-xs text-slate-200 leading-relaxed font-mono placeholder-slate-500" placeholder="แสดงการคำนวณความดันออสโมซิสทฤษฎี &Pi; = iCRT และความดันจากการทดลอง &Pi; = &rho;g&Delta;h เช่น ที่ความเข้มข้น 0.2 M: &Pi; = 1 * 200 mol/m³ * 8.314 * 298.15 = 495.7 kPa..."></textarea>
+            </div>
+
             <div class="space-y-2">
                 <label class="text-xs font-bold text-sky-400 flex items-center gap-2">
-                    <i class="fa-solid fa-chart-pie"></i> 1. การวิเคราะห์และวิจารณ์ผลการทดลอง (Experimental Discussion):
+                    <i class="fa-solid fa-chart-pie"></i> 2. การวิเคราะห์และวิจารณ์ผลการทดลอง (Experimental Discussion):
                 </label>
-                <textarea id="discussionText" rows="4" class="input-blank w-full p-3 rounded-xl text-xs text-slate-200 leading-relaxed font-sans placeholder-slate-500" placeholder="อภิปรายผลการทดสอบความดันออสโมซิสในหลอด U-Tube ความสอดคล้องกับกฎ van 't Hoff พฤติกรรมของเซลล์ยีสต์ในสภาวะไฮโปโทนิก ไฮเพอร์โทนิก การเกิด Plasmolysis และสาเหตุของความคลาดเคลื่อนในการทดลอง..."></textarea>
+                <textarea id="discussionText" name="lab_discussion" rows="4" class="input-blank w-full p-3 rounded-xl text-xs text-slate-200 leading-relaxed font-sans placeholder-slate-500" placeholder="อภิปรายผลการทดสอบความดันออสโมซิสในหลอด U-Tube ความสอดคล้องกับกฎ van 't Hoff พฤติกรรมของเซลล์ยีสต์ในสภาวะไฮโปโทนิก ไฮเพอร์โทนิก การเกิด Plasmolysis และสาเหตุของความคลาดเคลื่อนในการทดลอง..."></textarea>
             </div>
 
             <div class="space-y-2">
                 <label class="text-xs font-bold text-emerald-400 flex items-center gap-2">
-                    <i class="fa-solid fa-clipboard-check"></i> 2. สรุปผลการทดลอง (Conclusion):
+                    <i class="fa-solid fa-clipboard-check"></i> 3. สรุปผลการทดลอง (Conclusion):
                 </label>
-                <textarea id="conclusionText" rows="3" class="input-blank w-full p-3 rounded-xl text-xs text-slate-200 leading-relaxed font-sans placeholder-slate-500" placeholder="สรุปความสัมพันธ์ระหว่างความเข้มข้นสารละลายกับความดันออสโมซิส ค่าคงที่ก๊าซสากลที่ได้จากการทดลอง และบทบาทของ Turgor Pressure ต่อโครงสร้างเซลล์จุลินทรีย์..."></textarea>
+                <textarea id="conclusionText" name="lab_conclusion" rows="3" class="input-blank w-full p-3 rounded-xl text-xs text-slate-200 leading-relaxed font-sans placeholder-slate-500" placeholder="สรุปความสัมพันธ์ระหว่างความเข้มข้นสารละลายกับความดันออสโมซิส ค่าคงที่ก๊าซสากลที่ได้จากการทดลอง และบทบาทของ Turgor Pressure ต่อโครงสร้างเซลล์จุลินทรีย์..."></textarea>
             </div>
         </div>
     </div>
@@ -576,7 +746,7 @@ window.MathJax = {
                     <span class="w-5 h-5 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-[10px]">Q1</span>
                     จงอธิบายกลไกที่ยาปฏิชีวนะกลุ่ม $\beta$-lactam (เช่น Penicillin และ Ampicillin) ทำให้แบคทีเรียแกรมบวกเกิดการสลายตัวของเซลล์ (Osmotic Lysis) โดยใช้หลักการของ Turgor Pressure และสมดุลแรงดันออสโมซิส
                 </h4>
-                <textarea rows="3" class="input-blank w-full p-2.5 rounded-lg text-xs text-slate-200 placeholder-slate-500" placeholder="ระบุผลกระทบของการยับยั้งเอนไซม์ Transpeptidase ต่อโครงสร้างผนังเซลล์ Peptidoglycan และแรงดันเต่งภายในเซลล์ (ประมาณ 2-5 atm ในแบคทีเรียแกรมลบ และสูงถึง 15-25 atm ในแกรมบวก)..."></textarea>
+                <textarea id="quiz_ans_1" name="quiz_ans_1" rows="3" class="input-blank w-full p-2.5 rounded-lg text-xs text-slate-200 placeholder-slate-500" placeholder="ระบุผลกระทบของการยับยั้งเอนไซม์ Transpeptidase ต่อโครงสร้างผนังเซลล์ Peptidoglycan และแรงดันเต่งภายในเซลล์ (ประมาณ 2-5 atm ในแบคทีเรียแกรมลบ และสูงถึง 15-25 atm ในแกรมบวก)..."></textarea>
             </div>
 
             <!-- Question 2 -->
@@ -585,7 +755,7 @@ window.MathJax = {
                     <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px]">Q2</span>
                     แบคทีเรียกลุ่มชอบเค็มจัด (Extreme Halophiles เช่น <em>Halobacterium salinarum</em>) มีกลไกการปรับตัวทางชีวฟิสิกส์ (Osmoregulation) อย่างไร เพื่อป้องกันการสูญเสียน้ำและ Plasmolysis เมื่อเจริญในสิ่งแวดล้อมที่มีความเข้มข้นเกลือสูงถึง $4-5\text{ M NaCl}$
                 </h4>
-                <textarea rows="3" class="input-blank w-full p-2.5 rounded-lg text-xs text-slate-200 placeholder-slate-500" placeholder="อธิบายกลไก Salt-in strategy (การสะสม K+ ions ภายในเซลล์) และ Compatible solute strategy (การสะสม Betaine, Proline, Trehalose) เพื่อรักษาสมดุลความต่างแรงดันออสโมซิส..."></textarea>
+                <textarea id="quiz_ans_2" name="quiz_ans_2" rows="3" class="input-blank w-full p-2.5 rounded-lg text-xs text-slate-200 placeholder-slate-500" placeholder="อธิบายกลไก Salt-in strategy (การสะสม K+ ions ภายในเซลล์) และ Compatible solute strategy (การสะสม Betaine, Proline, Trehalose) เพื่อรักษาสมดุลความต่างแรงดันออสโมซิส..."></textarea>
             </div>
 
             <!-- Question 3 -->
@@ -594,10 +764,28 @@ window.MathJax = {
                     <span class="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-[10px]">Q3</span>
                     ในการออกแบบระบบการกรองแบบ Reverse Osmosis (RO) สำหรับแยกเอนไซม์หรือเข้มข้นโปรตีนในกระบวนการหมักชีวภาพ (Downstream Bioprocessing) จงวิเคราะห์ว่าปัจจัยใดเป็นตัวกำหนดแรงดันขั้นต่ำที่ปั๊มแรงดันสูงต้องจ่าย และเหตุใดค่า Staverman Reflection Coefficient ($\sigma$) ของเยื่อกรองจึงมีความสำคัญอย่างยิ่ง
                 </h4>
-                <textarea rows="3" class="input-blank w-full p-2.5 rounded-lg text-xs text-slate-200 placeholder-slate-500" placeholder="วิเคราะห์ความดันออสโมซิสของน้ำหมัก (&Pi;) ความดันต้านทานไฮโดรลิก และค่า &sigma; (หาก &sigma; = 1 เยื่อจะกักโปรตีนได้ 100%, หาก &sigma; < 1 โปรตีนจะรั่วไหลผ่านเยื่อ)..."></textarea>
+                <textarea id="quiz_ans_3" name="quiz_ans_3" rows="3" class="input-blank w-full p-2.5 rounded-lg text-xs text-slate-200 placeholder-slate-500" placeholder="วิเคราะห์ความดันออสโมซิสของน้ำหมัก (&Pi;) ความดันต้านทานไฮโดรลิก และค่า &sigma; (หาก &sigma; = 1 เยื่อจะกักโปรตีนได้ 100%, หาก &sigma; < 1 โปรตีนจะรั่วไหลผ่านเยื่อ)..."></textarea>
             </div>
         </div>
     </div>
+
+    <!-- Submit Button Card -->
+    <div class="bg-gradient-to-r from-slate-900 via-slate-950 to-slate-900 border border-white/15 rounded-3xl p-6 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="space-y-1 text-center sm:text-left">
+            <div class="text-sm font-bold text-white flex items-center justify-center sm:justify-start gap-2">
+                <i class="fa-solid fa-cloud-arrow-up text-sky-400"></i> ยืนยันการส่งรายงานผลปฏิบัติการที่ 6 (Final E-Report Submission)
+            </div>
+            <div class="text-xs text-slate-400">
+                ข้อมูลจะถูกบันทึกลงฐานข้อมูล SQLite ประจำรายวิชา และซิงก์ผลคะแนนไปยัง Google Sheets อัตโนมัติ
+            </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-sky-500 via-cyan-500 to-indigo-500 hover:from-sky-400 text-slate-950 font-extrabold text-sm shadow-xl shadow-sky-950/40 transition active:scale-95 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> บันทึกและส่งรายงานผล
+        </button>
+    </div>
+
+    </form>
 
     <!-- Navigation Buttons -->
     <nav class="flex items-center justify-between pt-4 border-t border-white/10">
@@ -635,7 +823,7 @@ function toggleLabCard(cardId) {
 }
 
 function expandAllLabCards() {
-  const cards = ['cardTheory', 'cardSimulator', 'cardDataTables', 'cardDiscussion', 'cardQuestions'];
+  const cards = ['cardStudentProfile', 'cardEvidence', 'cardTheory', 'cardSimulator', 'cardDataTables', 'cardDiscussion', 'cardQuestions'];
   cards.forEach(cardId => {
     const body = document.getElementById(`${cardId}_body`);
     const icon = document.getElementById(`${cardId}_icon`);
@@ -648,7 +836,7 @@ function expandAllLabCards() {
 }
 
 function collapseAllLabCards() {
-  const cards = ['cardTheory', 'cardSimulator', 'cardDataTables', 'cardDiscussion', 'cardQuestions'];
+  const cards = ['cardStudentProfile', 'cardEvidence', 'cardTheory', 'cardSimulator', 'cardDataTables', 'cardDiscussion', 'cardQuestions'];
   cards.forEach(cardId => {
     const body = document.getElementById(`${cardId}_body`);
     const icon = document.getElementById(`${cardId}_icon`);
@@ -658,6 +846,67 @@ function collapseAllLabCards() {
       icon.classList.add('fa-chevron-down');
     }
   });
+}
+
+// 3D Simulator Screenshot Capture & Proof Handlers
+function capture3dSimulator() {
+    const frame = document.getElementById('osmosis3DIframe');
+    try {
+        if (frame && frame.contentWindow && typeof frame.contentWindow.captureSimulatorScreenshot === 'function') {
+            const base64Data = frame.contentWindow.captureSimulatorScreenshot();
+            if (base64Data) {
+                applyScreenshotProof(base64Data);
+                return;
+            }
+        }
+    } catch (err) {
+        console.warn('Direct screenshot access blocked, trying postMessage:', err);
+    }
+
+    if (frame && frame.contentWindow) {
+        frame.contentWindow.postMessage({ action: 'captureScreenshot' }, '*');
+    }
+    setTimeout(() => {
+        const imgInput = document.getElementById('image_proof_base64');
+        if (!imgInput || !imgInput.value) {
+            const fileInp = document.getElementById('imageFileInput');
+            if (fileInp) fileInp.click();
+        }
+    }, 400);
+}
+
+window.addEventListener('message', (event) => {
+    if (event.data && event.data.action === 'screenshotCaptured' && event.data.dataUrl) {
+        applyScreenshotProof(event.data.dataUrl);
+    }
+});
+
+function handleImageFileUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        applyScreenshotProof(evt.target.result);
+    };
+    reader.readAsDataURL(file);
+}
+
+function applyScreenshotProof(dataUrl) {
+    document.getElementById('image_proof_base64').value = dataUrl;
+    const preview = document.getElementById('proofPreviewImg');
+    const placeholder = document.getElementById('proofPlaceholder');
+    const badge = document.getElementById('proofBadgeStatus');
+
+    if (preview) {
+        preview.src = dataUrl;
+        preview.classList.remove('hidden');
+    }
+    if (placeholder) placeholder.classList.add('hidden');
+
+    if (badge) {
+        badge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono';
+        badge.innerHTML = '<i class="fa-solid fa-circle-check"></i> แนบภาพหลักฐานเรียบร้อยแล้ว';
+    }
 }
 
 // Fullscreen toggle for simulator
@@ -746,11 +995,150 @@ function saveStudentDraft() {
   const draftData = {
     lab: 'lab06_equilibrium',
     timestamp: new Date().toISOString(),
-    discussion: document.getElementById('discussionText').value,
-    conclusion: document.getElementById('conclusionText').value
+    calculations: document.getElementById('lab_calculations')?.value || '',
+    discussion: document.getElementById('discussionText')?.value || '',
+    conclusion: document.getElementById('conclusionText')?.value || ''
   };
   localStorage.setItem('lab06_draft', JSON.stringify(draftData));
   alert('บันทึกผลการทดลองลงในระบบเรียบร้อยแล้ว (Saved to Local Storage & Ready for SQLite/Cloud Sync)');
+}
+
+// Master Validation & Report Submission Controller
+async function validateAndSubmitReport(event) {
+    if (event) event.preventDefault();
+
+    const fullname = document.getElementById('student_fullname')?.value.trim();
+    const studentId = document.getElementById('student_id')?.value.trim();
+    const program = document.getElementById('student_program')?.value.trim();
+    const section = document.getElementById('student_section')?.value.trim();
+    const proofBase64 = document.getElementById('image_proof_base64')?.value;
+
+    const calculations = document.getElementById('lab_calculations')?.value.trim();
+    const discussion = document.getElementById('discussionText')?.value.trim();
+    const conclusion = document.getElementById('conclusionText')?.value.trim();
+
+    const q1 = document.getElementById('quiz_ans_1')?.value.trim();
+    const q2 = document.getElementById('quiz_ans_2')?.value.trim();
+    const q3 = document.getElementById('quiz_ans_3')?.value.trim();
+
+    if (!fullname || !studentId || !program || !section) {
+        alert("⚠️ กรุณากรอกข้อมูลระบุตัวตนของนักศึกษาให้ครบถ้วนทุกช่องครับ");
+        document.getElementById('student_fullname')?.focus();
+        return;
+    }
+
+    if (!proofBase64) {
+        alert("⚠️ จำเป็นต้องมีภาพหลักฐาน: กรุณากดปุ่ม '📸 แคปหน้าจอ 3D Osmometer ตอนนี้' หรืออัปโหลดไฟล์ภาพก่อนส่งรายงานครับ");
+        return;
+    }
+
+    // Collect table 6.1
+    const table1Data = [];
+    for (let i = 0; i < 5; i++) {
+        table1Data.push({
+            row: i + 1,
+            dh: document.getElementById(`t1_dh_${i}`)?.value || '',
+            pi_exp: document.getElementById(`t1_piexp_${i}`)?.value || '',
+            pi_theor: document.getElementById(`t1_pitheor_${i}`)?.value || '',
+            err: document.getElementById(`t1_err_${i}`)?.textContent || ''
+        });
+    }
+
+    // Collect table 6.2
+    const table2Data = [];
+    for (let i = 0; i < 6; i++) {
+        table2Data.push({
+            row: i + 1,
+            diam: document.getElementById(`t2_diam_${i}`)?.value || '',
+            vol: document.getElementById(`t2_vol_${i}`)?.value || '',
+            plas: document.getElementById(`t2_plas_${i}`)?.value || '',
+            turgor: document.getElementById(`t2_turgor_${i}`)?.value || '',
+            state: document.getElementById(`t2_state_${i}`)?.textContent || ''
+        });
+    }
+
+    // Collect table 6.3
+    const table3Data = [];
+    for (let i = 0; i < 5; i++) {
+        table3Data.push({
+            row: i + 1,
+            p_pa: document.getElementById(`t3_p_${i}`)?.value || ''
+        });
+    }
+
+    if (!calculations || !discussion || !conclusion) {
+        alert("⚠️ กรุณากรอกวิธีคำนวณ การอภิปรายผล และสรุปผลการทดลองให้ครบถ้วนครับ");
+        return;
+    }
+
+    if (!q1 || !q2 || !q3) {
+        alert("⚠️ กรุณาตอบคำถามท้ายการทดลองเชิงประยุกต์ให้ครบทั้ง 3 ข้อก่อนส่งรายงานครับ");
+        return;
+    }
+
+    const payload = {
+        lab_id: 'lab06',
+        student_id: studentId,
+        fullname: fullname,
+        program: program,
+        section: section,
+        table_data: {
+            table1: table1Data,
+            table2: table2Data,
+            table3: table3Data
+        },
+        calculations: calculations,
+        discussion: discussion,
+        conclusion: conclusion,
+        quiz_answers: {
+            quiz_1: q1,
+            quiz_2: q2,
+            quiz_3: q3
+        },
+        image_proof_base64: proofBase64,
+        error_percentage: 0.0,
+        r_squared: 1.0,
+        accuracy_score: 100.0,
+        post_quiz_score: 3,
+        post_quiz_total: 3
+    };
+
+    const submitBtn = document.getElementById('submitBtn');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังบันทึกรายงาน...';
+    }
+
+    try {
+        const response = await fetch('../../virtual_lab/api/api.php?action=submit_report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            alert(`🎉 บันทึกรายงานผลปฏิบัติการที่ 6 สำเร็จ!\n\nรหัสนักศึกษา: ${studentId}\nหมายเลขส่งรายงาน (Report ID): #${result.report_id || result.id || 'SUB-06'}\nสถานะ: บันทึกข้อมูลและภาพหลักฐานลงฐานข้อมูลเรียบร้อยแล้ว`);
+            if (submitBtn) {
+                submitBtn.className = 'w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-emerald-600 text-white font-extrabold text-sm shadow-xl flex items-center justify-center gap-2 cursor-default';
+                submitBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i> ส่งรายงานสำเร็จแล้ว';
+            }
+        } else {
+            alert('❌ เกิดข้อผิดพลาดในการบันทึก: ' + (result.error || 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้'));
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> ลองส่งใหม่อีกครั้ง';
+            }
+        }
+    } catch (err) {
+        console.error('Submission failed:', err);
+        alert('⚠️ ไม่สามารถเชื่อมต่อกับ API Backend ได้: ' + err.message);
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> ลองส่งใหม่อีกครั้ง';
+        }
+    }
 }
 </script>
 

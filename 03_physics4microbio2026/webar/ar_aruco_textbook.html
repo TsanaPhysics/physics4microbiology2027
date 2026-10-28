@@ -465,11 +465,12 @@
       </div>
       <div class="status-group">
         <div id="tracking-badge" class="status-badge">● HYPER-3D STUDIO (ID 0)</div>
-        <button class="top-link-btn phone-cta" onclick="openPhoneGuide()">📱 แอปมือถือ & วิธีใช้ผ่าน GitHub</button>
+        <button class="top-link-btn" id="btn-webxr-top" onclick="triggerWebXRSession()" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(99, 102, 241, 0.35)); color: #d8b4fe; border-color: rgba(168, 85, 247, 0.5); font-weight: 600;">🥽 WebXR Immersive</button>
+        <button class="top-link-btn phone-cta" onclick="openPhoneGuide()">📱 แอปมือถือ & วิธีใช้</button>
         <button class="top-link-btn" id="btn-xray-top" onclick="toggleExplodedView()">🔍 แยกชิ้นส่วน X-Ray</button>
         <button class="top-link-btn active" id="btn-labels-top" onclick="toggle3DLabels()">🏷️ ป้าย 3D</button>
         <a href="aruco_marker_sheet.html" target="_blank" class="top-link-btn">🖨️ มาร์กเกอร์ ID 0–11</a>
-        <a href="../06_เอกสารคำสอน_3D_AR_ArUco_4011111_ฟิสิกส์สำหรับจุลชีววิทยา_พร้อมปก.pdf" target="_blank" class="top-link-btn">📘 PDF หนังสือ AR</a>
+        <button class="top-link-btn" id="btn-back-to-lab" onclick="returnToLab()" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.4);">← กลับหน้าแล็บ</button>
       </div>
     </div>
     <div id="marker-carousel"></div>
@@ -877,7 +878,8 @@
       if (!('speechSynthesis' in window)) return;
       window.speechSynthesis.cancel();
       const cfg = CHAPTER_MODELS[currentMarkerId];
-      const u = new SpeechSynthesisUtterance(cfg.voice);
+      const voiceText = (cfg.voice || '').replace(/4011111/g, 'สี่ ศูนย์ หนึ่ง หนึ่ง หนึ่ง หนึ่ง หนึ่ง');
+      const u = new SpeechSynthesisUtterance(voiceText);
       u.lang = 'th-TH';
       u.rate = 0.98;
       u.pitch = 0.96;
@@ -904,7 +906,7 @@
     const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.set(0, 2.35, 6.1);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -912,7 +914,15 @@
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.xr.enabled = true;
     container.appendChild(renderer.domElement);
+
+    // Standardized screenshot API for iframe proof capture
+    window.captureSimulatorScreenshot = function() {
+      if (!renderer || !scene || !camera) return null;
+      renderer.render(scene, camera);
+      return renderer.domElement.toDataURL('image/png');
+    };
 
     // Build Procedural Studio HDR Environment Map via PMREMGenerator for Ultra-Realistic Metallic & Glass Reflections
     function buildStudioEnvironment() {
@@ -2394,11 +2404,64 @@
       setDrawersVisible(false);
     }
 
+    function returnToLab() {
+      const labNum = currentMarkerId + 1;
+      const labFiles = [
+        'lab01_measurement.php', 'lab02_vectors.php', 'lab03_motion.php', 'lab04_newton.php',
+        'lab05_momentum.php', 'lab06_equilibrium.php', 'lab07_energy.php', 'lab08_machines.php',
+        'lab09_heat.php', 'lab10_electricity.php', 'lab11_optics.php', 'lab12_radioactivity.php'
+      ];
+      const target = labFiles[currentMarkerId] || `lab${String(labNum).padStart(2, '0')}_measurement.php`;
+      window.location.href = `../labs/${target}`;
+    }
+
+    async function triggerWebXRSession() {
+      if (!navigator.xr) {
+        alert("⚠️ อุปกรณ์หรือเบราว์เซอร์นี้ยังไม่รองรับ WebXR Device API โดยตรง\n\nระบบจะสลับเข้าสู่โหมด 3D WebAR ส่องมาร์กเกอร์ ArUco (Optical Tracking) ผ่านกล้องมือถือให้อัตโนมัติ ซึ่งทำงานได้ 100% บนทุกเบราว์เซอร์ครับ!");
+        toggleARCameraMode();
+        return;
+      }
+      try {
+        const supportedAR = await navigator.xr.isSessionSupported('immersive-ar');
+        const supportedVR = !supportedAR && await navigator.xr.isSessionSupported('immersive-vr');
+        const sessionMode = supportedAR ? 'immersive-ar' : (supportedVR ? 'immersive-vr' : null);
+        if (!sessionMode) {
+          alert("⚠️ เบราว์เซอร์รองรับ WebXR แต่ไม่พบฮาร์ดแวร์ VR/AR headset หรือ immersive session ที่พร้อมใช้งาน\n\nระบบจะเปิดโหมด 3D WebAR ผ่านกล้องสมาร์ทโฟนให้แทนครับ");
+          toggleARCameraMode();
+          return;
+        }
+        const session = await navigator.xr.requestSession(sessionMode, {
+          optionalFeatures: ['local-floor', 'dom-overlay', 'hit-test'],
+          domOverlay: { root: document.body }
+        });
+        renderer.xr.setSession(session);
+        session.addEventListener('end', () => {
+          console.log('WebXR session ended');
+        });
+      } catch (err) {
+        console.warn('WebXR request failed, falling back to WebAR camera:', err);
+        alert("ℹ️ ไม่สามารถเปิด WebXR Session ได้ (" + err.message + ")\n\nระบบเปิดโหมด 3D WebAR ผ่านกล้องให้แทนครับ");
+        toggleARCameraMode();
+      }
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
-    const initId = parseInt(urlParams.get('id') || '0', 10);
-    selectMarker(isNaN(initId) ? 0 : Math.max(0, Math.min(11, initId)), false);
+    let initId = 0;
+    if (urlParams.has('id')) {
+      initId = parseInt(urlParams.get('id'), 10);
+    } else if (urlParams.has('lab')) {
+      initId = parseInt(urlParams.get('lab'), 10) - 1;
+    } else if (urlParams.has('ch')) {
+      initId = parseInt(urlParams.get('ch'), 10) - 1;
+    }
+    if (isNaN(initId) || initId < 0 || initId > 11) initId = 0;
+    selectMarker(initId, false);
+
     if (urlParams.get('ar') === '1') {
       setTimeout(() => toggleARCameraMode(), 350);
+    }
+    if (urlParams.get('xr') === '1') {
+      setTimeout(() => triggerWebXRSession(), 500);
     }
 
     const clock = new THREE.Clock();
@@ -2480,7 +2543,7 @@
       controls.update();
       renderer.render(scene, camera);
     }
-    animate();
+    renderer.setAnimationLoop(animate);
 
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
