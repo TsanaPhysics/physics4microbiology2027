@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องปฏิบัติการ 3D ไฟฟ้าสถิตและกลไกการย้อมสีแกรม | Lab 07: Gram Stain Electrostatics & Cell Wall 3D PBR</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #030712; color: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .font-digital { font-family: 'Orbitron', monospace; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.4); border-radius: 9999px; }
+    .fui-panel { background: rgba(10, 15, 29, 0.85); backdrop-filter: blur(14px); border: 1px solid rgba(56, 189, 248, 0.25); }
+  </style>
+</head>
+<body class="w-screen h-screen relative select-none">
+  <div id="canvasContainer" class="w-full h-full absolute inset-0 cursor-grab active:cursor-grabbing"></div>
+
+  <!-- Header -->
+  <header class="absolute top-3 inset-x-3 z-30 pointer-events-none flex items-center justify-between">
+    <div class="pointer-events-auto flex items-center gap-2 bg-slate-950/85 backdrop-blur-md px-4 py-2 rounded-2xl border border-sky-500/30 shadow-2xl">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+      </div>
+      <div>
+        <h1 class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+          <span>LAB 07 // ไฟฟ้าสถิต &amp; การย้อมสีแกรมระดับนาโน</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/40 font-mono">PBR 3D</span>
+        </h1>
+        <p class="text-[10px] text-slate-400 font-mono">4011111 Physics for Microbiology &bull; Coulomb Attraction &amp; Porosity</p>
+      </div>
+    </div>
+
+    <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-950/85 backdrop-blur-md p-1.5 rounded-2xl border border-slate-700/80 shadow-2xl">
+      <button onclick="setCameraView('wide')" class="px-2.5 py-1 rounded-xl text-xs font-mono font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition">
+        <i class="fa-solid fa-cube text-sky-400"></i> ภาพรวม
+      </button>
+      <button onclick="setCameraView('gramPos')" class="px-2.5 py-1 rounded-xl text-xs font-mono font-semibold text-purple-300 hover:text-white hover:bg-slate-800 transition">
+        <i class="fa-solid fa-plus text-purple-400"></i> แกรมบวก (หนา)
+      </button>
+      <button onclick="setCameraView('gramNeg')" class="px-2.5 py-1 rounded-xl text-xs font-mono font-semibold text-rose-300 hover:text-white hover:bg-slate-800 transition">
+        <i class="fa-solid fa-minus text-rose-400"></i> แกรมลบ (บาง)
+      </button>
+      <button onclick="resetStaining()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition">
+        <i class="fa-solid fa-rotate-right"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Left Control Panel: 4-Step Staining Wizard -->
+  <aside class="fui-panel absolute top-20 left-3 z-20 w-80 sm:w-88 max-h-[calc(100vh-6.5rem)] rounded-2xl p-4 shadow-2xl flex flex-col gap-3.5 overflow-y-auto text-xs">
+    <div class="font-bold text-sky-300 border-b border-slate-800 pb-2 flex items-center justify-between">
+      <span><i class="fa-solid fa-vial-circle-check text-emerald-400"></i> 4 ขั้นตอนการย้อมสีแกรม</span>
+      <span id="txtStepNum" class="font-mono text-purple-400">ขั้นตอนที่ 1/4</span>
+    </div>
+
+    <div class="space-y-2">
+      <!-- Step 1: Crystal Violet -->
+      <button onclick="applyStep(1)" id="btnStep1" class="w-full text-left p-2.5 rounded-xl bg-purple-900/60 border border-purple-500/50 shadow transition flex items-center justify-between">
+        <div>
+          <div class="font-bold text-purple-200">1. Crystal Violet (สีม่วง)</div>
+          <div class="text-[10px] text-slate-400">สีย้อมประจุบวก CV⁺ ดึงดูดประจุลบผิวเซลล์</div>
+        </div>
+        <span class="text-xs text-purple-400"><i class="fa-solid fa-droplet"></i> 60s</span>
+      </button>
+
+      <!-- Step 2: Iodine -->
+      <button onclick="applyStep(2)" id="btnStep2" class="w-full text-left p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:bg-slate-800/80 transition flex items-center justify-between">
+        <div>
+          <div class="font-bold text-amber-200">2. Gram's Iodine (สารมอร์แดนต์)</div>
+          <div class="text-[10px] text-slate-400">ไอโอดีนรวมกับ CV⁺ เป็นผลึกโมเลกุลใหญ่ CV-I</div>
+        </div>
+        <span class="text-xs text-amber-400"><i class="fa-solid fa-droplet"></i> 60s</span>
+      </button>
+
+      <!-- Step 3: Ethanol -->
+      <button onclick="applyStep(3)" id="btnStep3" class="w-full text-left p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:bg-slate-800/80 transition flex items-center justify-between">
+        <div>
+          <div class="font-bold text-cyan-200">3. 95% Ethanol (ขั้นตอนล้างสี)</div>
+          <div class="text-[10px] text-slate-400">ละลายไขมันแกรมลบ / ปิดรูพรุนแกรมบวก</div>
+        </div>
+        <span class="text-xs text-cyan-400"><i class="fa-solid fa-droplet"></i> 10s</span>
+      </button>
+
+      <!-- Step 4: Safranin -->
+      <button onclick="applyStep(4)" id="btnStep4" class="w-full text-left p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:bg-slate-800/80 transition flex items-center justify-between">
+        <div>
+          <div class="font-bold text-rose-200">4. Safranin (สีชมพูแดง)</div>
+          <div class="text-[10px] text-slate-400">ย้อมทับเซลล์แกรมลบที่ไร้สีให้เป็นสีชมพู</div>
+        </div>
+        <span class="text-xs text-rose-400"><i class="fa-solid fa-droplet"></i> 45s</span>
+      </button>
+    </div>
+
+    <!-- Live Color State Comparison Card -->
+    <div class="p-3 rounded-xl bg-slate-950/90 border border-purple-500/30 space-y-2 text-[11px] font-mono">
+      <div class="font-bold text-slate-200">สถานะสีของเซลล์ทั้งสองกลุ่ม:</div>
+      <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-800">
+        <span class="flex items-center gap-1.5 text-purple-300 font-bold">
+          <span id="dotPos" class="w-3 h-3 rounded-full bg-purple-600 inline-block"></span> แกรมบวก (Gram +)
+        </span>
+        <span id="lblPosColor" class="text-purple-300 font-bold">สีม่วงเข้ม (Violet)</span>
+      </div>
+      <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900 border border-slate-800">
+        <span class="flex items-center gap-1.5 text-rose-300 font-bold">
+          <span id="dotNeg" class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span> แกรมลบ (Gram -)
+        </span>
+        <span id="lblNegColor" class="text-rose-400 font-bold">สีชมพูแดง (Pink/Red)</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right Nanostructure Guide -->
+  <aside class="fui-panel absolute top-20 right-3 z-20 w-80 sm:w-88 max-h-[calc(100vh-6.5rem)] rounded-2xl p-4 shadow-2xl flex flex-col gap-3 overflow-y-auto text-xs">
+    <div class="border-b border-slate-800 pb-2">
+      <h3 class="font-bold text-sky-300 flex items-center gap-1.5">
+        <i class="fa-solid fa-dna text-emerald-400"></i> โครงสร้างชีวฟิสิกส์ของผนังเซลล์
+      </h3>
+    </div>
+
+    <!-- Gram Positive Wall Card -->
+    <div class="p-3 rounded-xl bg-purple-950/30 border border-purple-500/30 space-y-1">
+      <div class="font-bold text-purple-300 flex items-center gap-1">
+        <i class="fa-solid fa-circle-dot text-purple-400"></i> แบคทีเรียแกรมบวก (Gram-Positive):
+      </div>
+      <p class="text-[11px] text-slate-300 leading-relaxed">
+        ชั้นเพปทิโดไกลแคนหนา <strong>30–80 nm</strong> ถักทอเป็นตาข่ายแน่นหนา เมื่อถูกแอลกอฮอล์จะเกิดการคายน้ำ (Dehydration) ทำให้รูพรุนหดตัว กักขังผลึก CV-I ไว้ข้างใน เซลล์จึงคงสีม่วงเข้ม
+      </p>
+    </div>
+
+    <!-- Gram Negative Wall Card -->
+    <div class="p-3 rounded-xl bg-rose-950/30 border border-rose-500/30 space-y-1">
+      <div class="font-bold text-rose-300 flex items-center gap-1">
+        <i class="fa-solid fa-circle-dot text-rose-400"></i> แบคทีเรียแกรมลบ (Gram-Negative):
+      </div>
+      <p class="text-[11px] text-slate-300 leading-relaxed">
+        เพปทิโดไกลแคนบางเพียง <strong>2–7 nm</strong> และถูกห่อหุ้มด้วยเยื่อหุ้มชั้นนอก (Outer Membrane) ที่มีไขมันสูง เมื่อถูกแอลกอฮอล์ ไขมันจะละลายเกิดรูโหว่ขนาดใหญ่ ทำให้ผลึก CV-I รั่วไหลหลุดออกจนเซลล์ไร้สี ก่อนจะถูกย้อมทับด้วย Safranin จนกลายเป็นสีชมพู
+      </p>
+    </div>
+
+    <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-[10px] text-slate-400">
+      <strong class="text-slate-200">กฎของคูลอมบ์ (Coulomb's Law):</strong><br>
+      $$F = k_e \frac{|q_1 q_2|}{r^2}$$
+      แรงดึงดูดทางไฟฟ้าสถิตระหว่างประจุบวกของสี ($q_1 > 0$) กับประจุลบบนผิวเซลล์ ($q_2 < 0$) เป็นจุดเริ่มต้นของการยึดติดของสีย้อมในงานจุลชีววิทยา
+    </div>
+  </aside>
+
+  <footer class="absolute bottom-3 inset-x-3 z-20 pointer-events-none flex justify-center">
+    <div class="pointer-events-auto bg-slate-950/80 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-slate-700/80 text-xs text-slate-300 flex items-center gap-4 shadow-2xl font-mono">
+      <span><i class="fa-solid fa-arrows-up-down-left-right text-sky-400 mr-1"></i> หมุน 3D</span>
+      <span class="text-slate-600">|</span>
+      <span><i class="fa-solid fa-magnifying-glass text-emerald-400 mr-1"></i> ซูม</span>
+      <span class="text-slate-600">|</span>
+      <span>แบบจำลอง 3 มิติ ผนังเซลล์แบคทีเรียตัดขวางระดับนาโนเมตร</span>
+    </div>
+  </footer>
+
+  <script>
+    let scene, camera, renderer, controls;
+    let posMesh, negMesh, posWallMesh, negWallMesh;
+    let currentStep = 1;
+
+    // Color definitions for Gram positive and negative at each step
+    const stepColors = {
+      0: { pos: 0x94a3b8, neg: 0x94a3b8, posText: "ไม่มีสี (Unstained)", negText: "ไม่มีสี (Unstained)", dotPos: "#94a3b8", dotNeg: "#94a3b8" },
+      1: { pos: 0x6b21a8, neg: 0x6b21a8, posText: "สีม่วงคริสตัลไวโอเลต", negText: "สีม่วงคริสตัลไวโอเลต", dotPos: "#9333ea", dotNeg: "#9333ea" },
+      2: { pos: 0x4c1d95, neg: 0x4c1d95, posText: "สีม่วงเข้มผลึก CV-I", negText: "สีม่วงเข้มผลึก CV-I", dotPos: "#581c87", dotNeg: "#581c87" },
+      3: { pos: 0x4c1d95, neg: 0xcfd8dc, posText: "สีม่วงเข้มคงเดิม (ตาข่ายหด)", negText: "ไร้สี (แอลกอฮอล์ชะล้างหลุด)", dotPos: "#581c87", dotNeg: "#cbd5e1" },
+      4: { pos: 0x4c1d95, neg: 0xf43f5e, posText: "สีม่วงเข้ม (แกรมบวก)", negText: "สีชมพูแดงซาฟรานิน (แกรมลบ)", dotPos: "#581c87", dotNeg: "#f43f5e" }
+    };
+
+    function init() {
+      const container = document.getElementById('canvasContainer');
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x060914);
+
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(0, 1.5, 6.5);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+
+      setupLights();
+      buildModels();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      applyStep(1);
+      requestAnimationFrame(animate);
+    }
+
+    function setupLights() {
+      scene.add(new THREE.AmbientLight(0xffffff, 0.85));
+      const spot = new THREE.DirectionalLight(0x38bdf8, 1.8);
+      spot.position.set(5, 8, 6);
+      scene.add(spot);
+    }
+
+    function buildModels() {
+      // 1. Gram-Positive Cell (Left: Coccus / S. aureus)
+      const posGroup = new THREE.Group();
+      posGroup.position.set(-1.8, 0, 0);
+
+      // Thick outer peptidoglycan wall cutaway
+      const pWallGeo = new THREE.SphereGeometry(1.2, 32, 16, 0, Math.PI * 1.6);
+      const pWallMat = new THREE.MeshStandardMaterial({ color: 0x6b21a8, roughness: 0.4, side: THREE.DoubleSide });
+      posWallMesh = new THREE.Mesh(pWallGeo, pWallMat);
+      posGroup.add(posWallMesh);
+
+      // Inner membrane
+      const pInner = new THREE.Mesh(
+        new THREE.SphereGeometry(0.85, 32, 16),
+        new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.3 })
+      );
+      posGroup.add(pInner);
+      scene.add(posGroup);
+
+      // 2. Gram-Negative Cell (Right: Bacillus / E. coli)
+      const negGroup = new THREE.Group();
+      negGroup.position.set(1.8, 0, 0);
+
+      // Outer membrane + thin peptidoglycan
+      const nWallGeo = new THREE.CylinderGeometry(0.7, 0.7, 1.8, 32, 1, false, 0, Math.PI * 1.6);
+      const nWallMat = new THREE.MeshStandardMaterial({ color: 0x6b21a8, roughness: 0.4, side: THREE.DoubleSide });
+      negWallMesh = new THREE.Mesh(nWallGeo, nWallMat);
+      negGroup.add(negWallMesh);
+
+      // Inner membrane
+      const nInner = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.55, 0.55, 1.6, 32),
+        new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.3 })
+      );
+      negGroup.add(nInner);
+      scene.add(negGroup);
+    }
+
+    function applyStep(step) {
+      currentStep = step;
+      document.getElementById('txtStepNum').textContent = `ขั้นตอนที่ ${step}/4`;
+
+      // Update button highlights
+      for (let s = 1; s <= 4; s++) {
+        const btn = document.getElementById(`btnStep${s}`);
+        if (s === step) {
+          btn.className = "w-full text-left p-2.5 rounded-xl bg-purple-900/60 border border-purple-500/50 shadow transition flex items-center justify-between";
+        } else {
+          btn.className = "w-full text-left p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:bg-slate-800/80 transition flex items-center justify-between";
+        }
+      }
+
+      const cfg = stepColors[step];
+      if (posWallMesh) posWallMesh.material.color.setHex(cfg.pos);
+      if (negWallMesh) negWallMesh.material.color.setHex(cfg.neg);
+
+      document.getElementById('lblPosColor').textContent = cfg.posText;
+      document.getElementById('lblNegColor').textContent = cfg.negText;
+      document.getElementById('dotPos').style.backgroundColor = cfg.dotPos;
+      document.getElementById('dotNeg').style.backgroundColor = cfg.dotNeg;
+    }
+
+    function setCameraView(v) {
+      if (v === 'wide') {
+        camera.position.set(0, 1.5, 6.5);
+        controls.target.set(0, 0, 0);
+      } else if (v === 'gramPos') {
+        camera.position.set(-1.8, 0.8, 3.2);
+        controls.target.set(-1.8, 0, 0);
+      } else if (v === 'gramNeg') {
+        camera.position.set(1.8, 0.8, 3.2);
+        controls.target.set(1.8, 0, 0);
+      }
+    }
+
+    function resetStaining() {
+      applyStep(1);
+      setCameraView('wide');
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (posWallMesh) posWallMesh.rotation.y += 0.003;
+      if (negWallMesh) negWallMesh.rotation.y += 0.003;
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

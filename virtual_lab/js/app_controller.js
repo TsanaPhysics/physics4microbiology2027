@@ -129,7 +129,7 @@ class AppController {
     if (reportBtn) {
       const labFiles = [
         'lab01_measurement.php', 'lab02_vectors.php', 'lab03_motion.php', 'lab04_newton.php',
-        'lab05_momentum.php', 'lab06_equilibrium.php', 'lab07_energy.php', 'lab08_machines.php',
+        'lab05_heat_incubator.php', 'lab06_equilibrium.php', 'lab07_energy.php', 'lab08_machines.php',
         'lab09_heat.php', 'lab10_electricity.php', 'lab11_optics.php', 'lab12_radioactivity.php'
       ];
       if (labNum <= 12) {
@@ -143,10 +143,20 @@ class AppController {
 
     const simFullBtn = document.getElementById("btnSimFullscreen");
     if (simFullBtn) {
-      const simFiles = [
-        'sim_micropipette_3d.html', 'sim02_force_vectors_3d.html', 'sim03_viscometer_3d.html', 'sim04_centrifuge_3d.html',
-        'sim05_momentum_3d.html', 'sim06_osmosis_3d.html', 'sim07_molecular_motors_3d.html', 'sim08_nanomechanics_3d.html',
-        'sim09_pcr_thermal_3d.html', 'sim10_electrophoresis_3d.html', 'sim11_optics_3d.html', 'sim12_radioactivity_3d.html'
+            const simFiles = [
+        'sim_micropipette_3d.html',
+        'sim02_brownian_motion_3d.html',
+        'sim03_viscometer_3d.html',
+        'sim04_centrifuge_3d.html',
+        'sim05_incubator_3d.html',
+        'sim06_autoclave_3d.html',
+        'sim07_gram_stain_3d.html',
+        'sim10_electrophoresis_3d.html',
+        'sim09_refraction_3d.html',
+        'sim11_optics_3d.html',
+        'sim12_radioactivity_3d.html',
+        'sim12_od600_3d.html',
+        'sim12_od600_3d.html'
       ];
       if (labNum <= 12) {
         simFullBtn.style.display = 'inline-flex';

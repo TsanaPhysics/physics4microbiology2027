@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องปฏิบัติการ 3D ตู้อบเลี้ยงเชื้อและสมดุลความร้อน | Lab 05: Incubator Thermodynamics & Calorimetry 3D PBR</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js r128 & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- Google Fonts & Font Awesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #030712; color: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .font-digital { font-family: 'Orbitron', monospace; }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.4); border-radius: 9999px; }
+
+    .glow-cyan { filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.6)); }
+    .glow-amber { filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6)); }
+    .glow-emerald { filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6)); }
+
+    .fui-panel {
+      background: rgba(10, 15, 29, 0.82);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+  </style>
+</head>
+<body class="w-screen h-screen relative select-none">
+
+  <!-- 3D Canvas Container -->
+  <div id="canvasContainer" class="w-full h-full absolute inset-0 cursor-grab active:cursor-grabbing"></div>
+
+  <!-- Top Navigation & Status Bar -->
+  <header class="absolute top-3 inset-x-3 z-30 pointer-events-none flex items-center justify-between">
+    <div class="pointer-events-auto flex items-center gap-2 bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-2xl border border-sky-500/30 shadow-2xl">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-rose-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
+        <i class="fa-solid fa-temperature-three-quarters"></i>
+      </div>
+      <div>
+        <h1 class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+          <span>LAB 05 // ตู้อบ Incubator &amp; การถ่ายโอนความร้อน</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono">PBR 3D</span>
+        </h1>
+        <p class="text-[10px] text-slate-400 font-mono">4011111 Physics for Microbiology &bull; Specific Heat &amp; Convection</p>
+      </div>
+    </div>
+
+    <!-- Quick Camera & Mode Tools -->
+    <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-950/80 backdrop-blur-md p-1.5 rounded-2xl border border-slate-700/80 shadow-2xl">
+      <button onclick="setCameraView('front')" class="px-2.5 py-1 rounded-xl text-xs font-mono font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition" title="มุมมองด้านหน้า">
+        <i class="fa-solid fa-cube text-sky-400"></i> <span class="hidden sm:inline">หน้าตรง</span>
+      </button>
+      <button onclick="setCameraView('iso')" class="px-2.5 py-1 rounded-xl text-xs font-mono font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition" title="มุมมอง 3 มิติเฉียง">
+        <i class="fa-solid fa-cubes text-emerald-400"></i> <span class="hidden sm:inline">Isometric</span>
+      </button>
+      <button onclick="setCameraView('inside')" class="px-2.5 py-1 rounded-xl text-xs font-mono font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition" title="ซูมเข้าในตู้">
+        <i class="fa-solid fa-magnifying-glass-plus text-amber-400"></i> <span class="hidden sm:inline">ในตู้</span>
+      </button>
+      <button onclick="setCameraView('calorimeter')" class="px-2.5 py-1 rounded-xl text-xs font-mono font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition" title="สถานีแคลอริมิเตอร์">
+        <i class="fa-solid fa-flask text-purple-400"></i> <span class="hidden sm:inline">แคลอริมิเตอร์</span>
+      </button>
+      <div class="w-px h-5 bg-slate-700 mx-1"></div>
+      <button onclick="toggleDoor()" id="btnDoorToggle" class="px-3 py-1 rounded-xl text-xs font-bold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 transition flex items-center gap-1">
+        <i class="fa-solid fa-door-open"></i> <span id="doorLabel">เปิดประตู</span>
+      </button>
+      <button onclick="resetSim()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition" title="รีเซ็ตการจำลอง">
+        <i class="fa-solid fa-rotate-right"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Left Control HUD: Parameters & Controls -->
+  <aside class="fui-panel absolute top-20 left-3 z-20 w-80 sm:w-88 max-h-[calc(100vh-6.5rem)] rounded-2xl p-4 shadow-2xl flex flex-col gap-4 overflow-y-auto">
+    <!-- Active Tab Switcher -->
+    <div class="flex rounded-xl bg-slate-900/90 p-1 border border-slate-700/60 text-xs font-bold">
+      <button onclick="switchTab('incubator')" id="tabBtnIncubator" class="flex-1 py-1.5 rounded-lg bg-sky-500 text-slate-950 shadow transition">
+        <i class="fa-solid fa-temperature-arrow-up"></i> ตู้อบ 37°C
+      </button>
+      <button onclick="switchTab('calorimetry')" id="tabBtnCalorimetry" class="flex-1 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition">
+        <i class="fa-solid fa-fire-burner"></i> แคลอริมิเตอร์
+      </button>
+    </div>
+
+    <!-- TAB 1: INCUBATOR THERMODYNAMICS -->
+    <div id="tabIncubator" class="space-y-4">
+      <div class="p-3 rounded-xl bg-slate-900/60 border border-sky-500/20 space-y-3">
+        <div class="flex items-center justify-between text-xs">
+          <label class="font-bold text-sky-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-sliders"></i> อุณหภูมิเป้าหมาย (Set Value: SV)
+          </label>
+          <span id="txtSV" class="font-digital text-amber-400 font-bold text-sm">37.0 °C</span>
+        </div>
+        <input type="range" id="rngSV" min="30.0" max="60.0" step="0.5" value="37.0" oninput="updateIncubatorParams()" class="w-full accent-amber-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+        <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>30.0°C (บ่มยีสต์)</span>
+          <span class="text-amber-400 font-bold">37.0°C (แบคทีเรีย)</span>
+          <span>55.0°C (ทนร้อน)</span>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-xl bg-slate-900/60 border border-sky-500/20 space-y-3">
+        <div class="flex items-center justify-between text-xs">
+          <label class="font-bold text-slate-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-cloud-sun"></i> อุณหภูมิห้องแล็บ ($T_{\text{ambient}}$)
+          </label>
+          <span id="txtAmbient" class="font-mono text-cyan-300 text-xs">25.0 °C</span>
+        </div>
+        <input type="range" id="rngAmbient" min="18.0" max="38.0" step="0.5" value="25.0" oninput="updateIncubatorParams()" class="w-full accent-cyan-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+      </div>
+
+      <div class="p-3 rounded-xl bg-slate-900/60 border border-sky-500/20 space-y-2">
+        <label class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-fan text-emerald-400"></i> พัดลมพาความร้อน (Forced Convection)
+        </label>
+        <div class="grid grid-cols-3 gap-1.5 text-xs">
+          <button onclick="setFanMode('off')" id="btnFanOff" class="py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition">ปิดพัดลม</button>
+          <button onclick="setFanMode('low')" id="btnFanLow" class="py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition">รอบต่ำ</button>
+          <button onclick="setFanMode('high')" id="btnFanHigh" class="py-1.5 rounded-lg bg-emerald-600 text-white font-bold border border-emerald-400 transition shadow">รอบสูง</button>
+        </div>
+        <p class="text-[10px] text-slate-400 italic">การพาความร้อนหมุนเวียนช่วยลดผลต่างอุณหภูมิระหว่างชั้นบนและล่าง</p>
+      </div>
+    </div>
+
+    <!-- TAB 2: CALORIMETRY MIXING EXPERIMENT -->
+    <div id="tabCalorimetry" class="space-y-4 hidden">
+      <div class="p-3 rounded-xl bg-slate-900/60 border border-purple-500/20 space-y-2.5">
+        <div class="text-xs font-bold text-purple-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-glass-water"></i> น้ำอุณหภูมิห้อง (แคลอริมิเตอร์)
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <span class="text-[10px] text-slate-400">มวล $m_1$ (g)</span>
+            <input type="number" id="inpM1" value="100" min="50" max="300" step="10" onchange="calcCalorimetry()" class="w-full bg-slate-800 text-white p-1.5 rounded-lg border border-slate-700 text-xs font-mono">
+          </div>
+          <div>
+            <span class="text-[10px] text-slate-400">อุณหภูมิ $T_1$ (°C)</span>
+            <input type="number" id="inpT1" value="25.0" min="10" max="40" step="0.5" onchange="calcCalorimetry()" class="w-full bg-slate-800 text-white p-1.5 rounded-lg border border-slate-700 text-xs font-mono">
+          </div>
+        </div>
+      </div>
+
+      <div class="p-3 rounded-xl bg-slate-900/60 border border-purple-500/20 space-y-2.5">
+        <div class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-mug-hot"></i> น้ำอุ่นที่เทผสม (Hot Water)
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <span class="text-[10px] text-slate-400">มวล $m_2$ (g)</span>
+            <input type="number" id="inpM2" value="100" min="50" max="300" step="10" onchange="calcCalorimetry()" class="w-full bg-slate-800 text-white p-1.5 rounded-lg border border-slate-700 text-xs font-mono">
+          </div>
+          <div>
+            <span class="text-[10px] text-slate-400">อุณหภูมิ $T_2$ (°C)</span>
+            <input type="number" id="inpT2" value="60.0" min="40" max="95" step="0.5" onchange="calcCalorimetry()" class="w-full bg-slate-800 text-white p-1.5 rounded-lg border border-slate-700 text-xs font-mono">
+          </div>
+        </div>
+      </div>
+
+      <button onclick="triggerMixAnimation()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-purple-950/40 transition flex items-center justify-center gap-2 active:scale-98">
+        <i class="fa-solid fa-blender"></i> เทผสมและบันทึกสมดุลความร้อน
+      </button>
+
+      <div class="p-3 rounded-xl bg-slate-950/80 border border-emerald-500/30 text-xs space-y-1.5 font-mono">
+        <div class="flex justify-between text-slate-300">
+          <span>ความร้อน $Q_{\text{gain}} = Q_{\text{lost}}$:</span>
+          <span id="resHeatJoules" class="text-emerald-400 font-bold">14,644 J</span>
+        </div>
+        <div class="flex justify-between text-slate-300">
+          <span>อุณหภูมิผสมทฤษฎี ($T_{\text{mix}}$):</span>
+          <span id="resTmix" class="text-cyan-300 font-bold">42.50 °C</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right Telemetry HUD: Real-time 3-Point Sensors & Graph -->
+  <aside class="fui-panel absolute top-20 right-3 z-20 w-80 sm:w-88 max-h-[calc(100vh-6.5rem)] rounded-2xl p-4 shadow-2xl flex flex-col gap-3 overflow-y-auto">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+      <h3 class="text-xs font-bold text-sky-300 flex items-center gap-1.5">
+        <i class="fa-solid fa-satellite-dish text-emerald-400"></i> หัววัดอุณหภูมิ 3 จุด (3-Point Probes)
+      </h3>
+      <span class="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> LIVE
+      </span>
+    </div>
+
+    <!-- Sensor 1: Top Shelf -->
+    <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between text-xs">
+      <div>
+        <div class="font-bold text-slate-200 flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> จุดที่ 1: ชั้นบนสุด (ด้านใน)
+        </div>
+        <span class="text-[10px] text-slate-400 font-mono">Top Shelf (Air Pocket)</span>
+      </div>
+      <div class="text-right">
+        <span id="sensorTopVal" class="font-digital text-sm font-bold text-rose-400">37.4 °C</span>
+        <div id="sensorTopDev" class="text-[10px] font-mono text-slate-400">+0.4°C</div>
+      </div>
+    </div>
+
+    <!-- Sensor 2: Middle Shelf (Reference) -->
+    <div class="p-2.5 rounded-xl bg-slate-900/80 border border-sky-500/30 flex items-center justify-between text-xs shadow">
+      <div>
+        <div class="font-bold text-sky-300 flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> จุดที่ 2: ชั้นกลาง (จุดอ้างอิง)
+        </div>
+        <span class="text-[10px] text-slate-400 font-mono">Center Shelf (Core Temp)</span>
+      </div>
+      <div class="text-right">
+        <span id="sensorMidVal" class="font-digital text-sm font-bold text-cyan-300">37.0 °C</span>
+        <div id="sensorMidDev" class="text-[10px] font-mono text-emerald-400">0.0°C (ตรง)</div>
+      </div>
+    </div>
+
+    <!-- Sensor 3: Bottom Shelf near door -->
+    <div class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between text-xs">
+      <div>
+        <div class="font-bold text-slate-200 flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span> จุดที่ 3: ชั้นล่าง (ใกล้ประตู)
+        </div>
+        <span class="text-[10px] text-slate-400 font-mono">Bottom Shelf (Door Loss)</span>
+      </div>
+      <div class="text-right">
+        <span id="sensorBotVal" class="font-digital text-sm font-bold text-amber-400">36.6 °C</span>
+        <div id="sensorBotDev" class="text-[10px] font-mono text-slate-400">-0.4°C</div>
+      </div>
+    </div>
+
+    <!-- Mini Telemetry Strip-Chart -->
+    <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 space-y-2">
+      <div class="flex items-center justify-between text-[10px] font-mono text-slate-400">
+        <span>กราฟอุณหภูมิเรียลไทม์ (Strip Chart)</span>
+        <span class="text-sky-400">ช่วง ±2°C</span>
+      </div>
+      <canvas id="chartCanvas" width="280" height="90" class="w-full h-24 bg-slate-950 rounded-lg border border-slate-800 block"></canvas>
+      <div class="flex justify-center gap-4 text-[10px] font-mono">
+        <span class="flex items-center gap-1 text-rose-400"><span class="w-2 h-0.5 bg-rose-400"></span> ชั้นบน</span>
+        <span class="flex items-center gap-1 text-cyan-400"><span class="w-2 h-0.5 bg-cyan-400"></span> ชั้นกลาง</span>
+        <span class="flex items-center gap-1 text-amber-400"><span class="w-2 h-0.5 bg-amber-400"></span> ชั้นล่าง</span>
+      </div>
+    </div>
+
+    <!-- Quick Formula Card -->
+    <div class="p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/20 text-xs text-slate-300 space-y-1">
+      <div class="font-bold text-indigo-300 font-mono">หลักการและสมการคำนวณ:</div>
+      <p class="text-[11px] font-mono text-slate-300 leading-relaxed">
+        $Q = mc\Delta T$ &bull; $c_{\text{water}} = 4.184\text{ J/g}\cdot^\circ\text{C}$
+      </p>
+      <p class="text-[10px] text-slate-400">
+        การพาความร้อน (Convection) ด้วยพัดลมช่วยให้อากาศร้อนหมุนเวียน ลดการแบ่งชั้นอุณหภูมิ (Thermal Stratification)
+      </p>
+    </div>
+  </aside>
+
+  <!-- Bottom Floating Instruction Bar -->
+  <footer class="absolute bottom-3 inset-x-3 z-20 pointer-events-none flex justify-center">
+    <div class="pointer-events-auto bg-slate-950/80 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-slate-700/80 text-xs text-slate-300 flex items-center gap-4 shadow-2xl font-mono">
+      <span><i class="fa-solid fa-arrows-up-down-left-right text-sky-400 mr-1"></i> คลิกซ้ายค้างหมุน 3D</span>
+      <span class="hidden sm:inline text-slate-600">|</span>
+      <span class="hidden sm:inline"><i class="fa-solid fa-magnifying-glass text-emerald-400 mr-1"></i> เลื่อนลูกกลิ้งเพื่อซูม</span>
+      <span class="hidden sm:inline text-slate-600">|</span>
+      <span class="hidden md:inline"><i class="fa-solid fa-hand-pointer text-amber-400 mr-1"></i> คลิกขวาเลื่อนจอ (Pan)</span>
+    </div>
+  </footer>
+
+  <!-- Simulation Logic & Three.js Engine -->
+  <script>
+    // Global State
+    const state = {
+      sv: 37.0,
+      ambient: 25.0,
+      fan: 'high', // off, low, high
+      doorOpen: false,
+      doorAngle: 0,
+      topTemp: 37.4,
+      midTemp: 37.0,
+      botTemp: 36.6,
+      calM1: 100,
+      calT1: 25.0,
+      calM2: 100,
+      calT2: 60.0,
+      history: []
+    };
+
+    let scene, camera, renderer, controls;
+    let incubatorDoorGroup, fanMesh;
+    let probeTopLED, probeMidLED, probeBotLED;
+
+    function initThree() {
+      const container = document.getElementById('canvasContainer');
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x060913);
+      scene.fog = new THREE.FogExp2(0x060913, 0.04);
+
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(0, 2.5, 4.8);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.1;
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 - 0.02;
+      controls.minDistance = 1.2;
+      controls.maxDistance = 12;
+      controls.target.set(0, 1.1, 0);
+
+      setupLighting();
+      buildLaboratoryEnvironment();
+      buildIncubatorApparatus();
+      buildCalorimeterApparatus();
+
+      window.addEventListener('resize', onWindowResize);
+      requestAnimationFrame(animate);
+    }
+
+    function setupLighting() {
+      const ambient = new THREE.AmbientLight(0xffffff, 0.85);
+      scene.add(ambient);
+
+      const mainSpot = new THREE.SpotLight(0x38bdf8, 2.2);
+      mainSpot.position.set(3, 6, 4);
+      mainSpot.angle = Math.PI / 4;
+      mainSpot.penumbra = 0.5;
+      mainSpot.castShadow = true;
+      mainSpot.shadow.mapSize.width = 2048;
+      mainSpot.shadow.mapSize.height = 2048;
+      scene.add(mainSpot);
+
+      const warmLight = new THREE.PointLight(0xf59e0b, 1.2, 8);
+      warmLight.position.set(-2, 3, 2);
+      scene.add(warmLight);
+
+      const chamberLight = new THREE.PointLight(0xffedd5, 1.5, 3);
+      chamberLight.position.set(-0.6, 1.4, 0);
+      scene.add(chamberLight);
+    }
+
+    function buildLaboratoryEnvironment() {
+      // Floor
+      const floorGeo = new THREE.PlaneGeometry(30, 30);
+      const floorMat = new THREE.MeshStandardMaterial({
+        color: 0x0a0f1d,
+        roughness: 0.8,
+        metalness: 0.2
+      });
+      const floor = new THREE.Mesh(floorGeo, floorMat);
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      // Laboratory Benchtop
+      const benchGeo = new THREE.BoxGeometry(4.8, 0.1, 2.2);
+      const benchMat = new THREE.MeshStandardMaterial({
+        color: 0x1e293b,
+        roughness: 0.3,
+        metalness: 0.4
+      });
+      const bench = new THREE.Mesh(benchGeo, benchMat);
+      bench.position.set(0, 0.85, 0);
+      bench.castShadow = true;
+      bench.receiveShadow = true;
+      scene.add(bench);
+
+      // Bench legs (Steel frame)
+      const legGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.85, 16);
+      const legMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.8, roughness: 0.3 });
+      [[-2.2, 0.9], [2.2, 0.9], [-2.2, -0.9], [2.2, -0.9]].forEach(pos => {
+        const leg = new THREE.Mesh(legGeo, legMat);
+        leg.position.set(pos[0], 0.425, pos[1]);
+        leg.castShadow = true;
+        scene.add(leg);
+      });
+    }
+
+    function buildIncubatorApparatus() {
+      const incubatorGroup = new THREE.Group();
+      incubatorGroup.position.set(-0.8, 0.9, 0);
+
+      // Outer Casing (Powder-coated slate white / light grey)
+      const outerGeo = new THREE.BoxGeometry(1.4, 1.5, 1.3);
+      const outerMat = new THREE.MeshStandardMaterial({
+        color: 0xe2e8f0,
+        roughness: 0.35,
+        metalness: 0.25
+      });
+      const outer = new THREE.Mesh(outerGeo, outerMat);
+      outer.position.y = 0.75;
+      outer.castShadow = true;
+      outer.receiveShadow = true;
+      incubatorGroup.add(outer);
+
+      // Inner Chamber Cavity (Polished Stainless Steel)
+      const chamberGeo = new THREE.BoxGeometry(1.15, 1.15, 1.05);
+      const chamberMat = new THREE.MeshStandardMaterial({
+        color: 0x94a3b8,
+        roughness: 0.15,
+        metalness: 0.9,
+        side: THREE.BackSide
+      });
+      const chamber = new THREE.Mesh(chamberGeo, chamberMat);
+      chamber.position.set(0, 0.7, 0.05);
+      incubatorGroup.add(chamber);
+
+      // Top Control Panel Head
+      const panelGeo = new THREE.BoxGeometry(1.36, 0.24, 0.04);
+      const panelMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4, metalness: 0.6 });
+      const panel = new THREE.Mesh(panelGeo, panelMat);
+      panel.position.set(0, 1.4, 0.66);
+      incubatorGroup.add(panel);
+
+      // Digital Display Screen on Panel
+      const screenGeo = new THREE.PlaneGeometry(0.35, 0.14);
+      const screenMat = new THREE.MeshBasicMaterial({ color: 0x0284c7 });
+      const screen = new THREE.Mesh(screenGeo, screenMat);
+      screen.position.set(-0.35, 1.4, 0.682);
+      incubatorGroup.add(screen);
+
+      // Wire Shelves (3 Shelves)
+      const shelfMat = new THREE.MeshStandardMaterial({ color: 0xcfd8dc, metalness: 0.95, roughness: 0.2 });
+      [0.35, 0.7, 1.05].forEach((yPos, idx) => {
+        const shelfGeo = new THREE.BoxGeometry(1.1, 0.015, 0.95);
+        const shelf = new THREE.Mesh(shelfGeo, shelfMat);
+        shelf.position.set(0, yPos, 0.05);
+        shelf.castShadow = true;
+        incubatorGroup.add(shelf);
+      });
+
+      // Convection Fan on Back Wall
+      const fanHubGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.04, 16);
+      const fanMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.7 });
+      fanMesh = new THREE.Mesh(fanHubGeo, fanMat);
+      fanMesh.rotation.x = Math.PI / 2;
+      fanMesh.position.set(0, 0.7, -0.46);
+      incubatorGroup.add(fanMesh);
+
+      // 3 Temperature Probes with glowing LED tips
+      const probeGeo = new THREE.CylinderGeometry(0.012, 0.012, 0.12, 12);
+      const probeMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.9 });
+
+      // Probe 1 (Top Shelf)
+      const p1 = new THREE.Mesh(probeGeo, probeMat);
+      p1.position.set(-0.25, 1.12, -0.2);
+      probeTopLED = new THREE.Mesh(new THREE.SphereGeometry(0.02, 12, 12), new THREE.MeshBasicMaterial({ color: 0xf43f5e }));
+      probeTopLED.position.set(-0.25, 1.18, -0.2);
+      incubatorGroup.add(p1, probeTopLED);
+
+      // Probe 2 (Middle Shelf - Center Reference)
+      const p2 = new THREE.Mesh(probeGeo, probeMat);
+      p2.position.set(0, 0.77, 0.05);
+      probeMidLED = new THREE.Mesh(new THREE.SphereGeometry(0.02, 12, 12), new THREE.MeshBasicMaterial({ color: 0x06b6d4 }));
+      probeMidLED.position.set(0, 0.83, 0.05);
+      incubatorGroup.add(p2, probeMidLED);
+
+      // Probe 3 (Bottom Shelf near door)
+      const p3 = new THREE.Mesh(probeGeo, probeMat);
+      p3.position.set(0.25, 0.42, 0.35);
+      probeBotLED = new THREE.Mesh(new THREE.SphereGeometry(0.02, 12, 12), new THREE.MeshBasicMaterial({ color: 0xf59e0b }));
+      probeBotLED.position.set(0.25, 0.48, 0.35);
+      incubatorGroup.add(p3, probeBotLED);
+
+      // Hinged Door Group (Pivot at x = -0.7)
+      incubatorDoorGroup = new THREE.Group();
+      incubatorDoorGroup.position.set(-0.7, 0.7, 0.65);
+
+      const doorFrameGeo = new THREE.BoxGeometry(1.4, 1.25, 0.06);
+      const doorFrameMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.3, metalness: 0.3 });
+      const doorFrame = new THREE.Mesh(doorFrameGeo, doorFrameMat);
+      doorFrame.position.set(0.7, 0, 0);
+
+      // Double-pane Glass Window
+      const glassGeo = new THREE.BoxGeometry(0.9, 0.85, 0.02);
+      const glassMat = new THREE.MeshPhysicalMaterial({
+        color: 0xbae6fd,
+        transparent: true,
+        opacity: 0.35,
+        roughness: 0.1,
+        metalness: 0.1,
+        transmission: 0.85,
+        ior: 1.5
+      });
+      const glass = new THREE.Mesh(glassGeo, glassMat);
+      glass.position.set(0.7, 0, 0);
+
+      // Door Handle
+      const handleGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.4, 16);
+      const handleMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.8, roughness: 0.2 });
+      const handle = new THREE.Mesh(handleGeo, handleMat);
+      handle.position.set(1.32, 0, 0.05);
+
+      incubatorDoorGroup.add(doorFrame, glass, handle);
+      incubatorGroup.add(incubatorDoorGroup);
+
+      scene.add(incubatorGroup);
+    }
+
+    function buildCalorimeterApparatus() {
+      const calGroup = new THREE.Group();
+      calGroup.position.set(1.3, 0.9, 0);
+
+      // Outer Insulated Cup (Styrofoam / Plastic Jacket)
+      const cupGeo = new THREE.CylinderGeometry(0.22, 0.18, 0.45, 32);
+      const cupMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.4, metalness: 0.1 });
+      const cup = new THREE.Mesh(cupGeo, cupMat);
+      cup.position.y = 0.225;
+      cup.castShadow = true;
+      calGroup.add(cup);
+
+      // Inner Aluminium Liner
+      const innerLiner = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.19, 0.16, 0.42, 32, 1, true),
+        new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.85, roughness: 0.25 })
+      );
+      innerLiner.position.y = 0.23;
+      calGroup.add(innerLiner);
+
+      // Water body inside calorimeter
+      const waterMesh = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.185, 0.165, 0.3, 32),
+        new THREE.MeshPhysicalMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.7, roughness: 0.1, transmission: 0.6 })
+      );
+      waterMesh.position.y = 0.18;
+      calGroup.add(waterMesh);
+
+      // Digital Immersion Thermometer
+      const stemGeo = new THREE.CylinderGeometry(0.008, 0.008, 0.55, 16);
+      const stemMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.9 });
+      const stem = new THREE.Mesh(stemGeo, stemMat);
+      stem.position.set(0.05, 0.35, 0);
+      calGroup.add(stem);
+
+      const headGeo = new THREE.BoxGeometry(0.1, 0.08, 0.04);
+      const headMat = new THREE.MeshStandardMaterial({ color: 0x0284c7 });
+      const head = new THREE.Mesh(headGeo, headMat);
+      head.position.set(0.05, 0.64, 0);
+      calGroup.add(head);
+
+      // Stirrer Rod
+      const stirGeo = new THREE.CylinderGeometry(0.006, 0.006, 0.5, 12);
+      const stirMat = new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.7 });
+      const stirrer = new THREE.Mesh(stirGeo, stirMat);
+      stirrer.position.set(-0.06, 0.32, 0);
+      calGroup.add(stirrer);
+
+      // Hot Water Beaker on side
+      const beakerGeo = new THREE.CylinderGeometry(0.14, 0.13, 0.32, 24);
+      const beakerMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, transparent: true, opacity: 0.4, transmission: 0.9, roughness: 0.1 });
+      const beaker = new THREE.Mesh(beakerGeo, beakerMat);
+      beaker.position.set(0.55, 0.16, 0.2);
+      beaker.castShadow = true;
+      calGroup.add(beaker);
+
+      // Hot water in beaker (warm orange tinted)
+      const hotWater = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.135, 0.125, 0.24, 24),
+        new THREE.MeshPhysicalMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.65, transmission: 0.6 })
+      );
+      hotWater.position.set(0.55, 0.13, 0.2);
+      calGroup.add(hotWater);
+
+      scene.add(calGroup);
+    }
+
+    function toggleDoor() {
+      state.doorOpen = !state.doorOpen;
+      document.getElementById('doorLabel').textContent = state.doorOpen ? "ปิดประตู" : "เปิดประตู";
+      document.getElementById('btnDoorToggle').className = state.doorOpen
+        ? "px-3 py-1 rounded-xl text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 transition flex items-center gap-1"
+        : "px-3 py-1 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 transition flex items-center gap-1";
+    }
+
+    function setFanMode(mode) {
+      state.fan = mode;
+      ['btnFanOff', 'btnFanLow', 'btnFanHigh'].forEach(id => {
+        document.getElementById(id).className = "py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition";
+      });
+      const activeBtn = mode === 'off' ? 'btnFanOff' : (mode === 'low' ? 'btnFanLow' : 'btnFanHigh');
+      document.getElementById(activeBtn).className = "py-1.5 rounded-lg bg-emerald-600 text-white font-bold border border-emerald-400 transition shadow";
+    }
+
+    function updateIncubatorParams() {
+      state.sv = parseFloat(document.getElementById('rngSV').value);
+      state.ambient = parseFloat(document.getElementById('rngAmbient').value);
+      document.getElementById('txtSV').textContent = state.sv.toFixed(1) + " °C";
+      document.getElementById('txtAmbient').textContent = state.ambient.toFixed(1) + " °C";
+    }
+
+    function switchTab(tab) {
+      if (tab === 'incubator') {
+        document.getElementById('tabIncubator').classList.remove('hidden');
+        document.getElementById('tabCalorimetry').classList.add('hidden');
+        document.getElementById('tabBtnIncubator').className = "flex-1 py-1.5 rounded-lg bg-sky-500 text-slate-950 font-bold shadow transition";
+        document.getElementById('tabBtnCalorimetry').className = "flex-1 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition";
+      } else {
+        document.getElementById('tabIncubator').classList.add('hidden');
+        document.getElementById('tabCalorimetry').classList.remove('hidden');
+        document.getElementById('tabBtnCalorimetry').className = "flex-1 py-1.5 rounded-lg bg-purple-600 text-white font-bold shadow transition";
+        document.getElementById('tabBtnIncubator').className = "flex-1 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition";
+        calcCalorimetry();
+      }
+    }
+
+    function calcCalorimetry() {
+      const m1 = parseFloat(document.getElementById('inpM1').value) || 100;
+      const t1 = parseFloat(document.getElementById('inpT1').value) || 25.0;
+      const m2 = parseFloat(document.getElementById('inpM2').value) || 100;
+      const t2 = parseFloat(document.getElementById('inpT2').value) || 60.0;
+      const c = 4.184; // J/g°C
+
+      // T_mix = (m1*t1 + m2*t2) / (m1 + m2)
+      const tMix = ((m1 * t1) + (m2 * t2)) / (m1 + m2);
+      const heatGain = m1 * c * (tMix - t1);
+
+      document.getElementById('resTmix').textContent = tMix.toFixed(2) + " °C";
+      document.getElementById('resHeatJoules').textContent = Math.round(heatGain).toLocaleString() + " J (" + (heatGain/1000).toFixed(2) + " kJ)";
+    }
+
+    function triggerMixAnimation() {
+      calcCalorimetry();
+      setCameraView('calorimeter');
+    }
+
+    function setCameraView(view) {
+      if (view === 'front') {
+        camera.position.set(0, 1.8, 4.2);
+        controls.target.set(0, 1.2, 0);
+      } else if (view === 'iso') {
+        camera.position.set(2.4, 2.8, 3.8);
+        controls.target.set(0, 1.1, 0);
+      } else if (view === 'inside') {
+        if (!state.doorOpen) toggleDoor();
+        camera.position.set(-0.8, 1.6, 1.8);
+        controls.target.set(-0.8, 1.5, 0);
+      } else if (view === 'calorimeter') {
+        camera.position.set(1.3, 1.8, 2.2);
+        controls.target.set(1.3, 1.2, 0);
+      }
+    }
+
+    function resetSim() {
+      state.sv = 37.0;
+      state.ambient = 25.0;
+      state.fan = 'high';
+      if (state.doorOpen) toggleDoor();
+      document.getElementById('rngSV').value = 37.0;
+      document.getElementById('rngAmbient').value = 25.0;
+      updateIncubatorParams();
+      setFanMode('high');
+      setCameraView('front');
+    }
+
+    function updatePhysicsSimulation() {
+      // Fan spin
+      if (fanMesh) {
+        const speed = state.fan === 'high' ? 0.35 : (state.fan === 'low' ? 0.15 : 0);
+        fanMesh.rotation.z += speed;
+      }
+
+      // Door animation (Smooth swing 0 to ~105 deg)
+      const targetAngle = state.doorOpen ? Math.PI * 0.6 : 0;
+      state.doorAngle += (targetAngle - state.doorAngle) * 0.08;
+      if (incubatorDoorGroup) {
+        incubatorDoorGroup.rotation.y = -state.doorAngle;
+      }
+
+      // Thermal calculations:
+      // When fan is high: thermal stratification is minimal (~0.3°C diff)
+      // When fan is off: natural convection causes air stratification (~1.6°C diff)
+      // When door is open: severe heat loss, lower shelf drops towards ambient temp!
+      let strat = state.fan === 'high' ? 0.25 : (state.fan === 'low' ? 0.65 : 1.35);
+      let doorLoss = state.doorOpen ? (state.sv - state.ambient) * 0.55 : 0;
+
+      let mid = state.sv - (doorLoss * 0.4);
+      let top = mid + strat - (doorLoss * 0.2);
+      let bot = mid - strat - (doorLoss * 0.85);
+
+      // Add slight sensor fluctuation (realistic noise ±0.03°C)
+      const noise = (Math.random() - 0.5) * 0.06;
+      state.midTemp += (mid + noise - state.midTemp) * 0.05;
+      state.topTemp += (top + noise - state.topTemp) * 0.05;
+      state.botTemp += (bot + noise - state.botTemp) * 0.05;
+
+      // Update HUD values
+      document.getElementById('sensorTopVal').textContent = state.topTemp.toFixed(1) + " °C";
+      document.getElementById('sensorMidVal').textContent = state.midTemp.toFixed(1) + " °C";
+      document.getElementById('sensorBotVal').textContent = state.botTemp.toFixed(1) + " °C";
+
+      const devTop = state.topTemp - state.sv;
+      const devMid = state.midTemp - state.sv;
+      const devBot = state.botTemp - state.sv;
+
+      document.getElementById('sensorTopDev').textContent = (devTop >= 0 ? "+" : "") + devTop.toFixed(1) + "°C";
+      document.getElementById('sensorMidDev').textContent = (devMid >= 0 ? "+" : "") + devMid.toFixed(1) + "°C";
+      document.getElementById('sensorBotDev').textContent = (devBot >= 0 ? "+" : "") + devBot.toFixed(1) + "°C";
+
+      // Append to history for strip chart
+      state.history.push({ top: state.topTemp, mid: state.midTemp, bot: state.botTemp });
+      if (state.history.length > 70) state.history.shift();
+      drawChart();
+    }
+
+    function drawChart() {
+      const cvs = document.getElementById('chartCanvas');
+      if (!cvs) return;
+      const ctx = cvs.getContext('2d');
+      const w = cvs.width;
+      const h = cvs.height;
+
+      ctx.fillStyle = "#030712";
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw grid
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.1)";
+      ctx.lineWidth = 1;
+      for (let y = 15; y < h; y += 20) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      // Baseline (SV) at middle (h/2)
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(0, h / 2);
+      ctx.lineTo(w, h / 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      const pts = state.history;
+      if (pts.length < 2) return;
+
+      const scaleY = 16; // 1°C = 16 pixels
+      const stepX = w / 70;
+
+      function plotLine(key, color) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        pts.forEach((pt, i) => {
+          const dy = (pt[key] - state.sv) * scaleY;
+          const px = i * stepX;
+          const py = (h / 2) - dy;
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        });
+        ctx.stroke();
+      }
+
+      plotLine('top', '#fb7185'); // rose
+      plotLine('mid', '#22d3ee'); // cyan
+      plotLine('bot', '#fbbf24'); // amber
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      updatePhysicsSimulation();
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initThree();
+      updateIncubatorParams();
+      calcCalorimetry();
+    });
+  </script>
+</body>
+</html>
+

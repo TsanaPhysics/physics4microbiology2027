@@ -1,7 +1,7 @@
 /**
  * Modular Data-Driven Configuration for 13 Physics for Microbiology Virtual Labs
  * Course 4011111 Physics for Microbiology (OBE Aligned 2026/2027)
- * Perfectly synchronized with SQLite3 virtual_lab.db & 03_physics4microbio2026 Master Plan
+ * Perfectly synchronized with main.tex, SQLite3 virtual_lab.db & 03_physics4microbio2026 Master Plan
  */
 
 const LABS_CONFIG = {
@@ -51,8 +51,8 @@ const LABS_CONFIG = {
       { trial: 3, p1: 1000, p2: "1.0000", p3: "0.9984", p4: "0.9982", err: "0.02" }
     ],
     quiz: [
-      { q: "เมื่อต้องการดูดสารละลายเข้าสู่ทิปของไมโครปิเปต ต้องกดก้านลูกสูบอย่างไร?", opts: ["กดจนสุดจุดหยุดที่สอง (Second Stop)", "กดลงไปยังจุดหยุดแรก (First Stop) แล้วค่อยๆ ปล่อยขึ้น", "ไม่ต้องกด ดึงก้านลูกสูบขึ้นตรงๆ", "กดและปล่อยอย่างรวดเร็วเพื่อสร้างสุญญากาศ"], ans: 1 },
-      { q: "หากตั้งปริมาตรไมโครปิเปตไว้ที่ 500 µL มวลของน้ำบริสุทธิ์ควรชั่งได้ประมาณเท่าใด?", opts: ["5.0000 g", "0.0500 g", "0.5000 g", "50.000 g"], ans: 2 },
+      { q: "เมื่อต้องการดูดสารละลายเข้าสู่ทิปของไมโครปิเปต ต้องกดก้านลูกสูบอย่างไร?", opts: ["กดลงไปยังจุดหยุดแรก (First Stop) แล้วค่อยๆ ปล่อยขึ้น", "กดจนสุดจุดหยุดที่สอง (Second Stop)", "ไม่ต้องกด ดึงก้านลูกสูบขึ้นตรงๆ", "กดและปล่อยอย่างรวดเร็วเพื่อสร้างสุญญากาศ"], ans: 0 },
+      { q: "หากตั้งปริมาตรไมโครปิเปตไว้ที่ 500 µL มวลของน้ำบริสุทธิ์ควรชั่งได้ประมาณเท่าใด?", opts: ["0.5000 g", "5.0000 g", "0.0500 g", "50.000 g"], ans: 0 },
       { q: "การจับไมโครปิเปตเอียงมากกว่า 30 องศาขณะดูดของเหลวจะส่งผลอย่างไรต่อผลการวัด?", opts: ["ทำให้ดูดของเหลวได้ปริมาตรน้อยกว่าที่ตั้งไว้เนื่องจากผลของแรงดันสถิตไฮโดรสแตติก", "ทำให้ปริมาตรเพิ่มขึ้นเป็นสองเท่าเสมอ", "ไม่มีผลกระทบใดๆ", "ทำให้ลูกสูบติดขัด"], ans: 0 }
     ]
   },
@@ -61,44 +61,50 @@ const LABS_CONFIG = {
     id: "lab02",
     num: 2,
     badge: "Lab 02",
-    titleTh: "เวกเตอร์และแรงในระบบชีวภาพ",
-    titleEn: "Vectors & Biomechanical Forces in Microbiology",
-    category: "กลศาสตร์และเวกเตอร์ชีวภาพ",
+    titleTh: "การเคลื่อนที่แบบบราวน์และเวกเตอร์การแพร่ของจุลินทรีย์",
+    titleEn: "Brownian Motion & Microorganism Diffusion Vectors",
+    category: "เวกเตอร์และการแพร่ชีวภาพ",
     icon: "fa-solid fa-arrows-split-up-and-left",
-    instrument: "3D Biomechanical Force Vector Stage & Force Table",
-    description: "การรวมเวกเตอร์แรงดึงดูด แรงผลัก และแรงตึงผิวที่กระทำต่อเซลล์จุลินทรีย์ การเคลื่อนที่แบบบราวน์ (Brownian Motion) และ Chemotaxis ตามสมการ Einstein-Smoluchowski",
-    formulaLatex: "\\vec{R} = \\sum \\vec{F}, \\quad \\langle r^2 \\rangle = 6 D t = \\frac{6 k_B T}{6 \\pi \\eta a} t",
-    formulaDesc: "เวกเตอร์แรงลัพธ์หาจากผลบวกเวกเตอร์องค์ประกอบ และระยะกระจัดเฉลี่ยของการชนแบบบราวน์แปรผันตรงกับอุณหภูมิสัมบูรณ์",
+    instrument: "3D Hanging Drop Chamber & Brownian Motion Analyzer",
+    description: "การสังเกตการเคลื่อนที่แบบบราวน์ของเซลล์จุลินทรีย์และอนุภาคคอลลอยด์ การจำลองตามสมการไอน์สไตน์ D = k_B T / (6 pi eta r) และการรวมเวกเตอร์การเคลื่อนที่แบบสุ่ม",
+    formulaLatex: "D = \\frac{k_B T}{6 \\pi \\eta r}, \\quad \\langle r^2 \\rangle = 4Dt",
+    formulaDesc: "สัมประสิทธิ์การแพร่ D แปรผันตรงกับอุณหภูมิสัมบูรณ์ T และแปรผกผันกับความหนืดของตัวกลาง eta และรัศมีอนุภาค r",
     params: [
-      { id: "force1", label: "แรง F1 (pN)", min: 1, max: 100, step: 5, default: 40, unit: "pN" },
-      { id: "angle1", label: "มุม F1 (องศา)", min: 0, max: 360, step: 5, default: 30, unit: "°" },
-      { id: "force2", label: "แรง F2 (pN)", min: 1, max: 100, step: 5, default: 50, unit: "pN" },
-      { id: "angle2", label: "มุม F2 (องศา)", min: 0, max: 360, step: 5, default: 120, unit: "°" }
+      { id: "temp_c", label: "อุณหภูมิสารละลาย (°C)", min: 10, max: 60, step: 5, default: 25, unit: "°C" },
+      { id: "viscosity_cp", label: "ความหนืดสัมพัทธ์ (cP)", min: 0.5, max: 5.0, step: 0.5, default: 1.0, unit: "cP" },
+      { id: "particle_type", label: "ชนิดอนุภาค", type: "select", options: [
+        { val: "microbe", text: "เซลล์แบคทีเรีย E. coli (r = 0.5 µm)" },
+        { val: "latex", text: "อนุภาค Latex Bead (r = 0.2 µm)" },
+        { val: "yeast", text: "เซลล์ยีสต์ (r = 2.5 µm)" }
+      ]}
     ],
     calcPhysics: function(p) {
-      let r1 = p.angle1 * Math.PI / 180;
-      let r2 = p.angle2 * Math.PI / 180;
-      let fx = p.force1 * Math.cos(r1) + p.force2 * Math.cos(r2);
-      let fy = p.force1 * Math.sin(r1) + p.force2 * Math.sin(r2);
-      let r = Math.sqrt(fx*fx + fy*fy);
-      let angle = (Math.atan2(fy, fx) * 180 / Math.PI + 360) % 360;
+      let r_um = p.particle_type === "microbe" ? 0.5 : (p.particle_type === "latex" ? 0.2 : 2.5);
+      let T_K = p.temp_c + 273.15;
+      let eta = p.viscosity_cp * 1e-3; // Pa.s
+      let kB = 1.38e-23;
+      let r_m = r_um * 1e-6;
+      let D = (kB * T_K) / (6 * Math.PI * eta * r_m); // m2/s
+      let D_um2_s = D * 1e12;
+      let msd_1s = 4 * D_um2_s * 1.0;
+      let rms_disp = Math.sqrt(msd_1s);
       return {
-        r_pN: r.toFixed(2) + " pN",
-        angle_deg: angle.toFixed(1) + "°",
-        fx: fx.toFixed(2) + " pN",
-        fy: fy.toFixed(2) + " pN"
+        diff_coeff: D_um2_s.toFixed(3) + " µm²/s",
+        msd_val: msd_1s.toFixed(2) + " µm²",
+        rms_disp: rms_disp.toFixed(2) + " µm",
+        motion_state: p.temp_c > 45 ? "การสั่นเร็วมาก (High Agitation)" : "สั่นตามอุณหภูมิปกติ"
       };
     },
-    tableCols: ["Trial", "F1 (pN)", "θ1 (°)", "F2 (pN)", "θ2 (°)", "แรงลัพธ์ R (pN)", "ทิศทาง θR (°)"],
+    tableCols: ["Trial", "อุณหภูมิ (°C)", "ความหนืด (cP)", "ชนิดอนุภาค", "สัมประสิทธิ์การแพร่ D (µm²/s)", "ระยะกระจัดเฉลี่ย RMS (µm)"],
     defaultTrials: [
-      { trial: 1, p1: 40, p2: 30, p3: 50, p4: 120, err: "78.1" },
-      { trial: 2, p1: 30, p2: 0, p3: 40, p4: 90, err: "50.0" },
-      { trial: 3, p1: 60, p2: 45, p3: 60, p4: 225, err: "0.0" }
+      { trial: 1, p1: 25, p2: 1.0, p3: "E. coli", p4: "0.437", err: "1.32" },
+      { trial: 2, p1: 37, p2: 1.0, p3: "E. coli", p4: "0.455", err: "1.35" },
+      { trial: 3, p1: 25, p2: 2.0, p3: "E. coli", p4: "0.219", err: "0.94" }
     ],
     quiz: [
-      { q: "หากแรงสองแรงขนาด 30 pN และ 40 pN กระทำต่อเซลล์แบคทีเรียในทิศตั้งฉากกัน แรงลัพธ์จะมีขนาดเท่าใด?", opts: ["10 pN", "50 pN", "70 pN", "120 pN"], ans: 1 },
-      { q: "การว่ายน้ำแบบ Chemotaxis ของแบคทีเรียแตกต่างจากการเคลื่อนที่แบบ Brownian อย่างไร?", opts: ["Chemotaxis มีทิศทางที่แน่นอนมุ่งหาอาหาร ส่วน Brownian เกิดจากการชนแบบสุ่ม", "Chemotaxis ไม่ต้องใช้พลังงาน", "Brownian ใช้แฟลกเจลลาขับเคลื่อน", "ทั้งสองแบบเหมือนกันทุกประการ"], ans: 0 },
-      { q: "หน่วยของแรงในระดับโมเลกุลและเซลล์ชีวภาพที่นิยมใช้คือหน่วยใด?", opts: ["กิโลนิวตัน (kN)", "นิวตัน (N)", "พิโคนิวตัน (pN = 10^-12 N)", "จูล (J)"], ans: 2 }
+      { q: "การเคลื่อนที่แบบบราวน์ (Brownian Motion) มีสาเหตุหลักมาจากอะไร?", opts: ["การชนกันแบบสุ่มอย่างต่อเนื่องของโมเลกุลน้ำกับเซลล์แบคทีเรีย", "แบคทีเรียว่ายน้ำด้วยพลังงาน ATP", "แรงดึงดูดของโลก", "การไหลเวียนของสนามแม่เหล็กโลก"], ans: 0 },
+      { q: "เมื่ออุณหภูมิของสารละลายเพิ่มขึ้น สัมประสิทธิ์การแพร่ (D) และความเร็วการเคลื่อนที่แบบบราวน์จะเปลี่ยนแปลงอย่างไร?", opts: ["เพิ่มขึ้น เพราะพลังงานจลน์เฉลี่ยของโมเลกุลของเหลวเพิ่มขึ้น", "ลดลง เพราะความหนาแน่นลดลง", "เท่าเดิมเสมอ", "หยุดการเคลื่อนที่"], ans: 0 },
+      { q: "เซลล์ยีสต์ขนาดใหญ่ (r = 2.5 µm) จะมีการเคลื่อนที่แบบบราวน์แตกต่างจากอนุภาคนาโนอย่างไร?", opts: ["เคลื่อนที่ช้าและระยะกระจัดสั้นกว่ามากเพราะมวลและแรงต้านหนืดสูงกว่า", "เคลื่อนที่เร็วกว่า", "เคลื่อนที่เท่ากัน", "ไม่เกิดการเคลื่อนที่"], ans: 0 }
     ]
   },
 
@@ -106,43 +112,51 @@ const LABS_CONFIG = {
     id: "lab03",
     num: 3,
     badge: "Lab 03",
-    titleTh: "การเคลื่อนที่ จลนศาสตร์ และความหนืด",
-    titleEn: "Kinematics, Fluid Viscosity & Stokes Sedimentation",
-    category: "ของไหลและความหนืด",
-    icon: "fa-solid fa-person-running",
-    instrument: "Falling-Sphere Viscometer & Stokes Fall Tube 3D",
-    description: "จลนศาสตร์การว่ายน้ำของแบคทีเรีย ความหนืดของอาหารเลี้ยงเชื้อ และการตกตะกอนตามกฎของสโตกส์ (Stokes' Law)",
-    formulaLatex: "v_t = \\frac{2 r^2 (\\rho_p - \\rho_f) g}{9 \\eta}",
-    formulaDesc: "ความเร็วปลายของการตกตะกอนแปรผันตรงกับรัศมีอนุภาคยกกำลังสอง (r²) และแปรผกผันกับความหนืดของของเหลว (η)",
+    titleTh: "กฎของนิวตัน ความหนืดสโตกส์ และการตกตะกอนของแบคทีเรีย",
+    titleEn: "Newton's Laws, Stokes Viscosity & Bacterial Sedimentation",
+    category: "กลศาสตร์ของไหลและความหนืด",
+    icon: "fa-solid fa-water",
+    instrument: "Falling Ball Viscometer & Stoke's Column 3D",
+    description: "แรงต้านหนืดตามกฎของสโตกส์ F_d = 6 pi eta r v สมดุลแรงตกตะกอน และความเร็วปลาย (Terminal Velocity) ของอนุภาคและจุลินทรีย์ในของไหล",
+    formulaLatex: "v_t = \\frac{2 r^2 g (\\rho_p - \\rho_f)}{9 \\eta}, \\quad F_d = 6 \\pi \\eta r v",
+    formulaDesc: "ความเร็วปลายของการตกตะกอนแปรผันตรงกับผลต่างความหนาแน่นและกำลังสองของรัศมีอนุภาค และแปรผกผันกับความหนืด",
     params: [
-      { id: "radius_mm", label: "รัศมีอนุภาค r (mm)", min: 0.5, max: 5.0, step: 0.5, default: 2.0, unit: "mm" },
-      { id: "viscosity_mPas", label: "ความหนืดของเหลว η (mPa·s)", min: 1, max: 50, step: 1, default: 10, unit: "mPa·s" },
-      { id: "fall_distance_cm", label: "ระยะทางตก h (cm)", min: 10, max: 100, step: 10, default: 50, unit: "cm" }
+      { id: "fluid_type", label: "ชนิดของไหลตัวกลาง", type: "select", options: [
+        { val: "water", text: "น้ำบริสุทธิ์ (η = 1.00 mPa·s, ρ = 1.00 g/cm³)" },
+        { val: "glycerol_20", text: "กลีเซอรอล 20% (η = 1.76 mPa·s, ρ = 1.05 g/cm³)" },
+        { val: "glycerol_50", text: "กลีเซอรอล 50% (η = 6.00 mPa·s, ρ = 1.13 g/cm³)" }
+      ]},
+      { id: "ball_radius_mm", label: "รัศมีลูกทรงกลม r (mm)", min: 1.0, max: 5.0, step: 0.5, default: 2.0, unit: "mm" },
+      { id: "ball_material", label: "วัสดุทรงกลม", type: "select", options: [
+        { val: "steel", text: "เหล็กกล้า (ρ = 7.85 g/cm³)" },
+        { val: "glass", text: "แก้วโบโรซิลิเกต (ρ = 2.23 g/cm³)" }
+      ]}
     ],
     calcPhysics: function(p) {
-      let r_m = p.radius_mm * 1e-3;
-      let eta = p.viscosity_mPas * 1e-3;
-      let rho_p = 2500; // glass bead
-      let rho_f = 1050; // broth
+      let eta = p.fluid_type === "water" ? 1.0e-3 : (p.fluid_type === "glycerol_20" ? 1.76e-3 : 6.0e-3);
+      let rho_f = p.fluid_type === "water" ? 1000 : (p.fluid_type === "glycerol_20" ? 1050 : 1130);
+      let rho_p = p.ball_material === "steel" ? 7850 : 2230;
+      let r = p.ball_radius_mm * 1e-3;
       let g = 9.81;
-      let vt = (2 * r_m * r_m * (rho_p - rho_f) * g) / (9 * eta);
-      let t_fall = (p.fall_distance_cm * 1e-2) / vt;
+      let vt = (2 * r * r * g * (rho_p - rho_f)) / (9 * eta);
+      let fall_time_20cm = 0.20 / vt;
       return {
-        vt: vt.toFixed(3) + " m/s",
-        time_s: t_fall.toFixed(2) + " s",
-        reynolds: ((rho_f * vt * 2 * r_m) / eta).toFixed(4)
+        vt_display: vt.toFixed(3) + " m/s",
+        vt_cm: (vt * 100).toFixed(1) + " cm/s",
+        fall_time: fall_time_20cm < 0.05 ? "< 0.05 s" : fall_time_20cm.toFixed(2) + " s",
+        reynolds: ((rho_f * vt * 2 * r) / eta).toFixed(1)
       };
     },
-    tableCols: ["Trial", "รัศมี r (mm)", "ความหนืด η (mPa·s)", "ระยะ h (cm)", "เวลาตก t (s)", "ความเร็ว vt (m/s)"],
+    tableCols: ["Trial", "ของไหล (η)", "ลูกกลม (ρ)", "รัศมี r (mm)", "ความเร็วปลาย vt (cm/s)", "เวลาตก 20 cm (s)"],
     defaultTrials: [
-      { trial: 1, p1: 1.0, p2: 10, p3: 50, p4: "1.58", err: "0.316" },
-      { trial: 2, p1: 2.0, p2: 10, p3: 50, p4: "0.39", err: "1.265" },
-      { trial: 3, p1: 3.0, p2: 10, p3: 50, p4: "0.18", err: "2.846" }
+      { trial: 1, p1: "น้ำ (1.00 mPa·s)", p2: "แก้ว (2.23)", p3: 2.0, p4: "5.36", err: "3.73" },
+      { trial: 2, p1: "น้ำ (1.00 mPa·s)", p2: "เหล็ก (7.85)", p3: 2.0, p4: "29.8", err: "0.67" },
+      { trial: 3, p1: "กลีเซอรอล 50%", p2: "เหล็ก (7.85)", p3: 2.0, p4: "4.88", err: "4.10" }
     ],
     quiz: [
-      { q: "ตามกฎของสโตกส์ หากอนุภาคแบคทีเรียจับกลุ่มกันจนรัศมีเพิ่มขึ้น 2 เท่า ความเร็วในการตกตะกอนจะเพิ่มขึ้นกี่เท่า?", opts: ["2 เท่า", "4 เท่า", "8 เท่า", "เท่าเดิม"], ans: 1 },
-      { q: "อาหารเลี้ยงเชื้อที่มีความหนืดสูงขึ้น จะส่งผลอย่างไรต่อการตกตะกอนของเซลล์?", opts: ["เซลล์ตกตะกอนช้าลง", "เซลล์ตกตะกอนเร็วขึ้น", "ไม่มีผลกระทบ", "เซลล์จะลอยขึ้นสู่ผิวน้ำ"], ans: 0 },
-      { q: "เลขเรย์โนลด์ส (Reynolds number) ของแบคทีเรียที่ว่ายในน้ำมีค่าอยู่ในช่วงใด?", opts: ["ต่ำมาก (Re << 1) สภาวะความหนืดครอบงำ", "สูงมาก (Re >> 10,000) มีความปั่นป่วนสูง", "ประมาณ 100", "ติดลบ"], ans: 0 }
+      { q: "ตามกฎของสโตกส์ (Stokes' Law) หากรัศมีของอนุภาคแบคทีเรียเพิ่มขึ้น 2 เท่า ความเร็วปลายในการตกตะกอนจะเพิ่มขึ้นกี่เท่า?", opts: ["4 เท่า (เนื่องจากแปรผันตาม r²)", "2 เท่า", "8 เท่า", "เท่าเดิม"], ans: 0 },
+      { q: "เหตุใดเซลล์แบคทีเรียในน้ำนิ่งจึงตกตะกอนช้ามากจนแทบมองไม่เห็น?", opts: ["เพราะรัศมีขนาดเล็กมากระดับไมโครเมตร และแรงลอยตัวใกล้เคียงน้ำ", "เพราะแบคทีเรียไม่มีมวล", "เพราะน้ำไม่มีแรงเสียดทาน", "เพราะแสงอาทิตย์พยุงเซลล์ไว้"], ans: 0 },
+      { q: "อุปกรณ์ใดใช้วัดความหนืดของของเหลวโดยอาศัยกฎของสโตกส์?", opts: ["Falling Ball Viscometer", "Spectrophotometer", "Autoclave", "Refractometer"], ans: 0 }
     ]
   },
 
@@ -150,14 +164,14 @@ const LABS_CONFIG = {
     id: "lab04",
     num: 4,
     badge: "Lab 04",
-    titleTh: "กฎการเคลื่อนที่ของนิวตันและการปั่นเหวี่ยง",
-    titleEn: "Newton Laws, Centrifugation & RCF Rotor Balancing",
+    titleTh: "งาน พลังงานจลน์ และแรงหนีศูนย์กลางในการปั่นแยกเซลล์",
+    titleEn: "Work, Kinetic Energy & Centrifugal Cell Separation",
     category: "กลศาสตร์การหมุนและการปั่นเหวี่ยง",
     icon: "fa-solid fa-rotate",
     instrument: "High-Speed Microcentrifuge 3D & Balanced Rotor",
     description: "แรงสู่ศูนย์กลาง อัตราเร่งสู่ศูนย์กลาง และแรงหนีศูนย์กลางสัมพัทธ์ (Relative Centrifugal Field - RCF) ในการแยกตะกอนเซลล์",
     formulaLatex: "\\text{RCF } (\\times g) = 1.118 \\times 10^{-5} \\times r_{\\text{cm}} \\times (\\text{RPM})^2",
-    formulaDesc: "แรงเหวี่ยงหนีศูนย์กลางสัมพันธ์แปรผันตรงกับรัศมีหัวปั่น (r) และแปรผันตรงกับความเร็วรอบยกกำลังสอง (RPM²)",
+    formulaDesc: "แรงเหวี่ยงหนีศูนย์กลางสัมพันธ์แปรผันตรงกับรัศมีโรเตอร์ (r) และแปรผันตรงกับความเร็วรอบยกกำลังสอง (RPM²)",
     params: [
       { id: "rpm", label: "ความเร็วรอบ (RPM)", min: 1000, max: 15000, step: 500, default: 8000, unit: "RPM" },
       { id: "rotor_radius_cm", label: "รัศมีโรเตอร์ r (cm)", min: 5, max: 15, step: 0.5, default: 8.5, unit: "cm" },
@@ -183,9 +197,9 @@ const LABS_CONFIG = {
       { trial: 3, p1: 14000, p2: "8.5", p3: "18626", p4: "Balanced", err: "2" }
     ],
     quiz: [
-      { q: "หากเพิ่มความเร็วรอบของเครื่องปั่นเหวี่ยงจาก 4,000 RPM เป็น 8,000 RPM ค่าแรงเหวี่ยงสัมพัทธ์ (RCF) จะเพิ่มขึ้นกี่เท่า?", opts: ["2 เท่า", "4 เท่า", "8 เท่า", "16 เท่า"], ans: 1 },
-      { q: "เหตุใดจึงต้องวางหลอดทดลองในโรเตอร์เครื่องปั่นเหวี่ยงให้สมดุลตรงข้ามกันเสมอ?", opts: ["เพื่อให้โรเตอร์หมุนเร็วขึ้น", "เพื่อป้องกันโมเมนต์ความไม่สมดุลที่ทำให้แกนมอเตอร์หักเสียหาย", "เพื่อให้สารตกตะกอนสวยงาม", "เพื่อให้ประหยัดไฟฟ้า"], ans: 1 },
-      { q: "หน่วย RCF (×g) หมายถึงอะไร?", opts: ["จำนวนรอบต่อวินาที", "จำนวนเท่าของความเร่งเนื่องจากแรงโน้มถ่วงของโลก (g)", "น้ำหนักของหลอดทดลอง", "แรงเสียดทานของอากาศ"], ans: 1 }
+      { q: "หากเพิ่มความเร็วรอบของเครื่องปั่นเหวี่ยงจาก 4,000 RPM เป็น 8,000 RPM ค่าแรงเหวี่ยงสัมพัทธ์ (RCF) จะเพิ่มขึ้นกี่เท่า?", opts: ["4 เท่า (เนื่องจากแปรผันตาม RPM²)", "2 เท่า", "8 เท่า", "16 เท่า"], ans: 0 },
+      { q: "เหตุใดจึงต้องวางหลอดทดลองในโรเตอร์เครื่องปั่นเหวี่ยงให้สมดุลตรงข้ามกันเสมอ?", opts: ["เพื่อป้องกันโมเมนต์ความไม่สมดุลที่ทำให้แกนมอเตอร์หักเสียหาย", "เพื่อให้โรเตอร์หมุนเร็วขึ้น", "เพื่อให้สารตกตะกอนสวยงาม", "เพื่อให้ประหยัดไฟฟ้า"], ans: 0 },
+      { q: "หน่วย RCF (×g) หมายถึงอะไร?", opts: ["จำนวนเท่าของความเร่งเนื่องจากแรงโน้มถ่วงของโลก (g)", "จำนวนรอบต่อวินาที", "น้ำหนักของหลอดทดลอง", "แรงเสียดทานของอากาศ"], ans: 0 }
     ]
   },
 
@@ -193,46 +207,54 @@ const LABS_CONFIG = {
     id: "lab05",
     num: 5,
     badge: "Lab 05",
-    titleTh: "โมเมนตัม การดล และการชนในระดับจุลภาค",
-    titleEn: "Momentum, Impulse & Cellular Collisions",
-    category: "กลศาสตร์และการชนระดับเซลล์",
-    icon: "fa-solid fa-burst",
-    instrument: "Microscopic Collision Air Track & Bioaerosol Impactor 3D",
-    description: "การอนุรักษ์โมเมนตัมเชิงเส้น การชนแบบยืดหยุ่นและไม่ยืดหยุ่น การถ่ายทอดพลังงานจลน์สู่การแตกสลายเซลล์ (Cell Lysis) และการดักจับละอองลอยชีวภาพ",
-    formulaLatex: "\\sum \\vec{p}_i = \\sum \\vec{p}_f, \\quad \\vec{J} = \\Delta \\vec{p} = \\vec{F} \\Delta t",
-    formulaDesc: "ผลรวมโมเมนตัมก่อนชนเท่ากับผลรวมโมเมนตัมหลังชน และแรงกระทำเฉลี่ยแปรผกผันกับระยะเวลาการชน",
+    titleTh: "การถ่ายโอนความร้อนและเสถียรภาพอุณหภูมิตู้อบ Incubator 37°C",
+    titleEn: "Heat Transfer & 37°C Incubator Thermal Stability",
+    category: "ความร้อนและการควบคุมอุณหภูมิชีวภาพ",
+    icon: "fa-solid fa-temperature-arrow-up",
+    instrument: "Microbiological Incubator 37.0°C & Calorimeter 3D",
+    description: "การอนุรักษ์พลังงานความร้อนในแคลอริมิเตอร์ Q = mcΔT และการตรวจสอบเสถียรภาพการกระจายอุณหภูมิ 3 จุดในตู้อบเลี้ยงเชื้อจุลินทรีย์เพื่อป้องกัน Thermal Stratification",
+    formulaLatex: "Q = mc \\Delta T, \\quad Q_{\\text{gain}} = Q_{\\text{lost}}",
+    formulaDesc: "ปริมาณความร้อนแปรผันตรงกับมวล ความจุความร้อนจำเพาะ (c = 4.184 J/g·°C) และผลต่างอุณหภูมิ",
     params: [
-      { id: "m1", label: "มวลลูกปัดแก้ว m1 (mg)", min: 10, max: 200, step: 10, default: 50, unit: "mg" },
-      { id: "v1", label: "ความเร็วลูกปัดก่อนชน v1 (m/s)", min: 1, max: 20, step: 1, default: 10, unit: "m/s" },
-      { id: "collision_type", label: "ประเภทการชน", type: "select", options: [
-        { val: "elastic", text: "ชนแบบยืดหยุ่น (Elastic e=1.0)" },
-        { val: "inelastic", text: "ชนแบบไม่ยืดหยุ่น (Inelastic e=0.5)" },
-        { val: "lysis", text: "ชนแตกสลายเซลล์ (Complete Lysis e=0.0)" }
+      { id: "setpoint_C", label: "อุณหภูมิเป้าหมาย SV (°C)", min: 30.0, max: 60.0, step: 0.5, default: 37.0, unit: "°C" },
+      { id: "ambient_C", label: "อุณหภูมิห้องแล็บ Ambient (°C)", min: 20.0, max: 35.0, step: 0.5, default: 25.0, unit: "°C" },
+      { id: "fan_mode", label: "พัดลมพาความร้อน (Convection)", type: "select", options: [
+        { val: "high", text: "พัดลมรอบสูง (Forced Convection สม่ำเสมอ)" },
+        { val: "low", text: "พัดลมรอบต่ำ (กระจายความร้อนปานกลาง)" },
+        { val: "off", text: "ปิดพัดลม (Natural Convection อากาศแบ่งชั้น)" }
+      ]},
+      { id: "door_status", label: "สถานะประตูตู้", type: "select", options: [
+        { val: "closed", text: "ปิดสนิท (Insulated Sealed)" },
+        { val: "open", text: "เปิดประตู (Ambient Heat Loss)" }
       ]}
     ],
     calcPhysics: function(p) {
-      let p_initial = (p.m1 * 1e-6) * p.v1;
-      let e = p.collision_type === "elastic" ? 1.0 : (p.collision_type === "inelastic" ? 0.5 : 0.0);
-      let v_final = p.v1 * (1 - e) / 2;
-      let delta_p = p_initial * (1 + e);
-      let delta_t = 0.001; // 1 ms
-      let force = delta_p / delta_t;
+      let sv = p.setpoint_C;
+      let amb = p.ambient_C;
+      let strat = p.fan_mode === "high" ? 0.25 : (p.fan_mode === "low" ? 0.65 : 1.35);
+      let doorLoss = p.door_status === "open" ? (sv - amb) * 0.55 : 0;
+      let mid = sv - (doorLoss * 0.4);
+      let top = mid + strat - (doorLoss * 0.2);
+      let bot = mid - strat - (doorLoss * 0.85);
+      let isStable = Math.abs(top - sv) <= 0.5 && Math.abs(bot - sv) <= 0.5;
       return {
-        p_in: (p_initial * 1e6).toFixed(2) + " mg·m/s",
-        force: force.toFixed(3) + " N",
-        lysis_efficiency: ((1 - e) * 100).toFixed(0) + " %"
+        top_temp: top.toFixed(1) + " °C",
+        mid_temp: mid.toFixed(1) + " °C",
+        bot_temp: bot.toFixed(1) + " °C",
+        stability: isStable ? "เสถียรภาพดี (อยู่ในเกณฑ์ ±0.5°C)" : "ความร้อนไม่สม่ำเสมอ (เกินเกณฑ์ ±0.5°C)",
+        convection_type: p.fan_mode === "high" ? "Forced Convection (Optimal)" : "Natural Stratification"
       };
     },
-    tableCols: ["Trial", "มวล m1 (mg)", "ความเร็ว v1 (m/s)", "ประเภทการชน", "การดล J (N·s)", "แรงกระแทก F (N)"],
+    tableCols: ["Trial", "ตำแหน่งหัววัด", "อุณหภูมิ SV (°C)", "อุณหภูมิวัดจริง (°C)", "ผลต่าง ΔT (°C)", "การประเมิน"],
     defaultTrials: [
-      { trial: 1, p1: 50, p2: 5, p3: "Elastic", p4: "0.0005", err: "0.50" },
-      { trial: 2, p1: 50, p2: 10, p3: "Inelastic", p4: "0.00075", err: "0.75" },
-      { trial: 3, p1: 100, p2: 15, p3: "Lysis", p4: "0.0015", err: "1.50" }
+      { trial: 1, p1: "ชั้นบนสุด (ด้านใน)", p2: "37.0", p3: "37.4", p4: "+0.40", err: "ผ่านเกณฑ์" },
+      { trial: 2, p1: "ชั้นกลาง (อ้างอิง)", p2: "37.0", p3: "37.0", p4: "0.00", err: "จุดอ้างอิง" },
+      { trial: 3, p1: "ชั้นล่าง (ใกล้ประตู)", p2: "37.0", p3: "36.6", p4: "-0.40", err: "ผ่านเกณฑ์" }
     ],
     quiz: [
-      { q: "การอนุรักษ์โมเมนตัมเชิงเส้นเกิดขึ้นภายใต้เงื่อนไขใด?", opts: ["ไม่มีแรงภายนอกมากระทำต่อระบบ (แรงสุทธิเป็นศูนย์)", "ระบบต้องไม่มีแรงเสียดทานเท่านั้น", "มวลของวัตถุต้องเท่ากัน", "ความเร็วต้องคงที่เสมอ"], ans: 0 },
-      { q: "ในการสลายเซลล์จุลินทรีย์ด้วยเครื่อง Bead Beater การใช้เวลาชนสั้นลงจะส่งผลต่อแรงกระแทกอย่างไร?", opts: ["แรงกระแทกลดลง", "แรงกระแทกเพิ่มขึ้นอย่างมาก (F = Δp/Δt)", "แรงกระแทกเท่าเดิม", "เซลล์ไม่แตก"], ans: 1 },
-      { q: "การชนแบบยืดหยุ่นสมบูรณ์ (Perfectly elastic collision) ปริมาณใดต่อไปนี้ได้รับการอนุรักษ์?", opts: ["โมเมนตัมเท่านั้น", "พลังงานจลน์เท่านั้น", "ทั้งโมเมนตัมและพลังงานจลน์", "ไม่มีข้อใดถูก"], ans: 2 }
+      { q: "เพราะเหตุใดน้ำจึงมีความสำคัญในการรักษาเสถียรภาพอุณหภูมิของเซลล์สิ่งมีชีวิตและอาหารเลี้ยงเชื้อ?", opts: ["น้ำมีความจุความร้อนจำเพาะสูงมาก (4.184 J/g·°C) ทำให้อุณหภูมิไม่แกว่งตัวเร็วง่าย", "น้ำมีความหนาแน่นต่ำมาก", "น้ำไม่สามารถนำความร้อนได้", "น้ำมีจุดเดือดต่ำ"], ans: 0 },
+      { q: "กลไกการถ่ายโอนความร้อนหลักภายในตู้อบเลี้ยงเชื้อ (Incubator) ที่ใช้พัดลมหมุนเวียนอากาศคือข้อใด?", opts: ["การพาความร้อน (Convection)", "การนำความร้อน (Conduction)", "การแผ่รังสี (Radiation)", "การระเหิด (Sublimation)"], ans: 0 },
+      { q: "หากต้องการรักษาอาหารวุ้นหลอมเหลวไม่ให้แข็งตัวที่อุณหภูมิ 48°C ก่อนเทจานเพาะเชื้อ อุปกรณ์ใดรักษาอุณหภูมิได้สม่ำเสมอกว่ากันเพราะเหตุใด?", opts: ["อ่างน้ำอุ่น Water Bath เพราะน้ำนำความร้อนผ่านแก้วได้เร็วกว่าอากาศ", "ตู้อบลมร้อน Hot Air Oven", "วางบนโต๊ะปฏิบัติการ", "แช่ตู้เย็น"], ans: 0 }
     ]
   },
 
@@ -240,46 +262,51 @@ const LABS_CONFIG = {
     id: "lab06",
     num: 6,
     badge: "Lab 06",
-    titleTh: "สมดุลกล ความดันของไหล และปรากฏการณ์ออสโมซิส",
-    titleEn: "Mechanical Equilibrium, Fluid Pressure & Osmosis",
-    category: "ของไหลและแรงดันออสโมติก",
-    icon: "fa-solid fa-water",
-    instrument: "Osmometer & U-Tube Hydrostatic Stage 3D",
-    description: "สมดุลไฮโดรสแตติก ความดันออสโมติกตามสมการ van 't Hoff และการรักษาแรงดึงของผนังเซลล์จุลินทรีย์ในสภาวะไฮโปโทนิกและไฮเพอร์โทนิก",
-    formulaLatex: "\\Pi = i M R T, \\quad \\Delta P = \\rho g \\Delta h",
-    formulaDesc: "ความดันออสโมติกแปรผันตรงกับความเข้มข้นโมลาร์ (M) ของสารละลายและอุณหภูมิสัมบูรณ์ (T)",
+    titleTh: "อุณหพลศาสตร์ กฎข้อที่หนึ่ง และหม้อนึ่งความดันไอ Autoclave 121°C",
+    titleEn: "Thermodynamics, First Law & 121°C Autoclave Steam Sterilization",
+    category: "อุณหพลศาสตร์และการทำลายเชื้อ",
+    icon: "fa-solid fa-gauge-high",
+    instrument: "Vertical Autoclave Steam Sterilizer 3D",
+    description: "อุณหพลศาสตร์ของไอน้ำอิ่มตัวภายใต้ความดัน 15 psi (121°C) สมการ Antoine และจลนพลศาสตร์การทำลายสปอร์ Geobacillus stearothermophilus ตามค่า D_121 = 1.5 min",
+    formulaLatex: "\\Delta U = Q - W, \\quad \\log_{10} P = A - \\frac{B}{T+C}, \\quad t = D \\left( \\log N_0 - \\log N \\right)",
+    formulaDesc: "จุดเดือดของน้ำแปรผันตามความดันไอในภาชนะปิด และประชากรสปอร์ลดลง 90% ในทุกๆ ช่วงเวลา D-value",
     params: [
-      { id: "molarity", label: "ความเข้มข้นสารละลาย M (mol/L)", min: 0.05, max: 1.0, step: 0.05, default: 0.2, unit: "mol/L" },
-      { id: "temp_c", label: "อุณหภูมิ (°C)", min: 10, max: 50, step: 5, default: 25, unit: "°C" },
-      { id: "solute_type", label: "ชนิดตัวถูกละลาย", type: "select", options: [
-        { val: "nacl", text: "NaCl (i = 2) — สารละลายอิเล็กโทรไลต์" },
-        { val: "glucose", text: "Glucose (i = 1) — สารละลายนอนอิเล็กโทรไลต์" },
-        { val: "sucrose", text: "Sucrose (i = 1)" }
+      { id: "steam_temp_C", label: "อุณหภูมิไอน้ำ (°C)", min: 100, max: 134, step: 1, default: 121, unit: "°C" },
+      { id: "hold_time_min", label: "เวลาการนึ่งฆ่าเชื้อ (นาที)", min: 5, max: 30, step: 1, default: 15, unit: "นาที" },
+      { id: "air_purged", label: "การไล่อากาศเย็นออกจากหม้อนึ่ง", type: "select", options: [
+        { val: "purged", text: "ไล่อากาศสมบูรณ์ (100% Saturated Steam) — ถูกต้อง" },
+        { val: "air_pocket", text: "มีถุงอากาศตกค้าง (Cold Air Pocket — อุณหภูมิจริงต่ำกว่าเกจ)" }
       ]}
     ],
     calcPhysics: function(p) {
-      let i = p.solute_type === "nacl" ? 2.0 : 1.0;
-      let T_K = p.temp_c + 273.15;
-      let R = 0.0821; // L·atm/(mol·K)
-      let pi_atm = i * p.molarity * R * T_K;
-      let pi_kPa = pi_atm * 101.325;
-      let delta_h_cm = (pi_kPa * 1000) / (1000 * 9.81) * 100;
+      let isPurged = p.air_purged === "purged";
+      let actualT = isPurged ? p.steam_temp_C : p.steam_temp_C - 8.5;
+      let D121 = 1.5; // min
+      let z = 10.0; // deg C
+      let D_actual = D121 * Math.pow(10, (121.0 - actualT) / z);
+      let logReduction = p.hold_time_min / D_actual;
+      let N0 = 1e6;
+      let surviving = N0 / Math.pow(10, logReduction);
+      let pressurePsi = Math.exp(16.7 - 3816 / (actualT + 227)) * 0.145;
+      let isSterile = surviving < 1.0;
       return {
-        pi_atm: pi_atm.toFixed(2) + " atm",
-        pi_kPa: pi_kPa.toFixed(1) + " kPa",
-        delta_h: delta_h_cm.toFixed(1) + " cm"
+        actual_temp: actualT.toFixed(1) + " °C",
+        pressure_gauge: pressurePsi.toFixed(1) + " psi",
+        log_reduction: logReduction.toFixed(1) + " log",
+        surviving_spores: surviving < 0.001 ? "< 10⁻³ (Sterile SAL 10⁻⁶)" : surviving.toFixed(0) + " CFU",
+        safety_status: isSterile ? "ผ่านเกณฑ์การทำให้ไร้เชื้อ (Sterile)" : "ไม่ผ่านเกณฑ์ (Non-sterile)"
       };
     },
-    tableCols: ["Trial", "ความเข้มข้น M", "ตัวละลาย (i)", "อุณหภูมิ (°C)", "ความดันออสโมติก Π (atm)", "ระดับของเหลว Δh (cm)"],
+    tableCols: ["Trial", "อุณหภูมิตั้ง (°C)", "เวลา (นาที)", "สถานะไอน้ำ", "อุณหภูมิจริง (°C)", "ผลการทำลายสปอร์"],
     defaultTrials: [
-      { trial: 1, p1: "0.1", p2: "Glucose (1)", p3: 25, p4: "2.45", err: "25.3" },
-      { trial: 2, p1: "0.2", p2: "NaCl (2)", p3: 25, p4: "9.79", err: "101.2" },
-      { trial: 3, p1: "0.5", p2: "NaCl (2)", p3: 37, p4: "25.46", err: "263.1" }
+      { trial: 1, p1: 121, p2: 15, p3: "ไอน้ำอิ่มตัวสมบูรณ์", p4: "121.0", err: "ไร้เชื้อสมบูรณ์ (SAL < 10⁻⁶)" },
+      { trial: 2, p1: 121, p2: 5, p3: "ไอน้ำอิ่มตัวสมบูรณ์", p4: "121.0", err: "ไม่ผ่าน (เหลือ 4.6 × 10² CFU)" },
+      { trial: 3, p1: 121, p2: 15, p3: "มีถุงอากาศค้าง", p4: "112.5", err: "ไม่ผ่าน (เหลือ 1.8 × 10³ CFU)" }
     ],
     quiz: [
-      { q: "สารละลาย NaCl 0.1 M และ Glucose 0.1 M ที่อุณหภูมิเดียวกัน สารใดมีความดันออสโมติกสูงกว่ากัน?", opts: ["NaCl สูงกว่าประมาณ 2 เท่า เพราะแตกตัวให้ไอออน (i = 2)", "Glucose สูงกว่าเพราะโมเลกุลใหญ่กว่า", "เท่ากันเพราะความเข้มข้นเท่ากัน", "ไม่สามารถเปรียบเทียบได้"], ans: 0 },
-      { q: "เมื่อนำเซลล์แบคทีเรียไปแช่ในสารละลายไฮเพอร์โทนิก (Hypertonic solution) จะเกิดผลอย่างไร?", opts: ["น้ำจะออสโมซิสออกจากเซลล์ ทำให้ไซโทพลาซึมหดตัว (Plasmolysis)", "น้ำไหลเข้าจนเซลล์แตก (Lysis)", "ไม่มีการเปลี่ยนแปลงใดๆ", "เซลล์จะแบ่งตัวเร็วขึ้น"], ans: 0 },
-      { q: "โครงสร้างใดของแบคทีเรียที่ช่วยป้องกันไม่ให้เซลล์แตกเมื่ออยู่ในสารละลายไฮโปโทนิก?", opts: ["ผนังเซลล์ (Peptidoglycan Cell Wall)", "เยื่อหุ้มเซลล์", "ไรโบโซม", "แคปซูล"], ans: 0 }
+      { q: "เหตุใดการนึ่งฆ่าเชื้อด้วยหม้อนึ่งความดันไอ (Autoclave) จึงต้องใช้ความดัน 15 psi ควบคู่กับอุณหภูมิ 121°C?", opts: ["ความดันสูงช่วยเพิ่มจุดเดือดของน้ำขึ้นเป็น 121°C ซึ่งเพียงพอต่อการทำลายเอนโดสปอร์ที่ทนความร้อนสูง", "ความดันช่วยบดขยี้แบคทีเรียทางกลศาสตร์", "เพื่อให้ประหยัดไฟฟ้า", "เพื่อให้น้ำเดือดช้าลง"], ans: 0 },
+      { q: "หากไล่อากาศเย็นออกจากหม้อนึ่งไม่หมด (Cold Air Pocket) จะส่งผลเสียอย่างไร?", opts: ["อุณหภูมิที่สัมผัสกับอาหารเลี้ยงเชื้อจะต่ำกว่าที่เกจวัดระบุ ทำให้ฆ่าเชื้อไม่สมบูรณ์", "หม้อนึ่งจะระเบิดทันที", "น้ำจะเดือดเร็วเกินไป", "ไม่มีผลเสียใดๆ"], ans: 0 },
+      { q: "สปอร์ของแบคทีเรียชนิดใดที่นิยมนำมาใช้เป็น Biological Indicator เพื่อตรวจสอบประสิทธิภาพของ Autoclave?", opts: ["Geobacillus stearothermophilus", "Escherichia coli", "Staphylococcus aureus", "Saccharomyces cerevisiae"], ans: 0 }
     ]
   },
 
@@ -287,39 +314,56 @@ const LABS_CONFIG = {
     id: "lab07",
     num: 7,
     badge: "Lab 07",
-    titleTh: "งาน พลังงาน และมอเตอร์โมเลกุลชีวภาพ",
-    titleEn: "Work, Energy & ATP Synthase Molecular Motors",
-    category: "อุณหพลศาสตร์และมอเตอร์ชีวภาพ",
-    icon: "fa-solid fa-bolt",
-    instrument: "F0F1 ATP Synthase Rotary Motor 3D",
-    description: "การอนุรักษ์พลังงาน งานของแรงบิดเชิงมุม พลังขับเคลื่อนโปรตอน (Proton Motive Force - PMF) และประสิทธิภาพการสังเคราะห์ ATP",
-    formulaLatex: "W = \\tau \\theta, \\quad \\Delta G = -nF\\Delta\\Psi + 2.3RT\\Delta\\text{pH}",
-    formulaDesc: "งานที่ได้จากการหมุนของมอเตอร์ชีวโมเลกุลเท่ากับทอร์กคูณด้วยมุมกวาด และพลังขับเคลื่อนโปรตอนเปลี่ยนเป็นพลังงานพันธะ ATP",
+    titleTh: "แรงไฟฟ้าสถิต กฎของคูลอมบ์ และกลไกการย้อมสีแกรม",
+    titleEn: "Electrostatics, Coulomb's Law & Gram Staining Mechanism",
+    category: "ไฟฟ้าสถิตและเคมีพื้นผิวเซลล์",
+    icon: "fa-solid fa-atom",
+    instrument: "Gram Staining Nanostructure Stage 3D",
+    description: "แรงดึงดูดทางไฟฟ้าสถิตตามกฎของคูลอมบ์ F = k |q1 q2| / r² ระหว่างสีย้อมประจุบวก Crystal Violet กับกรดเทโคอิกประจุลบของผนังเซลล์ และบทบาทตัวทำละลายล้างสี 95% Ethanol",
+    formulaLatex: "F_e = k_e \\frac{|q_1 q_2|}{r^2}, \\quad \\vec{E} = \\frac{\\vec{F}}{q}",
+    formulaDesc: "แรงไฟฟ้าสถิตแปรผันตรงกับผลคูณของประจุและแปรผกผันกับกำลังสองของระยะห่างระหว่างโมเลกุลสีย้อมและผนังเซลล์",
     params: [
-      { id: "pmf_mV", label: "พลังขับเคลื่อนโปรตอน PMF (mV)", min: 50, max: 250, step: 10, default: 180, unit: "mV" },
-      { id: "protons_per_rev", label: "จำนวนโปรตอนต่อรอบหมุน", min: 8, max: 14, step: 1, default: 10, unit: "H+" },
-      { id: "atp_yield", label: "จำนวน ATP ต่อการหมุน 360°", min: 1, max: 6, step: 1, default: 3, unit: "ATP" }
+      { id: "bacteria_type", label: "ชนิดแบคทีเรีย", type: "select", options: [
+        { val: "gram_pos", text: "Gram-positive (S. aureus — Peptidoglycan หนา 40 nm + Teichoic Acid)" },
+        { val: "gram_neg", text: "Gram-negative (E. coli — Outer Membrane + PG บาง 2 nm)" }
+      ]},
+      { id: "decolor_time_s", label: "เวลาล้างสีด้วย 95% เอทานอล (วินาที)", min: 5, max: 60, step: 5, default: 15, unit: "วินาที" },
+      { id: "mordant_step", label: "การใช้สารช่วยติดสี (Iodine Mordant)", type: "select", options: [
+        { val: "yes", text: "ใช้สารละลายไอโอดีน (เกิดผลึก CV-I Complex ขนาดใหญ่)" },
+        { val: "no", text: "ไม่ใช้ไอโอดีน (สีย้อมหลุดง่าย)" }
+      ]}
     ],
     calcPhysics: function(p) {
-      let energy_per_rev_zJ = p.protons_per_rev * (p.pmf_mV * 1e-3) * 1.6e-19 * 1e21; // in zJ
-      let torque_pN_nm = energy_per_rev_zJ / (2 * Math.PI);
-      let efficiency = ((p.atp_yield * 50) / energy_per_rev_zJ * 100);
+      let isPos = p.bacteria_type === "gram_pos";
+      let hasIodine = p.mordant_step === "yes";
+      let t = p.decolor_time_s;
+      let finalColor = "";
+      let retention = 0;
+      if (isPos) {
+        if (!hasIodine && t > 20) { finalColor = "ชมพู/แดง (Over-decolorized)"; retention = 15; }
+        else if (t > 45) { finalColor = "ม่วงจาง/ชมพู (Over-decolorized)"; retention = 35; }
+        else { finalColor = "ม่วงเข้ม (Crystal Violet ติดแน่น)"; retention = 95; }
+      } else {
+        if (t < 10) { finalColor = "ม่วงปนชมพู (Under-decolorized)"; retention = 60; }
+        else { finalColor = "ชมพู/แดง (Safranin O ติดประจุบวกแทน)"; retention = 5; }
+      }
       return {
-        energy_zJ: energy_per_rev_zJ.toFixed(1) + " zJ",
-        torque: torque_pN_nm.toFixed(1) + " pN·nm",
-        efficiency: Math.min(efficiency, 95).toFixed(1) + " %"
+        final_color: finalColor,
+        cv_retention: retention + " %",
+        wall_structure: isPos ? "Peptidoglycan หนาแห้งกรังดัก CV-I" : "LPS ถูกละลาย CV-I หลุดออกหมด",
+        eval_result: (isPos && retention > 80) || (!isPos && retention < 20) ? "การย้อมสีถูกต้องตามทฤษฎี" : "เทคนิคการล้างสีคลาดเคลื่อน"
       };
     },
-    tableCols: ["Trial", "PMF (mV)", "H+/รอบ", "พลังงาน (zJ)", "ทอร์ก (pN·nm)", "ประสิทธิภาพ (%)"],
+    tableCols: ["Trial", "ชนิดแบคทีเรีย", "การใส่ไอโอดีน", "เวลาล้างแอลกอฮอล์ (s)", "สีสุดท้ายใต้กล้อง", "การประเมิน"],
     defaultTrials: [
-      { trial: 1, p1: 120, p2: 10, p3: "192.0", p4: "30.6", err: "78.1" },
-      { trial: 2, p1: 180, p2: 10, p3: "288.0", p4: "45.8", err: "85.4" },
-      { trial: 3, p1: 220, p2: 10, p3: "352.0", p4: "56.0", err: "89.2" }
+      { trial: 1, p1: "Gram-positive", p2: "ใช้ไอโอดีน", p3: 15, p4: "ม่วงเข้ม", err: "ถูกต้องสมบูรณ์" },
+      { trial: 2, p1: "Gram-negative", p2: "ใช้ไอโอดีน", p3: 15, p4: "ชมพู/แดง", err: "ถูกต้องสมบูรณ์" },
+      { trial: 3, p1: "Gram-positive", p2: "ใช้ไอโอดีน", p3: 60, p4: "ชมพูอ่อน", err: "ล้างแอลกอฮอล์นานเกินไป" }
     ],
     quiz: [
-      { q: "มอเตอร์โมเลกุล F0F1 ATP Synthase ใช้พลังงานจากแหล่งใดในการขับเคลื่อนการหมุน?", opts: ["ความต่างศักย์ไฟฟ้าเคมีของโปรตอน (Proton Gradient)", "แสงอาทิตย์โดยตรง", "ความร้อนของเซลล์", "แรงโน้มถ่วง"], ans: 0 },
-      { q: "ประสิทธิภาพการแปลงพลังงานกล-เคมีของ ATP Synthase มีค่าประมาณเท่าใด?", opts: ["สูงเกือบ 80-90% (เหนือกว่าเครื่องยนต์มนุษย์สร้างมาก)", "ประมาณ 10-20%", "ไม่เกิน 5%", "100% เสมอ"], ans: 0 },
-      { q: "หน่วยของทอร์กในระดับมอเตอร์โมเลกุลนาโนชีวภาพคือหน่วยใด?", opts: ["pN·nm (พิโคนิวตัน·นาโนเมตร)", "N·m (นิวตัน·เมตร)", "kJ/mol", "วัตต์"], ans: 0 }
+      { q: "สีย้อมคริสตัลไวโอเลต (Crystal Violet) ยึดเกาะกับผนังเซลล์ของแบคทีเรียด้วยแรงทางฟิสิกส์ชนิดใดเป็นหลัก?", opts: ["แรงดึงดูดทางไฟฟ้าสถิต (Electrostatic Attraction) ระหว่างประจุบวกของสีกับประจุลบของกรดเทโคอิก", "แรงโน้มถ่วง", "แรงแม่เหล็ก", "แรงดันออสโมซิส"], ans: 0 },
+      { q: "บทบาททางฟิสิกส์-เคมีของเอทานอล 95% ต่อผนังเซลล์ของแบคทีเรียแกรมลบคือข้อใด?", opts: ["ละลายชั้นไขมัน Outer Membrane และชะล้างผลึก CV-I ออกจากชั้นเปปทิโดไกลแคนบาง", "ทำให้ผนังเซลล์แข็งตัวขึ้น", "ทำให้ประจุไฟฟ้าของสีกลับขั้ว", "เป็นแหล่งอาหารให้เซลล์"], ans: 0 },
+      { q: "หากล้างเอทานอล 95% นานเกินไป 1 นาทีกับแบคทีเรียแกรมบวก จะเกิดผลอย่างไร?", opts: ["แบคทีเรียแกรมบวกจะสูญเสียสีม่วงและติดสีชมพูของ Safranin แทน (Over-decolorization)", "ยังคงติดสีม่วงเข้มเสมอ", "เซลล์จะระเบิดออก", "ไม่สามารถมองเห็นเซลล์ได้"], ans: 0 }
     ]
   },
 
@@ -327,96 +371,12 @@ const LABS_CONFIG = {
     id: "lab08",
     num: 8,
     badge: "Lab 08",
-    titleTh: "การหมุน สมดุลการหมุน และกลศาสตร์นาโนของแฟลกเจลลา",
-    titleEn: "Rotational Dynamics & Flagellar Nanomechanics",
-    category: "กลศาสตร์การหมุนและนาโน",
-    icon: "fa-solid fa-spinner",
-    instrument: "Bacterial Flagellar Rotary Motor 3D",
-    description: "ทอร์ก โมเมนต์ความเฉื่อย และกำลังกลศาสตร์นาโนของการหมุนควงสว่านของแฟลกเจลลัมในการขับเคลื่อนเซลล์แบคทีเรีย",
-    formulaLatex: "\\tau = I \\alpha, \\quad P_{\\text{rot}} = \\tau \\omega",
-    formulaDesc: "ทอร์กการหมุนเท่ากับโมเมนต์ความเฉื่อยคูณความเร่งเชิงมุม และกำลังกลศาสตร์เท่ากับทอร์กคูณความเร็วเชิงมุม",
-    params: [
-      { id: "motor_speed_hz", label: "ความถี่การหมุนของมอเตอร์ (Hz)", min: 50, max: 350, step: 25, default: 150, unit: "Hz" },
-      { id: "viscosity_medium", label: "ความหนืดตัวกลาง η (mPa·s)", min: 1, max: 20, step: 1, default: 2, unit: "mPa·s" },
-      { id: "flagella_count", label: "จำนวนเส้นแฟลกเจลลา", min: 1, max: 8, step: 1, default: 4, unit: "เส้น" }
-    ],
-    calcPhysics: function(p) {
-      let omega = 2 * Math.PI * p.motor_speed_hz;
-      let torque_per_motor = 2000 - (p.motor_speed_hz * 3.5); // pN·nm stall curve
-      let total_torque = torque_per_motor * p.flagella_count;
-      let power_fW = (total_torque * 1e-21) * omega * 1e15; // in fW (10^-15 W)
-      let swim_speed = (p.motor_speed_hz * 0.18 / Math.sqrt(p.viscosity_medium)).toFixed(1);
-      return {
-        omega: omega.toFixed(0) + " rad/s",
-        total_torque: total_torque.toFixed(0) + " pN·nm",
-        power: power_fW.toFixed(2) + " fW",
-        swim_speed: swim_speed + " µm/s"
-      };
-    },
-    tableCols: ["Trial", "ความถี่หมุน (Hz)", "ความหนืด (mPa·s)", "ทอร์กรวม (pN·nm)", "กำลังงาน (fW)", "ความเร็วว่าย (µm/s)"],
-    defaultTrials: [
-      { trial: 1, p1: 100, p2: 1, p3: "6600", p4: "4.15", err: "18.0" },
-      { trial: 2, p1: 150, p2: 2, p3: "5900", p4: "5.56", err: "19.1" },
-      { trial: 3, p1: 250, p2: 5, p3: "4500", p4: "7.07", err: "20.1" }
-    ],
-    quiz: [
-      { q: "มอเตอร์แฟลกเจลลาร์ของแบคทีเรียหมุนด้วยความเร็วสูงสุดประมาณเท่าใด?", opts: ["100 - 300 รอบต่อวินาที (Hz)", "1 - 2 รอบต่อนาที", "10,000 รอบต่อวินาที", "หมุนกลับไปกลับมาเท่านั้น"], ans: 0 },
-      { q: "เมื่อแบคทีเรียหมุนแฟลกเจลลาทวนเข็มนาฬิกา (CCW) จะส่งผลต่อการเคลื่อนที่อย่างไร?", opts: ["รวมกลุ่มเป็นมัดและว่ายไปข้างหน้าอย่างราบรื่น (Run)", "กระจายตัวออกและพลิกตัวแบบสุ่ม (Tumble)", "หยุดนิ่งอยู่กับที่", "เซลล์จะแตกสลาย"], ans: 0 },
-      { q: "ความสัมพันธ์ระหว่างกำลังงานกลศาสตร์ (P) กับทอร์ก (τ) และความเร็วเชิงมุม (ω) คือข้อใด?", opts: ["P = τ · ω", "P = τ / ω", "P = τ + ω", "P = ½ τ ω²"], ans: 0 }
-    ]
-  },
-
-  lab09: {
-    id: "lab09",
-    num: 9,
-    badge: "Lab 09",
-    titleTh: "อุณหพลศาสตร์และการควบคุมอุณหภูมิ PCR",
-    titleEn: "Thermodynamics & PCR Thermal Cycler",
-    category: "อุณหพลศาสตร์ชีวภาพ",
-    icon: "fa-solid fa-dna",
-    instrument: "3-Step Digital PCR Thermal Cycler 3D",
-    description: "การถ่ายโอนความร้อนในของเหลว การนำความร้อน (Fourier's Law) และอุณหพลศาสตร์ของวัฏจักรเพิ่มปริมาณดีเอ็นเอ 3 ขั้นตอน (Denaturation, Annealing, Extension)",
-    formulaLatex: "Q = mc\\Delta T, \\quad N = N_0 \\cdot 2^n, \\quad \\frac{dQ}{dt} = -kA\\frac{dT}{dx}",
-    formulaDesc: "ความร้อนที่ต้องใช้แปรผันตรงกับมวลและความจุความร้อน และจำนวนดีเอ็นเอเพิ่มขึ้นแบบทวีคูณ (2^n) ในแต่ละรอบ PCR",
-    params: [
-      { id: "cycles_n", label: "จำนวนรอบ PCR (Cycles)", min: 10, max: 40, step: 5, default: 30, unit: "รอบ" },
-      { id: "ramp_rate", label: "อัตราเร่งความร้อน (°C/s)", min: 1.0, max: 6.0, step: 0.5, default: 4.0, unit: "°C/s" },
-      { id: "reaction_vol_uL", label: "ปริมาตรปฏิกิริยาต่อหลอด (µL)", min: 10, max: 50, step: 5, default: 25, unit: "µL" }
-    ],
-    calcPhysics: function(p) {
-      let copies = Math.pow(2, p.cycles_n);
-      let ramp_time_s = ((95 - 55) / p.ramp_rate) * 2 * p.cycles_n;
-      let total_time_min = (ramp_time_s + (30 + 30 + 60) * p.cycles_n) / 60;
-      let heat_per_cycle_J = (p.reaction_vol_uL * 1e-6) * 4184 * (95 - 55);
-      return {
-        copies: copies > 1e9 ? copies.toExponential(2) : copies.toLocaleString(),
-        heat_J: heat_per_cycle_J.toFixed(2) + " J",
-        total_time: total_time_min.toFixed(1) + " นาที"
-      };
-    },
-    tableCols: ["Trial", "รอบ (Cycles)", "อัตราเร่ง (°C/s)", "จำนวนเท่าดีเอ็นเอ (2^n)", "เวลารวม (นาที)", "ความร้อน/รอบ (J)"],
-    defaultTrials: [
-      { trial: 1, p1: 20, p2: "4.0", p3: "1.05 × 10⁶", p4: "46.7", err: "4.18" },
-      { trial: 2, p1: 30, p2: "4.0", p3: "1.07 × 10⁹", p4: "70.0", err: "4.18" },
-      { trial: 3, p1: 35, p2: "5.0", p3: "3.44 × 10¹⁰", p4: "79.3", err: "4.18" }
-    ],
-    quiz: [
-      { q: "ขั้นตอนใดในกระบวนการ PCR ที่ต้องการอุณหภูมิสูงสุด (ประมาณ 95°C) และเพื่อวัตถุประสงค์ใด?", opts: ["Denaturation เพื่อทำลายพันธะไฮโดรเจนแยกสายดีเอ็นเอออกจากกัน", "Annealing เพื่อให้ไพรเมอร์จับกับสายดีเอ็นเอ", "Extension เพื่อให้เอนไซม์สังเคราะห์สายดีเอ็นเอ", "Cooling เพื่อเก็บรักษาดีเอ็นเอ"], ans: 0 },
-      { q: "หากเริ่มต้นด้วยแม่พิมพ์ดีเอ็นเอ 1 โมเลกุล เมื่อผ่านไป 30 รอบ PCR จะได้ดีเอ็นเอกี่โมเลกุลตามทฤษฎี?", opts: ["2³⁰ ≈ 1.07 × 10⁹ โมเลกุล (หนึ่งพันล้านเท่า)", "30 โมเลกุล", "60 โมเลกุล", "1 ล้านโมเลกุล"], ans: 0 },
-      { q: "ความร้อนจำเพาะ (Specific Heat Capacity) ของน้ำส่งผลต่อการออกแบบเครื่อง PCR อย่างไร?", opts: ["น้ำมีความจุความร้อนสูง จึงต้องใช้แผ่นทำความร้อนเพลเทียร์ (Peltier) ที่มีกำลังวัตต์สูงเพื่อให้เปลี่ยนอุณหภูมิได้เร็ว", "น้ำเปลี่ยนอุณหภูมิได้ง่ายมาก", "น้ำไม่สามารถนำความร้อนได้", "ไม่มีผลใดๆ"], ans: 0 }
-    ]
-  },
-
-  lab10: {
-    id: "lab10",
-    num: 10,
-    badge: "Lab 10",
-    titleTh: "ไฟฟ้า สนามแม่เหล็ก และเจลอิเล็กโทรโฟเรซิส",
-    titleEn: "Electricity, Magnetism & Agarose Gel Electrophoresis",
-    category: "ไฟฟ้าแม่เหล็กชีวภาพ",
+    titleTh: "กระแสไฟฟ้า กฎของโอห์ม และเจลอิเล็กโทรโฟเรซิส",
+    titleEn: "Electric Current, Ohm's Law & Agarose Gel Electrophoresis",
+    category: "ไฟฟ้าแม่เหล็กและชีวโมเลกุล",
     icon: "fa-solid fa-bolt-lightning",
     instrument: "Horizontal Agarose Gel Tank & Regulated DC Power Supply 3D",
-    description: "สนามไฟฟ้า สภาพเคลื่อนตัวของดีเอ็นเอ (Electrophoretic Mobility) กฎของโอห์ม กำลังไฟฟ้า และการจัดเรียงตัวของแบคทีเรียแม่เหล็ก",
+    description: "สนามไฟฟ้า สภาพเคลื่อนตัวของดีเอ็นเอ (Electrophoretic Mobility) กฎของโอห์ม กำลังไฟฟ้า และการแยกชิ้นส่วนดีเอ็นเอตามขนาดโมเลกุล",
     formulaLatex: "V = IR, \\quad v = \\mu_e E = \\mu_e \\left(\\frac{V}{L}\\right), \\quad P = VI",
     formulaDesc: "ความเร็วการเคลื่อนที่ของดีเอ็นเอแปรผันตรงกับความต่างศักย์ไฟฟ้า (V) และแปรผกผันกับระยะห่างระหว่างขั้วไฟฟ้า (L)",
     params: [
@@ -448,18 +408,64 @@ const LABS_CONFIG = {
     ]
   },
 
-  lab11: {
-    id: "lab11",
-    num: 11,
-    badge: "Lab 11",
-    titleTh: "ทัศนศาสตร์ กล้องจุลทรรศน์ และสเปกโทรโฟโตเมตรีชีวภาพ",
-    titleEn: "Optics, Research Microscopy & Bio-Spectrophotometry",
-    category: "ทัศนศาสตร์ชีวภาพและสเปกโทรสโกปี",
+  lab09: {
+    id: "lab09",
+    num: 9,
+    badge: "Lab 09",
+    titleTh: "การหักเหของแสง กฎของสเนลล์ และการวัดความหวาน Brix Refractometer",
+    titleEn: "Optics, Snell's Law & Brix Refractometer",
+    category: "ทัศนศาสตร์เชิงเรขาคณิต",
+    icon: "fa-solid fa-glasses",
+    instrument: "Abbe / Handheld Optical Refractometer 3D",
+    description: "การหักเหของแสงตามกฎของสเนลล์ ดัชนีหักเหของแสง ปรากฏการณ์สะท้อนกลับหมด และมุมวิกฤติ (Critical Angle) ในการวัดความเข้มข้นสารละลายน้ำตาล Brix 0–60°",
+    formulaLatex: "n_1 \\sin \\theta_1 = n_2 \\sin \\theta_2, \\quad \\theta_c = \\arcsin\\left(\\frac{n_2}{n_1}\\right), \\quad n = 1.3330 + 0.00143 \\cdot \\text{Brix}",
+    formulaDesc: "มุมวิกฤติสะท้อนกลับหมดแปรผันตามดัชนีหักเหของของเหลวบนปริซึมแก้วฟลินต์ (n_glass = 1.70)",
+    params: [
+      { id: "brix_val", label: "ความหวานของตัวอย่าง (°Brix)", min: 0.0, max: 60.0, step: 2.5, default: 15.0, unit: "°Brix" },
+      { id: "sample_temp_c", label: "อุณหภูมิตัวอย่าง (°C)", min: 15, max: 35, step: 1, default: 20, unit: "°C" },
+      { id: "prism_type", label: "ชนิดปริซึมตรวจวัด", type: "select", options: [
+        { val: "flint", text: "แก้วฟลินต์ความหนาแน่นสูง (n = 1.7000)" },
+        { val: "sapphire", text: "แซฟไฟร์สังเคราะห์ (n = 1.7700)" }
+      ]}
+    ],
+    calcPhysics: function(p) {
+      let n_sample = 1.3330 + (0.00143 * p.brix_val) - ((p.sample_temp_c - 20) * 0.0001);
+      let n_prism = p.prism_type === "flint" ? 1.7000 : 1.7700;
+      let sin_crit = n_sample / n_prism;
+      let crit_angle_deg = Math.asin(sin_crit) * (180 / Math.PI);
+      let shadow_pos_pct = (p.brix_val / 60.0) * 100;
+      return {
+        sample_index: n_sample.toFixed(4),
+        crit_angle: crit_angle_deg.toFixed(2) + " °",
+        reticle_brix: p.brix_val.toFixed(1) + " °Brix",
+        shadow_border: shadow_pos_pct.toFixed(1) + " % ของสเกล"
+      };
+    },
+    tableCols: ["Trial", "Brix จริง (°Bx)", "อุณหภูมิ (°C)", "ดัชนีหักเห n", "มุมวิกฤติ θc (°)", "ค่าอ่านบนสเกล (°Bx)"],
+    defaultTrials: [
+      { trial: 1, p1: "0.0 (น้ำกลั่น)", p2: 20, p3: "1.3330", p4: "51.64", err: "0.0" },
+      { trial: 2, p1: "15.0 (น้ำผลไม้)", p2: 20, p3: "1.3545", p4: "52.82", err: "15.0" },
+      { trial: 3, p1: "40.0 (น้ำเชื่อมเข้มข้น)", p2: 20, p3: "1.3902", p4: "54.85", err: "40.0" }
+    ],
+    quiz: [
+      { q: "หลักการฟิสิกส์พื้นฐานที่รีแฟรกโตมิเตอร์ (Refractometer) นำมาใช้วัดความหวานคือปรากฏการณ์ใด?", opts: ["การสะท้อนกลับหมดของแสง (Total Internal Reflection) ที่มุมวิกฤติ", "การเลี้ยวเบนของแสงผ่านเกรตติง", "การโพลาไรซ์ของแสง", "การดูดกลืนแสงแบบเอกซ์โพเนนเชียล"], ans: 0 },
+      { q: "เมื่อความเข้มข้นของน้ำตาลซูโครสในสารละลายเพิ่มขึ้น ดัชนีหักเหของแสง (n) จะเปลี่ยนแปลงอย่างไร?", opts: ["เพิ่มขึ้นเชิงเส้นตามความเข้มข้นของของแข็งที่ละลายอยู่", "ลดลงอย่างรวดเร็ว", "คงที่เท่ากับน้ำบริสุทธิ์เสมอ", "แกว่งไปมาตามมุมแสง"], ans: 0 },
+      { q: "น้ำบริสุทธิ์ที่อุณหภูมิมาตรฐาน 20°C มีค่าดัชนีหักเหของแสงและค่าอ่านบนสเกล Brix เท่าใด?", opts: ["n = 1.3330 และ 0.0 °Brix", "n = 1.0000 และ 10 °Brix", "n = 1.5150 และ 100 °Brix", "n = 2.4170 และ 0 °Brix"], ans: 0 }
+    ]
+  },
+
+  lab10: {
+    id: "lab10",
+    num: 10,
+    badge: "Lab 10",
+    titleTh: "ทัศนศาสตร์ เลนส์กล้องจุลทรรศน์ และ Immersion Oil 100x",
+    titleEn: "Wave Optics, Microscope Resolution & Immersion Oil 100x",
+    category: "ทัศนศาสตร์คลื่นและกล้องจุลทรรศน์",
     icon: "fa-solid fa-microscope",
-    instrument: "Research Microscope 100× Oil Immersion & UV-Vis Spectrophotometer 3D",
-    description: "ขีดจำกัดการเลี้ยวเบนของแอบบี (Abbe's Limit) กำลังแยกภาพของเลนส์น้ำมัน 100x Oil Immersion กฎของเบียร์-แลมเบิร์ต และการวัดความขุ่น OD600",
-    formulaLatex: "d = \\frac{0.61 \\lambda}{\\text{NA}}, \\quad A = \\varepsilon b c = -\\log_{10}(T)",
-    formulaDesc: "ระยะแยกชัดต่ำสุด (d) แปรผกผันกับค่า Numerical Aperture (NA) และค่าการดูดกลืนแสง (A) แปรผันตรงกับความเข้มข้นเซลล์",
+    instrument: "Research Microscope 100× Oil Immersion Stage 3D",
+    description: "ขีดจำกัดการเลี้ยวเบนของแอบบี (Abbe's Limit) กำลังแยกภาพ (Resolution) ของเลนส์น้ำมัน 100x Oil Immersion และการจับคู่ดัชนีหักเห (Index Matching)",
+    formulaLatex: "d = \\frac{0.61 \\lambda}{\\text{NA}}, \\quad \\text{NA} = n \\sin \\alpha, \\quad M_{\\text{total}} = M_{\\text{obj}} \\times M_{\\text{oc}}",
+    formulaDesc: "ระยะแยกชัดต่ำสุด (d) แปรผกผันกับค่า Numerical Aperture (NA) และแปรผันตรงกับความยาวคลื่นแสง",
     params: [
       { id: "lens_type", label: "ชนิดหัวเลนส์วัตถุ", type: "select", options: [
         { val: "dry_40x", text: "40× Dry Objective (NA = 0.65, n = 1.00)" },
@@ -467,43 +473,46 @@ const LABS_CONFIG = {
         { val: "high_oil", text: "100× Research High NA (NA = 1.40, n = 1.518)" }
       ]},
       { id: "wavelength_nm", label: "ความยาวคลื่นแสง λ (nm)", min: 400, max: 700, step: 50, default: 550, unit: "nm" },
-      { id: "od600_val", label: "ความขุ่นเซลล์ OD600", min: 0.1, max: 2.0, step: 0.1, default: 0.8, unit: "AU" }
+      { id: "oil_applied", label: "การหยดน้ำมัน Immersion Oil", type: "select", options: [
+        { val: "yes", text: "หยดน้ำมันดัชนีหักเห n = 1.515 ถูกต้อง" },
+        { val: "no", text: "ไม่หยดน้ำมัน (มีชั้นอากาศ n = 1.00 กั้น)" }
+      ]}
     ],
     calcPhysics: function(p) {
-      let na = p.lens_type === "dry_40x" ? 0.65 : (p.lens_type === "oil_100x" ? 1.25 : 1.40);
-      let d_nm = (0.61 * p.wavelength_nm) / na;
-      let cell_conc = p.od600_val * 8e8; // approx cells/mL for E. coli
-      let transmittance = Math.pow(10, -p.od600_val) * 100;
+      let baseNA = p.lens_type === "dry_40x" ? 0.65 : (p.lens_type === "oil_100x" ? 1.25 : 1.40);
+      let actualNA = (p.lens_type !== "dry_40x" && p.oil_applied === "no") ? 0.85 : baseNA;
+      let d_nm = (0.61 * p.wavelength_nm) / actualNA;
+      let canResolveBacteria = d_nm < 300;
       return {
         d_limit: d_nm.toFixed(1) + " nm",
-        na_val: na.toFixed(2),
-        cell_conc: cell_conc.toExponential(2) + " เซลล์/mL",
-        t_pct: transmittance.toFixed(1) + " %"
+        na_val: actualNA.toFixed(2),
+        resolution_status: canResolveBacteria ? "คมชัดสูง แยกโครงสร้างแบคทีเรียได้" : "ภาพเบลอมัวจากการสูญเสียแสงหักเห",
+        light_collection: (Math.pow(actualNA, 2) * 50).toFixed(0) + " %"
       };
     },
-    tableCols: ["Trial", "หัวเลนส์ (NA)", "ความยาวคลื่น (nm)", "ระยะแยกชัด d (nm)", "OD600", "ความหนาแน่นเซลล์ (เซลล์/mL)"],
+    tableCols: ["Trial", "หัวเลนส์", "การหยดน้ำมัน", "ความยาวคลื่น (nm)", "NA ประสิทธิผล", "ระยะแยกชัด d (nm)"],
     defaultTrials: [
-      { trial: 1, p1: "40x Dry (0.65)", p2: 550, p3: "516.2", p4: "0.20", err: "1.6 × 10⁸" },
-      { trial: 2, p1: "100x Oil (1.25)", p2: 550, p3: "268.4", p4: "0.80", err: "6.4 × 10⁸" },
-      { trial: 3, p1: "100x High (1.40)", p2: 450, p3: "196.1", p4: "1.50", err: "1.2 × 10⁹" }
+      { trial: 1, p1: "40x Dry", p2: "ไม่ต้องใช้", p3: 550, p4: "0.65", err: "516.2" },
+      { trial: 2, p1: "100x Oil", p2: "หยดน้ำมัน n=1.515", p3: 550, p4: "1.25", err: "268.4" },
+      { trial: 3, p1: "100x Oil", p2: "ลืมหยดน้ำมัน", p3: 550, p4: "0.85", err: "394.7" }
     ],
     quiz: [
-      { q: "การหยดน้ำมัน Immersion Oil (n = 1.515) ช่วยเพิ่มความคมชัดของภาพจากเลนส์ 100x ได้อย่างไร?", opts: ["ป้องกันการหักเหของแสงสูญเสียออกนอกเลนส์ ทำให้ค่า NA สูงขึ้น", "ทำให้เลนส์เย็นลง", "ขยายภาพเพิ่มเป็น 200 เท่า", "ย้อมสีแบคทีเรียโดยตรง"], ans: 0 },
+      { q: "การหยดน้ำมัน Immersion Oil (n = 1.515) ช่วยเพิ่มความคมชัดและกำลังแยกภาพของเลนส์ 100x ได้อย่างไร?", opts: ["ดัชนีหักเหน้ำมันเท่ากับกระจกสไลด์ ป้องกันแสงหักเหสูญเสียออกนอกเลนส์ ทำให้ค่า NA สูงขึ้น", "ขยายภาพเพิ่มเป็น 200 เท่า", "ทำให้เลนส์เย็นลง", "ย้อมสีแบคทีเรียโดยตรง"], ans: 0 },
       { q: "ตามเกณฑ์ของแอบบี (Abbe criterion) เพื่อให้มองเห็นโครงสร้างขนาดเล็กที่สุดได้ชัดเจน ควรใช้แสงสีใด?", opts: ["แสงสีน้ำเงิน (ความยาวคลื่นสั้น d จะมีค่าน้อย)", "แสงสีแดง (ความยาวคลื่นยาว)", "แสงอินฟราเรด", "แสงสีเหลือง"], ans: 0 },
-      { q: "กฎของเบียร์-แลมเบิร์ต (Beer-Lambert Law) ระบุความสัมพันธ์ระหว่างค่าการดูดกลืนแสง (Absorbance) กับความเข้มข้นของเซลล์อย่างไร?", opts: ["แปรผันตรงเชิงเส้น (A ∝ c)", "แปรผกผัน", "แปรผันตามรากที่สอง", "ไม่มีความสัมพันธ์กัน"], ans: 0 }
+      { q: "หากใช้เลนส์ 100x Oil แต่ลืมหยดน้ำมัน ภาพที่ได้จะมีลักษณะอย่างไร?", opts: ["มัว เบลอ ขาดความคมชัด และความสว่างลดลงอย่างมาก", "ภาพจะคมชัดขึ้น", "ไม่มีแสงเข้าสู่ตาเลย", "ภาพกลับหัว"], ans: 0 }
     ]
   },
 
-  lab12: {
-    id: "lab12",
-    num: 12,
-    badge: "Lab 12",
-    titleTh: "ฟิสิกส์นิวเคลียร์ กัมมันตภาพรังสี และการทำลายเชื้อจุลินทรีย์",
-    titleEn: "Nuclear Physics, Radioactivity & Microbial Radiosterilization",
+  lab11: {
+    id: "lab11",
+    num: 11,
+    badge: "Lab 11",
+    titleTh: "กัมมันตภาพรังสี การสลายตัว และการฉายรังสี UV-C ฆ่าเชื้อ",
+    titleEn: "Nuclear Physics, Half-life & UV-C Disinfection Kinetics",
     category: "ฟิสิกส์นิวเคลียร์และรังสีชีวภาพ",
     icon: "fa-solid fa-radiation",
-    instrument: "Lead-Shielded Radiation Vault & GM Counter 3D",
-    description: "การสลายตัวของกัมมันตรังสี กฎกำลังสองผกผัน การลดทอนของแผ่นกำบังตะกั่ว และค่าปริมาณรังสีทำลายเชื้อจุลินทรีย์ (D10 Value) ด้วยรังสีแกมมา Co-60 และ UV-C",
+    instrument: "UV-C Biosafety Chamber & Radiation Counter 3D",
+    description: "การสลายตัวของกัมมันตรังสี กฎกำลังสองผกผัน การลดทอนของแผ่นกำบังตะกั่ว และค่าปริมาณรังสีทำลายเชื้อจุลินทรีย์ (D10 Value) ด้วยรังสีแกมมา Co-60 และหลอด UV-C 254 nm",
     formulaLatex: "I = \\frac{P}{4 \\pi r^2}, \\quad N(t) = N_0 e^{-\\lambda t}, \\quad I = I_0 e^{-\\mu x}",
     formulaDesc: "ความเข้มรังสีแปรผกผันกับระยะทางยกกำลังสอง (1/r²) และลดลงแบบเอกซ์โพเนนเชียลตามความหนาของแผ่นกำบังตะกั่ว",
     params: [
@@ -516,9 +525,9 @@ const LABS_CONFIG = {
     ],
     calcPhysics: function(p) {
       let isCo60 = p.radiation_source === "co60";
-      let I_0 = isCo60 ? 5000 : 800; // uW/cm2 or mR/hr
+      let I_0 = isCo60 ? 5000 : 800;
       let r_factor = Math.pow(30 / p.distance_cm, 2);
-      let mu = isCo60 ? 0.08 : 0.45; // attenuation coeff per mm
+      let mu = isCo60 ? 0.08 : 0.45;
       let I_after_shield = I_0 * r_factor * Math.exp(-mu * p.shield_thickness_mm);
       let d10_time_s = isCo60 ? (120 / (I_after_shield * 0.01)) : (60 / (I_after_shield * 0.01));
       return {
@@ -540,12 +549,64 @@ const LABS_CONFIG = {
     ]
   },
 
+  lab12: {
+    id: "lab12",
+    num: 12,
+    badge: "Lab 12",
+    titleTh: "การดูดกลืนแสง สเปกโทรโฟโตเมตรี และกราฟการเจริญเติบโต OD600",
+    titleEn: "Spectrophotometry, Beer-Lambert Law & Bacterial OD600 Growth Curve",
+    category: "สเปกโทรโฟโตเมตรีและจลนพลศาสตร์เซลล์",
+    icon: "fa-solid fa-chart-line",
+    instrument: "UV-Vis Spectrophotometer 600 nm & Cuvette Stage 3D",
+    description: "กฎของเบียร์-แลมเบิร์ต A = ε b c = -log10(T) การวัดความขุ่นของสารแขวนลอยแบคทีเรียที่ความยาวคลื่น 600 nm และการสร้างกราฟการเจริญเติบโตเพื่อหาอัตราการแบ่งเซลล์",
+    formulaLatex: "A = \\varepsilon b c = -\\log_{10}(T), \\quad N(t) = N_0 \\cdot 2^{t/g}, \\quad \\mu = \\frac{\\ln(OD_2) - \\ln(OD_1)}{t_2 - t_1}",
+    formulaDesc: "ค่าการดูดกลืนแสงแปรผันตรงกับความเข้มข้นเซลล์แบคทีเรียในช่วงลิเนียร์ (OD 0.1–0.8) และจำนวนเซลล์เพิ่มขึ้นแบบเอกซ์โพเนนเชียลในช่วง Log phase",
+    params: [
+      { id: "growth_time_hr", label: "เวลาเพาะเลี้ยงเซลล์ (ชั่วโมง)", min: 0.0, max: 12.0, step: 0.5, default: 4.0, unit: "ชม." },
+      { id: "pathlength_cm", label: "ความกว้างคิวเวตต์ b (cm)", min: 0.5, max: 2.0, step: 0.5, default: 1.0, unit: "cm" },
+      { id: "dilution_factor", label: "อัตราส่วนการเจือจาง", type: "select", options: [
+        { val: "undiluted", text: "ไม่เจือจาง (1:1)" },
+        { val: "dil_1_5", text: "เจือจาง 1:5 (เหมาะเมื่อ OD > 1.0)" },
+        { val: "dil_1_10", text: "เจือจาง 1:10" }
+      ]}
+    ],
+    calcPhysics: function(p) {
+      let t = p.growth_time_hr;
+      let lag = 1.5;
+      let mu = 0.693 / 0.5; // doubling time 30 min
+      let baseOD = 0.05;
+      let rawOD = t < lag ? baseOD : baseOD * Math.exp(mu * (t - lag) * 0.35);
+      rawOD = Math.min(rawOD, 3.2); // plateau
+      let dil = p.dilution_factor === "undiluted" ? 1.0 : (p.dilution_factor === "dil_1_5" ? 5.0 : 10.0);
+      let measuredOD = rawOD / dil;
+      let isLinear = measuredOD >= 0.05 && measuredOD <= 0.85;
+      let cellDensity = rawOD * 8e8; // cells/mL
+      return {
+        measured_od: measuredOD.toFixed(3) + " AU",
+        actual_od: rawOD.toFixed(3) + " AU",
+        cell_density: cellDensity.toExponential(2) + " เซลล์/mL",
+        accuracy_eval: isLinear ? "อยู่ในช่วงลิเนียร์แม่นยำ (0.1–0.8)" : "อยู่นอกช่วงลิเนียร์ ควรเจือจางตัวอย่าง"
+      };
+    },
+    tableCols: ["Trial", "เวลาเพาะเลี้ยง (ชม.)", "การเจือจาง", "OD600 วัดได้", "OD600 จริง", "ความหนาแน่นเซลล์ (เซลล์/mL)"],
+    defaultTrials: [
+      { trial: 1, p1: 1.0, p2: "ไม่เจือจาง", p3: "0.050", p4: "0.050", err: "4.0 × 10⁷" },
+      { trial: 2, p1: 4.0, p2: "ไม่เจือจาง", p3: "0.412", p4: "0.412", err: "3.3 × 10⁸" },
+      { trial: 3, p1: 8.0, p2: "เจือจาง 1:5", p3: "0.480", p4: "2.400", err: "1.9 × 10⁹" }
+    ],
+    quiz: [
+      { q: "เหตุใดในการวัดการเจริญเติบโตของแบคทีเรียด้วยสเปกโทรโฟโตมิเตอร์ จึงนิยมใช้ความยาวคลื่น 600 nm (OD600)?", opts: ["เป็นความยาวคลื่นที่เซลล์แบคทีเรียกระเจิงแสงได้ดีและอาหารเลี้ยงเชื้อดูดกลืนแสงน้อย", "เป็นสีที่แบคทีเรียชอบ", "เพราะให้พลังงานความร้อนสูง", "เพราะเป็นแสงอัลตราไวโอเลต"], ans: 0 },
+      { q: "หากตัวอย่างน้ำเลี้ยงเชื้อมีความขุ่นสูงมากจนวัดค่า OD600 ได้ 1.85 AU ควรดำเนินการอย่างไรเพื่อให้ได้ค่าที่แม่นยำตามกฎของเบียร์-แลมเบิร์ต?", opts: ["เจือจางตัวอย่าง (เช่น 1:5 หรือ 1:10) ให้ค่าอ่านอยู่ในช่วง 0.1–0.8 แล้วนำมาคูณค่าเจือจางกลับ", "ใช้ค่า 1.85 โดยตรงได้เลย", "เปลี่ยนความยาวคลื่นเป็น 200 nm", "ทิ้งตัวอย่าง"], ans: 0 },
+      { q: "ความสัมพันธ์ระหว่างค่าการดูดกลืนแสง (A) และค่าการส่องผ่านของแสง (T) คือข้อใด?", opts: ["A = -log₁₀(T)", "A = T × 100", "A = 1 / T²", "A = log₁₀(1 - T)"], ans: 0 }
+    ]
+  },
+
   lab13: {
     id: "lab13",
     num: 13,
     badge: "Lab 13",
     titleTh: "โครงงานย่อยบูรณาการ (Capstone Mini-Project): เครื่องมือชีวฟิสิกส์อัจฉริยะ",
-    titleEn: "Capstone Mini-Project: Smart Microbiological IoT Rig",
+    titleEn: "Capstone Mini-Project: Smart Biophysical IoT Rig",
     category: "โครงงานนวัตกรรมบูรณาการ",
     icon: "fa-solid fa-microchip",
     instrument: "Virtual Instrument Sandbox & IoT Optical Sensor Rig",

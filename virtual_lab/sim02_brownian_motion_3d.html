@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องปฏิบัติการ 3D การเคลื่อนที่แบบบราวน์และการแพร่ในของเหลว | Lab 02: Brownian Motion & Microscopic Diffusion 3D PBR</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #030712; color: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .font-digital { font-family: 'Orbitron', monospace; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.4); border-radius: 9999px; }
+    .fui-panel { background: rgba(10, 15, 29, 0.85); backdrop-filter: blur(14px); border: 1px solid rgba(56, 189, 248, 0.25); }
+  </style>
+</head>
+<body class="w-screen h-screen relative select-none">
+  <div id="canvasContainer" class="w-full h-full absolute inset-0 cursor-grab active:cursor-grabbing"></div>
+
+  <!-- Header -->
+  <header class="absolute top-3 inset-x-3 z-30 pointer-events-none flex items-center justify-between">
+    <div class="pointer-events-auto flex items-center gap-2 bg-slate-950/85 backdrop-blur-md px-4 py-2 rounded-2xl border border-sky-500/30 shadow-2xl">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
+        <i class="fa-solid fa-arrows-split-up-and-left"></i>
+      </div>
+      <div>
+        <h1 class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+          <span>LAB 02 // การเคลื่อนที่แบบบราวน์ &amp; สไลด์หยดแขวน</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">PBR 3D</span>
+        </h1>
+        <p class="text-[10px] text-slate-400 font-mono">4011111 Physics for Microbiology &bull; Brownian Motion &amp; Diffusion</p>
+      </div>
+    </div>
+
+    <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-950/85 backdrop-blur-md p-1.5 rounded-2xl border border-slate-700/80 shadow-2xl">
+      <button onclick="setCameraView('top')" class="px-2.5 py-1 rounded-xl text-xs font-mono font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition">
+        <i class="fa-solid fa-microscope text-sky-400"></i> กล้องจุลทรรศน์
+      </button>
+      <button onclick="setCameraView('iso')" class="px-2.5 py-1 rounded-xl text-xs font-mono font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition">
+        <i class="fa-solid fa-cubes text-emerald-400"></i> Isometric 3D
+      </button>
+      <button onclick="toggleParticleTracing()" id="btnTrace" class="px-3 py-1 rounded-xl text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40 transition">
+        <i class="fa-solid fa-route"></i> เส้นทางการเคลื่อนที่
+      </button>
+      <button onclick="resetSim()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition">
+        <i class="fa-solid fa-rotate-right"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Left Control Panel -->
+  <aside class="fui-panel absolute top-20 left-3 z-20 w-80 sm:w-88 max-h-[calc(100vh-6.5rem)] rounded-2xl p-4 shadow-2xl flex flex-col gap-3.5 overflow-y-auto text-xs">
+    <div class="p-3 rounded-xl bg-slate-900/60 border border-sky-500/20 space-y-2.5">
+      <div class="flex items-center justify-between">
+        <label class="font-bold text-sky-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-bacteria"></i> ชนิดอนุภาคในของเหลว
+        </label>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="setSampleType('bacteria')" id="btnSampleBact" class="py-2 rounded-xl bg-emerald-600 text-white font-bold border border-emerald-400 shadow">
+          เซลล์แบคทีเรีย (2.0 µm)
+        </button>
+        <button onclick="setSampleType('beads')" id="btnSampleBead" class="py-2 rounded-xl bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700">
+          ลูกปัดลาเท็กซ์ (0.5 µm)
+        </button>
+      </div>
+      <p class="text-[10px] text-slate-400 italic">อนุภาคขนาดเล็กกว่า (0.5 µm) จะถูกชนและแพร่เร็วกว่าอนุภาคขนาดใหญ่</p>
+    </div>
+
+    <!-- Temperature Slider -->
+    <div class="p-3 rounded-xl bg-slate-900/60 border border-sky-500/20 space-y-2">
+      <div class="flex items-center justify-between">
+        <label class="font-bold text-slate-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-temperature-high text-amber-400"></i> อุณหภูมิของเหลว ($T$)
+        </label>
+        <span id="txtTemp" class="font-digital text-amber-400 text-sm font-bold">25.0 °C</span>
+      </div>
+      <input type="range" id="rngTemp" min="5" max="65" step="1" value="25" oninput="updateParams()" class="w-full accent-amber-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+      <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+        <span>5°C (แช่เย็น)</span>
+        <span class="text-amber-400 font-bold">25°C (ห้องแล็บ)</span>
+        <span>65°C (น้ำร้อน)</span>
+      </div>
+    </div>
+
+    <!-- Viscosity Slider -->
+    <div class="p-3 rounded-xl bg-slate-900/60 border border-sky-500/20 space-y-2">
+      <div class="flex items-center justify-between">
+        <label class="font-bold text-slate-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-droplet text-cyan-400"></i> ความหนืดของตัวกลาง ($\eta$)
+        </label>
+        <span id="txtViscosity" class="font-digital text-cyan-300 text-sm font-bold">1.0 mPa·s</span>
+      </div>
+      <input type="range" id="rngViscosity" min="0.5" max="5.0" step="0.1" value="1.0" oninput="updateParams()" class="w-full accent-cyan-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+      <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+        <span>น้ำกลั่น (1.0)</span>
+        <span>อาหารเลี้ยงเชื้อ (1.5)</span>
+        <span>กลีเซอรอลเจือจาง (5.0)</span>
+      </div>
+    </div>
+
+    <!-- Live Physics Calculation Card -->
+    <div class="p-3 rounded-xl bg-slate-950/90 border border-emerald-500/30 space-y-1.5 font-mono text-[11px]">
+      <div class="font-bold text-emerald-400 mb-1">สมการไอน์สไตน์-สโมลูโชฟสกี (Einstein Diffusion):</div>
+      <div class="flex justify-between text-slate-300">
+        <span>สัมประสิทธิ์การแพร่ ($D$):</span>
+        <span id="resDiffCoeff" class="text-cyan-300 font-bold">2.18 × 10⁻¹³ m²/s</span>
+      </div>
+      <div class="flex justify-between text-slate-300">
+        <span>ระยะกระจัดเฉลี่ย (RMS $\sqrt{\langle r^2 \rangle}$ ใน 1s):</span>
+        <span id="resRMS" class="text-amber-400 font-bold">0.93 µm</span>
+      </div>
+      <p class="text-[10px] text-slate-400 pt-1 border-t border-slate-800">
+        $$D = \frac{k_B T}{6\pi \eta r}, \quad \langle r^2 \rangle = 4Dt$$
+      </p>
+    </div>
+  </aside>
+
+  <!-- Right Telemetry Panel -->
+  <aside class="fui-panel absolute top-20 right-3 z-20 w-80 sm:w-88 max-h-[calc(100vh-6.5rem)] rounded-2xl p-4 shadow-2xl flex flex-col gap-3 overflow-y-auto text-xs">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+      <h3 class="font-bold text-sky-300 flex items-center gap-1.5">
+        <i class="fa-solid fa-chart-line text-emerald-400"></i> การบันทึกพิกัดการชนแบบสุ่ม (Brownian Walk)
+      </h3>
+      <span class="text-[10px] font-mono text-emerald-400">LIVE</span>
+    </div>
+
+    <!-- Mini Canvas: XY Particle Trajectory Graph -->
+    <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 space-y-2">
+      <div class="flex items-center justify-between text-[10px] font-mono text-slate-400">
+        <span>ผังเส้นทางอนุภาคเป้าหมาย (XY Trace)</span>
+        <span class="text-emerald-400">สเกล ±15 µm</span>
+      </div>
+      <canvas id="walkCanvas" width="280" height="180" class="w-full h-44 bg-slate-950 rounded-lg border border-slate-800 block"></canvas>
+    </div>
+
+    <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1 text-slate-300">
+      <div class="font-bold text-amber-300">เปรียบเทียบการเคลื่อนที่ 2 รูปแบบ:</div>
+      <ul class="list-disc list-inside space-y-1 text-[11px] text-slate-400">
+        <li><strong class="text-slate-200">Brownian Motion:</strong> ขยับสั่นแบบสุ่มไปทุกทิศทางด้วยแรงชนจากโมเลกุลน้ำ (ไม่ได้ว่ายไปข้างหน้า)</li>
+        <li><strong class="text-slate-200">Active Motility:</strong> การว่ายน้ำจริงด้วยแส้แฟลกเจลลา มีทิศทางที่แน่นอน (Run &amp; Tumble)</li>
+      </ul>
+    </div>
+  </aside>
+
+  <footer class="absolute bottom-3 inset-x-3 z-20 pointer-events-none flex justify-center">
+    <div class="pointer-events-auto bg-slate-950/80 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-slate-700/80 text-xs text-slate-300 flex items-center gap-4 shadow-2xl font-mono">
+      <span><i class="fa-solid fa-arrows-up-down-left-right text-sky-400 mr-1"></i> หมุน 3D</span>
+      <span class="text-slate-600">|</span>
+      <span><i class="fa-solid fa-magnifying-glass text-emerald-400 mr-1"></i> ซูม</span>
+      <span class="text-slate-600">|</span>
+      <span>กล้องจุลทรรศน์ส่องดูสไลด์หยดแขวน (Hanging Drop Slide)</span>
+    </div>
+  </footer>
+
+  <script>
+    const simState = {
+      sample: 'bacteria', // 'bacteria' (2um) or 'beads' (0.5um)
+      radius_um: 1.0,
+      temp_C: 25.0,
+      viscosity_mPas: 1.0,
+      tracing: true,
+      particles: [],
+      traceHistory: []
+    };
+
+    let scene, camera, renderer, controls;
+    let chamberMesh, particleGroup, targetParticle;
+
+    function init() {
+      const container = document.getElementById('canvasContainer');
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x040714);
+
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(0, 0, 16);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      setupLights();
+      buildHangingDropChamber();
+      createParticles();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      updateParams();
+      requestAnimationFrame(animate);
+    }
+
+    function setupLights() {
+      const amb = new THREE.AmbientLight(0xffffff, 0.9);
+      scene.add(amb);
+      const spot = new THREE.DirectionalLight(0x38bdf8, 1.5);
+      spot.position.set(5, 10, 8);
+      scene.add(spot);
+    }
+
+    function buildHangingDropChamber() {
+      // Circular well representing hanging drop coverslip & liquid boundary
+      const wellGeo = new THREE.RingGeometry(0, 7.5, 64);
+      const wellMat = new THREE.MeshBasicMaterial({ color: 0x0f172a, side: THREE.DoubleSide });
+      const well = new THREE.Mesh(wellGeo, wellMat);
+      scene.add(well);
+
+      // Outer ring glass edge
+      const edgeGeo = new THREE.RingGeometry(7.4, 7.8, 64);
+      const edgeMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
+      scene.add(new THREE.Mesh(edgeGeo, edgeMat));
+    }
+
+    function createParticles() {
+      if (particleGroup) scene.remove(particleGroup);
+      particleGroup = new THREE.Group();
+      simState.particles = [];
+      simState.traceHistory = [];
+
+      const count = 45;
+      const rVisual = simState.sample === 'bacteria' ? 0.35 : 0.16;
+      const geom = new THREE.SphereGeometry(rVisual, 16, 16);
+
+      for (let i = 0; i < count; i++) {
+        const isTarget = i === 0;
+        const mat = new THREE.MeshStandardMaterial({
+          color: isTarget ? 0xf59e0b : (simState.sample === 'bacteria' ? 0x10b981 : 0x06b6d4),
+          roughness: 0.3,
+          metalness: 0.2,
+          emissive: isTarget ? 0xb45309 : 0x000000
+        });
+        const mesh = new THREE.Mesh(geom, mat);
+        const angle = Math.random() * Math.PI * 2;
+        const rad = Math.random() * 5.5;
+        mesh.position.set(Math.cos(angle) * rad, Math.sin(angle) * rad, 0);
+        particleGroup.add(mesh);
+        simState.particles.push({ mesh: mesh, isTarget: isTarget });
+      }
+
+      scene.add(particleGroup);
+    }
+
+    function setSampleType(type) {
+      simState.sample = type;
+      simState.radius_um = type === 'bacteria' ? 1.0 : 0.25;
+      document.getElementById('btnSampleBact').className = type === 'bacteria'
+        ? "py-2 rounded-xl bg-emerald-600 text-white font-bold border border-emerald-400 shadow"
+        : "py-2 rounded-xl bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700";
+      document.getElementById('btnSampleBead').className = type === 'beads'
+        ? "py-2 rounded-xl bg-cyan-600 text-white font-bold border border-cyan-400 shadow"
+        : "py-2 rounded-xl bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700";
+      createParticles();
+      updateParams();
+    }
+
+    function updateParams() {
+      simState.temp_C = parseFloat(document.getElementById('rngTemp').value);
+      simState.viscosity_mPas = parseFloat(document.getElementById('rngViscosity').value);
+      document.getElementById('txtTemp').textContent = simState.temp_C.toFixed(1) + " °C";
+      document.getElementById('txtViscosity').textContent = simState.viscosity_mPas.toFixed(1) + " mPa·s";
+
+      // Einstein-Smoluchowski: D = kB*T / (6*pi*eta*r)
+      const kB = 1.380649e-23;
+      const T_kelvin = simState.temp_C + 273.15;
+      const eta = simState.viscosity_mPas * 1e-3;
+      const r_m = simState.radius_um * 1e-6;
+
+      const D = (kB * T_kelvin) / (6 * Math.PI * eta * r_m);
+      // RMS displacement in 1 second: sqrt(4*D*1)
+      const rms_m = Math.sqrt(4 * D * 1.0);
+      const rms_um = rms_m * 1e6;
+
+      document.getElementById('resDiffCoeff').textContent = (D * 1e12).toFixed(2) + " × 10⁻¹² m²/s";
+      document.getElementById('resRMS').textContent = rms_um.toFixed(2) + " µm";
+    }
+
+    function toggleParticleTracing() {
+      simState.tracing = !simState.tracing;
+      document.getElementById('btnTrace').className = simState.tracing
+        ? "px-3 py-1 rounded-xl text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40 transition"
+        : "px-3 py-1 rounded-xl text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700 transition";
+    }
+
+    function setCameraView(v) {
+      if (v === 'top') {
+        camera.position.set(0, 0, 16);
+        controls.target.set(0, 0, 0);
+      } else if (v === 'iso') {
+        camera.position.set(8, -8, 12);
+        controls.target.set(0, 0, 0);
+      }
+    }
+
+    function resetSim() {
+      document.getElementById('rngTemp').value = 25;
+      document.getElementById('rngViscosity').value = 1.0;
+      setSampleType('bacteria');
+      setCameraView('top');
+    }
+
+    function updatePhysics() {
+      // Step size proportional to sqrt(T / (eta * r))
+      const factor = Math.sqrt((simState.temp_C + 273.15) / (simState.viscosity_mPas * simState.radius_um)) * 0.0035;
+
+      simState.particles.forEach(p => {
+        const dx = (Math.random() - 0.5) * factor;
+        const dy = (Math.random() - 0.5) * factor;
+        p.mesh.position.x += dx;
+        p.mesh.position.y += dy;
+
+        // Keep inside circular well boundary
+        const dist = Math.hypot(p.mesh.position.x, p.mesh.position.y);
+        if (dist > 7.0) {
+          p.mesh.position.x *= 0.98;
+          p.mesh.position.y *= 0.98;
+        }
+
+        if (p.isTarget && simState.tracing) {
+          simState.traceHistory.push({ x: p.mesh.position.x, y: p.mesh.position.y });
+          if (simState.traceHistory.length > 250) simState.traceHistory.shift();
+        }
+      });
+
+      drawWalkCanvas();
+    }
+
+    function drawWalkCanvas() {
+      const cvs = document.getElementById('walkCanvas');
+      if (!cvs) return;
+      const ctx = cvs.getContext('2d');
+      const w = cvs.width, h = cvs.height;
+
+      ctx.fillStyle = "#030712";
+      ctx.fillRect(0, 0, w, h);
+
+      // Crosshairs
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.15)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(w / 2, 0); ctx.lineTo(w / 2, h);
+      ctx.moveTo(0, h / 2); ctx.lineTo(w, h / 2);
+      ctx.stroke();
+
+      const pts = simState.traceHistory;
+      if (pts.length < 2) return;
+
+      const scale = 14; // pixels per unit
+      ctx.strokeStyle = "#f59e0b";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      pts.forEach((pt, i) => {
+        const px = (w / 2) + pt.x * scale;
+        const py = (h / 2) - pt.y * scale;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      });
+      ctx.stroke();
+
+      // Draw current target particle head
+      const head = pts[pts.length - 1];
+      ctx.fillStyle = "#fbbf24";
+      ctx.beginPath();
+      ctx.arc((w / 2) + head.x * scale, (h / 2) - head.y * scale, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      updatePhysics();
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

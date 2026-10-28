@@ -134,34 +134,38 @@ elseif (strpos($currentFilename, '_zh.php') !== false) $currentLang = 'zh';
             <div class="relative group py-2">
                 <a href="<?php echo $basePath ?? ''; ?>index.php" class="px-3.5 py-2 text-xs font-semibold text-gray-300 group-hover:text-amber-400 flex items-center space-x-1 transition-colors rounded-xl hover:bg-white/5">
                     <i class="fa-solid fa-book-open text-amber-400"></i>
-                    <span>13 บทเรียน</span>
+                    <span>12 บทเรียนหลัก</span>
                     <i class="fas fa-chevron-down text-[10px] ml-1 opacity-50"></i>
                 </a>
-                <div class="absolute top-full left-0 w-72 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all shadow-2xl -translate-y-2 group-hover:translate-y-1 z-50">
-                    <div class="grid grid-cols-1 gap-1 max-h-[420px] overflow-y-auto pr-1">
+                <div class="absolute top-full left-0 w-80 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all shadow-2xl -translate-y-2 group-hover:translate-y-1 z-50">
+                    <div class="grid grid-cols-1 gap-1 max-h-[440px] overflow-y-auto pr-1">
+                        <div class="px-3 py-1.5 text-[10px] font-bold tracking-wider text-amber-400/80 uppercase">เอกสารคำสอน 12 บท (main.tex)</div>
                         <?php 
                         $navModules = [
-                            ['01', 'ระบบหน่วยและการวัดระดับจุลภาค', 'ch01_th.php'],
-                            ['02', 'เวกเตอร์และแรงในระบบชีวภาพ', 'ch02_th.php'],
-                            ['03', 'จลนศาสตร์และความหนืดของของไหล', 'ch03_th.php'],
-                            ['04', 'กฎของนิวตันและเครื่องปั่นเหวี่ยง', 'ch04_th.php'],
-                            ['05', 'โมเมนตัม การดล และการชนในระดับเซลล์', 'ch05_th.php'],
-                            ['06', 'สมดุลกล ความดันของไหล และออสโมซิส', 'ch06_th.php'],
-                            ['07', 'งาน พลังงาน และมอเตอร์โมเลกุล', 'ch07_th.php'],
-                            ['08', 'การหมุนและกลศาสตร์นาโนของแฟลกเจลลา', 'ch08_th.php'],
-                            ['09', 'อุณหพลศาสตร์และ PCR Thermocycler', 'ch09_th.php'],
-                            ['10', 'ไฟฟ้าและเจลอิเล็กโทรโฟรีซิส', 'ch10_th.php'],
-                            ['11', 'ทัศนศาสตร์ กล้อง 100x และสเปกโทรฯ', 'ch11_th.php'],
-                            ['12', 'ฟิสิกส์นิวเคลียร์และรังสีทำลายเชื้อ', 'ch12_th.php'],
-                            ['13', 'โครงงานจุลชีววิทยาอัจฉริยะ (Capstone)', 'ch13_th.php'],
+                            ['01', 'ระบบหน่วยและการวัดในโลกจุลทรรศน์', 'ch01_th.php'],
+                            ['02', 'เวกเตอร์และการเคลื่อนที่ในของเหลว', 'ch02_th.php'],
+                            ['03', 'กฎการเคลื่อนที่ของนิวตันและแรงหนืด', 'ch03_th.php'],
+                            ['04', 'งาน พลังงาน และเครื่องปั่นเหวี่ยง', 'ch04_th.php'],
+                            ['05', 'ความร้อนและการควบคุมอุณหภูมิชีวภาพ', 'ch05_th.php'],
+                            ['06', 'อุณหพลศาสตร์ ความดันไอ และ Autoclave', 'ch06_th.php'],
+                            ['07', 'ไฟฟ้าสถิต ประจุเซลล์ และการย้อมสีแกรม', 'ch07_th.php'],
+                            ['08', 'ไฟฟ้ากระแส กฎโอห์ม & อิเล็กโทรโฟรีซิส', 'ch08_th.php'],
+                            ['09', 'ทัศนศาสตร์ การหักเห & Brix Refractometer', 'ch09_th.php'],
+                            ['10', 'กล้องจุลทรรศน์ แอบบี & Immersion Oil', 'ch10_th.php'],
+                            ['11', 'กัมมันตภาพรังสี & การฉายรังสี UV-C', 'ch11_th.php'],
+                            ['12', 'สเปกโตรโฟโตมิเตอร์ & OD600 การเจริญ', 'ch12_th.php'],
                         ];
                         foreach($navModules as $nm):
                         ?>
-                        <a href="<?php echo $basePath ?? ''; ?>chapters/<?php echo $nm[2]; ?>" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-amber-500/10 transition-colors group/item">
+                        <a href="<?php echo $basePath ?? ''; ?>chapters/<?php echo $nm[2]; ?>" class="flex items-center space-x-3 p-2 rounded-xl hover:bg-amber-500/10 transition-colors group/item">
                             <span class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-amber-400 group-hover/item:bg-amber-500 group-hover/item:text-slate-950"><?php echo $nm[0]; ?></span>
                             <span class="block text-xs font-medium text-slate-200 group-hover/item:text-white truncate"><?php echo $nm[1]; ?></span>
                         </a>
                         <?php endforeach; ?>
+                        <div class="border-t border-white/10 my-1 pt-1.5 px-3 flex items-center justify-between text-[11px]">
+                            <span class="text-slate-400 font-medium">✨ บทเรียนเสริม (Enrichment)</span>
+                            <a href="<?php echo $basePath ?? ''; ?>enrichment/osmosis_th.php" class="text-cyan-400 hover:underline">ดู 4 บทเสริม →</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -170,29 +174,31 @@ elseif (strpos($currentFilename, '_zh.php') !== false) $currentLang = 'zh';
             <div class="relative group py-2">
                 <a href="<?php echo $basePath ?? ''; ?>../virtual_lab/index.html" class="px-3.5 py-2 text-xs font-semibold text-gray-300 group-hover:text-emerald-400 flex items-center space-x-1 transition-colors rounded-xl hover:bg-white/5">
                     <i class="fa-solid fa-flask text-emerald-400"></i>
-                    <span>12 ปฏิบัติการ</span>
+                    <span>13 ปฏิบัติการ</span>
                     <i class="fas fa-chevron-down text-[10px] ml-1 opacity-50"></i>
                 </a>
-                <div class="absolute top-full left-0 w-80 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all shadow-2xl -translate-y-2 group-hover:translate-y-1 z-50">
-                    <div class="grid grid-cols-1 gap-1 max-h-[420px] overflow-y-auto pr-1">
+                <div class="absolute top-full left-0 w-84 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all shadow-2xl -translate-y-2 group-hover:translate-y-1 z-50">
+                    <div class="grid grid-cols-1 gap-1 max-h-[440px] overflow-y-auto pr-1">
+                        <div class="px-3 py-1.5 text-[10px] font-bold tracking-wider text-emerald-400/80 uppercase">ใบงานแล็บ 13 สัปดาห์ (main.tex)</div>
                         <?php 
                         $navLabs = [
-                            ['01', 'การวัดละเอียด & สอบเทียบไมโครปิเปต', 'lab01_measurement.php'],
-                            ['02', 'เวกเตอร์และแรงในระบบชีวภาพ', 'lab02_vectors.php'],
-                            ['03', 'จลนศาสตร์ ความหนืด & กฎสโตกส์', 'lab03_motion.php'],
-                            ['04', 'กฎนิวตันและการปั่นเหวี่ยง Centrifuge', 'lab04_newton.php'],
-                            ['05', 'โมเมนตัมและการชนระดับเซลล์ Lysis', 'lab05_momentum.php'],
-                            ['06', 'สมดุลกล ความดัน & ปรากฏการณ์ออสโมซิส', 'lab06_equilibrium.php'],
-                            ['07', 'งาน พลังงาน & ATP Synthase', 'lab07_energy.php'],
-                            ['08', 'การหมุนและกลศาสตร์นาโนแฟลกเจลลา', 'lab08_machines.php'],
-                            ['09', 'อุณหพลศาสตร์และ PCR Thermal Cycler', 'lab09_heat.php'],
-                            ['10', 'ไฟฟ้า & เจลอิเล็กโทรโฟเรซิส', 'lab10_electricity.php'],
-                            ['11', 'ทัศนศาสตร์ กล้อง 100x Oil & OD600', 'lab11_optics.php'],
-                            ['12', 'ฟิสิกส์นิวเคลียร์ & รังสีทำลายเชื้อ', 'lab12_radioactivity.php'],
+                            ['01', 'การวัดละเอียด & ไมโครปิเปต P1000', 'lab01_measurement.php'],
+                            ['02', 'การเคลื่อนที่แบบบราวน์ & เวกเตอร์การแพร่', 'lab02_brownian_motion.php'],
+                            ['03', 'กฎของนิวตัน & ความหนืดสโตกส์', 'lab03_viscosity.php'],
+                            ['04', 'การอนุรักษ์พลังงาน & แรงหนีศูนย์ RCF', 'lab04_centrifuge.php'],
+                            ['05', 'ความร้อนจำเพาะ & ตู้อบ Incubator 37°C', 'lab05_heat_incubator.php'],
+                            ['06', 'อุณหพลศาสตร์ & หม้อนึ่ง Autoclave 121°C', 'lab06_autoclave.php'],
+                            ['07', 'แรงไฟฟ้าสถิต & กลไกการย้อมสีแกรม', 'lab07_gram_electrostatics.php'],
+                            ['08', 'กฎของโอห์ม & เจลอิเล็กโทรโฟเรซิส', 'lab08_electrophoresis.php'],
+                            ['09', 'การหักเหของแสง & Brix Refractometer', 'lab09_refraction.php'],
+                            ['10', 'กล้องจุลทรรศน์ & Immersion Oil 100x', 'lab10_microscope.php'],
+                            ['11', 'การสลายตัวครึ่งชีวิต & การฆ่าเชื้อ UV-C', 'lab11_radioactivity_uv.php'],
+                            ['12', 'สเปกโตรโฟโตมิเตอร์ & OD600 การเจริญ', 'lab12_od600.php'],
+                            ['13', 'โครงงานบูรณาการ Capstone Mini-Project', 'lab13_mini_project.php'],
                         ];
                         foreach($navLabs as $nl):
                         ?>
-                        <a href="<?php echo $basePath ?? ''; ?>labs/<?php echo $nl[2]; ?>" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-emerald-500/10 transition-colors group/item">
+                        <a href="<?php echo $basePath ?? ''; ?>labs/<?php echo $nl[2]; ?>" class="flex items-center space-x-3 p-2 rounded-xl hover:bg-emerald-500/10 transition-colors group/item">
                             <span class="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-emerald-400 group-hover/item:bg-emerald-500 group-hover/item:text-slate-950">L<?php echo $nl[0]; ?></span>
                             <span class="block text-xs font-medium text-slate-200 group-hover/item:text-white truncate"><?php echo $nl[1]; ?></span>
                         </a>
@@ -227,16 +233,6 @@ elseif (strpos($currentFilename, '_zh.php') !== false) $currentLang = 'zh';
             </div>
             <button class="lg:hidden w-8 h-8 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white">
                 <i class="fas fa-bars text-xs"></i>
-            </button>
-        </div>
-    </div>
-</nav>
-                <button onclick="handleLangChange('en')" class="lang-btn w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold transition-all hover:bg-white/10" id="btn-en">EN</button>
-                <button onclick="handleLangChange('zh')" class="lang-btn w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold transition-all hover:bg-white/10" id="btn-zh">ZH</button>
-            </div>
-            
-            <button class="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-white">
-                <i class="fas fa-bars"></i>
             </button>
         </div>
     </div>

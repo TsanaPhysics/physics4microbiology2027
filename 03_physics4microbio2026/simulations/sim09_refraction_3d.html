@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องปฏิบัติการ 3D การหักเหของแสงและเครื่องรีแฟรกโตมิเตอร์ | Lab 09: Refraction & Optical Brix Measurement 3D PBR</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body { font-family: 'Prompt', sans-serif; background-color: #030712; color: #f8fafc; margin: 0; padding: 0; overflow: hidden; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .font-digital { font-family: 'Orbitron', monospace; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.4); border-radius: 9999px; }
+    .fui-panel { background: rgba(10, 15, 29, 0.85); backdrop-filter: blur(14px); border: 1px solid rgba(56, 189, 248, 0.25); }
+  </style>
+</head>
+<body class="w-screen h-screen relative select-none">
+  <div id="canvasContainer" class="w-full h-full absolute inset-0 cursor-grab active:cursor-grabbing"></div>
+
+  <!-- Header -->
+  <header class="absolute top-3 inset-x-3 z-30 pointer-events-none flex items-center justify-between">
+    <div class="pointer-events-auto flex items-center gap-2 bg-slate-950/85 backdrop-blur-md px-4 py-2 rounded-2xl border border-sky-500/30 shadow-2xl">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-cyan-500 flex items-center justify-center text-slate-950 font-bold text-sm shadow-md">
+        <i class="fa-solid fa-glasses"></i>
+      </div>
+      <div>
+        <h1 class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+          <span>LAB 09 // การหักเหของแสง &bull; กฎของสเนลล์ &amp; Refractometer</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-mono">PBR 3D</span>
+        </h1>
+        <p class="text-[10px] text-slate-400 font-mono">4011111 Physics for Microbiology &bull; Snell's Law &amp; Sugar Brix Analysis</p>
+      </div>
+    </div>
+
+    <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-950/85 backdrop-blur-md p-1.5 rounded-2xl border border-slate-700/80 shadow-2xl">
+      <button onclick="setCameraView('top')" class="px-2.5 py-1 rounded-xl text-xs font-mono font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition">
+        <i class="fa-solid fa-table text-sky-400"></i> มุมบน (2D Bench)
+      </button>
+      <button onclick="setCameraView('iso')" class="px-2.5 py-1 rounded-xl text-xs font-mono font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition">
+        <i class="fa-solid fa-cubes text-emerald-400"></i> Isometric 3D
+      </button>
+      <button onclick="resetSim()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center text-xs transition">
+        <i class="fa-solid fa-rotate-right"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Left Control Panel -->
+  <aside class="fui-panel absolute top-20 left-3 z-20 w-80 sm:w-88 max-h-[calc(100vh-6.5rem)] rounded-2xl p-4 shadow-2xl flex flex-col gap-3.5 overflow-y-auto text-xs">
+    <!-- Liquid Medium Selection -->
+    <div class="p-3 rounded-xl bg-slate-900/60 border border-sky-500/20 space-y-2">
+      <label class="font-bold text-sky-300 flex items-center gap-1.5">
+        <i class="fa-solid fa-flask-vial"></i> สารละลายตัวอย่างชีวภาพ
+      </label>
+      <select id="selLiquid" onchange="onLiquidChange()" class="w-full bg-slate-800 text-white p-2 rounded-xl border border-slate-700 font-mono text-xs cursor-pointer">
+        <option value="1.3330">น้ำกลั่นบริสุทธิ์ (0° Brix, n = 1.333)</option>
+        <option value="1.3478">สารละลายน้ำตาล 10% (10° Brix, n = 1.348)</option>
+        <option value="1.3812">น้ำหมักจุลินทรีย์ 30% (30° Brix, n = 1.381)</option>
+        <option value="1.4201">น้ำเชื่อมกลูโคสเข้มข้น 50% (50° Brix, n = 1.420)</option>
+        <option value="1.5150">น้ำมันช่วยส่องกล้อง Immersion Oil (n = 1.515)</option>
+      </select>
+    </div>
+
+    <!-- Angle of Incidence Slider -->
+    <div class="p-3 rounded-xl bg-slate-900/60 border border-sky-500/20 space-y-2">
+      <div class="flex items-center justify-between">
+        <label class="font-bold text-slate-300 flex items-center gap-1.5">
+          <i class="fa-solid fa-compass-drafting text-amber-400"></i> มุมตกกระทบ ($\theta_1$)
+        </label>
+        <span id="txtAngle1" class="font-digital text-amber-400 text-sm font-bold">45.0°</span>
+      </div>
+      <input type="range" id="rngAngle1" min="0" max="80" step="0.5" value="45.0" oninput="updateOptics()" class="w-full accent-amber-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+    </div>
+
+    <!-- Live Calculation Card -->
+    <div class="p-3 rounded-xl bg-slate-950/90 border border-cyan-500/30 space-y-1.5 font-mono text-[11px]">
+      <div class="font-bold text-cyan-300 mb-1">ผลการคำนวณตามกฎของสเนลล์ (Snell's Law):</div>
+      <div class="flex justify-between text-slate-300">
+        <span>ดัชนีหักเหของเหลว ($n_2$):</span>
+        <span id="resN2" class="text-emerald-400 font-bold">1.3330</span>
+      </div>
+      <div class="flex justify-between text-slate-300">
+        <span>มุมหักเหในของเหลว ($\theta_2$):</span>
+        <span id="resAngle2" class="text-cyan-300 font-bold">32.11°</span>
+      </div>
+      <div class="flex justify-between text-slate-300">
+        <span>ความเร็วแสงในสารละลาย ($v = c/n_2$):</span>
+        <span id="resLightSpeed" class="text-amber-400 font-bold">2.25 × 10⁸ m/s</span>
+      </div>
+      <p class="text-[10px] text-slate-400 pt-1 border-t border-slate-800">
+        $$n_1 \sin\theta_1 = n_2 \sin\theta_2 \quad (n_{\text{air}} = 1.000)$$
+      </p>
+    </div>
+  </aside>
+
+  <!-- Right Refractometer Reticle Eyepiece -->
+  <aside class="fui-panel absolute top-20 right-3 z-20 w-80 sm:w-88 max-h-[calc(100vh-6.5rem)] rounded-2xl p-4 shadow-2xl flex flex-col gap-3 overflow-y-auto text-xs">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+      <h3 class="font-bold text-amber-300 flex items-center gap-1.5">
+        <i class="fa-solid fa-eye text-emerald-400"></i> สเกลช่องมองรีแฟรกโตมิเตอร์ (Refractometer Eyepiece)
+      </h3>
+    </div>
+
+    <!-- Circular Eyepiece Canvas (Blue/White border line) -->
+    <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 space-y-2 flex flex-col items-center">
+      <div class="text-[10px] font-mono text-slate-400 w-full flex justify-between">
+        <span>เส้นแบ่งแสง-มืด (Shadow Border)</span>
+        <span id="lblBrix" class="text-amber-400 font-bold">0.0 °Brix</span>
+      </div>
+      <canvas id="reticleCanvas" width="220" height="220" class="w-52 h-52 rounded-full border-2 border-sky-400 shadow-2xl block"></canvas>
+      <p class="text-[10px] text-slate-400 text-center">
+        ค่าความเข้มข้นน้ำตาล (°Brix) อ่านจากจุดตัดของเส้นขอบเขตมืด-สว่าง
+      </p>
+    </div>
+  </aside>
+
+  <footer class="absolute bottom-3 inset-x-3 z-20 pointer-events-none flex justify-center">
+    <div class="pointer-events-auto bg-slate-950/80 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-slate-700/80 text-xs text-slate-300 flex items-center gap-4 shadow-2xl font-mono">
+      <span><i class="fa-solid fa-arrows-up-down-left-right text-sky-400 mr-1"></i> หมุน 3D</span>
+      <span class="text-slate-600">|</span>
+      <span><i class="fa-solid fa-magnifying-glass text-emerald-400 mr-1"></i> ซูม</span>
+      <span class="text-slate-600">|</span>
+      <span>การติดตามลำแสงเลเซอร์ (Laser Ray Tracing) ผ่านแท่งปริซึม</span>
+    </div>
+  </footer>
+
+  <script>
+    const optState = {
+      n1: 1.000,
+      n2: 1.333,
+      theta1_deg: 45.0,
+      theta2_deg: 32.11
+    };
+
+    let scene, camera, renderer, controls;
+    let incidentRay, refractedRay, reflectedRay;
+
+    function init() {
+      const container = document.getElementById('canvasContainer');
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x060914);
+
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(0, 0, 14);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+
+      setupLights();
+      buildOpticalBench();
+      buildRays();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      updateOptics();
+      requestAnimationFrame(animate);
+    }
+
+    function setupLights() {
+      scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+      const dir = new THREE.DirectionalLight(0x38bdf8, 1.2);
+      dir.position.set(5, 5, 10);
+      scene.add(dir);
+    }
+
+    function buildOpticalBench() {
+      // Semicircular prism (Lower half: y < 0)
+      const prismGeo = new THREE.CylinderGeometry(5.0, 5.0, 0.4, 32, 1, false, 0, Math.PI);
+      const prismMat = new THREE.MeshPhysicalMaterial({
+        color: 0x0284c7,
+        transparent: true,
+        opacity: 0.4,
+        roughness: 0.1,
+        transmission: 0.8
+      });
+      const prism = new THREE.Mesh(prismGeo, prismMat);
+      prism.rotation.z = Math.PI / 2;
+      prism.position.y = -2.5;
+      scene.add(prism);
+
+      // Normal line (y-axis)
+      const normMat = new THREE.LineDashedMaterial({ color: 0x94a3b8, dashSize: 0.2, gapSize: 0.1 });
+      const normGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 5, 0), new THREE.Vector3(0, -5, 0)]);
+      const normal = new THREE.Line(normGeo, normMat);
+      normal.computeLineDistances();
+      scene.add(normal);
+
+      // Interface line (x-axis)
+      const interGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-6, 0, 0), new THREE.Vector3(6, 0, 0)]);
+      scene.add(new THREE.Line(interGeo, new THREE.LineBasicMaterial({ color: 0x38bdf8 })));
+    }
+
+    function buildRays() {
+      // Incident laser (Emerald / Green)
+      incidentRay = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x10b981, linewidth: 3 }));
+      // Refracted laser (Cyan)
+      refractedRay = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x06b6d4, linewidth: 3 }));
+      // Reflected laser (Amber, faint)
+      reflectedRay = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xf59e0b, linewidth: 1 }));
+
+      scene.add(incidentRay, refractedRay, reflectedRay);
+    }
+
+    function onLiquidChange() {
+      optState.n2 = parseFloat(document.getElementById('selLiquid').value);
+      updateOptics();
+    }
+
+    function updateOptics() {
+      optState.theta1_deg = parseFloat(document.getElementById('rngAngle1').value);
+      document.getElementById('txtAngle1').textContent = optState.theta1_deg.toFixed(1) + "°";
+
+      const theta1_rad = (optState.theta1_deg * Math.PI) / 180;
+      // Snell's Law: sin(theta2) = (n1 * sin(theta1)) / n2
+      const sinTheta2 = (optState.n1 * Math.sin(theta1_rad)) / optState.n2;
+      const theta2_rad = Math.asin(Math.min(1.0, sinTheta2));
+      optState.theta2_deg = (theta2_rad * 180) / Math.PI;
+
+      document.getElementById('resN2').textContent = optState.n2.toFixed(4);
+      document.getElementById('resAngle2').textContent = optState.theta2_deg.toFixed(2) + "°";
+
+      const speed = (299792458 / optState.n2) / 1e8;
+      document.getElementById('resLightSpeed').textContent = speed.toFixed(2) + " × 10⁸ m/s";
+
+      // Update laser ray geometries
+      const rayLen = 5.0;
+      // Incident ray: incoming from top-left towards (0,0,0)
+      const inX = - rayLen * Math.sin(theta1_rad);
+      const inY = rayLen * Math.cos(theta1_rad);
+      incidentRay.geometry.setFromPoints([new THREE.Vector3(inX, inY, 0), new THREE.Vector3(0, 0, 0)]);
+
+      // Refracted ray: into bottom-right
+      const refrX = rayLen * Math.sin(theta2_rad);
+      const refrY = - rayLen * Math.cos(theta2_rad);
+      refractedRay.geometry.setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(refrX, refrY, 0)]);
+
+      // Reflected ray: towards top-right
+      const reflX = rayLen * Math.sin(theta1_rad);
+      const reflY = rayLen * Math.cos(theta1_rad);
+      reflectedRay.geometry.setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(reflX, reflY, 0)]);
+
+      drawReticle();
+    }
+
+    function drawReticle() {
+      const cvs = document.getElementById('reticleCanvas');
+      if (!cvs) return;
+      const ctx = cvs.getContext('2d');
+      const w = cvs.width, h = cvs.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Calculate approximate Brix: (n - 1.333) / 0.00175
+      const brix = Math.max(0, (optState.n2 - 1.3330) / 0.00175);
+      document.getElementById('lblBrix').textContent = brix.toFixed(1) + " °Brix";
+
+      // Reticle shadow line: y position mapped from Brix 0 to 60
+      const shadowY = h - (brix / 60) * (h * 0.7) - (h * 0.15);
+
+      // Top area: Light blue / illuminated
+      ctx.fillStyle = "#38bdf8";
+      ctx.fillRect(0, 0, w, shadowY);
+
+      // Bottom area: Dark blue / shadow
+      ctx.fillStyle = "#0f172a";
+      ctx.fillRect(0, shadowY, w, h - shadowY);
+
+      // Shadow dividing border line
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, shadowY); ctx.lineTo(w, shadowY);
+      ctx.stroke();
+
+      // Measurement Reticle Graticule (Scale marks on right)
+      ctx.strokeStyle = "#f8fafc";
+      ctx.fillStyle = "#f8fafc";
+      ctx.font = "9px JetBrains Mono";
+      for (let b = 0; b <= 60; b += 10) {
+        const y = h - (b / 60) * (h * 0.7) - (h * 0.15);
+        ctx.beginPath();
+        ctx.moveTo(w / 2 - 15, y); ctx.lineTo(w / 2 + 15, y);
+        ctx.stroke();
+        ctx.fillText(b + "°", w / 2 + 20, y + 3);
+      }
+    }
+
+    function setCameraView(v) {
+      if (v === 'top') {
+        camera.position.set(0, 0, 14);
+        controls.target.set(0, 0, 0);
+      } else if (v === 'iso') {
+        camera.position.set(6, -6, 10);
+        controls.target.set(0, 0, 0);
+      }
+    }
+
+    function resetSim() {
+      document.getElementById('rngAngle1').value = 45;
+      document.getElementById('selLiquid').value = "1.3330";
+      onLiquidChange();
+      setCameraView('top');
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

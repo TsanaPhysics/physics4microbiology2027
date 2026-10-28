@@ -167,7 +167,7 @@ class Sim3DEngine {
     }
 
     // Build specific 3D model according to Master Plan 2026/2027
-    switch (labId) {
+        switch (labId) {
       case "lab01":
         this.buildLab01Micropipette(params);
         break;
@@ -181,28 +181,28 @@ class Sim3DEngine {
         this.buildLab04Centrifuge(params);
         break;
       case "lab05":
-        this.buildLab05Momentum(params);
-        break;
-      case "lab06":
-        this.buildLab06Osmosis(params);
-        break;
-      case "lab07":
-        this.buildLab07ATPSynthase(params);
-        break;
-      case "lab08":
-        this.buildLab08Flagella(params);
-        break;
-      case "lab09":
         this.buildLab05IncubatorPCR(params);
         break;
-      case "lab10":
+      case "lab06":
+        this.buildLab06Autoclave(params);
+        break;
+      case "lab07":
+        this.buildLab07GramStain(params);
+        break;
+      case "lab08":
         this.buildLab08GelElectrophoresis(params);
         break;
-      case "lab11":
+      case "lab09":
+        this.buildLab09OpticsRefraction(params);
+        break;
+      case "lab10":
         this.buildLab10Microscope(params);
         break;
-      case "lab12":
+      case "lab11":
         this.buildLab11UVSterilization(params);
+        break;
+      case "lab12":
+        this.buildLab12Spectrophotometer(params);
         break;
       case "lab13":
       default:

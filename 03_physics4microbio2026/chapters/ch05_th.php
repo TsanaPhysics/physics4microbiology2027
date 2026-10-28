@@ -1,5 +1,5 @@
 <?php
-$pageTitle = "บทที่ 5: โมเมนตัมและการชนในระดับเซลล์";
+$pageTitle = "บทที่ 5: ความร้อนและการควบคุมอุณหภูมิชีวภาพ";
 $basePath = '../';
 include '../includes/header.php';
 ?>
@@ -15,421 +15,159 @@ include '../includes/header.php';
                 </a>
                 <span class="text-slate-600">/</span>
                 <a href="../index.php" class="hover:text-amber-400 transition-colors flex items-center gap-1">
-                    <i class="fas fa-book-open"></i> สารบัญ 13 บทเรียน
+                    <i class="fas fa-book-open"></i> สารบัญ 12 บทเรียน
                 </a>
                 <span class="text-slate-600">/</span>
                 <span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40">บทที่ 5</span>
             </nav>
-            <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full text-purple-400 font-mono text-xs mb-4 border border-purple-500/30 bg-purple-500/10 tracking-widest uppercase shadow-lg shadow-purple-500/10">
-                <i class="fas fa-bullseye text-xs"></i> MODULE 05 &bull; MOMENTUM &amp; CELL LYSIS
+            <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full text-indigo-400 font-mono text-xs mb-4 border border-indigo-500/30 bg-indigo-500/10 tracking-widest uppercase shadow-lg shadow-indigo-500/10">
+                <i class="fas fa-atom text-xs"></i> MODULE 05 &bull; HEAT & INCUBATOR STABILITY
             </span>
             <h1 class="text-3xl md:text-5xl font-black mb-4 leading-tight tracking-tight text-white">
-                โมเมนตัมและการชนในระดับเซลล์
+                ความร้อนและการควบคุมอุณหภูมิชีวภาพ
             </h1>
             <p class="text-base md:text-lg text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
-                การอนุรักษ์โมเมนตัม แรงดลจากการชนของเม็ดบีดส์ในเครื่อง Vortex และฟิสิกส์การทำลายผนังเซลล์ (Cell Lysis) เพื่อสกัดดีเอ็นเอ
+                เอกสารคำสอนมาตรฐานฉบับ 3D AR ArUco &bull; รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา (สัปดาห์ที่ 5)
             </p>
             <div class="mt-6 flex flex-wrap justify-center gap-3 text-xs text-slate-300 font-mono">
                 <span class="px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center gap-1.5">
                     <i class="fas fa-clock text-amber-400"></i> บรรยาย 2 ชม. + แล็บ 3 ชม.
                 </span>
                 <span class="px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center gap-1.5">
-                    <i class="fas fa-bullseye text-emerald-400"></i> CLO1 &bull; CLO2 &bull; CLO3
+                    <i class="fas fa-calendar-week text-emerald-400"></i> สัปดาห์ที่ 5
                 </span>
-                <span class="px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center gap-1.5">
-                    <i class="fas fa-cube text-cyan-400"></i> WebAR Marker ID: 4
-                </span>
+                <a href="../webar/ar_aruco_textbook.html?id=4&ar=1" target="_blank" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/40 text-cyan-300 flex items-center gap-1.5 transition">
+                    <i class="fas fa-cube text-cyan-400"></i> 3D WebAR ArUco ID: 4 ↗
+                </a>
+            </div>
+            <div class="mt-4 flex flex-wrap justify-center gap-3">
+                
+                <a href="../labs/lab05_heat_incubator.php" class="px-4 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold font-mono transition flex items-center gap-2 shadow-lg shadow-emerald-950/40">
+                    <i class="fa-solid fa-flask-vial"></i> <span>เข้าสู่ Lab 05: ความร้อนจำเพาะและเสถียรภาพอุณหภูมิตู้อบ Incubator (3 ชั่วโมง)</span>
+                </a>
+            
             </div>
         </div>
     </section>
 
     <!-- Main Container -->
     <div class="container mx-auto px-4 md:px-6 -mt-8 relative z-20 max-w-5xl">
-        <div class="rounded-3xl shadow-2xl overflow-hidden border p-6 md:p-12 bg-slate-900/95 backdrop-blur-3xl border-slate-800 space-y-12">
+        <div class="rounded-3xl shadow-2xl overflow-hidden border p-6 md:p-12 bg-slate-900/95 backdrop-blur-3xl border-slate-800 space-y-10">
 
-            <!-- Curriculum & Learning Outcomes Planbox -->
-            <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-purple-500/10 via-slate-800/40 to-slate-900 border border-purple-500/20 shadow-xl">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400 border border-purple-500/30">
-                        <i class="fas fa-atom text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-white">ผลลัพธ์การเรียนรู้ประจำบท (Learning Outcomes &bull; OBE)</h3>
-                        <p class="text-xs text-slate-400 font-mono">หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาจุลชีววิทยา (มคอ.3 พ.ศ. 2569/2570)</p>
-                    </div>
+            
+        <!-- Curriculum Planbox (แผนบริหารการสอน) -->
+        <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-slate-800/40 to-slate-900 border border-indigo-500/30 shadow-xl mb-12">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 border border-indigo-500/30">
+                    <i class="fa-solid fa-chalkboard-user text-lg"></i>
                 </div>
-                <div class="grid md:grid-cols-2 gap-4 text-sm text-slate-300">
-                    <div class="space-y-2">
-                        <div class="flex items-start gap-2">
-                            <i class="fas fa-check-circle text-purple-400 mt-1"></i>
-                            <span><strong>CLO1:</strong> อธิบายความสัมพันธ์ระหว่างโมเมนตัม ($p = mv$), การดล และแรงกระแทก ($F_{\text{impact}}$) ได้</span>
-                        </div>
-                        <div class="flex items-start gap-2">
-                            <i class="fas fa-check-circle text-purple-400 mt-1"></i>
-                            <span><strong>CLO2:</strong> อธิบายกลไกทางฟิสิกส์ของการใช้เม็ดบีดส์ (Bead Beating) ในการสลายผนังเซลล์แบคทีเรียและยีสต์</span>
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-start gap-2">
-                            <i class="fas fa-check-circle text-amber-400 mt-1"></i>
-                            <span><strong>CLO3:</strong> ปฏิบัติการใช้เครื่องผสมสาร Vortex Mixer และ Shaker ได้อย่างปลอดภัยและถูกวิธี</span>
-                        </div>
-                        <div class="flex items-start gap-2">
-                            <i class="fas fa-check-circle text-emerald-400 mt-1"></i>
-                            <span><strong>CLO4:</strong> วิเคราะห์การถ่ายเทพลังงานจลน์จากการชนและบันทึกผลการทดลองได้อย่างถูกต้อง</span>
-                        </div>
-                    </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white">แผนบริหารการสอนประจำบทที่ 5&emsp; ความร้อนและการควบคุมอุณหภูมิชีวภาพ (สัปดาห์ที่ 5)</h3>
+                    <p class="text-xs text-slate-400 font-mono">แผนการจัดการเรียนรู้บูรณาการ OBE มคอ.3 พ.ศ. 2569/2570</p>
                 </div>
             </div>
+            <div class="tex-article text-sm text-slate-300">
+                <p><strong>1. หัวข้อเนื้อหาประจำบท (บรรยาย 2 ชั่วโมง และปฏิบัติการ 3 ชั่วโมง)</strong></p>
+<ul class="tex-ul"><li>5.1 อุณหภูมิและการแปลงหน่วยอุณหภูมิระหว่างเซลเซียส เคลวิน และฟาเรนไฮต์</li><li>5.2 ความจุความร้อนจำเพาะของน้ำและความร้อนแฝงในการเปลี่ยนสถานะของสสาร</li><li>5.3 กลไกการถ่ายโอนความร้อน (การนำ การพา และการแผ่รังสี) ในตู้อบเลี้ยงเชื้อ (Incubator) และอ่างน้ำควบคุมอุณหภูมิ (Water Bath)</li><li>5.4 ปฏิบัติการที่ 5 การวัดความร้อนจำเพาะและการตรวจสอบเสถียรภาพการกระจายอุณหภูมิในตู้อบเลี้ยงเชื้อ</li></ul>
+<p><strong>2. วัตถุประสงค์เชิงพฤติกรรมและผลลัพธ์การเรียนรู้รายวิชา (CLOs ที่เชื่อมโยง PLOs)</strong></p>
+<ol class="tex-ol"><li>คำนวณปริมาณความร้อนที่ทำให้อุณหภูมิของอาหารเลี้ยงเชื้อเปลี่ยนแปลงโดยใช้สมการ $Q = mc\Delta T$ และความร้อนแฝง $Q = mL$ ได้ <strong>(CLO1 เชื่อมโยง PLO2)</strong></li><li>อธิบายเหตุผลทางฟิสิกส์ว่าทำไมการอุ่นละลายอาหารเลี้ยงเชื้อในอ่างน้ำควบคุมอุณหภูมิ (Water Bath) จึงถ่ายโอนความร้อนได้เร็วและสม่ำเสมอกว่าตู้อบลมร้อน (Air Incubator) <strong>(CLO1, CLO2 เชื่อมโยง PLO2, PLO3)</strong></li><li>ปฏิบัติการวัดอุณหภูมิและตรวจสอบความสม่ำเสมอของความร้อนอย่างปลอดภัยและบันทึกผลตามจริง <strong>(CLO3, CLO4 เชื่อมโยง PLO1, PLO5, PLO6)</strong></li></ol>
+<p><strong>3. กิจกรรมการจัดการเรียนรู้เชิงรุก (Active Learning &amp; OBE)</strong></p>
+<ul class="tex-ul"><li><strong>Active Group Discussion</strong>&emsp; เปรียบเทียบกราฟการให้ความร้อนแก่วุ้นอาหารเลี้ยงเชื้อ (Nutrient Agar) ที่หลอมเหลวที่ $95\text{--}100\,^\circ\text{C}$ แต่แข็งตัวที่ $42\,^\circ\text{C}$ (ปรากฏการณ์ Hysteresis ของวุ้น)</li><li><strong>ปฏิบัติการทดลอง</strong>&emsp; ทดลองผสมน้ำร้อนกับน้ำเย็นในแคลอริมิเตอร์และวัดการกระจายอุณหภูมิในตู้อบ Incubator ที่ตั้งค่าไว้ที่ $37\,^\circ\text{C}$</li></ul>
+<p><strong>4. สื่อการเรียนรู้และแหล่งเรียนรู้</strong></p>
+<ul class="tex-ul"><li>เอกสารคำสอนบทที่ 5 ชุดแคลอริมิเตอร์ เทอร์โมมิเตอร์ดิจิทัล และตู้อบเลี้ยงเชื้อจุลินทรีย์</li></ul>
+<p><strong>5. การวัดและประเมินผลประจำบท</strong></p>
+<ul class="tex-ul"><li>แบบฝึกหัดการคำนวณความร้อน $Q = mc\Delta T$ <strong>(CLO1)</strong></li><li>รายงานปฏิบัติการที่ 5 และการสังเกตความปลอดภัยในการใช้อุปกรณ์ความร้อน <strong>(CLO3, CLO4)</strong></li></ul>
+            </div>
+        </div>
+        
 
-            <!-- 1. Anchor Instrument Box -->
-            <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/30 shadow-2xl">
-                <div class="flex flex-col md:flex-row gap-6 items-center">
-                    <div class="w-full md:w-5/12 overflow-hidden rounded-2xl border border-emerald-500/30 shadow-lg">
-                        <img src="../images/sec_3d/ch05_s1.jpg" alt="เครื่อง Vortex Mixer และการชนระดับเซลล์" class="w-full h-auto object-cover hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <div class="w-full md:w-7/12 space-y-4">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                            <i class="fas fa-anchor"></i> MICROBIOLOGY INSTRUMENT ANCHOR
-                        </span>
-                        <h2 class="text-2xl font-bold text-white">เครื่องผสมสาร Vortex Mixer และเทคนิค Bead Beating</h2>
-                        <p class="text-sm text-slate-300 leading-relaxed">
-                            ในการสกัดดีเอ็นเอและโปรตีนจากจุลินทรีย์ที่มีผนังเซลล์หนา (เช่น แบคทีเรียแกรมบวก ยีสต์ หรือสปอร์ของเชื้อรา) การใช้สารเคมีเพียงอย่างเดียวมักไม่เพียงพอ นักจุลชีววิทยาจึงใช้เครื่อง Vortex Mixer ผสมกับเม็ดบีดส์แก้วหรือเซอร์โคเนีย (Zirconia Beads) ขนาดเล็ก ให้เกิดการชนด้วยความเร็วสูง ถ่ายโอนโมเมนตัมและสร้างแรงกระแทกเฉือนเพื่อทำลายโครงสร้างเพปทิโดไกลแคนของผนังเซลล์
-                        </p>
-                        <div class="grid grid-cols-2 gap-3 text-xs font-mono text-slate-300 pt-2 border-t border-emerald-500/20">
-                            <div class="bg-slate-800/60 p-2.5 rounded-lg border border-slate-700/50">
-                                <span class="text-emerald-400 font-bold block mb-0.5">ความถี่การสั่น</span>
-                                <span>$0\text{--}3{,}000\text{ RPM}$ ($50\text{ Hz}$)</span>
-                            </div>
-                            <div class="bg-slate-800/60 p-2.5 rounded-lg border border-slate-700/50">
-                                <span class="text-emerald-400 font-bold block mb-0.5">ขนาดเม็ดบีดส์</span>
-                                <span>$0.1\text{ mm}$ (แบคทีเรีย) / $0.5\text{ mm}$ (ยีสต์)</span>
-                            </div>
-                        </div>
-                    </div>
+            
+        <!-- Section: อุณหภูมิ ความจุความร้อนจำเพาะ และความร้อนแฝง -->
+        <section class="tex-section my-10">
+            <h2 class="tex-h2">อุณหภูมิ ความจุความร้อนจำเพาะ และความร้อนแฝง</h2>
+            <div class="tex-article leading-relaxed">
+                <figure class="tex-figure tex-figure-photo" id="fig-5.1"><img src="../images/maintex/sec_3d/ch05_s1.jpg" alt="ภาพที่ 5.1" loading="lazy"><figcaption><strong>ภาพที่ 5.1</strong>&ensp;ความจุความร้อนจำเพาะของน้ำ ($c = 4.184\text{ J/g}\cdot^\circ\text{C}$) และความร้อนแฝงในการต้มหลอมละลายอาหารเลี้ยงเชื้อวุ้นในห้องปฏิบัติการ</figcaption></figure>
+<p>จุลินทรีย์แต่ละกลุ่มมีช่วงอุณหภูมิที่เหมาะสมต่อการเจริญเติบโตแตกต่างกัน เช่น แบคทีเรียก่อโรคในมนุษย์กลุ่ม <strong>Mesophiles</strong> เจริญได้ดีที่สุดที่อุณหภูมิประมาณ $37\,^\circ\text{C}$ ในขณะที่แบคทีเรียทนร้อนกลุ่ม <strong>Thermophiles</strong> เจริญได้ดีที่ $55\text{--}80\,^\circ\text{C}$ การแปลงหน่วยระหว่างองศาเซลเซียส ($T_{\text{C}}$) กับเคลวิน ($T_{\text{K}}$) ใช้ความสัมพันธ์อย่างง่ายคือ</p>
+<div class="tex-display">\[T_{\text{K}} = T_{\text{C}} + 273.15 \tag{5.1}\]</div>
+<p>เมื่อเราให้ความร้อนแก่อาหารเลี้ยงเชื้อเหลวมวล $m$ จนมีอุณหภูมิเปลี่ยนไป $\Delta T = T_{\text{final}} - T_{\text{initial}}$ ปริมาณความร้อน ($Q$) ที่ต้องใช้จะขึ้นอยู่กับ<strong>ความจุความร้อนจำเพาะ</strong> (<strong>Specific Heat Capacity</strong>, $c$) ของสารนั้น ดังแสดงในภาพที่ 5.1 และสมการที่ (5.2)</p>
+<div class="tex-display">\[Q = m c \Delta T \qquad \text{(เปลี่ยนอุณหภูมิโดยไม่เปลี่ยนสถานะ)} \tag{5.2}\]</div>
+<p>ส่วนในกรณีที่สารเกิดการเปลี่ยนสถานะ เช่น น้ำเดือดกลายเป็นไอน้ำที่อุณหภูมิคงที่ ปริมาณความร้อนที่ใช้จะเรียกว่า <strong>ความร้อนแฝง</strong> (<strong>Latent Heat</strong>, $L$) ตามสมการที่ (5.3)</p>
+<div class="tex-display">\[Q = m L \qquad \text{(เปลี่ยนสถานะที่อุณหภูมิคงที่)} \tag{5.3}\]</div>
+<p>น้ำเป็นตัวกลางหลักของเซลล์สิ่งมีชีวิตและอาหารเลี้ยงเชื้อ โดยน้ำมีความจุความร้อนจำเพาะสูงมาก คือ $c_{\text{water}} = 4.184\text{ J/(g}\cdot^\circ\text{C)}$ (หรือ $4{,}184\text{ J/(kg}\cdot\text{K)}$) และมีความร้อนแฝงของการกลายเป็นไอสูงถึง $L_v = 2{,}260\text{ J/g}$ สมบัติทางฟิสิกส์ข้อนี้ช่วยให้อุณหภูมิของอาหารเลี้ยงเชื้อและไซโทพลาซึมของเซลล์ไม่แกว่งตัวเปลี่ยนแปลงเร็วเกินไปเมื่อสภาพแวดล้อมภายนอกเปลี่ยนอุณหภูมิ</p>
+            </div>
+        </section>
+        
+        <!-- Section: กลไกการถ่ายโอนความร้อนในห้องปฏิบัติการจุลชีววิทยา -->
+        <section class="tex-section my-10">
+            <h2 class="tex-h2">กลไกการถ่ายโอนความร้อนในห้องปฏิบัติการจุลชีววิทยา</h2>
+            <div class="tex-article leading-relaxed">
+                <figure class="tex-figure tex-figure-photo" id="fig-5.2"><img src="../images/maintex/sec_3d/ch05_s2.jpg" alt="ภาพที่ 5.2" loading="lazy"><figcaption><strong>ภาพที่ 5.2</strong>&ensp;กลไกการถ่ายโอนความร้อนทั้ง 3 รูปแบบในงานจุลชีววิทยา ได้แก่ การนำความร้อนในอ่าง Water Bath การพาความร้อนในตู้ Incubator และการแผ่รังสีจากตะเกียงบุนเสน</figcaption></figure>
+<p>การถ่ายโอนความร้อนในอุปกรณ์ห้องปฏิบัติการจุลชีววิทยาเกิดขึ้นได้ 3 รูปแบบหลัก ดังแสดงในภาพที่ 5.2 และภาพที่ 5.3 ได้แก่</p>
+<ol class="tex-ol"><li><strong>การนำความร้อน</strong> (<strong>Conduction</strong>)&emsp; เป็นการส่งผ่านความร้อนผ่านเนื้อวัสดุโดยตรง เช่น ความร้อนจากน้ำอุ่นในอ่าง <strong>Water Bath</strong> ไหลผ่านผนังขวดแก้วเข้าสู่อาหารวุ้นที่อยู่ด้านใน หรือการใช้ห่วงเขี่ยเชื้อ (<strong>Inoculating Loop</strong>) แตะลงบนผิววุ้นเพื่อให้เย็นตัวลงก่อนตักโคโลนีเชื้อ</li><li><strong>การพาความร้อน</strong> (<strong>Convection</strong>)&emsp; เป็นการเคลื่อนที่ของตัวกลางของไหล (อากาศหรือน้ำ) พาความร้อนไปทั่วบริเวณ เช่น พัดลมหมุนเวียนอากาศร้อนภายใน<strong>ตู้อบเลี้ยงเชื้อ</strong> (<strong>Incubator</strong>) และ<strong>ตู้อบลมร้อน</strong> (<strong>Hot Air Oven</strong>) เพื่อให้ทุกชั้นวางมีอุณหภูมิ $37.0\,^\circ\text{C}$ เท่ากันทั้งหมด</li><li><strong>การแผ่รังสีความร้อน</strong> (<strong>Radiation</strong>)&emsp; เป็นการส่งผ่านพลังงานในรูปคลื่นแม่เหล็กไฟฟ้าโดยไม่อาศัยตัวกลาง เช่น เปลวไฟจากตะเกียงบุนเสน (<strong>Bunsen Burner</strong>) ที่แผ่รังสีความร้อนรอบปากหลอดทดลองขณะเทคนิคปลอดเชื้อ (<strong>Aseptic Technique</strong>)</li></ol>
+<figure class="tex-figure tex-figure-diagram" id="fig-5.3"><img src="../images/maintex/tikz/ch05_tikz1.svg" alt="ภาพที่ 5.3" loading="lazy"><figcaption><strong>ภาพที่ 5.3</strong>&ensp;รูปแบบการถ่ายโอนความร้อนทั้งสามชนิดที่พบในเครื่องมือและเทคนิคปลอดเชื้อทางจุลชีววิทยา</figcaption></figure>
+<div class="tex-aruco" data-aruco="4"><div class="tex-aruco-marker"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.4 -0.4 6.8 6.8" width="120" height="120" role="img" aria-label="ArUco ID 4"><rect x="-0.4" y="-0.4" width="6.8" height="6.8" fill="#fff"/><rect x="0" y="0" width="6" height="6" fill="#000"/><rect x="2" y="1" width="1" height="1" fill="#fff"/><rect x="4" y="1" width="1" height="1" fill="#fff"/><rect x="2" y="2" width="1" height="1" fill="#fff"/><rect x="3" y="2" width="1" height="1" fill="#fff"/><rect x="1" y="3" width="1" height="1" fill="#fff"/><rect x="4" y="3" width="1" height="1" fill="#fff"/><rect x="1" y="4" width="1" height="1" fill="#fff"/><rect x="2" y="4" width="1" height="1" fill="#fff"/><path d="M-0.4 -0.4 L0.45 -0.4 L-0.4 0.45Z" fill="#10b981"/></svg><span>ArUco ID 4 (4×4)</span></div><div class="tex-aruco-body"><div class="tex-aruco-title">[3D WebAR + ArUco Marker] มาร์กเกอร์ ArUco ID 4 — บทที่ 5: การกระจายความร้อนในตู้อบ Incubator 37°C และวัฏจักรอุณหภูมิเครื่อง PCR</div><p><strong>แบบจำลอง 3 มิติ</strong>&ensp;จำลองการพาความร้อนภายในตู้อบเลี้ยงเชื้อ และวัฏจักรการเพิ่มปริมาณดีเอ็นเอ 3 ขั้นตอน ($2^n$ เท่า) ในเครื่อง Thermal Cycler</p><p><strong>ตัวแปรที่ปรับค่าได้</strong>&ensp;อุณหภูมิแต่ละขั้น ($95\,^\circ\text{C}, 55\,^\circ\text{C}, 72\,^\circ\text{C}$), จำนวนรอบวัฏจักร $n$ ($1\text{--}35$ รอบ)</p><a class="tex-aruco-btn" href="../webar/ar_aruco_textbook.html?id=4&amp;ar=1" target="_blank" rel="noopener"><i class="fa-solid fa-camera-rotate"></i> เปิดกล้อง 3D WebAR ส่องมาร์กเกอร์ ID 4</a></div></div>
+<div class="tex-box tex-box-worked"><div class="tex-box-title"><i class="fa-solid fa-calculator"></i> ตัวอย่างที่ 5.1&ensp;การคำนวณความร้อนในการต้มเตรียมอาหารเลี้ยงเชื้อเหลว</div><div class="tex-box-body"><p><strong>โจทย์ปัญหา</strong>&emsp; นักศึกษาเตรียมอาหารเลี้ยงเชื้อ Nutrient Broth ปริมาตร $500\text{ mL}$ (คิดเป็นมวล $m = 500\text{ g}$) ซึ่งมีอุณหภูมิเริ่มต้น $25\,^\circ\text{C}$ หากต้องการให้ความร้อนจนมีอุณหภูมิสูงขึ้นเป็น $95\,^\circ\text{C}$ เพื่อละลายผงอาหารให้หมด จะต้องใช้พลังงานความร้อนกี่จูล ($\text{J}$) และกี่กิโลจูล ($\text{kJ}$) กำหนดให้ความจุความร้อนจำเพาะของอาหารเหลวใกล้เคียงกับน้ำ คือ $c = 4.2\text{ J/(g}\cdot^\circ\text{C)}$</p>
+<p><strong>วิธีทำทีละขั้นตอนฉบับเข้าใจง่าย</strong></p>
+<ol class="tex-ol"><li><strong>ขั้นที่ 1 หาผลต่างอุณหภูมิ $\Delta T = T_{\text{final}} - T_{\text{initial}}$</strong>
+<div class="tex-display">\[
+        \Delta T = 95\,^\circ\text{C} - 25\,^\circ\text{C} = 70\,^\circ\text{C}
+    \]</div></li><li><strong>ขั้นที่ 2 แทนค่าลงในสูตร $Q = m c \Delta T$</strong>
+<div class="tex-display">\[
+        Q = 500\text{ g} \times 4.2\text{ J/(g}\cdot^\circ\text{C)} \times 70\,^\circ\text{C} = 147{,}000\text{ J}
+    \]</div></li><li><strong>ขั้นที่ 3 แปลงหน่วยจูล ($\text{J}$) เป็นกิโลจูล ($\text{kJ}$) โดยหารด้วย $1{,}000$</strong>
+<div class="tex-display">\[
+        Q = \frac{147{,}000}{1{,}000} = 147\text{ kJ}
+    \]</div></li></ol>
+<p><strong>คำตอบ</strong>&emsp; ต้องใช้พลังงานความร้อนเท่ากับ $147{,}000\text{ J}$ หรือ $147\text{ kJ}$</p></div></div>
+            </div>
+        </section>
+        
+        <!-- Section: ปฏิบัติการประจำสัปดาห์ที่ 5 -->
+        <section class="tex-section my-10">
+            <h2 class="tex-h2">ปฏิบัติการประจำสัปดาห์ที่ 5</h2>
+            <div class="tex-article leading-relaxed">
+                <figure class="tex-figure tex-figure-photo" id="fig-5.4"><img src="../images/maintex/sec_3d/ch05_s3.jpg" alt="ภาพที่ 5.4" loading="lazy"><figcaption><strong>ภาพที่ 5.4</strong>&ensp;ชุดปฏิบัติการที่ 5 สำหรับทดสอบสมดุลความร้อนในแคลอริมิเตอร์และตรวจสอบการกระจายอุณหภูมิ 3 จุดภายในตู้อบเลี้ยงเชื้อ $37.0\,^\circ\text{C}$</figcaption></figure>
+<div class="tex-box tex-box-lab"><div class="tex-box-title"><i class="fa-solid fa-flask-vial"></i> ปฏิบัติการที่ 5&emsp; ความร้อนจำเพาะและเสถียรภาพอุณหภูมิตู้อบ Incubator (3 ชั่วโมง)</div><div class="tex-box-body"><p><strong>ผลลัพธ์การเรียนรู้ที่ประเมิน</strong>&emsp; CLO1 (การคำนวณความร้อน), CLO2 (วิเคราะห์เสถียรภาพตู้ Incubator), CLO3 (ความปลอดภัยและวินัย), CLO4 (รายงานกลุ่ม)</p>
+<p><strong>1. วัสดุและอุปกรณ์ (ดังแสดงในภาพที่ 5.4)</strong></p>
+<ul class="tex-ul"><li>กระป๋องแคลอริมิเตอร์พร้อมฉนวนหุ้ม, บีกเกอร์, เตาให้ความร้อนไฟฟ้า และเทอร์โมมิเตอร์ดิจิทัล 3 ชุด</li><li>ตู้อบเลี้ยงเชื้อ (Incubator) ที่ตั้งอุณหภูมิไว้ที่ $37.0\,^\circ\text{C}$ และอ่างน้ำควบคุมอุณหภูมิ (Water Bath) ที่ตั้งไว้ที่ $50.0\,^\circ\text{C}$</li></ul>
+<p><strong>2. ขั้นตอนการทดลอง</strong></p>
+<ol class="tex-ol"><li><strong>ตอนที่ 1 สมดุลความร้อนของการผสมน้ำ</strong>&emsp; ตวงน้ำอุณหภูมิห้องมวล $m_1 = 100\text{ g}$ ใส่ในแคลอริมิเตอร์ วัดอุณหภูมิ $T_1$ จากนั้นตวงน้ำอุ่นมวล $m_2 = 100\text{ g}$ อุณหภูมิประมาณ $T_2 = 60\,^\circ\text{C}$ เทผสมลงไป คนเบาๆ แล้วอ่านอุณหภูมิผสมสุดท้าย $T_{\text{mix}}$ เปรียบเทียบกับค่าทฤษฎี $(T_1 + T_2)/2$</li><li><strong>ตอนที่ 2 การตรวจสอบการกระจายอุณหภูมิในตู้อบ Incubator</strong>&emsp; วางหัววัดเทอร์โมมิเตอร์ดิจิทัลไว้ที่ 3 ตำแหน่งในตู้อบ ได้แก่ ชั้นบนสุด ชั้นกลาง และชั้นล่างใกล้ประตู อ่านค่าอุณหภูมิจริงและคำนวณส่วนเบี่ยงเบนไปจากค่าที่ตั้งไว้ ($37.0\,^\circ\text{C}$)</li></ol>
+<p><strong>3. ตารางบันทึกผลการทดลอง</strong></p>
+<div class="tex-center"><div class="tex-table-wrap"><table class="tex-table"><thead><tr><th><strong>ตำแหน่งวัดในตู้ Incubator ($37.0\,^\circ\text{C}$)</strong></th><th><strong>ครั้งที่ 1 ($^\circ\text{C}$)</strong></th><th><strong>ครั้งที่ 2 ($^\circ\text{C}$)</strong></th><th><strong>ค่าเฉลี่ย ($^\circ\text{C}$)</strong></th><th><strong>ผลต่างจาก $37.0\,^\circ\text{C}$</strong></th></tr></thead><tbody><tr><td>ชั้นบนสุด (ด้านใน)</td><td>............</td><td>............</td><td>............</td><td>............</td></tr><tr><td>ชั้นกลาง (จุดอ้างอิง)</td><td>............</td><td>............</td><td>............</td><td>............</td></tr><tr><td>ชั้นล่าง (ใกล้ขอบประตู)</td><td>............</td><td>............</td><td>............</td><td>............</td></tr></tbody></table></div></div></div></div>
+            </div>
+        </section>
+        
+
+            
+        <!-- End of Chapter Review Questions -->
+        <section class="mt-14 p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950/40 border border-indigo-500/30 shadow-2xl">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-lg border border-indigo-500/30">
+                    <i class="fa-solid fa-circle-question"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg sm:text-xl font-bold text-white">คำถามท้ายบทที่ 5 (ทบทวนแนวคิดและการคำนวณเบื้องต้น)</h3>
+                    <p class="text-xs text-slate-400 font-mono">ทบทวนแนวคิดหลักและการคำนวณเบื้องต้นก่อนทำปฏิบัติการ</p>
                 </div>
             </div>
-
-            <!-- Content Section 1: Momentum & Impulse -->
-            <section class="space-y-6">
-                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-                    <span class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 font-mono font-bold flex items-center justify-center text-sm border border-purple-500/30">5.1</span>
-                    <h2 class="text-xl md:text-2xl font-bold text-white">โมเมนตัม การดล และฟิสิกส์การทำลายผนังเซลล์ (Cell Lysis)</h2>
-                </div>
-                <div class="grid md:grid-cols-2 gap-6 items-center">
-                    <div class="space-y-4 text-sm text-slate-300">
-                        <p>
-                            <strong>โมเมนตัม ($\vec{p} = m\vec{v}$)</strong> คือสภาพการเคลื่อนที่ของวัตถุ มีหน่วยเป็น $\text{kg}\cdot\text{m/s}$ เมื่อเม็ดบีดส์มวล $m$ พุ่งชนผนังเซลล์ด้วยความเร็ว $v$ แล้วกระดอนกลับ โมเมนตัมจะเกิดการเปลี่ยนแปลง ($\Delta p = m\Delta v$)
-                        </p>
-                        <p>
-                            ตามกฎข้อที่ 2 ของนิวตัน แรงกระแทกที่กระทำต่อผนังเซลล์สัมพันธ์กับเวลาการชนดังสมการ:
-                        </p>
-                        <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700/60 font-mono text-center text-amber-300 text-sm">
-                            $$F_{\text{impact}} = \frac{\Delta p}{\Delta t}$$
-                        </div>
-                        <p class="text-xs text-slate-400">
-                            <strong>หัวใจฟิสิกส์:</strong> การชนของเม็ดบีดส์แข็งเกิดขึ้นในเสี้ยววินาที ($\Delta t \approx 10^{-6}\text{ s}$) เมื่อตัวหาร $\Delta t$ น้อยมาก แรงกระแทก $F_{\text{impact}}$ จึงมีค่าสูงมหาศาลจนสามารถฉีกขาดพันธะโควาเลนต์ของผนังเซลล์ได้ทันที!
-                        </p>
-                    </div>
-                    <div class="rounded-2xl overflow-hidden border border-slate-800 shadow-xl">
-                        <img src="../images/sec_3d/ch05_s2.jpg" alt="การชนของเม็ดบีดส์กับการสลายเซลล์" class="w-full h-auto object-cover hover:scale-105 transition-transform duration-500">
-                        <p class="p-3 bg-slate-900/90 text-xs text-slate-400 text-center italic border-t border-slate-800">
-                            ภาพที่ 5.1: การถ่ายทอดโมเมนตัมจากการชนของเม็ดบีดส์ทำให้เกิดแรงเฉือนทำลายผนังเซลล์
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2. Low-Math Formula Triangle Box -->
-            <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-indigo-950/60 via-slate-900 to-slate-900 border border-indigo-500/30 shadow-2xl space-y-6">
-                <div class="flex items-center justify-between flex-wrap gap-2">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
-                        <i class="fas fa-shapes"></i> LOW-MATH &bull; ZERO-CALCULUS FORMULA SCAFFOLDING
-                    </span>
-                    <span class="text-xs text-slate-400 font-mono">สามเหลี่ยมช่วยจำโมเมนตัมและแรงดล</span>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-6 items-center">
-                    <!-- Triangle Box -->
-                    <div class="bg-slate-800/80 p-5 rounded-xl border border-slate-700/60 text-center space-y-2">
-                        <div class="text-sm font-bold text-slate-200">สามเหลี่ยมช่วยจำโมเมนตัม ($p = mv$)</div>
-                        <div class="p-4 rounded-xl bg-slate-900/90 border border-purple-500/30 inline-block font-mono text-center">
-                            <div class="text-amber-400 font-black text-xl border-b border-slate-700 pb-1 px-8 mb-1">โมเมนตัม $p$ ($\text{kg}\cdot\text{m/s}$)</div>
-                            <div class="text-cyan-400 font-bold text-base pt-1">มวล $m \times$ ความเร็ว $v$</div>
-                        </div>
-                        <p class="text-xs text-slate-400 mt-2">
-                            ความเร็วเพิ่ม 2 เท่า &rarr; โมเมนตัมเพิ่ม 2 เท่า &rarr; พลังงานจลน์ ($E_k = \frac{1}{2}mv^2$) พุ่ง 4 เท่า!
-                        </p>
-                    </div>
-
-                    <!-- Rule Box -->
-                    <div class="bg-slate-800/80 p-5 rounded-xl border border-slate-700/60 space-y-3 font-mono text-xs">
-                        <div class="text-emerald-400 font-bold text-sm mb-1 flex items-center gap-2">
-                            <i class="fas fa-shield-alt"></i> การเลือกขนาดเม็ดบีดส์ตามขนาดเซลล์
-                        </div>
-                        <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-700/40 text-slate-300">
-                            <strong class="text-cyan-400 block mb-1">แบคทีเรีย ($1\text{--}2\ \mu\text{m}$):</strong>
-                            <span>ใช้บีดส์แก้วขนาดเล็ก $0.1\text{ mm}$ เพื่อเพิ่มความถี่ในการชน ($Collision Frequency$)</span>
-                        </div>
-                        <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-700/40 text-slate-300">
-                            <strong class="text-purple-400 block mb-1">ยีสต์และสปอร์รา ($5\text{--}10\ \mu\text{m}$):</strong>
-                            <span>ใช้บีดส์เซอร์โคเนียขนาด $0.5\text{ mm}$ ซึ่งมีมวลมากกว่า เพื่อสร้างแรงกระแทก ($F_{\text{impact}}$) ที่สูงขึ้น</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Solved Worked Example -->
-                <div class="p-5 rounded-xl bg-slate-800/50 border border-slate-700/70 space-y-3">
-                    <span class="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider block">
-                        <i class="fas fa-calculator mr-1"></i> ตัวอย่างคำนวณ 3 ขั้นตอน: แรงกระแทกของเม็ดบีดส์สลายเซลล์
-                    </span>
-                    <p class="text-sm text-slate-200">
-                        <strong>โจทย์:</strong> เม็ดบีดส์ขนาดเล็กมวล $m = 2.0\times 10^{-6}\text{ kg}$ เคลื่อนที่ด้วยความเร็ว $v = 5.0\text{ m/s}$ พุ่งชนผนังเซลล์และหยุดนิ่งภายในเวลา $\Delta t = 1.0\times 10^{-5}\text{ s}$ จงหาโมเมนตัมก่อนชน และแรงกระแทกเฉลี่ยที่กระทำต่อผนังเซลล์
-                    </p>
-                    <div class="grid md:grid-cols-2 gap-4 text-xs font-mono bg-slate-900/80 p-4 rounded-lg text-slate-300">
-                        <div>
-                            <span class="text-amber-400 font-bold block mb-1">ขั้นที่ 1: หาโมเมนตัม ($p = mv$)</span>
-                            $$p = (2.0\times 10^{-6}\text{ kg}) \times (5.0\text{ m/s})$$
-                            $$p = 1.0\times 10^{-5}\text{ kg}\cdot\text{m/s}$$
-                        </div>
-                        <div>
-                            <span class="text-emerald-400 font-bold block mb-1">ขั้นที่ 2: หาแรงกระแทก ($F = \Delta p / \Delta t$)</span>
-                            $$F = \frac{1.0\times 10^{-5}\text{ kg}\cdot\text{m/s}}{1.0\times 10^{-5}\text{ s}} = 1.0\text{ N}$$
-                            <span class="text-slate-400">&bull; แรง 1.0 N บนพื้นที่ผิวระดับไมครอน ก่อให้เกิดความดันมหาศาลนับร้อยบรรยากาศ!</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="tex-article text-slate-200">
+                <ol class="tex-ol"><li>เพราะเหตุใดเมื่อเราต้องการรักษาอาหารวุ้นหลอมเหลวไม่ให้แข็งตัวที่อุณหภูมิ $48\,^\circ\text{C}$ ก่อนเทลงจานเพาะเชื้อ การแช่ขวดวุ้นในอ่างน้ำอุ่น (Water Bath) จึงรักษาอุณหภูมิได้ดีกว่าการวางในตู้อบลมร้อน</li><li>จงคำนวณปริมาณความร้อน (ในหน่วยกิโลจูล) ที่ต้องใช้ในการอุ่นน้ำกลั่นมวล $200\text{ g}$ จากอุณหภูมิ $20\,^\circ\text{C}$ ให้เป็น $80\,^\circ\text{C}$ กำหนดให้ $c = 4.2\text{ J/(g}\cdot^\circ\text{C)}$</li></ol>
             </div>
-
-            <!-- Content Section 2: Laboratory Mixing -->
-            <section class="space-y-6">
-                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-                    <span class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 font-mono font-bold flex items-center justify-center text-sm border border-purple-500/30">5.2</span>
-                    <h2 class="text-xl md:text-2xl font-bold text-white">การควบคุมพลังงานจลน์และการป้องกันความร้อนทำลายดีเอ็นเอ</h2>
-                </div>
-                <div class="grid md:grid-cols-2 gap-6 items-center">
-                    <div class="space-y-3 text-sm text-slate-300">
-                        <p>
-                            การชนของเม็ดบีดส์อย่างต่อเนื่องทำให้เกิดการเปลี่ยนรูปของพลังงานกลไปเป็น<strong>พลังงานความร้อน</strong> หากอุณหภูมิในหลอดสูงเกิน $65^\circ\text{C}$ จะทำให้โครงสร้างเกลียวคู่ของ DNA คลายตัว (Denaturation) และเอนไซม์เสียสภาพ
-                        </p>
-                        <p class="text-xs text-slate-400">
-                            <strong>เคล็ดลับในห้องแล็บ:</strong> ในการสกัดสารพันธุกรรม นักจุลชีววิทยาจะทำการ Vortex สลับกับแช่บนน้ำแข็ง (Ice Bath) ครั้งละ 30 วินาที เพื่อระบายความร้อนสะสมและรักษาคุณภาพของโมเลกุลชีวภาพ
-                        </p>
-                    </div>
-                    <div class="rounded-2xl overflow-hidden border border-slate-800 shadow-xl">
-                        <img src="../images/sec_3d/ch05_s3.jpg" alt="การทดลองการชนและการสลายเซลล์" class="w-full h-auto object-cover hover:scale-105 transition-transform duration-500">
-                        <p class="p-3 bg-slate-900/90 text-xs text-slate-400 text-center italic border-t border-slate-800">
-                            ภาพที่ 5.2: การควบคุมการสั่นผสมสารในหลอดไมโครทิวบ์เพื่อการสลายเซลล์ที่มีประสิทธิภาพ
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3. Interactive 3D Simulator & WebAR Action Card -->
-            <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-r from-purple-950/60 via-slate-900 to-slate-900 border border-purple-500/30 shadow-2xl space-y-6">
-                <div class="flex items-center justify-between flex-wrap gap-2">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-purple-500/20 text-purple-300 border border-purple-500/40">
-                        <i class="fas fa-cube"></i> INTERACTIVE 3D LAB &amp; WEBAR ARUCO
-                    </span>
-                    <span class="text-xs text-purple-400 font-mono font-bold">ArUco Marker ID: 4</span>
-                </div>
-                <div class="grid md:grid-cols-3 gap-4">
-                    <a href="../simulations/sim05_momentum_3d.html" target="_blank"
-                       class="group p-5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-purple-500/30 hover:border-purple-400 transition-all flex flex-col justify-between">
-                        <div>
-                            <div class="w-10 h-10 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-vr-cardboard"></i>
-                            </div>
-                            <h4 class="font-bold text-white text-base mb-1">3D Momentum &amp; Lysis Sim</h4>
-                            <p class="text-xs text-slate-400 leading-relaxed">
-                                จำลองการชนแบบยืดหยุ่นและไม่ยืดหยุ่นของเม็ดบีดส์กับผนังเซลล์ และวัดแรงกระแทกเฉือนแบบ 3 มิติ
-                            </p>
-                        </div>
-                        <span class="mt-4 inline-flex items-center text-xs font-mono text-purple-400 group-hover:translate-x-1 transition-transform">
-                            เปิดห้องทดลอง 3D <i class="fas fa-arrow-right ml-1.5"></i>
-                        </span>
-                    </a>
-
-                    <a href="../webar/ar_aruco_textbook.html?marker=4" target="_blank"
-                       class="group p-5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-cyan-500/30 hover:border-cyan-400 transition-all flex flex-col justify-between">
-                        <div>
-                            <div class="w-10 h-10 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-camera"></i>
-                            </div>
-                            <h4 class="font-bold text-white text-base mb-1">3D WebAR ArUco Marker 4</h4>
-                            <p class="text-xs text-slate-400 leading-relaxed">
-                                ส่องสมาร์ทโฟนไปที่มาร์กเกอร์ ArUco ID 4 เพื่อแสดงแบบจำลองเม็ดบีดส์สั่นชนผนังเซลล์ลอยบนโต๊ะแล็บ
-                            </p>
-                        </div>
-                        <span class="mt-4 inline-flex items-center text-xs font-mono text-cyan-400 group-hover:translate-x-1 transition-transform">
-                            เปิดกล้องส่อง WebAR <i class="fas fa-qrcode ml-1.5"></i>
-                        </span>
-                    </a>
-
-                    <a href="../labs/lab05_momentum.php"
-                       class="group p-5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-emerald-500/30 hover:border-emerald-400 transition-all flex flex-col justify-between">
-                        <div>
-                            <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-clipboard-check"></i>
-                            </div>
-                            <h4 class="font-bold text-white text-base mb-1">E-Report &amp; Lab 5</h4>
-                            <p class="text-xs text-slate-400 leading-relaxed">
-                                บันทึกผลการชน การวัดเวลา และการคำนวณประสิทธิภาพการสลายเซลล์ส่งเข้าฐานข้อมูลกลาง
-                            </p>
-                        </div>
-                        <span class="mt-4 inline-flex items-center text-xs font-mono text-emerald-400 group-hover:translate-x-1 transition-transform">
-                            กรอกรายงานออนไลน์ <i class="fas fa-file-alt ml-1.5"></i>
-                        </span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- 4. Biosafety Warning Box -->
-            <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-rose-950/40 via-slate-900 to-slate-900 border border-rose-500/30 shadow-2xl space-y-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center text-rose-400 border border-rose-500/30">
-                        <i class="fas fa-biohazard text-xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-white">ข้อควรระวังความปลอดภัยในการใช้ Vortex กับเชื้อโรคก่อโรค (BSL-2)</h3>
-                        <p class="text-xs text-rose-300 font-mono">การป้องกันความดันสะสมและฝาหลอดเปิดออกเอง</p>
-                    </div>
-                </div>
-                <div class="grid md:grid-cols-2 gap-4 text-xs md:text-sm text-slate-300">
-                    <div class="p-4 rounded-xl bg-slate-800/60 border border-rose-500/20 space-y-2">
-                        <strong class="text-rose-400 flex items-center gap-1.5">
-                            <i class="fas fa-exclamation-circle"></i> ปิดฝาหลอดไมโครทิวบ์ให้สนิทและใช้ Cap Lock
-                        </strong>
-                        <p class="text-slate-300 leading-relaxed">
-                            แรงสั่นสะเทือนและความดันอากาศภายในหลอดที่เพิ่มขึ้นระหว่าง Vortex อาจทำให้ฝาหลอดดีดเปิดออกเอง ทำให้สารละลายเชื้อโรคกระเด็นใส่ผู้ทดลอง ต้องใช้อุปกรณ์ล็อกฝา (Cap Lock) เสมอ
-                        </p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-slate-800/60 border border-rose-500/20 space-y-2">
-                        <strong class="text-rose-400 flex items-center gap-1.5">
-                            <i class="fas fa-shield-virus"></i> Vortex ในตู้ชีวนิรภัย (BSC) เมื่อใช้เชื้อเสี่ยง
-                        </strong>
-                        <p class="text-slate-300 leading-relaxed">
-                            หากตัวอย่างเป็นเชื้อแบคทีเรียก่อโรคทางเดินหายใจ (เช่น <em>Mycobacterium tuberculosis</em>) ต้องนำเครื่อง Vortex เข้าไปใช้งานภายในตู้ Biosafety Cabinet คลาส II เท่านั้น
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 5. Clinical Case Study Box -->
-            <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-purple-950/40 via-slate-900 to-slate-900 border border-purple-500/30 shadow-2xl space-y-4">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-purple-500/20 text-purple-300 border border-purple-500/40">
-                    <i class="fas fa-lightbulb"></i> CLINICAL CASE STUDY &bull; จีโนมิกส์และนิติวิทยาศาสตร์
-                </span>
-                <h3 class="text-xl font-bold text-white">การสกัดดีเอ็นเอจากสปอร์เชื้อแอนแทรกซ์ (Bacillus anthracis)</h3>
-                <p class="text-sm text-slate-300 leading-relaxed">
-                    สปอร์ของแบคทีเรีย <em>Bacillus anthracis</em> มีเปลือกหุ้มสปอร์หลายชั้น (Exosporium และ Spore Coat) ที่ทนทานต่อสารเคมี ความร้อน และเอนไซม์ไลโซไซม์อย่างยิ่ง ในการตรวจพิสูจน์ทางชีวนิติวิทยาศาสตร์อย่างเร่งด่วน การใช้เทคนิค Bead Beating ด้วยเม็ดบีดส์ซิลิกาความเร็วสูงเป็นวิธีเดียวที่สามารถกระแทกทำลายเปลือกสปอร์ได้อย่างสมบูรณ์ภายในเวลาไม่ถึง 1 นาที เพื่อปลดปล่อยดีเอ็นเอออกมาตรวจยืนยันด้วย Real-Time PCR
-                </p>
-            </div>
-
-            <!-- Practical Experiment Blank Data Table -->
-            <div class="p-6 md:p-8 rounded-2xl bg-slate-800/40 border border-slate-700/60 space-y-4">
-                <div class="flex items-center justify-between flex-wrap gap-2">
-                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                        <i class="fas fa-table text-purple-400"></i> ตารางบันทึกผลการทดลอง ปฏิบัติการที่ 5
-                    </h3>
-                    <span class="text-xs text-slate-400 font-mono">การวัดโมเมนตัมและการอนุรักษ์พลังงาน</span>
-                </div>
-                <div class="overflow-x-auto rounded-xl border border-slate-700/70">
-                    <table class="w-full text-left text-xs md:text-sm text-slate-300">
-                        <thead class="bg-slate-800 text-slate-200 font-mono text-xs uppercase">
-                            <tr>
-                                <th class="p-3">มวลลูกบีดส์ $m$ ($\text{g}$)</th>
-                                <th class="p-3 text-center">ความเร็ว $v$ ($\text{m/s}$)</th>
-                                <th class="p-3 text-center">โมเมนตัม $p = mv$ ($\text{kg}\cdot\text{m/s}$)</th>
-                                <th class="p-3 text-center">พลังงานจลน์ $E_k$ ($\text{J}$)</th>
-                                <th class="p-3 text-center">ประสิทธิผลการสลายเซลล์</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-800 bg-slate-900/40 font-mono">
-                            <tr>
-                                <td class="p-3 font-sans">บีดส์ขนาด $0.1\text{ mm}$</td>
-                                <td class="p-3 text-center text-slate-500">......</td>
-                                <td class="p-3 text-center text-purple-400">......</td>
-                                <td class="p-3 text-center text-cyan-400">......</td>
-                                <td class="p-3 text-center text-slate-400 font-sans">สลายแบคทีเรียดีเยี่ยม</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-sans">บีดส์ขนาด $0.5\text{ mm}$</td>
-                                <td class="p-3 text-center text-slate-500">......</td>
-                                <td class="p-3 text-center text-purple-400">......</td>
-                                <td class="p-3 text-center text-cyan-400">......</td>
-                                <td class="p-3 text-center text-emerald-400 font-sans">สลายยีสต์/สปอร์ราดีเยี่ยม</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 6. OBE Formative Quiz (3 Questions) -->
-            <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900 border border-slate-700/80 space-y-6">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400 border border-purple-500/30">
-                        <i class="fas fa-question-circle text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-white">แบบทดสอบประเมินตนเองประจำบท (OBE Self-Quiz)</h3>
-                        <p class="text-xs text-slate-400 font-mono">วัดผลลัพธ์การเรียนรู้ CLO1 &bull; CLO2 &bull; CLO3</p>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <!-- Q1 -->
-                    <details class="group p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-all">
-                        <summary class="font-bold text-sm text-slate-200 cursor-pointer list-none flex justify-between items-center">
-                            <span>ข้อที่ 1: เหตุใดการใช้เม็ดบีดส์ขนาดเล็กในเครื่อง Vortex จึงสร้างแรงกระแทกทำลายผนังเซลล์ได้สูงมาก?</span>
-                            <i class="fas fa-chevron-down text-purple-400 group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="mt-3 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-1">
-                            <p class="text-emerald-400 font-bold">เฉลย: เพราะเวลาในการชน ($\Delta t$) สั้นมาก ทำให้แรงดล ($F = \Delta p / \Delta t$) มีค่าสูงมหาศาล</p>
-                            <p class="text-slate-400">
-                                <strong>เหตุผล:</strong> เมื่อเวลาการกระทบสั้นในระดับไมโครวินาที แรงกระแทกเฉลี่ยจะพุ่งสูงมากจนเอาชนะความแข็งแรงของพันธะในผนังเซลล์ได้
-                            </p>
-                        </div>
-                    </details>
-
-                    <!-- Q2 -->
-                    <details class="group p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-all">
-                        <summary class="font-bold text-sm text-slate-200 cursor-pointer list-none flex justify-between items-center">
-                            <span>ข้อที่ 2: หากเพิ่มความเร็วในการสั่นของเครื่อง Vortex เป็น 2 เท่า พลังงานจลน์ของเม็ดบีดส์จะเพิ่มขึ้นกี่เท่า?</span>
-                            <i class="fas fa-chevron-down text-purple-400 group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="mt-3 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-1">
-                            <p class="text-emerald-400 font-bold">เฉลย: 4 เท่า</p>
-                            <p class="text-slate-400">
-                                <strong>เหตุผล:</strong> พลังงานจลน์แปรผันตรงกับกำลังสองของความเร็ว ($E_k = \frac{1}{2}mv^2$) ความเร็วเพิ่ม 2 เท่า พลังงานจึงเพิ่ม $(2)^2 = 4$ เท่า
-                            </p>
-                        </div>
-                    </details>
-
-                    <!-- Q3 -->
-                    <details class="group p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-all">
-                        <summary class="font-bold text-sm text-slate-200 cursor-pointer list-none flex justify-between items-center">
-                            <span>ข้อที่ 3: ทำไมจึงต้องแช่หลอดสกัดดีเอ็นเอบนน้ำแข็งสลับกับการ Vortex เม็ดบีดส์?</span>
-                            <i class="fas fa-chevron-down text-purple-400 group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="mt-3 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-1">
-                            <p class="text-emerald-400 font-bold">เฉลย: เพื่อระบายความร้อนที่เกิดจากการชน ป้องกันไม่ให้ดีเอ็นเอเสียสภาพ (Denaturation)</p>
-                            <p class="text-slate-400">
-                                <strong>เหตุผล:</strong> การชนและการเสียดสีเปลี่ยนพลังงานกลเป็นความร้อนสะสม หากอุณหภูมิสูงเกินไปจะทำลายโครงสร้างของดีเอ็นเอและโปรตีน
-                            </p>
-                        </div>
-                    </details>
-                </div>
-            </div>
+        </section>
+        
 
             <!-- Chapter Navigation Footer -->
             <div class="pt-8 border-t border-slate-800 flex justify-between items-center flex-wrap gap-4">
-                <a href="ch04_th.php" class="px-5 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors flex items-center gap-2">
-                    <i class="fas fa-arrow-left"></i> บทที่ 4: งาน พลังงาน และเครื่องปั่นเหวี่ยง
-                </a>
-                <a href="ch06_th.php" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-slate-950 font-bold text-xs font-mono transition-all flex items-center gap-2 shadow-lg shadow-purple-500/20">
-                    บทที่ 6: สมดุลกล ความดันของไหล และออสโมซิส <i class="fas fa-arrow-right"></i>
-                </a>
+                
+        <a href="ch04_th.php" class="px-5 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i> บทที่ 4: งาน พลังงาน และหลักการเครื่องปั่นเหวี่ยง
+        </a>
+    
+                
+        <a href="ch06_th.php" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs font-mono transition-all flex items-center gap-2 shadow-lg shadow-sky-500/20">
+            บทที่ 6: อุณหพลศาสตร์ ความดันไอ และหม้อนึ่งความดันไอ <i class="fas fa-arrow-right"></i>
+        </a>
+    
             </div>
 
         </div>

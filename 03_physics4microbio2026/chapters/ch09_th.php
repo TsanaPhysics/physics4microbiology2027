@@ -1,5 +1,5 @@
 <?php
-$pageTitle = "บทที่ 9: อุณหพลศาสตร์และหม้อนึ่ง Autoclave / PCR";
+$pageTitle = "บทที่ 9: ทัศนศาสตร์พื้นฐาน การสะท้อน และการหักเหของแสง";
 $basePath = '../';
 include '../includes/header.php';
 ?>
@@ -15,427 +15,154 @@ include '../includes/header.php';
                 </a>
                 <span class="text-slate-600">/</span>
                 <a href="../index.php" class="hover:text-amber-400 transition-colors flex items-center gap-1">
-                    <i class="fas fa-book-open"></i> สารบัญ 13 บทเรียน
+                    <i class="fas fa-book-open"></i> สารบัญ 12 บทเรียน
                 </a>
                 <span class="text-slate-600">/</span>
                 <span class="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40">บทที่ 9</span>
             </nav>
-            <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full text-orange-400 font-mono text-xs mb-4 border border-orange-500/30 bg-orange-500/10 tracking-widest uppercase shadow-lg shadow-orange-500/10">
-                <i class="fas fa-fire-flame-curved text-xs"></i> MODULE 09 &bull; THERMODYNAMICS &amp; STERILIZATION
+            <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full text-indigo-400 font-mono text-xs mb-4 border border-indigo-500/30 bg-indigo-500/10 tracking-widest uppercase shadow-lg shadow-indigo-500/10">
+                <i class="fas fa-atom text-xs"></i> MODULE 09 &bull; OPTICS & REFRACTOMETRY
             </span>
             <h1 class="text-3xl md:text-5xl font-black mb-4 leading-tight tracking-tight text-white">
-                อุณหพลศาสตร์และหม้อนึ่ง Autoclave / PCR
+                ทัศนศาสตร์พื้นฐาน การสะท้อน และการหักเหของแสง
             </h1>
             <p class="text-base md:text-lg text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
-                ความร้อนแฝงของไอน้ำอิ่มตัว ความดันไอ $15\text{ psi}$ จุดเดือด $121^\circ\text{C}$ และฟิสิกส์การถ่ายเทความร้อนในเครื่อง PCR
+                เอกสารคำสอนมาตรฐานฉบับ 3D AR ArUco &bull; รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา (สัปดาห์ที่ 10)
             </p>
             <div class="mt-6 flex flex-wrap justify-center gap-3 text-xs text-slate-300 font-mono">
                 <span class="px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center gap-1.5">
                     <i class="fas fa-clock text-amber-400"></i> บรรยาย 2 ชม. + แล็บ 3 ชม.
                 </span>
                 <span class="px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center gap-1.5">
-                    <i class="fas fa-bullseye text-emerald-400"></i> CLO1 &bull; CLO2 &bull; CLO3
+                    <i class="fas fa-calendar-week text-emerald-400"></i> สัปดาห์ที่ 10
                 </span>
-                <span class="px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center gap-1.5">
-                    <i class="fas fa-cube text-cyan-400"></i> WebAR Marker ID: 8
-                </span>
+                <a href="../webar/ar_aruco_textbook.html?id=8&ar=1" target="_blank" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/40 text-cyan-300 flex items-center gap-1.5 transition">
+                    <i class="fas fa-cube text-cyan-400"></i> 3D WebAR ArUco ID: 8 ↗
+                </a>
+            </div>
+            <div class="mt-4 flex flex-wrap justify-center gap-3">
+                
+                <a href="../labs/lab09_refraction.php" class="px-4 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold font-mono transition flex items-center gap-2 shadow-lg shadow-emerald-950/40">
+                    <i class="fa-solid fa-flask-vial"></i> <span>เข้าสู่ Lab 09: การสะท้อนและการหักเหของแสงผ่านตัวกลางและสารละลาย (3 ชั่วโมง)</span>
+                </a>
+            
             </div>
         </div>
     </section>
 
     <!-- Main Container -->
     <div class="container mx-auto px-4 md:px-6 -mt-8 relative z-20 max-w-5xl">
-        <div class="rounded-3xl shadow-2xl overflow-hidden border p-6 md:p-12 bg-slate-900/95 backdrop-blur-3xl border-slate-800 space-y-12">
+        <div class="rounded-3xl shadow-2xl overflow-hidden border p-6 md:p-12 bg-slate-900/95 backdrop-blur-3xl border-slate-800 space-y-10">
 
-            <!-- Curriculum & Learning Outcomes Planbox -->
-            <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-orange-500/10 via-slate-800/40 to-slate-900 border border-orange-500/20 shadow-xl">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-400 border border-orange-500/30">
-                        <i class="fas fa-temperature-high text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-white">ผลลัพธ์การเรียนรู้ประจำบท (Learning Outcomes &bull; OBE)</h3>
-                        <p class="text-xs text-slate-400 font-mono">หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาจุลชีววิทยา (มคอ.3 พ.ศ. 2569/2570)</p>
-                    </div>
+            
+        <!-- Curriculum Planbox (แผนบริหารการสอน) -->
+        <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-indigo-500/10 via-slate-800/40 to-slate-900 border border-indigo-500/30 shadow-xl mb-12">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 border border-indigo-500/30">
+                    <i class="fa-solid fa-chalkboard-user text-lg"></i>
                 </div>
-                <div class="grid md:grid-cols-2 gap-4 text-sm text-slate-300">
-                    <div class="space-y-2">
-                        <div class="flex items-start gap-2">
-                            <i class="fas fa-check-circle text-orange-400 mt-1"></i>
-                            <span><strong>CLO1:</strong> อธิบายความร้อนแฝงการกลายเป็นไอ ($Q = mL_v$) และความสัมพันธ์ระหว่างความดันกับจุดเดือดได้</span>
-                        </div>
-                        <div class="flex items-start gap-2">
-                            <i class="fas fa-check-circle text-orange-400 mt-1"></i>
-                            <span><strong>CLO2:</strong> อธิบายเหตุผลที่ไอน้ำอิ่มตัว $121^\circ\text{C}$ ฆ่าสปอร์ได้ดีกว่าลมร้อน $160^\circ\text{C}$ (Hot Air Oven)</span>
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex items-start gap-2">
-                            <i class="fas fa-check-circle text-amber-400 mt-1"></i>
-                            <span><strong>CLO3:</strong> ปฏิบัติการใช้งานหม้อนึ่งความดันไอและเครื่อง PCR อย่างปลอดภัยตามเกณฑ์มาตรฐาน</span>
-                        </div>
-                        <div class="flex items-start gap-2">
-                            <i class="fas fa-check-circle text-emerald-400 mt-1"></i>
-                            <span><strong>CLO4:</strong> คำนวณปริมาณความร้อนใน 3 สเต็ปของวงรอบ PCR ($95^\circ\text{C}, 55^\circ\text{C}, 72^\circ\text{C}$)</span>
-                        </div>
-                    </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white">แผนบริหารการสอนประจำบทที่ 9&emsp; ทัศนศาสตร์พื้นฐาน การสะท้อน และการหักเหของแสง (สัปดาห์ที่ 10)</h3>
+                    <p class="text-xs text-slate-400 font-mono">แผนการจัดการเรียนรู้บูรณาการ OBE มคอ.3 พ.ศ. 2569/2570</p>
                 </div>
             </div>
+            <div class="tex-article text-sm text-slate-300">
+                <p><strong>1. หัวข้อเนื้อหาประจำบท (บรรยาย 2 ชั่วโมง และปฏิบัติการ 3 ชั่วโมง)</strong></p>
+<ul class="tex-ul"><li>9.1 ธรรมชาติของแสง สเปกตรัมคลื่นแม่เหล็กไฟฟ้า และดัชนีหักเหของตัวกลาง ($n = c/v$)</li><li>9.2 กฎการสะท้อนของแสงและกฎการหักเหของสเนลล์ในบริบทการส่องสไลด์จุลชีววิทยา</li><li>9.3 การประยุกต์ใช้เครื่องวัดดัชนีหักเห (Refractometer) วัดความเข้มข้นน้ำตาลในการหมักด้วยจุลินทรีย์</li><li>9.4 ปฏิบัติการที่ 9 การศึกษาทางเดินรังสีแสงสะท้อน แสงหักเห และการวัดค่าบริกซ์ (Brix) ของอาหารหมัก</li></ul>
+<p><strong>2. วัตถุประสงค์เชิงพฤติกรรมและผลลัพธ์การเรียนรู้รายวิชา (CLOs ที่เชื่อมโยง PLOs)</strong></p>
+<ol class="tex-ol"><li>อธิบายความหมายของดัชนีหักเห ($n$) และทิศทางการเบนของลำแสงเมื่อเดินทางผ่านตัวกลางต่างชนิดกันได้ <strong>(CLO1 เชื่อมโยง PLO2)</strong></li><li>อธิบายหลักการทำงานของเครื่อง Hand Refractometer ในการวัดปริมาณน้ำตาล ($^\circ\text{Brix}$) ของกระบวนการหมักไวน์หรืออาหารเลี้ยงเชื้อได้ <strong>(CLO1, CLO2 เชื่อมโยง PLO2, PLO3)</strong></li><li>ปฏิบัติการทดลองลากแนวรังสีแสงตกกระทบและรังสีหักเหอย่างละเอียดรอบคอบ <strong>(CLO3, CLO4 เชื่อมโยง PLO1, PLO5, PLO6)</strong></li></ol>
+<p><strong>3. กิจกรรมการจัดการเรียนรู้เชิงรุก (Active Learning &amp; OBE)</strong></p>
+<ul class="tex-ul"><li><strong>Hands-on Optical Ray Tracing</strong>&emsp; ใช้กล่องกำเนิดลำแสงเลเซอร์ฉายผ่านแท่งแก้วปริซึมและสารละลายน้ำตาลความเข้มข้นต่างกัน พร้อมจำกฎง่ายๆ โดยไม่ต้องกดเครื่องคิดเลขตรีโกณมิติว่า “<strong>น้อยไปมาก เบนเข้าหาเส้นแนวฉาก / มากไปน้อย เบนออกจากเส้นแนวฉาก</strong>”</li></ul>
+<p><strong>4. สื่อการเรียนรู้และแหล่งเรียนรู้</strong></p>
+<ul class="tex-ul"><li>เอกสารคำสอนบทที่ 9 ชุดกล่องแสงเลเซอร์ แท่งพลาสติกใส และเครื่องวัดความหวาน Hand Refractometer</li></ul>
+<p><strong>5. การวัดและประเมินผลประจำบท</strong></p>
+<ul class="tex-ul"><li>คำถามท้ายคาบเรื่องดัชนีหักเหและทิศทางการเบนของแสง <strong>(CLO1, CLO2)</strong></li><li>รายงานปฏิบัติการที่ 9 <strong>(CLO3, CLO4)</strong></li></ul>
+            </div>
+        </div>
+        
 
-            <!-- 1. Anchor Instrument Box -->
-            <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/30 shadow-2xl">
-                <div class="flex flex-col md:flex-row gap-6 items-center">
-                    <div class="w-full md:w-5/12 overflow-hidden rounded-2xl border border-emerald-500/30 shadow-lg">
-                        <img src="../images/sec_3d/ch09_s1.jpg" alt="หม้อนึ่งความดันไอ Autoclave และ PCR" class="w-full h-auto object-cover hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <div class="w-full md:w-7/12 space-y-4">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                            <i class="fas fa-anchor"></i> STERILIZATION &amp; THERMAL ANCHOR
-                        </span>
-                        <h2 class="text-2xl font-bold text-white">หม้อนึ่งความดันไอ (Autoclave) และเครื่อง PCR Thermal Cycler</h2>
-                        <p class="text-sm text-slate-300 leading-relaxed">
-                            สปอร์ของแบคทีเรีย (Bacterial Endospores เช่น <em>Bacillus</em> และ <em>Clostridium</em>) ทนต่อน้ำเดือดธรรมดา $100^\circ\text{C}$ ได้นานหลายชั่วโมง การกำจัดสปอร์ให้ตายสนิทต้องอาศัย <strong>หม้อนึ่งความดันไอ (Autoclave)</strong> ที่เพิ่มความดันขึ้นเป็น $15\text{ psi}$ ($1\text{ atm}$ เกจ) เพื่อดันจุดเดือดของน้ำขึ้นไปถึง $121^\circ\text{C}$ ปล่อยความร้อนแฝงการควบแน่นมหาศาล $2{,}260\text{ J/g}$ แทรกซึมทำลายโปรตีนและเอนไซม์ของสปอร์จนหมดสิ้นภายใน 15 นาที
-                        </p>
-                        <div class="grid grid-cols-2 gap-3 text-xs font-mono text-slate-300 pt-2 border-t border-emerald-500/20">
-                            <div class="bg-slate-800/60 p-2.5 rounded-lg border border-slate-700/50">
-                                <span class="text-emerald-400 font-bold block mb-0.5">มาตรฐาน Autoclave</span>
-                                <span>$121^\circ\text{C}$ ($250^\circ\text{F}$) ที่ $15\text{ psi}$ นาน $15\text{ นาที}$</span>
-                            </div>
-                            <div class="bg-slate-800/60 p-2.5 rounded-lg border border-slate-700/50">
-                                <span class="text-emerald-400 font-bold block mb-0.5">ความร้อนแฝงควบแน่น</span>
-                                <span>$L_v = 2{,}260\text{ J/g}$ (สูงกว่าน้ำร้อน 5 เท่า)</span>
-                            </div>
-                        </div>
-                    </div>
+            
+        <!-- Section: ธรรมชาติของแสงและดัชนีหักเหของตัวกลางทางชีวภาพ -->
+        <section class="tex-section my-10">
+            <h2 class="tex-h2">ธรรมชาติของแสงและดัชนีหักเหของตัวกลางทางชีวภาพ</h2>
+            <div class="tex-article leading-relaxed">
+                <figure class="tex-figure tex-figure-photo" id="fig-9.1"><img src="../images/maintex/sec_3d/ch09_s1.jpg" alt="ภาพที่ 9.1" loading="lazy"><figcaption><strong>ภาพที่ 9.1</strong>&ensp;เปรียบเทียบค่าดัชนีหักเห ($n = c/v$) ของอากาศ น้ำ ไซโทพลาซึมของเซลล์สด กระจกสไลด์ และน้ำมันช่วยส่อง (Immersion Oil, $n = 1.515$)</figcaption></figure>
+<p>แสงที่ตามนุษย์มองเห็น (<strong>Visible Light</strong>) เป็นคลื่นแม่เหล็กไฟฟ้าที่มีช่วงความยาวคลื่น ($\lambda$) อยู่ระหว่าง $400\text{ nm}$ (แสงสีม่วง) ถึง $700\text{ nm}$ (แสงสีแดง) ในสุญญากาศหรือในอากาศ แสงเดินทางด้วยอัตราเร็วสูงสุดคงที่คือ $c \approx 3.0 \times 10^8\text{ m/s}$ แต่เมื่อแสงเดินทางเข้าสู่ตัวกลางโปร่งใสอื่นๆ เช่น น้ำ กลีเซอรีน กระจกสไลด์ หรือน้ำมันช่วยส่อง (<strong>Immersion Oil</strong>) อัตราเร็วของแสง ($v$) จะลดลง อัตราส่วนระหว่างอัตราเร็วแสงในสุญญากาศต่ออัตราเร็วแสงในตัวกลางนั้น เรียกว่า <strong>ดัชนีหักเห</strong> (<strong>Refractive Index</strong>, $n$) ดังสมการที่ (9.1)</p>
+<div class="tex-display">\[n = \frac{c}{v} \tag{9.1}\]</div>
+<p>ตัวกลางที่มีความหนาแน่นเชิงแสงมากจะมีค่าดัชนีหักเห $n$ สูง และแสงจะเดินทางผ่านได้ช้าลง ค่าดัชนีหักเหของตัวกลางที่เกี่ยวข้องกับการส่องกล้องจุลทรรศน์แสดงไว้ในภาพที่ 9.1 และตารางที่ 9.1</p>
+<div class="tex-tablefig" id="tab-9.1"><div class="tex-tablecap"><strong>ตารางที่ 9.1</strong>&ensp;ค่าดัชนีหักเห ($n$) ของตัวกลางสำคัญในงานกล้องจุลทรรศน์และจุลชีววิทยา</div><div class="tex-table-wrap"><table class="tex-table"><thead><tr><th>ชนิดของตัวกลาง</th><th>ดัชนีหักเห ($n$)</th><th>ความสำคัญในงานจุลชีววิทยา</th></tr></thead><tbody><tr><td>อากาศ (Air)</td><td>$1.000$</td><td>ช่องว่างระหว่างแผ่นสไลด์กับเลนส์ใกล้วัตถุกำลังขยายต่ำ (4x, 10x, 40x)</td></tr><tr><td>น้ำบริสุทธิ์ (Water)</td><td>$1.333$</td><td>ตัวกลางหลักภายในไซโทพลาซึมของเซลล์สด (ทำให้เซลล์สดดูใสเมื่อไม่ย้อมสี)</td></tr><tr><td>กระจกสไลด์และแผ่นปิดสไลด์</td><td>$1.515$</td><td>วัสดุมาตรฐานของแผ่นสไลด์แก้วและเลนส์ใกล้วัตถุของกล้องจุลทรรศน์</td></tr><tr><td>น้ำมันช่วยส่อง (Immersion Oil)</td><td>$1.515$</td><td>มีค่า $n$ เท่ากับกระจกสไลด์ทุกประการ ใช้หยดเชื่อมเลนส์หัวน้ำมัน 100x เพื่อป้องกันแสงหักเหหนี</td></tr></tbody></table></div></div>
+            </div>
+        </section>
+        
+        <!-- Section: กฎการสะท้อนและกฎการหักเหของแสงฉบับไม่ต้องจำตรีโกณมิติ -->
+        <section class="tex-section my-10">
+            <h2 class="tex-h2">กฎการสะท้อนและกฎการหักเหของแสงฉบับไม่ต้องจำตรีโกณมิติ</h2>
+            <div class="tex-article leading-relaxed">
+                <figure class="tex-figure tex-figure-photo" id="fig-9.2"><img src="../images/maintex/sec_3d/ch09_s2.jpg" alt="ภาพที่ 9.2" loading="lazy"><figcaption><strong>ภาพที่ 9.2</strong>&ensp;การเบนของลำแสงเลเซอร์ตามกฎการหักเหของสเนลล์เมื่อเดินทางผ่านรอยต่อระหว่างตัวกลางที่มีค่าดัชนีหักเหต่างกัน</figcaption></figure>
+<p>เมื่อลำแสงตกกระทบผิวรอยต่อระหว่างตัวกลางสองชนิดโดยทำมุมตกกระทบ $\theta_1$ กับ<strong>เส้นแนวฉาก</strong> (<strong>Normal Line</strong> คือเส้นประที่ลากตั้งฉากกับผิวรอยต่อ) แสงส่วนหนึ่งจะสะท้อนกลับโดยมี<strong>มุมตกกระทบเท่ากับมุมสะท้อนเสมอ</strong> ($\theta_{\text{incident}} = \theta_{\text{reflected}}$) และแสงอีกส่วนหนึ่งจะทะลุผ่านเข้าสู่ตัวกลางที่สองโดยเกิดการเบนทิศทางตาม<strong>กฎของสเนลล์</strong> (<strong>Snell's Law</strong>) ในสมการที่ (9.2)</p>
+<div class="tex-display">\[n_1 \sin\theta_1 = n_2 \sin\theta_2 \tag{9.2}\]</div>
+<p>สำหรับนักศึกษาจุลชีววิทยา เราสามารถสรุปทิศทางการหักเหของแสงเพื่อนำไปใช้วิเคราะห์กล้องจุลทรรศน์ได้ทันทีโดยไม่ต้องกดเครื่องคิดเลขหาค่าไซน์ ($\sin$) ดังแสดงในภาพที่ 9.2 และภาพที่ 9.3</p>
+<figure class="tex-figure tex-figure-diagram" id="fig-9.3"><img src="../images/maintex/tikz/ch09_tikz1.svg" alt="ภาพที่ 9.3" loading="lazy"><figcaption><strong>ภาพที่ 9.3</strong>&ensp;ทิศทางการเบนของลำแสงเมื่อเดินทางผ่านรอยต่อระหว่างอากาศกับกระจกสไลด์</figcaption></figure>
+<div class="tex-aruco" data-aruco="8"><div class="tex-aruco-marker"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.4 -0.4 6.8 6.8" width="120" height="120" role="img" aria-label="ArUco ID 8"><rect x="-0.4" y="-0.4" width="6.8" height="6.8" fill="#fff"/><rect x="0" y="0" width="6" height="6" fill="#000"/><rect x="1" y="1" width="1" height="1" fill="#fff"/><rect x="2" y="1" width="1" height="1" fill="#fff"/><rect x="3" y="1" width="1" height="1" fill="#fff"/><rect x="1" y="2" width="1" height="1" fill="#fff"/><rect x="2" y="2" width="1" height="1" fill="#fff"/><rect x="3" y="3" width="1" height="1" fill="#fff"/><rect x="1" y="4" width="1" height="1" fill="#fff"/><rect x="4" y="4" width="1" height="1" fill="#fff"/><path d="M-0.4 -0.4 L0.45 -0.4 L-0.4 0.45Z" fill="#10b981"/></svg><span>ArUco ID 8 (4×4)</span></div><div class="tex-aruco-body"><div class="tex-aruco-title">[3D WebAR + ArUco Marker] มาร์กเกอร์ ArUco ID 8 — บทที่ 9: การหักเหของสเนลล์และเครื่องวัดค่าบริกซ์การหมักยีสต์ Refractometer</div><p><strong>แบบจำลอง 3 มิติ</strong>&ensp;แสดงการเบนของลำแสงเลเซอร์เมื่อผ่านน้ำหมักที่มีความเข้มข้นน้ำตาลต่างกัน และสเกลเส้นแบ่งเขตมืด–สว่างในหน่วยองศาบริกซ์ ($^\circ\text{Brix}$)</p><p><strong>ตัวแปรที่ปรับค่าได้</strong>&ensp;มุมตกกระทบ $\theta_1$ ($^\circ$), ค่าความหวานน้ำหมัก ($0\text{--}30\,^\circ\text{Brix}$), เวลาการหมักยีสต์</p><a class="tex-aruco-btn" href="../webar/ar_aruco_textbook.html?id=8&amp;ar=1" target="_blank" rel="noopener"><i class="fa-solid fa-camera-rotate"></i> เปิดกล้อง 3D WebAR ส่องมาร์กเกอร์ ID 8</a></div></div>
+<div class="tex-box tex-box-worked"><div class="tex-box-title"><i class="fa-solid fa-calculator"></i> ตัวอย่างที่ 9.1&ensp;การคำนวณอัตราเร็วของแสงเมื่อเดินทางผ่านแผ่นสไลด์แก้วและน้ำ</div><div class="tex-box-body"><p><strong>โจทย์ปัญหา</strong>&emsp; แสงเดินทางในสุญญากาศด้วยอัตราเร็ว $c = 3.0 \times 10^8\text{ m/s}$ เมื่อลำแสงจากหลอดไฟใต้กล้องจุลทรรศน์เดินทางผ่านหยดน้ำบนสไลด์ซึ่งมีดัชนีหักเห $n = 1.33$ อัตราเร็วของแสงในหยดน้ำ ($v$) จะมีค่าเท่าใด</p>
+<p><strong>วิธีทำทีละขั้นตอนฉบับเข้าใจง่าย</strong></p>
+<ol class="tex-ol"><li><strong>ขั้นที่ 1 ใช้สามเหลี่ยมสูตรดัชนีหักเห $n = c / v$ ปิดตัวแปร $v$ จะได้ $v = c / n$</strong>
+<div class="tex-display">\[
+        v = \frac{c}{n}
+    \]</div></li><li><strong>ขั้นที่ 2 แทนค่าตัวเลขแล้วหารกัน</strong>
+<div class="tex-display">\[
+        v = \frac{3.0 \times 10^8\text{ m/s}}{1.33} \approx 2.26 \times 10^8\text{ m/s}
+    \]</div></li></ol>
+<p><strong>คำตอบ</strong>&emsp; อัตราเร็วของแสงขณะเดินทางผ่านหยดน้ำบนสไลด์มีค่าเท่ากับ $2.26 \times 10^8\text{ m/s}$</p></div></div>
+            </div>
+        </section>
+        
+        <!-- Section: ปฏิบัติการประจำสัปดาห์ที่ 10 -->
+        <section class="tex-section my-10">
+            <h2 class="tex-h2">ปฏิบัติการประจำสัปดาห์ที่ 10</h2>
+            <div class="tex-article leading-relaxed">
+                <figure class="tex-figure tex-figure-photo" id="fig-9.4"><img src="../images/maintex/sec_3d/ch09_s3.jpg" alt="ภาพที่ 9.4" loading="lazy"><figcaption><strong>ภาพที่ 9.4</strong>&ensp;ชุดปฏิบัติการที่ 9 สำหรับวัดมุมตกกระทบ–มุมหักเหผ่านแท่งอะคริลิกใส และการวัดความหวานน้ำหมักยีสต์ ($^\circ\text{Brix}$) ด้วยเครื่อง Hand Refractometer</figcaption></figure>
+<div class="tex-box tex-box-lab"><div class="tex-box-title"><i class="fa-solid fa-flask-vial"></i> ปฏิบัติการที่ 9&emsp; การสะท้อนและการหักเหของแสงผ่านตัวกลางและสารละลาย (3 ชั่วโมง)</div><div class="tex-box-body"><p><strong>ผลลัพธ์การเรียนรู้ที่ประเมิน</strong>&emsp; CLO1 (การสะท้อนและการหักเหของแสง), CLO3 (ทักษะการทดลองทางแสง), CLO4 (รายงานกลุ่ม)</p>
+<p><strong>1. วัสดุและอุปกรณ์ (ดังแสดงในภาพที่ 9.4)</strong></p>
+<ul class="tex-ul"><li>ชุดกล่องกำเนิดลำแสงเลเซอร์, กระจกเงาระนาบ, แท่งอะคริลิกใสครึ่งวงกลม, กระดาษกราฟวงกลมวัดมุม (Protractor)</li><li>เครื่องวัดดัชนีหักเหและความหวาน (Hand Refractometer) และสารละลายน้ำตาลกลูโคสความเข้มข้น $5\%, 10\%$ และ $20\%$</li></ul>
+<p><strong>2. ขั้นตอนการทดลอง</strong></p>
+<ol class="tex-ol"><li><strong>ตอนที่ 1 การตรวจสอบกฎการหักเหของแสง</strong>&emsp; วางแท่งอะคริลิกใสบนกระดาษวัดมุม ฉายลำแสงเลเซอร์จากอากาศเข้าสู่อะคริลิกด้วยมุมตกกระทบ $\theta_1 = 30^\circ$ และ $45^\circ$ อ่านค่ามุมหักเห $\theta_2$ และสังเกตว่าลำแสงเบนเข้าหาเส้นแนวฉากจริงหรือไม่</li><li><strong>ตอนที่ 2 การใช้เครื่อง Refractometer ติดตามความเข้มข้นน้ำตาลสำหรับการหมักจุลินทรีย์</strong>&emsp; หยดน้ำกลั่นปรับตั้งศูนย์เครื่อง Hand Refractometer จากนั้นหยดสารละลายน้ำตาลกลูโคส $5\%, 10\%$ และ $20\%$ อ่านค่าองศาบริกซ์ ($^\circ\text{Brix}$) ซึ่งแปรผันตรงกับดัชนีหักเหของสารละลาย</li></ol>
+<p><strong>3. ตารางบันทึกผลการทดลอง</strong></p>
+<div class="tex-center"><div class="tex-table-wrap"><table class="tex-table"><thead><tr><th><strong>ตัวอย่างสารละลายและการทดลอง</strong></th><th><strong>มุมตกกระทบ $\theta_1$ หรือความเข้มข้น</strong></th><th><strong>มุมหักเห $\theta_2$ หรือค่า $^\circ\text{Brix}$</strong></th><th><strong>สรุปทิศทางการเบนของแสง</strong></th></tr></thead><tbody><tr><td>แสงผ่านอากาศสู่อะคริลิก ครั้งที่ 1</td><td>$\theta_1 = 30^\circ$</td><td>$\theta_2 = $ ............</td><td><span class="tex-dotfill"></span></td></tr><tr><td>แสงผ่านอากาศสู่อะคริลิก ครั้งที่ 2</td><td>$\theta_1 = 45^\circ$</td><td>$\theta_2 = $ ............</td><td><span class="tex-dotfill"></span></td></tr><tr><td>สารละลายน้ำตาลกลูโคสหมักยีสต์</td><td>$10\%$ และ $20\%$</td><td>............ / ............ $^\circ\text{Brix}$</td><td><span class="tex-dotfill"></span></td></tr></tbody></table></div></div></div></div>
+            </div>
+        </section>
+        
+
+            
+        <!-- End of Chapter Review Questions -->
+        <section class="mt-14 p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950/40 border border-indigo-500/30 shadow-2xl">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-lg border border-indigo-500/30">
+                    <i class="fa-solid fa-circle-question"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg sm:text-xl font-bold text-white">คำถามท้ายบทที่ 9 (ทบทวนแนวคิดและการคำนวณเบื้องต้น)</h3>
+                    <p class="text-xs text-slate-400 font-mono">ทบทวนแนวคิดหลักและการคำนวณเบื้องต้นก่อนทำปฏิบัติการ</p>
                 </div>
             </div>
-
-            <!-- Content Section 1: Pressure & Boiling Point -->
-            <section class="space-y-6">
-                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-                    <span class="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 font-mono font-bold flex items-center justify-center text-sm border border-orange-500/30">9.1</span>
-                    <h2 class="text-xl md:text-2xl font-bold text-white">ความดันไอ จุดเดือด และอุณหพลศาสตร์การฆ่าเชื้อ (Sterilization)</h2>
-                </div>
-                <div class="grid md:grid-cols-2 gap-6 items-center">
-                    <div class="space-y-4 text-sm text-slate-300">
-                        <p>
-                            น้ำเดือดเมื่อ <strong>"ความดันไอของน้ำเท่ากับความดันบรรยากาศภายนอก"</strong> ที่ความดันบรรยากาศปกติ $1\text{ atm}$ ($14.7\text{ psi}$) น้ำจะเดือดที่ $100^\circ\text{C}$
-                        </p>
-                        <p>
-                            เมื่อปิดวาล์วในหม้อ Autoclave ไอน้ำที่ระเหยขึ้นมาจะไม่สามารถหนีออกไปได้ ทำให้ความดันภายในเพิ่มสูงขึ้นเป็น $2\text{ atm}$ (ความดันเกจ $15\text{ psi}$) ส่งผลให้โมเลกุลน้ำต้องใช้พลังงานความร้อนสูงขึ้นจนถึง <strong>$121^\circ\text{C}$</strong> จึงจะเดือดได้
-                        </p>
-                        <p class="text-xs text-slate-400">
-                            <strong>ทำไมไอน้ำจึงมีประสิทธิภาพเหนือกว่าลมร้อน?</strong> เมื่อไอน้ำ $121^\circ\text{C}$ สัมผัสกับภาชนะที่เย็นกว่า มันจะควบแน่นกลับเป็นหยดน้ำทันที พร้อมคาย <strong>"ความร้อนแฝง (Latent Heat)"</strong> ปริมาณมหาศาล $2{,}260\text{ J}$ ต่อไอน้ำทุกๆ 1 กรัม ถ่ายเทพลังงานเข้าสู่ผนังเซลล์ของจุลินทรีย์อย่างรวดเร็ว
-                        </p>
-                    </div>
-                    <div class="rounded-2xl overflow-hidden border border-slate-800 shadow-xl">
-                        <img src="../images/sec_3d/ch09_s2.jpg" alt="การทำงานของ Autoclave และการถ่ายเทความร้อน" class="w-full h-auto object-cover hover:scale-105 transition-transform duration-500">
-                        <p class="p-3 bg-slate-900/90 text-xs text-slate-400 text-center italic border-t border-slate-800">
-                            ภาพที่ 9.1: การควบคุมความดัน $15\text{ psi}$ และการถ่ายเทความร้อนแฝงของไอน้ำอิ่มตัวใน Autoclave
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2. Low-Math Formula Triangle Box: Heat Transfer -->
-            <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-indigo-950/60 via-slate-900 to-slate-900 border border-indigo-500/30 shadow-2xl space-y-6">
-                <div class="flex items-center justify-between flex-wrap gap-2">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
-                        <i class="fas fa-shapes"></i> LOW-MATH &bull; ZERO-CALCULUS FORMULA SCAFFOLDING
-                    </span>
-                    <span class="text-xs text-slate-400 font-mono">สูตรความร้อนสัมผัสและความร้อนแฝง</span>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-6 items-center">
-                    <!-- Formula Box -->
-                    <div class="bg-slate-800/80 p-5 rounded-xl border border-slate-700/60 space-y-3">
-                        <span class="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider block">
-                            สมการความร้อน 2 รูปแบบ
-                        </span>
-                        <div class="p-3 bg-slate-900/90 rounded-xl border border-orange-500/30 text-center font-mono text-sm text-orange-300 space-y-2">
-                            <div>$$\text{1. อุณหภูมิเปลี่ยน (ไม่มีเปลี่ยนสถานะ): } Q = mc\Delta T$$</div>
-                            <div>$$\text{2. เปลี่ยนสถานะ (อุณหภูมิคงที่): } Q = mL_v$$</div>
-                        </div>
-                        <p class="text-xs text-slate-300">
-                            โดย $c_{\text{น้ำ}} = 4.184\text{ J/g}\cdot^\circ\text{C}$ และ $L_v = 2{,}260\text{ J/g}$
-                        </p>
-                    </div>
-
-                    <!-- PCR Cycle Thermals -->
-                    <div class="bg-slate-800/80 p-5 rounded-xl border border-slate-700/60 space-y-2 font-mono text-xs">
-                        <div class="text-cyan-400 font-bold text-sm mb-1 flex items-center gap-2">
-                            <i class="fas fa-dna"></i> 3 อุณหภูมิหลักของวงรอบ PCR
-                        </div>
-                        <div class="p-2 rounded bg-slate-900/80 border border-rose-500/30 text-slate-200">
-                            <strong class="text-rose-400">1. $95^\circ\text{C}$ (Denaturation):</strong> คลายเกลียวคู่ DNA ตัดพันธะไฮโดรเจน
-                        </div>
-                        <div class="p-2 rounded bg-slate-900/80 border border-cyan-500/30 text-slate-200">
-                            <strong class="text-cyan-400">2. $55^\circ\text{C}$ (Annealing):</strong> ลดอุณหภูมิเพื่อให้ไพรเมอร์เข้าจับจำเพาะ
-                        </div>
-                        <div class="p-2 rounded bg-slate-900/80 border border-emerald-500/30 text-slate-200">
-                            <strong class="text-emerald-400">3. $72^\circ\text{C}$ (Extension):</strong> อุณหภูมิทำงานสูงสุดของเอนไซม์ <em>Taq</em> Polymerase
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Solved Worked Example -->
-                <div class="p-5 rounded-xl bg-slate-800/50 border border-slate-700/70 space-y-3">
-                    <span class="text-xs font-mono font-bold text-amber-400 uppercase tracking-wider block">
-                        <i class="fas fa-calculator mr-1"></i> ตัวอย่างคำนวณ 3 ขั้นตอน: การถ่ายเทพลังงานความร้อนแฝงของไอน้ำ
-                    </span>
-                    <p class="text-sm text-slate-200">
-                        <strong>โจทย์:</strong> ในหม้อ Autoclave ไอน้ำมวล $m = 100\text{ g}$ ควบแน่นบนผิวขวดอาหารเลี้ยงเชื้อ จงหาปริมาณความร้อนแฝงที่ปลดปล่อยออกมาเพื่อทำลายจุลินทรีย์ (ใช้ $L_v = 2{,}260\text{ J/g}$)
-                    </p>
-                    <div class="grid md:grid-cols-2 gap-4 text-xs font-mono bg-slate-900/80 p-4 rounded-lg text-slate-300">
-                        <div>
-                            <span class="text-amber-400 font-bold block mb-1">ขั้นที่ 1: เลือกใช้สูตรความร้อนแฝง ($Q = mL_v$)</span>
-                            $$Q = (100\text{ g}) \times (2{,}260\text{ J/g})$$
-                        </div>
-                        <div>
-                            <span class="text-emerald-400 font-bold block mb-1">ขั้นที่ 2: รวมผลลัพธ์ในหน่วยกิโลจูล ($\text{kJ}$)</span>
-                            $$Q = 226{,}000\text{ J} = 226\text{ kJ}$$
-                            <span class="text-slate-400">&bull; ปลดปล่อยพลังงานความร้อนสูงถึง 226 kJ จึงฆ่าสปอร์ที่ทนทานได้อย่างรวดเร็ว</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="tex-article text-slate-200">
+                <ol class="tex-ol"><li>เพราะเหตุใดการส่องดูเซลล์แบคทีเรียที่มีชีวิตในหยดน้ำ (Wet Mount) โดยไม่ย้อมสี จึงมองเห็นขอบเขตเซลล์ได้ยากมาก จงอธิบายโดยเปรียบเทียบดัชนีหักเหของไซโทพลาซึมกับน้ำรอบเซลล์</li><li>เมื่อแสงเดินทางออกจากแผ่นสไลด์แก้ว ($n = 1.515$) ออกสู่ชั้นอากาศ ($n = 1.000$) ลำแสงจะเบนเข้าหาหรือเบนหนีออกจากเส้นแนวฉาก</li></ol>
             </div>
-
-            <!-- Content Section 2: PCR Thermal Cycler Physics -->
-            <section class="space-y-6">
-                <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
-                    <span class="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 font-mono font-bold flex items-center justify-center text-sm border border-orange-500/30">9.2</span>
-                    <h2 class="text-xl md:text-2xl font-bold text-white">ฟิสิกส์ของเครื่อง PCR Thermal Cycler และแผ่นเพลเทียร์ (Peltier Element)</h2>
-                </div>
-                <div class="grid md:grid-cols-2 gap-6 items-center">
-                    <div class="space-y-3 text-sm text-slate-300">
-                        <p>
-                            เครื่อง PCR Thermal Cycler ต้องเปลี่ยนอุณหภูมิอย่างรวดเร็ว (Ramp Rate $3\text{--}5^\circ\text{C/s}$) สลับไปมาระหว่าง $95^\circ\text{C}, 55^\circ\text{C}$ และ $72^\circ\text{C}$ จำนวน 30–40 รอบ
-                        </p>
-                        <p>
-                            เทคโนโลยีเบื้องหลังการเปลี่ยนอุณหภูมินี้คือ <strong>แผ่นเพลเทียร์ (Thermoelectric Peltier Element)</strong> ซึ่งใช้ปรากฏการณ์เทอร์โมอิเล็กทริก: เมื่อป้อนกระแสไฟฟ้า ด้านหนึ่งจะร้อนและอีกด้านจะเย็น และเมื่อสลับขั้วไฟฟ้า ทิศทางการถ่ายเทความร้อนจะกลับด้านทันที ทำให้สามารถทำความร้อนและลดอุณหภูมิได้อย่างแม่นยำระดับ $\pm 0.1^\circ\text{C}$
-                        </p>
-                    </div>
-                    <div class="rounded-2xl overflow-hidden border border-slate-800 shadow-xl">
-                        <img src="../images/sec_3d/ch09_s3.jpg" alt="เครื่อง PCR และแผ่นเพลเทียร์" class="w-full h-auto object-cover hover:scale-105 transition-transform duration-500">
-                        <p class="p-3 bg-slate-900/90 text-xs text-slate-400 text-center italic border-t border-slate-800">
-                            ภาพที่ 9.2: กราฟวงรอบอุณหภูมิ PCR และบล็อกความร้อนโลหะที่ควบคุมด้วยแผ่นเพลเทียร์
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3. Interactive 3D Simulator & WebAR Action Card -->
-            <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-r from-orange-950/60 via-slate-900 to-slate-900 border border-orange-500/30 shadow-2xl space-y-6">
-                <div class="flex items-center justify-between flex-wrap gap-2">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-orange-500/20 text-orange-300 border border-orange-500/40">
-                        <i class="fas fa-cube"></i> INTERACTIVE 3D LAB &amp; WEBAR ARUCO
-                    </span>
-                    <span class="text-xs text-orange-400 font-mono font-bold">ArUco Marker ID: 8</span>
-                </div>
-                <div class="grid md:grid-cols-3 gap-4">
-                    <a href="../simulations/sim09_pcr_thermal_3d.html" target="_blank"
-                       class="group p-5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-orange-500/30 hover:border-orange-400 transition-all flex flex-col justify-between">
-                        <div>
-                            <div class="w-10 h-10 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-vr-cardboard"></i>
-                            </div>
-                            <h4 class="font-bold text-white text-base mb-1">3D PCR &amp; Autoclave Sim</h4>
-                            <p class="text-xs text-slate-400 leading-relaxed">
-                                จำลองการเพิ่มความดันไอใน Autoclave และดูกราฟอุณหภูมิ 3 สเต็ปของเครื่อง PCR แบบเรียลไทม์ 3 มิติ
-                            </p>
-                        </div>
-                        <span class="mt-4 inline-flex items-center text-xs font-mono text-orange-400 group-hover:translate-x-1 transition-transform">
-                            เปิดห้องทดลอง 3D <i class="fas fa-arrow-right ml-1.5"></i>
-                        </span>
-                    </a>
-
-                    <a href="../webar/ar_aruco_textbook.html?marker=8" target="_blank"
-                       class="group p-5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-purple-500/30 hover:border-purple-400 transition-all flex flex-col justify-between">
-                        <div>
-                            <div class="w-10 h-10 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-camera"></i>
-                            </div>
-                            <h4 class="font-bold text-white text-base mb-1">3D WebAR ArUco Marker 8</h4>
-                            <p class="text-xs text-slate-400 leading-relaxed">
-                                ส่องสมาร์ทโฟนไปที่มาร์กเกอร์ ArUco ID 8 เพื่อดูแบบจำลองหม้อนึ่ง Autoclave พ่นไอน้ำลอย 3 มิติบนโต๊ะแล็บ
-                            </p>
-                        </div>
-                        <span class="mt-4 inline-flex items-center text-xs font-mono text-purple-400 group-hover:translate-x-1 transition-transform">
-                            เปิดกล้องส่อง WebAR <i class="fas fa-qrcode ml-1.5"></i>
-                        </span>
-                    </a>
-
-                    <a href="../labs/lab09_heat.php"
-                       class="group p-5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-emerald-500/30 hover:border-emerald-400 transition-all flex flex-col justify-between">
-                        <div>
-                            <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg mb-3 group-hover:scale-110 transition-transform">
-                                <i class="fas fa-clipboard-check"></i>
-                            </div>
-                            <h4 class="font-bold text-white text-base mb-1">E-Report &amp; Lab 9</h4>
-                            <p class="text-xs text-slate-400 leading-relaxed">
-                                บันทึกผลการวัดความร้อนจำเพาะ การควบแน่น และการตรวจสอบสปอร์ตัวบ่งชี้ส่งอาจารย์
-                            </p>
-                        </div>
-                        <span class="mt-4 inline-flex items-center text-xs font-mono text-emerald-400 group-hover:translate-x-1 transition-transform">
-                            กรอกรายงานออนไลน์ <i class="fas fa-file-alt ml-1.5"></i>
-                        </span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- 4. Biosafety Warning Box -->
-            <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-rose-950/40 via-slate-900 to-slate-900 border border-rose-500/30 shadow-2xl space-y-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-rose-500/20 flex items-center justify-center text-rose-400 border border-rose-500/30">
-                        <i class="fas fa-biohazard text-xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-white">ข้อควรระวังความปลอดภัยขั้นสูงสุด: การใช้งานหม้อนึ่ง Autoclave (Steam Explosion)</h3>
-                        <p class="text-xs text-rose-300 font-mono">การป้องกันไอน้ำร้อนลวกและการระเบิดของของเหลวล้นเดือด</p>
-                    </div>
-                </div>
-                <div class="grid md:grid-cols-2 gap-4 text-xs md:text-sm text-slate-300">
-                    <div class="p-4 rounded-xl bg-slate-800/60 border border-rose-500/20 space-y-2">
-                        <strong class="text-rose-400 flex items-center gap-1.5">
-                            <i class="fas fa-hand-paper"></i> ห้ามเปิดฝาหม้อขณะยังมีแรงดันเกจตกค้าง
-                        </strong>
-                        <p class="text-slate-300 leading-relaxed">
-                            ต้องรอจนกว่าเกจวัดความดันลดลงถึง $0\text{ psi}$ และอุณหภูมิลดลงต่ำกว่า $80^\circ\text{C}$ ก่อนเสมอ หากเปิดฝาขณะมีความดัน ไอน้ำร้อนยวดยิ่งจะพุ่งใส่ใบหน้าและร่างกายก่อให้เกิดแผลไหม้รุนแรง
-                        </p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-slate-800/60 border border-rose-500/20 space-y-2">
-                        <strong class="text-rose-400 flex items-center gap-1.5">
-                            <i class="fas fa-vial"></i> ห้ามปิดฝาขวดแก้วแน่นสนิทก่อนเข้า Autoclave
-                        </strong>
-                        <p class="text-slate-300 leading-relaxed">
-                            ขวดอาหารเลี้ยงเชื้อที่เข้าหม้อนึ่ง ต้องคลายฝาเกลียวออกครึ่งรอบเสมอ เพื่อให้อากาศและไอน้ำถ่ายเทได้ หากปิดฝาแน่น ความดันภายในขวดจะสูงขึ้นจนระเบิดแตกกระจายภายในหม้อ
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 5. Clinical Case Study Box -->
-            <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-purple-950/40 via-slate-900 to-slate-900 border border-purple-500/30 shadow-2xl space-y-4">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-purple-500/20 text-purple-300 border border-purple-500/40">
-                    <i class="fas fa-lightbulb"></i> CLINICAL CASE STUDY &bull; การควบคุมคุณภาพการฆ่าเชื้อในโรงพยาบาล
-                </span>
-                <h3 class="text-xl font-bold text-white">การตรวจสอบความสมบูรณ์ของการฆ่าเชื้อด้วยแอมพูลสปอร์ Geobacillus stearothermophilus</h3>
-                <p class="text-sm text-slate-300 leading-relaxed">
-                    ในศูนย์จ่ายกลางโรงพยาบาล (CSSD) การดูเพียงเกจวัดอุณหภูมิและเทปดัชนีเคมี (Autoclave Tape) ยังไม่เพียงพอต่อการรับรองว่าอุปกรณ์ผ่าตัดปลอดเชื้อจริง ทุกสัปดาห์ต้องใส่หลอดทดสอบชีวภาพ (Biological Indicator) ซึ่งบรรจุสปอร์ที่มีชีวิตของ <em>Geobacillus stearothermophilus</em> จำนวน $10^6$ สปอร์ เข้าไปนึ่งพร้อมอุปกรณ์ สปอร์ชนิดนี้ทนความร้อนสูงเป็นพิเศษ หากนำมาบ่มที่ $55^\circ\text{C}$ นาน 24 ชั่วโมงแล้วน้ำยาไม่เปลี่ยนสี แสดงว่ากระบวนการถ่ายเทความร้อนแฝงของไอน้ำสมบูรณ์แบบและอุปกรณ์ปลอดเชื้อ 100%
-                </p>
-            </div>
-
-            <!-- Practical Experiment Blank Data Table -->
-            <div class="p-6 md:p-8 rounded-2xl bg-slate-800/40 border border-slate-700/60 space-y-4">
-                <div class="flex items-center justify-between flex-wrap gap-2">
-                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                        <i class="fas fa-table text-orange-400"></i> ตารางบันทึกผลการทดลอง ปฏิบัติการที่ 9
-                    </h3>
-                    <span class="text-xs text-slate-400 font-mono">การตรวจวัดอุณหภูมิและความดันของไอน้ำอิ่มตัว</span>
-                </div>
-                <div class="overflow-x-auto rounded-xl border border-slate-700/70">
-                    <table class="w-full text-left text-xs md:text-sm text-slate-300">
-                        <thead class="bg-slate-800 text-slate-200 font-mono text-xs uppercase">
-                            <tr>
-                                <th class="p-3">ระยะเวลา (นาที)</th>
-                                <th class="p-3 text-center">ความดันเกจ ($\text{psi}$)</th>
-                                <th class="p-3 text-center">อุณหภูมิ ($^\circ\text{C}$)</th>
-                                <th class="p-3 text-center">สถานะของไอน้ำ</th>
-                                <th class="p-3 text-center">ผลเทปดัชนีความร้อน</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-800 bg-slate-900/40 font-mono">
-                            <tr>
-                                <td class="p-3 font-sans">0 นาที (เริ่มต้น)</td>
-                                <td class="p-3 text-center text-slate-500">$0\text{ psi}$</td>
-                                <td class="p-3 text-center text-slate-500">$25^\circ\text{C}$</td>
-                                <td class="p-3 text-center text-slate-400 font-sans">น้ำเย็น</td>
-                                <td class="p-3 text-center text-slate-400 font-sans">แถบสีขาว</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-sans">10 นาที (ไล่อากาศหมด)</td>
-                                <td class="p-3 text-center text-slate-500">$5\text{ psi}$</td>
-                                <td class="p-3 text-center text-slate-500">$108^\circ\text{C}$</td>
-                                <td class="p-3 text-center text-cyan-400 font-sans">ไอน้ำเริ่มอิ่มตัว</td>
-                                <td class="p-3 text-center text-slate-400 font-sans">แถบเริ่มเทา</td>
-                            </tr>
-                            <tr>
-                                <td class="p-3 font-sans">20 นาที (สภาวะฆ่าเชื้อ)</td>
-                                <td class="p-3 text-center text-orange-400">$15\text{ psi}$</td>
-                                <td class="p-3 text-center text-orange-400">$121^\circ\text{C}$</td>
-                                <td class="p-3 text-center text-emerald-400 font-sans">ไอน้ำอิ่มตัวสมบูรณ์</td>
-                                <td class="p-3 text-center text-emerald-400 font-sans">เปลี่ยนเป็นสีดำสนิท</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 6. OBE Formative Quiz (3 Questions) -->
-            <div class="p-6 md:p-8 rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900 border border-slate-700/80 space-y-6">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-400 border border-orange-500/30">
-                        <i class="fas fa-question-circle text-lg"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-white">แบบทดสอบประเมินตนเองประจำบท (OBE Self-Quiz)</h3>
-                        <p class="text-xs text-slate-400 font-mono">วัดผลลัพธ์การเรียนรู้ CLO1 &bull; CLO2 &bull; CLO3</p>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <!-- Q1 -->
-                    <details class="group p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-all">
-                        <summary class="font-bold text-sm text-slate-200 cursor-pointer list-none flex justify-between items-center">
-                            <span>ข้อที่ 1: เหตุใดไอน้ำอิ่มตัวใน Autoclave ที่ $121^\circ\text{C}$ จึงฆ่าสปอร์ได้ดีกว่าตู้อบลมร้อน (Oven) ที่ $160^\circ\text{C}$?</span>
-                            <i class="fas fa-chevron-down text-orange-400 group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="mt-3 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-1">
-                            <p class="text-emerald-400 font-bold">เฉลย: ไอน้ำจะควบแน่นและปล่อยความร้อนแฝงมหาศาล ($2,260\text{ J/g}$) แทรกซึมทำลายโปรตีนของสปอร์ทันที</p>
-                            <p class="text-slate-400">
-                                <strong>เหตุผล:</strong> อากาศแห้งมีค่าการนำความร้อนต่ำมาก ขณะที่ไอน้ำถ่ายเทความร้อนแฝงได้อย่างรวดเร็วและมีความชื้นช่วยให้โปรตีนเสียสภาพได้ที่อุณหภูมิต่ำกว่า
-                            </p>
-                        </div>
-                    </details>
-
-                    <!-- Q2 -->
-                    <details class="group p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-all">
-                        <summary class="font-bold text-sm text-slate-200 cursor-pointer list-none flex justify-between items-center">
-                            <span>ข้อที่ 2: ในกระบวนการ PCR อุณหภูมิ $95^\circ\text{C}$ ในขั้นตอน Denaturation ทำหน้าที่ทางฟิสิกส์เคมีอะไร?</span>
-                            <i class="fas fa-chevron-down text-orange-400 group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="mt-3 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-1">
-                            <p class="text-emerald-400 font-bold">เฉลย: ทำลายพันธะไฮโดรเจนระหว่างคู่เบสเพื่อแยกสายคู่ DNA ออกเป็นสายเดี่ยว</p>
-                            <p class="text-slate-400">
-                                <strong>เหตุผล:</strong> พลังงานความร้อนที่ $95^\circ\text{C}$ สูงพอที่จะตัดพันธะไฮโดรเจนที่ยึดสายดีเอ็นเอออกจากกัน เพื่อให้ไพรเมอร์สามารถเข้าจับได้ในขั้นตอนถัดไป
-                            </p>
-                        </div>
-                    </details>
-
-                    <!-- Q3 -->
-                    <details class="group p-4 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-all">
-                        <summary class="font-bold text-sm text-slate-200 cursor-pointer list-none flex justify-between items-center">
-                            <span>ข้อที่ 3: หากเปิดฝาหม้อ Autoclave ทันทีขณะความดันยังอยู่ที่ $5\text{ psi}$ จะเกิดปรากฏการณ์ใดขึ้น?</span>
-                            <i class="fas fa-chevron-down text-orange-400 group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="mt-3 pt-3 border-t border-slate-800 text-xs text-slate-300 space-y-1">
-                            <p class="text-emerald-400 font-bold">เฉลย: ของเหลวในขวดจะเดือดพล่านพุ่งล้นทะลักออกอย่างรุนแรง (Boiling Over / Superheating)</p>
-                            <p class="text-slate-400">
-                                <strong>เหตุผล:</strong> การลดความดันกะทันหันทำให้จุดเดือดของของเหลวลดลงต่ำกว่าอุณหภูมิปัจจุบันทันที น้ำจึงเดือดระเบิดกลายเป็นไอพุ่งล้นขวด
-                            </p>
-                        </div>
-                    </details>
-                </div>
-            </div>
+        </section>
+        
 
             <!-- Chapter Navigation Footer -->
             <div class="pt-8 border-t border-slate-800 flex justify-between items-center flex-wrap gap-4">
-                <a href="ch08_th.php" class="px-5 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors flex items-center gap-2">
-                    <i class="fas fa-arrow-left"></i> บทที่ 8: การหมุนและแส้แบคทีเรีย
-                </a>
-                <a href="ch10_th.php" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-400 hover:to-yellow-400 text-slate-950 font-bold text-xs font-mono transition-all flex items-center gap-2 shadow-lg shadow-orange-500/20">
-                    บทที่ 10: ไฟฟ้าและเจลอิเล็กโทรโฟเรซิส <i class="fas fa-arrow-right"></i>
-                </a>
+                
+        <a href="ch08_th.php" class="px-5 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i> บทที่ 8: ไฟฟ้ากระแส กฎของโอห์ม และอิเล็กโทรโฟรีซิส
+        </a>
+    
+                
+        <a href="ch10_th.php" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs font-mono transition-all flex items-center gap-2 shadow-lg shadow-sky-500/20">
+            บทที่ 10: กล้องจุลทรรศน์ ขีดจำกัดการแยกชัด และน้ำมันช่วยส่อง <i class="fas fa-arrow-right"></i>
+        </a>
+    
             </div>
 
         </div>
