@@ -1,0 +1,185 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="100%" height="100%" style="background:#090d16; font-family:'Prompt',system-ui,sans-serif;">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#0284c7" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fb7185"/>
+      <stop offset="100%" stop-color="#e11d48"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background Glow & Grid -->
+  <rect width="960" height="560" fill="#090d16"/>
+  <circle cx="480" cy="280" r="260" fill="url(#bgGlow)"/>
+  
+  <!-- Outer Orbit Line -->
+  <circle cx="480" cy="280" r="210" fill="none" stroke="#1e293b" stroke-width="2" stroke-dasharray="6,6"/>
+  <circle cx="480" cy="280" r="115" fill="none" stroke="#334155" stroke-width="1.5" stroke-dasharray="4,4"/>
+
+  <!-- Title Header -->
+  <text x="480" y="38" text-anchor="middle" fill="#f8fafc" font-size="20" font-weight="700" letter-spacing="0.5">ระบบหน่วยสากลเอสไอฉบับปรับปรุงใหม่ (The Revised SI — 2019)</text>
+  <text x="480" y="60" text-anchor="middle" fill="#94a3b8" font-size="12">ผูกโยง 7 หน่วยฐานสากลเข้ากับ 7 ค่าคงตัวพื้นฐานแห่งเอกภพ (Fundamental Physical Constants)</text>
+
+  <!-- Central Hub: The 2019 SI Core -->
+  <g transform="translate(480, 280)">
+    <circle r="60" fill="#0f172a" stroke="#38bdf8" stroke-width="3" filter="url(#shadow)"/>
+    <circle r="52" fill="none" stroke="#0284c7" stroke-width="1" stroke-dasharray="4,3"/>
+    <text y="-14" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="700" letter-spacing="1">BIPM / CGPM</text>
+    <text y="6" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="800">REVISED SI</text>
+    <text y="24" text-anchor="middle" fill="#10b981" font-size="11" font-weight="700">20 พฤษภาคม 2019</text>
+  </g>
+
+  <!-- Connection Lines (Center to Constants to Units) -->
+  <!-- 1. Second (s) at Top: 90 deg up (x=480, y=70) -->
+  <line x1="480" y1="220" x2="480" y2="165" stroke="#38bdf8" stroke-width="2"/>
+  <line x1="480" y1="165" x2="480" y2="105" stroke="#38bdf8" stroke-width="2"/>
+
+  <!-- 2. Metre (m) at ~38 deg: (x=660, y=140) -->
+  <line x1="525" y1="240" x2="600" y2="185" stroke="#34d399" stroke-width="2"/>
+  <line x1="600" y1="185" x2="670" y2="135" stroke="#34d399" stroke-width="2"/>
+
+  <!-- 3. Kilogram (kg) at ~90 deg right: (x=730, y=280) -->
+  <line x1="540" y1="280" x2="635" y2="280" stroke="#fbbf24" stroke-width="2"/>
+  <line x1="635" y1="280" x2="730" y2="280" stroke="#fbbf24" stroke-width="2"/>
+
+  <!-- 4. Ampere (A) at ~142 deg: (x=660, y=420) -->
+  <line x1="525" y1="320" x2="600" y2="375" stroke="#fb7185" stroke-width="2"/>
+  <line x1="600" y1="375" x2="670" y2="425" stroke="#fb7185" stroke-width="2"/>
+
+  <!-- 5. Kelvin (K) at ~218 deg: (x=300, y=420) -->
+  <line x1="435" y1="320" x2="360" y2="375" stroke="#f97316" stroke-width="2"/>
+  <line x1="360" y1="375" x2="290" y2="425" stroke="#f97316" stroke-width="2"/>
+
+  <!-- 6. Mole (mol) at ~270 deg left: (x=230, y=280) -->
+  <line x1="420" y1="280" x2="325" y2="280" stroke="#a855f7" stroke-width="2"/>
+  <line x1="325" y1="280" x2="230" y2="280" stroke="#a855f7" stroke-width="2"/>
+
+  <!-- 7. Candela (cd) at ~322 deg: (x=300, y=140) -->
+  <line x1="435" y1="240" x2="360" y2="185" stroke="#eab308" stroke-width="2"/>
+  <line x1="360" y1="185" x2="290" y2="135" stroke="#eab308" stroke-width="2"/>
+
+  <!-- Cross-link dependency arrows (s -> m via c, s & m -> kg via h, s -> A via e, etc.) -->
+  <path d="M 480 105 Q 575 120 670 135" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.6"/>
+  <path d="M 670 135 Q 700 200 730 280" fill="none" stroke="#34d399" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.6"/>
+
+  <!-- ═════ INNER ORBIT: 7 DEFINING CONSTANTS (Pills) ═════ -->
+  <!-- ΔνCs -->
+  <g transform="translate(480, 165)">
+    <rect x="-48" y="-14" width="96" height="28" rx="14" fill="#0f172a" stroke="#38bdf8" stroke-width="1.8"/>
+    <text y="4" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="700" font-family="'JetBrains Mono',monospace">Δν_Cs</text>
+  </g>
+  <!-- c -->
+  <g transform="translate(600, 185)">
+    <rect x="-30" y="-14" width="60" height="28" rx="14" fill="#0f172a" stroke="#34d399" stroke-width="1.8"/>
+    <text y="4" text-anchor="middle" fill="#34d399" font-size="12" font-weight="700" font-family="'JetBrains Mono',monospace">c</text>
+  </g>
+  <!-- h -->
+  <g transform="translate(635, 280)">
+    <rect x="-30" y="-14" width="60" height="28" rx="14" fill="#0f172a" stroke="#fbbf24" stroke-width="1.8"/>
+    <text y="4" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700" font-family="'JetBrains Mono',monospace">h</text>
+  </g>
+  <!-- e -->
+  <g transform="translate(600, 375)">
+    <rect x="-30" y="-14" width="60" height="28" rx="14" fill="#0f172a" stroke="#fb7185" stroke-width="1.8"/>
+    <text y="4" text-anchor="middle" fill="#fb7185" font-size="12" font-weight="700" font-family="'JetBrains Mono',monospace">e</text>
+  </g>
+  <!-- k -->
+  <g transform="translate(360, 375)">
+    <rect x="-30" y="-14" width="60" height="28" rx="14" fill="#0f172a" stroke="#f97316" stroke-width="1.8"/>
+    <text y="4" text-anchor="middle" fill="#f97316" font-size="12" font-weight="700" font-family="'JetBrains Mono',monospace">k</text>
+  </g>
+  <!-- N_A -->
+  <g transform="translate(325, 280)">
+    <rect x="-35" y="-14" width="70" height="28" rx="14" fill="#0f172a" stroke="#a855f7" stroke-width="1.8"/>
+    <text y="4" text-anchor="middle" fill="#a855f7" font-size="11" font-weight="700" font-family="'JetBrains Mono',monospace">N_A</text>
+  </g>
+  <!-- K_cd -->
+  <g transform="translate(360, 185)">
+    <rect x="-35" y="-14" width="70" height="28" rx="14" fill="#0f172a" stroke="#eab308" stroke-width="1.8"/>
+    <text y="4" text-anchor="middle" fill="#eab308" font-size="11" font-weight="700" font-family="'JetBrains Mono',monospace">K_cd</text>
+  </g>
+
+  <!-- ═════ OUTER ORBIT: 7 BASE UNITS (Cards) ═════ -->
+
+  <!-- 1. SECOND (s) -->
+  <g transform="translate(480, 95)" filter="url(#shadow)">
+    <rect x="-70" y="-32" width="140" height="64" rx="16" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5"/>
+    <text y="-10" text-anchor="middle" fill="#38bdf8" font-size="16" font-weight="800">วินาที (s)</text>
+    <text y="8" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">เวลา (Time)</text>
+    <text y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono',monospace">9 192 631 770 Hz</text>
+  </g>
+
+  <!-- 2. METRE (m) -->
+  <g transform="translate(690, 130)" filter="url(#shadow)">
+    <rect x="-70" y="-32" width="140" height="64" rx="16" fill="#1e293b" stroke="#34d399" stroke-width="2.5"/>
+    <text y="-10" text-anchor="middle" fill="#34d399" font-size="16" font-weight="800">เมตร (m)</text>
+    <text y="8" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">ความยาว (Length)</text>
+    <text y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono',monospace">c = 299 792 458 m/s</text>
+  </g>
+
+  <!-- 3. KILOGRAM (kg) -->
+  <g transform="translate(770, 280)" filter="url(#shadow)">
+    <rect x="-75" y="-32" width="150" height="64" rx="16" fill="#1e293b" stroke="#fbbf24" stroke-width="2.5"/>
+    <text y="-10" text-anchor="middle" fill="#fbbf24" font-size="16" font-weight="800">กิโลกรัม (kg)</text>
+    <text y="8" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">มวล (Mass)</text>
+    <text y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono',monospace">h = 6.626 070 15×10⁻³⁴</text>
+  </g>
+
+  <!-- 4. AMPERE (A) -->
+  <g transform="translate(690, 430)" filter="url(#shadow)">
+    <rect x="-70" y="-32" width="140" height="64" rx="16" fill="#1e293b" stroke="#fb7185" stroke-width="2.5"/>
+    <text y="-10" text-anchor="middle" fill="#fb7185" font-size="16" font-weight="800">แอมแปร์ (A)</text>
+    <text y="8" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">กระแสไฟฟ้า (Current)</text>
+    <text y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono',monospace">e = 1.602 176 634×10⁻¹⁹</text>
+  </g>
+
+  <!-- 5. KELVIN (K) -->
+  <g transform="translate(270, 430)" filter="url(#shadow)">
+    <rect x="-70" y="-32" width="140" height="64" rx="16" fill="#1e293b" stroke="#f97316" stroke-width="2.5"/>
+    <text y="-10" text-anchor="middle" fill="#f97316" font-size="16" font-weight="800">เคลวิน (K)</text>
+    <text y="8" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">อุณหพลวัต (Temp)</text>
+    <text y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono',monospace">k = 1.380 649×10⁻²³</text>
+  </g>
+
+  <!-- 6. MOLE (mol) -->
+  <g transform="translate(190, 280)" filter="url(#shadow)">
+    <rect x="-75" y="-32" width="150" height="64" rx="16" fill="#1e293b" stroke="#a855f7" stroke-width="2.5"/>
+    <text y="-10" text-anchor="middle" fill="#a855f7" font-size="16" font-weight="800">โมล (mol)</text>
+    <text y="8" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">ปริมาณสาร (Substance)</text>
+    <text y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono',monospace">N_A = 6.022 140 76×10²³</text>
+  </g>
+
+  <!-- 7. CANDELA (cd) -->
+  <g transform="translate(270, 130)" filter="url(#shadow)">
+    <rect x="-70" y="-32" width="140" height="64" rx="16" fill="#1e293b" stroke="#eab308" stroke-width="2.5"/>
+    <text y="-10" text-anchor="middle" fill="#eab308" font-size="16" font-weight="800">แคนเดลา (cd)</text>
+    <text y="8" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="600">ความเข้มแสง (Intensity)</text>
+    <text y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="'JetBrains Mono',monospace">K_cd = 683 lm/W</text>
+  </g>
+
+  <!-- Bottom Legend/Note -->
+  <text x="480" y="525" text-anchor="middle" fill="#64748b" font-size="11">
+    ★ นิยามทั้งหมดในปัจจุบัน (2019–ปัจจุบัน) ปราศจากการอิงวัตถุประดิษฐ์ (No physical artifacts) ทำให้มาตรฐานมีความเสถียรคงทนชั่วกัลปาวสาน
+  </text>
+</svg>

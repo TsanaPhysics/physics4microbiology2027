@@ -82,15 +82,597 @@ include '../includes/header.php';
         
 
             
-        <!-- Section: ความสำคัญของระบบหน่วยเอสไอและคำอุปสรรคในงานจุลชีววิทยา -->
+                <!-- Section: ความสำคัญของระบบหน่วยเอสไอและคำอุปสรรคในงานจุลชีววิทยา -->
         <section class="tex-section my-10">
-            <h2 class="tex-h2">ความสำคัญของระบบหน่วยเอสไอและคำอุปสรรคในงานจุลชีววิทยา</h2>
-            <div class="tex-article leading-relaxed">
-                <figure class="tex-figure tex-figure-photo" id="fig-1.1"><img src="../images/maintex/sec_3d/ch01_s1.jpg" alt="ภาพที่ 1.1" loading="lazy"><figcaption><strong>ภาพที่ 1.1</strong>&ensp;การเปรียบเทียบสเกลขนาดในโลกจุลชีววิทยาตั้งแต่ระดับโคโลนีบนจานเพาะเชื้อ ($\text{mm}$), เซลล์แบคทีเรีย ($\mu\text{m}$) ไปจนถึงอนุภาคไวรัส ($\text{nm}$) พร้อมเครื่องมือวัดละเอียดมาตรฐาน</figcaption></figure>
-<p>ระบบหน่วยระหว่างชาติ หรือ <strong>ระบบหน่วยเอสไอ</strong> (<strong>International System of Units</strong> หรือ <strong>SI Units</strong>) เป็นภาษาสากลทางวิทยาศาสตร์ที่ทำให้นักจุลชีววิทยาทั่วโลกสามารถสื่อสารข้อมูลขนาดของเซลล์ ปริมาตรอาหารเลี้ยงเชื้อ อุณหภูมิการบ่มเชื้อ และความเข้มข้นของสารละลายได้อย่างถูกต้องตรงกัน ในงานจุลชีววิทยา สิ่งมีชีวิตที่เราศึกษามีขนาดเล็กเกินกว่าจะมองเห็นด้วยตาเปล่า เช่น แบคทีเรีย <em>Escherichia coli</em> มีความยาวประมาณ $2\text{ }\mu\text{m}$ (ไมโครเมตร) ในขณะที่ไวรัสก่อโรคมีความยาวเพียงระดับ $20\text{ nm}$ ถึง $300\text{ nm}$ (นาโนเมตร) ดังนั้น การเข้าใจหน่วยฐานและคำอุปสรรคจึงเป็นทักษะแรกที่สำคัญที่สุดก่อนเข้าสู่ห้องปฏิบัติการ ดังแสดงในภาพที่ 1.1</p>
-<p>หน่วยฐานเอสไอที่นักศึกษาจุลชีววิทยาต้องใช้งานเป็นประจำประกอบด้วย 5 ปริมาณหลัก ได้แก่ ความยาวมีหน่วยเป็น<strong>เมตร</strong> ($\text{m}$), มวลมีหน่วยเป็น<strong>กิโลกรัม</strong> ($\text{kg}$), เวลามีหน่วยเป็น<strong>วินาที</strong> ($\text{s}$), อุณหภูมิอุณหพลวัตมีหน่วยเป็น<strong>เคลวิน</strong> ($\text{K}$ โดยในห้องปฏิบัติการนิยมอ่านค่าเป็นองศาเซลเซียส $^\circ\text{C}$ แล้วแปลงเป็นเคลวินด้วยสมการ $T_{\text{K}} = T_{\text{C}} + 273.15$) และปริมาณของสารมีหน่วยเป็น<strong>โมล</strong> ($\text{mol}$) ดังสรุปพร้อมภาพตัวอย่างการใช้งานจริงในตารางที่ 1.1</p>
-<div class="tex-tablefig" id="tab-1.1"><div class="tex-tablecap"><strong>ตารางที่ 1.1</strong>&ensp;หน่วยฐานและคำอุปสรรคที่พบบ่อยที่สุดพร้อมภาพตัวอย่างการใช้งานจริงในห้องปฏิบัติการจุลชีววิทยา</div><p>1.12</p>
-<div class="tex-table-wrap"><table class="tex-table"><thead><tr><th><strong>คำอุปสรรค</strong></th><th><strong>สัญลักษณ์</strong></th><th><strong>ตัวคูณหน่วยฐาน</strong></th><th><strong>ตัวอย่างการใช้งานจริงในงานจุลชีววิทยา</strong></th><th><strong>ภาพตัวอย่างการใช้งานจริง</strong></th></tr></thead><tbody><tr><td>มิลลิ<br>(milli)</td><td>$\text{m}$</td><td>$10^{-3}$<br>$\left(\tfrac{1}{1{,}000}\right)$</td><td><strong>1. ความยาว ($\text{mm}$)</strong> วัดขนาดโคโลนีแบคทีเรีย <em>S. aureus</em> และ <em>E. coli</em> บนจานวุ้น ($1\text{--}5\text{ mm}$) ด้วยเวอร์เนียร์คาลิปเปอร์<br> <strong>2. ปริมาตรและมวล ($\text{mL}, \text{mg}$)</strong> ตวงอาหารเหลวในหลอดทดลอง ($5\text{--}10\text{ mL}$) และชั่งสารเคมี ($\text{mg}$)</td><td>[width=3.65cm, height=2.05cm, keepaspectratio]figures/sec_3d/prefix_milli.jpg</td></tr><tr><td>ไมโคร<br>(micro)</td><td>$\mu$</td><td>$10^{-6}$<br>$\left(\tfrac{1}{10^6}\right)$</td><td><strong>1. ระดับเซลล์ ($\mu\text{m}$)</strong> วัดขนาดเซลล์แบคทีเรีย <em>E. coli</em> ($1\text{--}2\text{ }\mu\text{m}$) และยีสต์กำลังแตกหน่อ ($5\text{--}10\text{ }\mu\text{m}$) ด้วยกล้องจุลทรรศน์ $1{,}000\times$<br> <strong>2. ปริมาตรไมโครปิเปต ($\mu\text{L}$)</strong> ดูดสารละลายเชื้อและดีเอ็นเอด้วยไมโครปิเปต P20, P200, P1000 ($1\text{--}1{,}000\text{ }\mu\text{L}$)</td><td>[width=3.65cm, height=2.05cm, keepaspectratio]figures/sec_3d/prefix_micro.jpg</td></tr><tr><td>นาโน<br>(nano)</td><td>$\text{n}$</td><td>$10^{-9}$<br>$\left(\tfrac{1}{10^9}\right)$</td><td><strong>1. ระดับไวรัสและโมเลกุล ($\text{nm}$)</strong> ระบุขนาดแบคทีริโอฟาจ T4 และไวรัส ($20\text{--}300\text{ nm}$) และรูพรุนแผ่นกรองปลอดเชื้อ ($220\text{ nm}$)<br> <strong>2. ความยาวคลื่นแสง ($\text{nm}$)</strong> ตั้งค่าลำแสง $\lambda = 600\text{ nm}$ ($\text{OD}_{600}$) ในเครื่องสเปกโตรโฟโตมิเตอร์วัดความขุ่นของเซลล์</td><td>[width=3.65cm, height=2.05cm, keepaspectratio]figures/sec_3d/prefix_nano.jpg</td></tr></tbody></table></div></div>
+            <h2 class="tex-h2">1.1 ระบบหน่วยสากลเอสไอ (SI Units) วิวัฒนาการจากอดีตสู่ปัจจุบัน และบทบาทในงานจุลชีววิทยา</h2>
+            <div class="tex-article leading-relaxed space-y-6">
+                
+                <figure class="tex-figure tex-figure-photo" id="fig-1.1">
+                    <img src="../images/maintex/sec_3d/ch01_s1.jpg" alt="ภาพที่ 1.1 สเกลขนาดในโลกจุลชีววิทยา" loading="lazy">
+                    <figcaption><strong>ภาพที่ 1.1</strong>&ensp;การเปรียบเทียบสเกลขนาดในโลกจุลชีววิทยาตั้งแต่ระดับโคโลนีบนจานเพาะเชื้อ ($\text{mm}$), เซลล์แบคทีเรีย ($\mu\text{m}$) ไปจนถึงอนุภาคไวรัสและชีวโมเลกุล ($\text{nm}$) พร้อมเครื่องมือวัดละเอียดมาตรฐานสากล</figcaption>
+                </figure>
+
+                <p>ระบบหน่วยระหว่างชาติ หรือ <strong>ระบบหน่วยเอสไอ</strong> (<strong>International System of Units</strong> หรือ <strong>Le Système International d'Unités — SI</strong>) เป็นภาษาสากลทางวิทยาศาสตร์ที่ทำให้นักจุลชีววิทยาทั่วโลกสามารถสื่อสารข้อมูลเชิงปริมาณร่วมกันได้อย่างเที่ยงตรง ไม่ว่าจะเป็นขนาดของเซลล์ ความหนาของเยื่อหุ้มเซลล์ อุณหภูมิการบ่มเพาะเชื้อ เวลาการแบ่งเซลล์ ปริมาตรสารละลายบัฟเฟอร์ และความเข้มข้นของสารอาหาร</p>
+
+                <div class="p-6 rounded-2xl bg-gradient-to-br from-cyan-950/40 via-slate-900 to-slate-900 border border-cyan-500/30 space-y-3">
+                    <div class="flex items-center gap-2 text-cyan-400 font-bold text-base">
+                        <i class="fa-solid fa-atom"></i> การปฏิวัติประวัติศาสตร์ระบบหน่วยเอสไอ ค.ศ. 2019 (The 2019 SI Redefinition)
+                    </div>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        ในอดีต ระบบหน่วยวัดผูกโยงอยู่กับ <strong>"วัตถุประดิษฐ์ทางกายภาพ (Physical Artifacts)"</strong> เช่น แท่งเมตรมาตรฐานแพลทินัม-อิริเดียม หรือก้อนกิโลกรัมต้นแบบนานาชาติ (<em>Le Grand K</em>) ซึ่งมีข้อจำกัดร้ายแรงคือ <em>มวลสามารถเปลี่ยนแปลงได้ตามกาลเวลาจากการสึกหรอหรือปนเปื้อนฝุ่นผงระดับไมโครกรัม</em> และหากวัตถุต้นแบบถูกทำลาย มาตรฐานการวัดของมนุษยชาติจะสูญสิ้นไปทันที
+                    </p>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        จนกระทั่งเมื่อวันที่ <strong>20 พฤษภาคม ค.ศ. 2019</strong> ที่ประชุมใหญ่ว่าด้วยการชั่งตวงวัด (CGPM / BIPM) ได้ประกาศการเปลี่ยนแปลงครั้งประวัติศาสตร์ โดย <strong>"ยกเลิกการนิยามหน่วยผ่านวัตถุประดิษฐ์ทั้งหมด"</strong> แล้วเปลี่ยนมากำหนดค่าคงที่ที่แน่นอน (Exact Numerical Values โดยไม่มีความคลาดเคลื่อน $\Delta = 0$) ให้กับ <strong>7 ค่าคงตัวพื้นฐานแห่งเอกภพ (The 7 Defining Physical Constants)</strong> ทำให้ทุกห้องปฏิบัติการทั่วโลกสามารถสร้างมาตรฐานหน่วยวัดที่เที่ยงตรงได้ด้วยตนเอง
+                    </p>
+                </div>
+
+                <!-- SVG Diagram 1: SI Network -->
+                <figure class="tex-figure tex-figure-diagram my-8" id="fig-si-network">
+                    <div class="rounded-2xl overflow-hidden border border-slate-700/80 shadow-2xl bg-slate-950 p-2">
+                        <img src="../images/maintex/tikz/ch01_si_network.svg" alt="แผนผัง 7 ค่าคงตัวพื้นฐานกับ 7 หน่วยฐานเอสไอ" class="w-full h-auto" loading="lazy">
+                    </div>
+                    <figcaption><strong>ภาพที่ 1.2</strong>&ensp;แผนผังเครือข่ายความสัมพันธ์ระหว่าง 7 ค่าคงตัวพื้นฐานแห่งเอกภพ (Defining Constants) สู่ 7 หน่วยฐานเอสไอ (Revised SI 2019) ได้แก่ วินาที ($\text{s}$), เมตร ($\text{m}$), กิโลกรัม ($\text{kg}$), แอมแปร์ ($\text{A}$), เคลวิน ($\text{K}$), โมล ($\text{mol}$) และแคนเดลา ($\text{cd}$)</figcaption>
+                </figure>
+
+                <h3 class="text-xl font-bold text-white pt-4 pb-2 border-b border-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-list-ol text-cyan-400"></i> เจาะลึก 7 หน่วยฐานเอสไอ (7 SI Base Units): นิยามจากอดีตสู่ปัจจุบัน
+                </h3>
+
+                <!-- Unit 1: Metre -->
+                <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center font-mono">1</span>
+                            <div>
+                                <h4 class="text-base font-bold text-white">ความยาว (Length, $l$) — เมตร (Metre, $\text{m}$)</h4>
+                                <span class="text-xs text-cyan-400 font-mono">ตรึงค่าคงตัว: อัตราเร็วของแสงในสุญญากาศ $c = 299{,}792{,}458\text{ m/s}$</span>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 text-xs font-mono font-bold border border-cyan-500/30">SI BASE: m</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
+                        <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
+                            <strong class="text-amber-400 block mb-1">📜 นิยามในอดีต:</strong>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>ค.ศ. 1791:</strong> หนึ่งในสิบล้าน ($	frac{1}{10^7}$) ของระยะทางจากขั้วโลกเหนือถึงเส้นศูนย์สูตรผ่านปารีส</li>
+                                <li><strong>ค.ศ. 1889:</strong> ระยะห่างระหว่างรอยขีดบนแท่งโลหะผสมแพลทินัม-อิริเดียม 90:10 (Standard Metre Bar)</li>
+                                <li><strong>ค.ศ. 1960:</strong> $1{,}650{,}763.73$ เท่าของความยาวคลื่นแสงสีส้ม-แดงของอะตอมคริปทอน-86 ($^{86}\text{Kr}$)</li>
+                            </ul>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-950/70 border border-emerald-500/30">
+                            <strong class="text-emerald-400 block mb-1">🔬 นิยามในปัจจุบัน (ตั้งแต่ ค.ศ. 1983):</strong>
+                            <p class="leading-relaxed">
+                                <em>"ระยะทางที่แสงเคลื่อนที่ได้ในสุญญากาศ ในช่วงเวลาเท่ากับ $rac{1}{299{,}792{,}458}$ วินาที"</em> โดยกำหนดให้อัตราเร็วแสงในสุญญากาศ $c$ มีค่าคงที่แน่นอนเท่ากับ $299{,}792{,}458\text{ m/s}$ ไม่มีความคลาดเคลื่อน
+                            </p>
+                            <div class="mt-2 text-slate-400 font-mono text-[11px]">
+                                <strong>บทบาทในจุลชีววิทยา:</strong> วัดเส้นผ่านศูนย์กลางโคโลนีบนจานวุ้น ($\text{mm}$), วัดขนาดเซลล์แบคทีเรีย ($\mu\text{m}$), ความหนาเยื่อหุ้มเซลล์ และขนาดอนุภาคไวรัส ($\text{nm}$)
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Figure: Def Metre -->
+                    <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-2">
+                        <img src="../images/maintex/tikz/ch01_def_meter.svg" alt="วิวัฒนาการนิยาม 1 เมตร" class="w-full h-auto" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Unit 2: Kilogram -->
+                <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center font-mono">2</span>
+                            <div>
+                                <h4 class="text-base font-bold text-white">มวล (Mass, $m$) — กิโลกรัม (Kilogram, $\text{kg}$)</h4>
+                                <span class="text-xs text-amber-400 font-mono">ตรึงค่าคงตัว: ค่าคงตัวของพลังค์ $h = 6.626\,070\,15 \times 10^{-34}\text{ J}\cdot\text{s}$ ($\text{kg}\cdot\text{m}^2\cdot\text{s}^{-1}$)</span>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 text-xs font-mono font-bold border border-amber-500/30">SI BASE: kg</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
+                        <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
+                            <strong class="text-amber-400 block mb-1">📜 นิยามในอดีต:</strong>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>ค.ศ. 1795:</strong> มวลของน้ำบริสุทธิ์ปริมาตร $1\text{ dm}^3$ ($1\text{ L}$) ที่จุดเยือกแข็ง (ต่อมาเปลี่ยนเป็นอุณหภูมิความหนาแน่นสูงสุด $4^\circ\text{C}$)</li>
+                                <li><strong>ค.ศ. 1889–2019:</strong> มวลของทรงกระบอกโลหะผสมแพลทินัม-อิริเดียมต้นแบบนานาชาติ (<em>International Prototype of the Kilogram — IPK / Le Grand K</em>) ซึ่งเก็บรักษาในครอบแก้วสุญญากาศ 3 ชั้น ณ BIPM เมืองเซฟวร์ ประเทศฝรั่งเศส (มวลลอยตัวเปลี่ยนไปราว $50\,\mu\text{g}$ ในรอบ 100 ปี)</li>
+                            </ul>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-950/70 border border-emerald-500/30">
+                            <strong class="text-emerald-400 block mb-1">🔬 นิยามในปัจจุบัน (ตั้งแต่ 20 พฤษภาคม 2019):</strong>
+                            <p class="leading-relaxed">
+                                <em>"นิยามผ่านค่าคงตัวของพลังค์ ($h$) ให้มีค่าคงที่เท่ากับ $6.626\,070\,15 \times 10^{-34}\text{ kg}\cdot\text{m}^2\cdot\text{s}^{-1}$"</em> โดยใช้ <strong>เครื่องชั่งคิบบิล (Kibble Balance)</strong> สร้างสมดุลระหว่างแรงโน้มถ่วงทางกลกับแรงแม่เหล็กไฟฟ้าในระดับควอนตัม
+                            </p>
+                            <div class="mt-2 text-slate-400 font-mono text-[11px]">
+                                <strong>บทบาทในจุลชีววิทยา:</strong> ชั่งผงอาหารเลี้ยงเชื้อ ($g, \text{mg}$), การชั่งน้ำกลั่นสอบเทียบความแม่นยำของไมโครปิเปต ($1{,}000\,\mu\text{L} = 1.0000\text{ g}$) และแรงเหวี่ยงหนีศูนย์กลางในการปั่นตกตะกอนเชื้อ
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Figure: Def Kilogram -->
+                    <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-2">
+                        <img src="../images/maintex/tikz/ch01_def_kilogram.svg" alt="วิวัฒนาการนิยาม 1 กิโลกรัม" class="w-full h-auto" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Unit 3: Second -->
+                <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-xl bg-sky-500/20 text-sky-400 font-bold flex items-center justify-center font-mono">3</span>
+                            <div>
+                                <h4 class="text-base font-bold text-white">เวลา (Time, $t$) — วินาที (Second, $\text{s}$)</h4>
+                                <span class="text-xs text-sky-400 font-mono">ตรึงค่าคงตัว: ความถี่ทรานซิชันไฮเปอร์ไฟน์ของอะตอม $^{133}\text{Cs}$, $\Delta
+u_{\text{Cs}} = 9{,}192{,}631{,}770\text{ Hz}$ ($\text{s}^{-1}$)</span>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-sky-500/10 text-sky-300 text-xs font-mono font-bold border border-sky-500/30">SI BASE: s</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
+                        <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
+                            <strong class="text-amber-400 block mb-1">📜 นิยามในอดีต:</strong>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>ก่อน ค.ศ. 1956:</strong> $rac{1}{86{,}400}$ ของวันสุริยคติเฉลี่ย (Mean Solar Day) โดยที่ $1\text{ วัน} = 24 \times 60 \times 60\text{ วินาที}$ (แต่โลกหมุนช้าลงอย่างช้า ๆ จากแรงเสียดทานของน้ำขึ้นน้ำลง)</li>
+                                <li><strong>ค.ศ. 1956–1967:</strong> เสี้ยวส่วนของปีทรอปิก ค.ศ. 1900 (Ephemeris Second)</li>
+                            </ul>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-950/70 border border-emerald-500/30">
+                            <strong class="text-emerald-400 block mb-1">🔬 นิยามในปัจจุบัน (ตั้งแต่ ค.ศ. 1967):</strong>
+                            <p class="leading-relaxed">
+                                <em>"ช่วงเวลาที่เท่ากับ $9{,}192{,}631{,}770$ คาบของการแผ่รังสีที่เกิดจากการเปลี่ยนระดับพลังงานไฮเปอร์ไฟน์ในสถานะพื้นของอะตอมซีเซียม-133 ($^{133}\text{Cs}$) ที่อุณหภูมิศูนย์สัมบูรณ์"</em> (นาฬิกาอะตอมมีความคลาดเคลื่อนไม่เกิน 1 วินาทีใน 100 ล้านปี)
+                            </p>
+                            <div class="mt-2 text-slate-400 font-mono text-[11px]">
+                                <strong>บทบาทในจุลชีววิทยา:</strong> อัตราการแบ่งเซลล์ (Generation Time), เวลาในการนึ่งฆ่าเชื้อด้วยความดันไอ (Autoclave 15–20 นาที หรือ 900–1,200 วินาที) และระยะเวลาการหมุนปั่นเหวี่ยง (Centrifugation)
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Figure: Def Second -->
+                    <div class="rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-2">
+                        <img src="../images/maintex/tikz/ch01_def_second.svg" alt="วิวัฒนาการนิยาม 1 วินาที" class="w-full h-auto" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Units 4-7: Grid Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Unit 4: Ampere -->
+                    <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="w-8 h-8 rounded-lg bg-rose-500/20 text-rose-400 font-bold flex items-center justify-center font-mono">4</span>
+                                <h4 class="text-sm font-bold text-white">กระแสไฟฟ้า — แอมแปร์ (Ampere, $\text{A}$)</h4>
+                            </div>
+                            <span class="px-2.5 py-0.5 rounded-full bg-rose-500/10 text-rose-300 text-[11px] font-mono border border-rose-500/30">A</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            <strong>นิยามปัจจุบัน (2019):</strong> ตรึงค่า <strong>ประจุไฟฟ้ามูลฐาน (Elementary Charge, $e$)</strong> ให้เท่ากับ $1.602\,176\,634 \times 10^{-19}\text{ C}$ ($\text{A}\cdot\text{s}$)<br>
+                            <em>(ในอดีตนิยามจากแรงดึงดูดเชิงกล $2 \times 10^{-7}\text{ N/m}$ ระหว่างลวดตัวนำคู่ขนาน 2 เส้นยาวอนันต์ในสุญญากาศ)</em>
+                        </p>
+                        <div class="text-[11px] text-slate-400 font-mono border-t border-slate-800 pt-2">
+                            <strong>จุลชีววิทยา:</strong> กระแสไฟฟ้าในเจลอิเล็กโทรโฟเรซิส (Agarose & SDS-PAGE) แยกสาย DNA/โปรตีน และการวัดสัญญาณ Patch-clamp ศักย์ไฟฟ้าเยื่อหุ้มเซลล์
+                        </div>
+                    </div>
+
+                    <!-- Unit 5: Kelvin -->
+                    <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 font-bold flex items-center justify-center font-mono">5</span>
+                                <h4 class="text-sm font-bold text-white">อุณหภูมิอุณหพลวัต — เคลวิน (Kelvin, $\text{K}$)</h4>
+                            </div>
+                            <span class="px-2.5 py-0.5 rounded-full bg-orange-500/10 text-orange-300 text-[11px] font-mono border border-orange-500/30">K</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            <strong>นิยามปัจจุบัน (2019):</strong> ตรึง <strong>ค่าคงตัวบ็อลทซ์มัน (Boltzmann Constant, $k$)</strong> ให้เท่ากับ $1.380\,649 \times 10^{-23}\text{ J/K}$ ผูกพลังงานจลน์เฉลี่ยของอนุภาคเข้ากับอุณหภูมิสัมบูรณ์<br>
+                            <em>(ในอดีตนิยามจาก $rac{1}{273.16}$ ของจุดร่วมสามของน้ำ Triple Point)</em> โดย $T_{\text{K}} = T_{^\circ\text{C}} + 273.15$
+                        </p>
+                        <div class="text-[11px] text-slate-400 font-mono border-t border-slate-800 pt-2">
+                            <strong>จุลชีววิทยา:</strong> การบ่มเชื้อ ($37^\circ\text{C} = 310.15\text{ K}$), การฆ่าเชื้อ Autoclave ($121^\circ\text{C} = 394.15\text{ K}$), อุณหภูมิการคลายและต่อสายดีเอ็นเอใน PCR ($95^\circ\text{C}, 55^\circ\text{C}, 72^\circ\text{C}$)
+                        </div>
+                    </div>
+
+                    <!-- Unit 6: Mole -->
+                    <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 font-bold flex items-center justify-center font-mono">6</span>
+                                <h4 class="text-sm font-bold text-white">ปริมาณของสาร — โมล (Mole, $\text{mol}$)</h4>
+                            </div>
+                            <span class="px-2.5 py-0.5 rounded-full bg-purple-500/10 text-purple-300 text-[11px] font-mono border border-purple-500/30">mol</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            <strong>นิยามปัจจุบัน (2019):</strong> มีจำนวนอนุภาคมูลฐาน (อะตอม โมเลกุล หรือไอออน) แน่นอนเท่ากับ <strong>$6.022\,140\,76 \times 10^{23}$ อนุภาค</strong> ซึ่งคือ <strong>ค่าคงตัวอาโวกาโดร (Avogadro Constant, $N_{\text{A}}$)</strong><br>
+                            <em>(ในอดีตนิยามจากจำนวนอะตอมในคาร์บอน-12 บริสุทธิ์มวล $0.012\text{ kg}$)</em>
+                        </p>
+                        <div class="text-[11px] text-slate-400 font-mono border-t border-slate-800 pt-2">
+                            <strong>จุลชีววิทยา:</strong> การเตรียมสารละลายความเข้มข้น ($\text{M} = \text{mol/L}$, $\text{mM}$, $\mu\text{M}$), จำนวนโมเลกุลสารตั้งต้นในเอนไซม์จลนศาสตร์ และจำนวนก๊อปปี้พลาสมิดดีเอ็นเอ
+                        </div>
+                    </div>
+
+                    <!-- Unit 7: Candela -->
+                    <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="w-8 h-8 rounded-lg bg-yellow-500/20 text-yellow-400 font-bold flex items-center justify-center font-mono">7</span>
+                                <h4 class="text-sm font-bold text-white">ความเข้มการส่องสว่าง — แคนเดลา (Candela, $\text{cd}$)</h4>
+                            </div>
+                            <span class="px-2.5 py-0.5 rounded-full bg-yellow-500/10 text-yellow-300 text-[11px] font-mono border border-yellow-500/30">cd</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            <strong>นิยามปัจจุบัน:</strong> ตรึง <strong>ประสิทธิผลของการส่องสว่าง (Luminous Efficacy, $K_{\text{cd}}$)</strong> ของรังสีเอกรงค์ความถี่ $540 \times 10^{12}\text{ Hz}$ (แสงสีเขียว $\lambda pprox 555\text{ nm}$) ให้มีค่าเท่ากับ $683\text{ lm/W}$ ($\text{cd}\cdot\text{sr}\cdot\text{W}^{-1}$)<br>
+                            <em>(ในอดีตนิยามจากความสว่างของเทียนไขมาตรฐานไขปลาวาฬ Sperm Whale Candle)</em>
+                        </p>
+                        <div class="text-[11px] text-slate-400 font-mono border-t border-slate-800 pt-2">
+                            <strong>จุลชีววิทยา:</strong> แสงสว่างสำหรับการเพาะเลี้ยงสาหร่ายเซลล์เดียวและไซยาโนแบคทีเรียใน Photobioreactor, หลอดไฟกล้องจุลทรรศน์ฟลูออเรสเซนต์, และการวัดการเรืองแสงชีวภาพ (Bioluminescence)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═════ 3 COMPREHENSIVE TABLES ═════ -->
+
+                <!-- TABLE 1.1: 7 SI BASE UNITS -->
+                <div class="tex-tablefig mt-10" id="tab-1.1">
+                    <div class="tex-tablecap">
+                        <strong>ตารางที่ 1.1</strong>&ensp;สรุปคุณสมบัติ 7 หน่วยฐานเอสไอ (7 SI Base Units) นิยามอดีต-ปัจจุบัน ค่าคงตัวตรึง และการประยุกต์ใช้ในจุลชีววิทยา
+                    </div>
+                    <div class="tex-table-wrap overflow-x-auto">
+                        <table class="tex-table w-full text-xs">
+                            <thead>
+                                <tr class="bg-slate-800/90 text-white border-b border-slate-700">
+                                    <th class="p-3 text-left">ปริมาณฐาน (Quantity)</th>
+                                    <th class="p-3 text-center">สัญลักษณ์ปริมาณ</th>
+                                    <th class="p-3 text-left">ชื่อหน่วยฐาน (Unit)</th>
+                                    <th class="p-3 text-center">สัญลักษณ์หน่วย</th>
+                                    <th class="p-3 text-left">ค่าคงตัวฟิสิกส์ที่ใช้ตรึง (Defining Constant)</th>
+                                    <th class="p-3 text-left">ตัวอย่างการใช้งานจริงในแล็บจุลชีววิทยา</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800">
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ความยาว (Length)</td>
+                                    <td class="p-3 text-center font-mono">$l, x, r$</td>
+                                    <td class="p-3 text-cyan-300 font-semibold">เมตร (metre)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{m}$</td>
+                                    <td class="p-3 font-mono text-[11px] text-emerald-400">$c = 299\,792\,458\text{ m/s}$ (อัตราเร็วแสง)</td>
+                                    <td class="p-3">วัดขนาดเซลล์แบคทีเรีย ($\mu\text{m}$), ไวรัส ($\text{nm}$), ขนาดโคโลนีบนจานวุ้น ($\text{mm}$)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">มวล (Mass)</td>
+                                    <td class="p-3 text-center font-mono">$m$</td>
+                                    <td class="p-3 text-amber-300 font-semibold">กิโลกรัม (kilogram)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{kg}$</td>
+                                    <td class="p-3 font-mono text-[11px] text-emerald-400">$h = 6.626\,070\,15 \times 10^{-34}\text{ J}\cdot\text{s}$ (พลังค์)</td>
+                                    <td class="p-3">ชั่งสารเคมีอาหารเลี้ยงเชื้อ ($\text{g, mg}$), สอบเทียบไมโครปิเปตผ่านน้ำกลั่น ($1\,\text{mL} = 1\text{ g}$)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">เวลา (Time)</td>
+                                    <td class="p-3 text-center font-mono">$t$</td>
+                                    <td class="p-3 text-sky-300 font-semibold">วินาที (second)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-sky-400">$\text{s}$</td>
+                                    <td class="p-3 font-mono text-[11px] text-emerald-400">$\Delta
+u_{\text{Cs}} = 9\,192\,631\,770\text{ s}^{-1}$ (ไฮเปอร์ไฟน์ $^{133}\text{Cs}$)</td>
+                                    <td class="p-3">ระยะเวลาการแบ่งเซลล์ (Doubling time), เวลานึ่งฆ่าเชื้อ Autoclave ($15\text{--}20\text{ min}$)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">กระแสไฟฟ้า (Electric current)</td>
+                                    <td class="p-3 text-center font-mono">$I, i$</td>
+                                    <td class="p-3 text-rose-300 font-semibold">แอมแปร์ (ampere)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-rose-400">$\text{A}$</td>
+                                    <td class="p-3 font-mono text-[11px] text-emerald-400">$e = 1.602\,176\,634 \times 10^{-19}\text{ C}$ (ประจุมูลฐาน)</td>
+                                    <td class="p-3">กระแสแยก DNA ในเจลอิเล็กโทรโฟเรซิส ($50\text{--}100\text{ mA}$), การวัดศักย์ไฟฟ้าเยื่อหุ้มเซลล์</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">อุณหภูมิอุณหพลวัต (Temperature)</td>
+                                    <td class="p-3 text-center font-mono">$T$</td>
+                                    <td class="p-3 text-orange-300 font-semibold">เคลวิน (kelvin)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-orange-400">$\text{K}$</td>
+                                    <td class="p-3 font-mono text-[11px] text-emerald-400">$k = 1.380\,649 \times 10^{-23}\text{ J/K}$ (บ็อลทซ์มัน)</td>
+                                    <td class="p-3">ตู้บ่มเชื้อ ($37^\circ\text{C} = 310.15\text{ K}$), หม้อนึ่งฆ่าเชื้อ ($121^\circ\text{C} = 394.15\text{ K}$), PCR ($95^\circ\text{C}$)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ปริมาณของสาร (Amount of substance)</td>
+                                    <td class="p-3 text-center font-mono">$n$</td>
+                                    <td class="p-3 text-purple-300 font-semibold">โมล (mole)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-purple-400">$\text{mol}$</td>
+                                    <td class="p-3 font-mono text-[11px] text-emerald-400">$N_{\text{A}} = 6.022\,140\,76 \times 10^{23}\text{ mol}^{-1}$ (อาโวกาโดร)</td>
+                                    <td class="p-3">ความเข้มข้นสารละลายบัฟเฟอร์ ($\text{mol/L}$ หรือ $\text{M}$), จำนวนโมเลกุลไพรเมอร์ใน PCR</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ความเข้มของการส่องสว่าง (Luminous intensity)</td>
+                                    <td class="p-3 text-center font-mono">$I_v$</td>
+                                    <td class="p-3 text-yellow-300 font-semibold">แคนเดลา (candela)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-yellow-400">$\text{cd}$</td>
+                                    <td class="p-3 font-mono text-[11px] text-emerald-400">$K_{\text{cd}} = 683\text{ lm/W}$ ที่ความถี่ $540\text{ THz}$</td>
+                                    <td class="p-3">การให้แสงสว่างเพาะเลี้ยงสาหร่ายเซลล์เดียว, หลอดไฟฟลูออเรสเซนต์, การเรืองแสงแบคทีเรีย</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TABLE 1.2: SI DERIVED UNITS -->
+                <div class="tex-tablefig mt-8" id="tab-1.2">
+                    <div class="tex-tablecap">
+                        <strong>ตารางที่ 1.2</strong>&ensp;หน่วยอนุพันธ์เอสไอ (SI Derived Units) ที่สำคัญทางฟิสิกส์และการประยุกต์ใช้ในห้องปฏิบัติการจุลชีววิทยา
+                    </div>
+                    <div class="tex-table-wrap overflow-x-auto">
+                        <table class="tex-table w-full text-xs">
+                            <thead>
+                                <tr class="bg-slate-800/90 text-white border-b border-slate-700">
+                                    <th class="p-3 text-left">ปริมาณอนุพันธ์ (Derived Quantity)</th>
+                                    <th class="p-3 text-left">ชื่อหน่วย</th>
+                                    <th class="p-3 text-center">สัญลักษณ์</th>
+                                    <th class="p-3 text-left">ความสัมพันธ์กับหน่วยอื่น</th>
+                                    <th class="p-3 text-left">ความสัมพันธ์กับหน่วยฐาน SI</th>
+                                    <th class="p-3 text-left">การประยุกต์ใช้ในงานจุลชีววิทยา</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800">
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ความถี่ (Frequency)</td>
+                                    <td class="p-3">เฮิรตซ์ (hertz)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{Hz}$</td>
+                                    <td class="p-3 font-mono">$1/\text{s}$</td>
+                                    <td class="p-3 font-mono">$\text{s}^{-1}$</td>
+                                    <td class="p-3">ความถี่การแกว่งอัลตราโซนิกทำลายผนังเซลล์, ความถี่แสงส่องเซลล์</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">แรง (Force)</td>
+                                    <td class="p-3">นิวตัน (newton)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{N}$</td>
+                                    <td class="p-3 font-mono">$\text{kg}\cdot\text{m/s}^2$</td>
+                                    <td class="p-3 font-mono">$\text{m}\cdot\text{kg}\cdot\text{s}^{-2}$</td>
+                                    <td class="p-3">แรงของแฟลกเจลลาขับเคลื่อนแบคทีเรีย ($\text{pN}$), แรงหนีศูนย์กลางในการปั่นตกตะกอน</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ความดัน (Pressure / Stress)</td>
+                                    <td class="p-3">พาสคาล (pascal)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{Pa}$</td>
+                                    <td class="p-3 font-mono">$\text{N/m}^2$</td>
+                                    <td class="p-3 font-mono">$\text{m}^{-1}\cdot\text{kg}\cdot\text{s}^{-2}$</td>
+                                    <td class="p-3">ความดันไอน้ำในหม้อนึ่งฆ่าเชื้อ Autoclave ($103\text{ kPa} pprox 15\text{ psi}$), ความดันออสโมซิส</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ความหนืดพลวัต (Dynamic Viscosity)</td>
+                                    <td class="p-3">พาสคาล-วินาที</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{Pa}\cdot\text{s}$</td>
+                                    <td class="p-3 font-mono">$\text{N}\cdot\text{s/m}^2$</td>
+                                    <td class="p-3 font-mono">$\text{m}^{-1}\cdot\text{kg}\cdot\text{s}^{-1}$</td>
+                                    <td class="p-3">ความหนืดของน้ำและอาหารเลี้ยงเชื้อจุลินทรีย์ ($\eta_{\text{water}} pprox 10^{-3}\text{ Pa}\cdot\text{s} = 1\text{ cP}$)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">พลังงาน งาน ความร้อน (Energy / Work)</td>
+                                    <td class="p-3">จูล (joule)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{J}$</td>
+                                    <td class="p-3 font-mono">$\text{N}\cdot\text{m}$</td>
+                                    <td class="p-3 font-mono">$\text{m}^2\cdot\text{kg}\cdot\text{s}^{-2}$</td>
+                                    <td class="p-3">พลังงานสลายพันธะไฮโดรเจนในดีเอ็นเอ, การปลดปล่อยพลังงานของ ATP ($30.5\text{ kJ/mol}$)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">กำลัง (Power)</td>
+                                    <td class="p-3">วัตต์ (watt)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{W}$</td>
+                                    <td class="p-3 font-mono">$\text{J/s}$</td>
+                                    <td class="p-3 font-mono">$\text{m}^2\cdot\text{kg}\cdot\text{s}^{-3}$</td>
+                                    <td class="p-3">กำลังไฟฟ้าของหม้อนึ่งฆ่าเชื้อ เครื่องปั่นเหวี่ยง และหลอดไฟตู้บ่มเชื้อ</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ประจุไฟฟ้า (Electric charge)</td>
+                                    <td class="p-3">คูลอมบ์ (coulomb)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{C}$</td>
+                                    <td class="p-3 font-mono">$\text{A}\cdot\text{s}$</td>
+                                    <td class="p-3 font-mono">$\text{s}\cdot\text{A}$</td>
+                                    <td class="p-3">ประจุลบสุทธิบนสาย Phosphodiester ของ DNA และประจุโปรตีน</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ความต่างศักย์ไฟฟ้า (Voltage / Potential)</td>
+                                    <td class="p-3">โวลต์ (volt)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{V}$</td>
+                                    <td class="p-3 font-mono">$\text{W/A}$</td>
+                                    <td class="p-3 font-mono">$\text{m}^2\cdot\text{kg}\cdot\text{s}^{-3}\cdot\text{A}^{-1}$</td>
+                                    <td class="p-3">แรงดันไฟฟ้าสำหรับแยกแถบ DNA ($100\text{ V}$), ศักย์ไฟฟ้าเยื่อหุ้มเซลล์ ($-70\text{ mV}$)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ความต้านทานไฟฟ้า (Resistance)</td>
+                                    <td class="p-3">โอห์ม (ohm)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\Omega$</td>
+                                    <td class="p-3 font-mono">$\text{V/A}$</td>
+                                    <td class="p-3 font-mono">$\text{m}^2\cdot\text{kg}\cdot\text{s}^{-3}\cdot\text{A}^{-2}$</td>
+                                    <td class="p-3">ความต้านทานของเยื่อหุ้มเซลล์ (Trans-epithelial electrical resistance — TEER)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">สภาพนำไฟฟ้า (Conductance)</td>
+                                    <td class="p-3">ซีเมนส์ (siemens)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{S}$</td>
+                                    <td class="p-3 font-mono">$\Omega^{-1}$</td>
+                                    <td class="p-3 font-mono">$\text{m}^{-2}\cdot\text{kg}^{-1}\cdot\text{s}^3\cdot\text{A}^2$</td>
+                                    <td class="p-3">การตรวจสอบความบริสุทธิ์ของน้ำกลั่นและระดับไอออนในอาหารเลี้ยงเชื้อ (EC Meter)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">กิจกรรมการเร่งปฏิกิริยา (Catalytic activity)</td>
+                                    <td class="p-3">คาทาล (katal)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{kat}$</td>
+                                    <td class="p-3 font-mono">$\text{mol/s}$</td>
+                                    <td class="p-3 font-mono">$\text{mol}\cdot\text{s}^{-1}$</td>
+                                    <td class="p-3">วัดอัตราการเร่งปฏิกิริยาของเอนไซม์จากจุลินทรีย์ (เช่น $eta$-galactosidase, Taq Polymerase)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ฟลักซ์ส่องสว่าง & ความสว่าง</td>
+                                    <td class="p-3">ลูเมน (lm) / ลักซ์ (lx)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{lm / lx}$</td>
+                                    <td class="p-3 font-mono">$\text{cd}\cdot\text{sr} \text{ / } \text{lm/m}^2$</td>
+                                    <td class="p-3 font-mono">$\text{m}^{-2}\cdot\text{cd}$</td>
+                                    <td class="p-3">ความเข้มแสงบนโต๊ะเขี่ยเชื้อปลอดเชื้อ (Laminar Airflow) และตู้บ่มเพาะสาหร่าย</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ปริมาณรังสีดูดกลืน (Absorbed dose)</td>
+                                    <td class="p-3">เกรย์ (gray)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{Gy}$</td>
+                                    <td class="p-3 font-mono">$\text{J/kg}$</td>
+                                    <td class="p-3 font-mono">$\text{m}^2\cdot\text{s}^{-2}$</td>
+                                    <td class="p-3">การฉายรังสีแกมมาเพื่อทำหมันอุปกรณ์พลาสติกและฆ่าเชื้อในอาหาร (Food Irradiation)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TABLE 1.3: SUPPLEMENTARY & NON-SI UNITS -->
+                <div class="tex-tablefig mt-8" id="tab-1.3">
+                    <div class="tex-tablecap">
+                        <strong>ตารางที่ 1.3</strong>&ensp;หน่วยเสริมและหน่วยนอกระบบเอสไอที่ยอมรับให้ใช้ร่วมกับระบบเอสไอ (Supplementary & Accepted Non-SI Units) ในทางชีวการแพทย์และจุลชีววิทยา
+                    </div>
+                    <div class="tex-table-wrap overflow-x-auto">
+                        <table class="tex-table w-full text-xs">
+                            <thead>
+                                <tr class="bg-slate-800/90 text-white border-b border-slate-700">
+                                    <th class="p-3 text-left">ปริมาณ (Quantity)</th>
+                                    <th class="p-3 text-left">ชื่อหน่วย</th>
+                                    <th class="p-3 text-center">สัญลักษณ์</th>
+                                    <th class="p-3 text-left">ค่าเทียบเท่าในหน่วยเอสไอ (SI Equivalent)</th>
+                                    <th class="p-3 text-left">ความสำคัญและการใช้งานจริงในงานจุลชีววิทยา</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800">
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white" rowspan="2">มุมระนาบและมุมตัน (Angles) <span class="text-amber-400 font-normal">(หน่วยเสริม)</span></td>
+                                    <td class="p-3">เรเดียน (radian)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{rad}$</td>
+                                    <td class="p-3 font-mono">$1\text{ rad} = \text{m/m} = 1$</td>
+                                    <td class="p-3">ความเร็วเชิงมุมในการหมุน ($\omega = \text{rad/s}$) ของหัวปั่นเหวี่ยง Centrifuge</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3">สเตอเรเดียน (steradian)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{sr}$</td>
+                                    <td class="p-3 font-mono">$1\text{ sr} = \text{m}^2/\text{m}^2 = 1$</td>
+                                    <td class="p-3">มุมตันของการกระจายแสงของหลอด LED กล้องจุลทรรศน์และเซ็นเซอร์วัดการกระเจิงแสง</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ปริมาตร (Volume)</td>
+                                    <td class="p-3">ลิตร (litre)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{L, l}$</td>
+                                    <td class="p-3 font-mono">$1\text{ L} = 1\text{ dm}^3 = 10^{-3}\text{ m}^3 = 1{,}000\text{ mL}$</td>
+                                    <td class="p-3">ปริมาตรถังหมักอาหารเลี้ยงเชื้อ (Bioreactor) และปริมาตรของเหลวในห้องทดลอง</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ปริมาตรไมโครปิเปต (Microvolume)</td>
+                                    <td class="p-3">ไมโครลิตร (microlitre)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-amber-400">$\mu\text{L}$</td>
+                                    <td class="p-3 font-mono">$1\text{ }\mu\text{L} = 10^{-6}\text{ L} = 10^{-9}\text{ m}^3 = 1\text{ mm}^3$</td>
+                                    <td class="p-3">ปริมาตรมาตรฐานของการดูดจ่ายสารด้วยไมโครปิเปต P20, P200, P1000 และปฏิกิริยา PCR</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white" rowspan="3">เวลาที่ไม่ใช่ SI (Non-SI Time)</td>
+                                    <td class="p-3">นาที (minute)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{min}$</td>
+                                    <td class="p-3 font-mono">$1\text{ min} = 60\text{ s}$</td>
+                                    <td class="p-3">เวลาปั่นเหวี่ยง ($5\text{--}10\text{ min}$), เวลานึ่งฆ่าเชื้อ Autoclave ($15\text{ min}$)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3">ชั่วโมง (hour)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{h}$</td>
+                                    <td class="p-3 font-mono">$1\text{ h} = 60\text{ min} = 3{,}600\text{ s}$</td>
+                                    <td class="p-3">เวลาบ่มเชื้อแบคทีเรียข้ามคืน (Overnight incubation: $16\text{--}24\text{ h}$)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3">วัน (day)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{d}$</td>
+                                    <td class="p-3 font-mono">$1\text{ d} = 24\text{ h} = 86{,}400\text{ s}$</td>
+                                    <td class="p-3">การติดตามการเจริญของเชื้อราและแบคทีเรียที่โตช้า (เช่น <em>Mycobacterium</em> ใช้เวลาหลายวัน)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">อุณหภูมิ (Temperature)</td>
+                                    <td class="p-3">องศาเซลเซียส (degree Celsius)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-amber-400">$^\circ\text{C}$</td>
+                                    <td class="p-3 font-mono">$T_{^\circ\text{C}} = T_{\text{K}} - 273.15$</td>
+                                    <td class="p-3">หน่วยวัดอุณหภูมิที่แสดงบนหน้าปัดตู้บ่มเชื้อ ตู้เย็นเก็บตัวอย่าง และหม้อนึ่งฆ่าเชื้อ</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">มวลชีวโมเลกุล (Molecular mass)</td>
+                                    <td class="p-3">ดาลตัน (dalton)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{Da, kDa}$</td>
+                                    <td class="p-3 font-mono">$1\text{ Da} pprox 1.660\,539 \times 10^{-27}\text{ kg}$</td>
+                                    <td class="p-3">น้ำหนักโมเลกุลของโปรตีนและสายกรดนิวคลีอิก (เช่น เอนไซม์ไลโซไซม์ $14.3\text{ kDa}$, BSA $66.5\text{ kDa}$)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">พลังงานระดับโมเลกุล (Energy)</td>
+                                    <td class="p-3">อิเล็กตรอนโวลต์</td>
+                                    <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{eV}$</td>
+                                    <td class="p-3 font-mono">$1\text{ eV} pprox 1.602\,176 \times 10^{-19}\text{ J}$</td>
+                                    <td class="p-3">พลังงานโฟตอนของแสง UV สำหรับฆ่าเชื้อในตู้ Biosafety ($h
+u pprox 4.9\text{ eV}$ ที่ $\lambda = 254\text{ nm}$)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ระยะพันธะ/โครงสร้างผลึก (Length)</td>
+                                    <td class="p-3">อังสตรอม (ångström)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-amber-400">\AA</td>
+                                    <td class="p-3 font-mono">$1\text{ \AA} = 0.1\text{ nm} = 10^{-10}\text{ m}$</td>
+                                    <td class="p-3">ความยาวพันธะเคมี ระยะห่างเกลียวคู่ดีเอ็นเอ ($34\text{ \AA}$ ต่อรอบ) และความละเอียดกล้อง Cryo-EM</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ความดันก๊าซและของเหลว (Pressure)</td>
+                                    <td class="p-3">มิลลิเมตรปรอท (millimetre of mercury)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-amber-400">$\text{mmHg}$</td>
+                                    <td class="p-3 font-mono">$1\text{ mmHg} pprox 133.322\text{ Pa}$</td>
+                                    <td class="p-3">ความดันโลหิต การดูดสุญญากาศกรองอาหารเลี้ยงเชื้อ (Vacuum filtration) และความดันไอ</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TABLE 1.4: PREFIXES (PRESERVED & EXPANDED) -->
+                <div class="tex-tablefig mt-8" id="tab-1.4">
+                    <div class="tex-tablecap">
+                        <strong>ตารางที่ 1.4</strong>&ensp;คำอุปสรรคเอสไอ (SI Prefixes) ที่พบบ่อยที่สุดในห้องปฏิบัติการจุลชีววิทยาและฟิสิกส์การวัด
+                    </div>
+                    <div class="tex-table-wrap overflow-x-auto">
+                        <table class="tex-table w-full text-xs">
+                            <thead>
+                                <tr class="bg-slate-800/90 text-white border-b border-slate-700">
+                                    <th class="p-3 text-left">คำอุปสรรค</th>
+                                    <th class="p-3 text-center">สัญลักษณ์</th>
+                                    <th class="p-3 text-center">ตัวคูณฐานสิบ</th>
+                                    <th class="p-3 text-left">ตัวอย่างการใช้งานจริงในงานจุลชีววิทยา</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800">
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">กิโล (kilo)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{k}$</td>
+                                    <td class="p-3 text-center font-mono">$10^3 = 1{,}000$</td>
+                                    <td class="p-3">กิโลกรัม ($\text{kg}$), กิโลดาลตัน ($\text{kDa}$ ขนาดโมเลกุลโปรตีน), กิโลเบสคู่ ($\text{kb}$ ความยาวสาย DNA)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">เซนติ (centi)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{c}$</td>
+                                    <td class="p-3 text-center font-mono">$10^{-2} = 0.01$</td>
+                                    <td class="p-3">เซนติเมตร ($\text{cm}$ ขนาดจานเพาะเชื้อ $9\text{ cm}$), เซนติพอยส์ ($\text{cP}$ ความหนืดของน้ำกลั่น $1\text{ cP}$)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">มิลลิ (milli)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{m}$</td>
+                                    <td class="p-3 text-center font-mono">$10^{-3} = 0.001$</td>
+                                    <td class="p-3">มิลลิเมตร ($\text{mm}$ วัดขนาดโคโลนีแบคทีเรีย $1\text{--}5\text{ mm}$), มิลลิลิตร ($\text{mL}$), มิลลิกรัม ($\text{mg}$)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">ไมโคร (micro)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\mu$</td>
+                                    <td class="p-3 text-center font-mono">$10^{-6} = 0.000\,001$</td>
+                                    <td class="p-3">ไมโครเมตร ($\mu\text{m}$ เซลล์แบคทีเรีย <em>E. coli</em> $1\text{--}2\text{ }\mu\text{m}$), ไมโครลิตร ($\mu\text{L}$ ปริมาตรไมโครปิเปต)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">นาโน (nano)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{n}$</td>
+                                    <td class="p-3 text-center font-mono">$10^{-9} = 10^{-9}$</td>
+                                    <td class="p-3">นาโนเมตร ($\text{nm}$ ไวรัส $20\text{--}300\text{ nm}$, รูพรุนแผ่นกรอง $220\text{ nm}$, ความยาวคลื่นแสง $\lambda = 600\text{ nm}$)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-900/60">
+                                    <td class="p-3 font-bold text-white">พิโก (pico)</td>
+                                    <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{p}$</td>
+                                    <td class="p-3 text-center font-mono">$10^{-12} = 10^{-12}$</td>
+                                    <td class="p-3">พิโกกรัม ($\text{pg}$ มวลของแบคทีเรีย 1 เซลล์ $pprox 1\text{ pg}$), พิโกนิวตัน ($\text{pN}$ แรงขับเคลื่อนของมอเตอร์โมเลกุล)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </section>
         

@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 460" width="100%" height="100%" style="background:#090d16; font-family:'Prompt',system-ui,sans-serif;">
+  <defs>
+    <filter id="glowDropSec" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <rect width="920" height="460" fill="#090d16"/>
+
+  <!-- Title -->
+  <text x="460" y="38" text-anchor="middle" fill="#f8fafc" font-size="20" font-weight="700">วิวัฒนาการนิยาม "เวลา 1 วินาที (1 Second)" จากอดีตสู่ปัจจุบัน</text>
+  <text x="460" y="60" text-anchor="middle" fill="#94a3b8" font-size="12">จากการหมุนของโลก (วันสุริยคติ) สู่นาฬิกาอะตอมซีเซียม-133 ที่นับการสั่นระดับควอนตัม 9,192,631,770 รอบ</text>
+
+  <!-- Timeline Axis -->
+  <line x1="100" y1="180" x2="820" y2="180" stroke="#334155" stroke-width="4"/>
+  <circle cx="200" cy="180" r="10" fill="#38bdf8"/>
+  <circle cx="480" cy="180" r="10" fill="#60a5fa"/>
+  <circle cx="740" cy="180" r="12" fill="#38bdf8" stroke="#0284c7" stroke-width="3"/>
+
+  <!-- Stage 1: Ancient - 1956 (Mean Solar Day) -->
+  <g transform="translate(200, 0)" filter="url(#glowDropSec)">
+    <rect x="-55" y="115" width="110" height="26" rx="13" fill="#0284c7"/>
+    <text y="132" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="700" font-family="'JetBrains Mono',monospace">ก่อน ค.ศ. 1956</text>
+
+    <rect x="-105" y="215" width="210" height="215" rx="14" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+    <text y="240" text-anchor="middle" fill="#38bdf8" font-size="13" font-weight="700">1. วันสุริยคติเฉลี่ย</text>
+    <text y="258" text-anchor="middle" fill="#64748b" font-size="10" font-family="'JetBrains Mono',monospace">(Mean Solar Day)</text>
+
+    <!-- Visual Icon (Sun and Earth rotation) -->
+    <g transform="translate(0, 300)">
+      <circle r="12" fill="#f59e0b"/>
+      <circle cx="0" cy="0" r="28" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <circle cx="28" cy="0" r="6" fill="#38bdf8"/>
+      <!-- Clock hand -->
+      <path d="M 0 0 L 0 -10 M 0 0 L 8 0" stroke="#f8fafc" stroke-width="1.5"/>
+    </g>
+
+    <text y="350" text-anchor="middle" fill="#cbd5e1" font-size="11" font-weight="500">1 / 86,400 ของวัน</text>
+    <text y="368" text-anchor="middle" fill="#94a3b8" font-size="10">($24\text{ ชม.} \times 60 \times 60$)</text>
+    <text y="386" text-anchor="middle" fill="#94a3b8" font-size="10">อิงจากการหมุนรอบตัวเองของโลก</text>
+    <text y="404" text-anchor="middle" fill="#f87171" font-size="9">⚠️ โลกหมุนช้าลงจากแรงเสียดทานน้ำขึ้นลง</text>
+  </g>
+
+  <!-- Stage 2: 1956 - 1967 (Ephemeris Time) -->
+  <g transform="translate(480, 0)" filter="url(#glowDropSec)">
+    <rect x="-65" y="115" width="130" height="26" rx="13" fill="#2563eb"/>
+    <text y="132" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="700" font-family="'JetBrains Mono',monospace">ค.ศ. 1956–1967</text>
+
+    <rect x="-115" y="215" width="230" height="215" rx="14" fill="#0f172a" stroke="#60a5fa" stroke-width="1.5"/>
+    <text y="240" text-anchor="middle" fill="#60a5fa" font-size="13" font-weight="700">2. เวลาดาราศาสตร์</text>
+    <text y="258" text-anchor="middle" fill="#64748b" font-size="10" font-family="'JetBrains Mono',monospace">(Ephemeris Second: ปีทรอปิก 1900)</text>
+
+    <!-- Visual Icon (Orbit around Sun) -->
+    <g transform="translate(0, 300)">
+      <circle r="10" fill="#f59e0b"/>
+      <ellipse rx="36" ry="16" fill="none" stroke="#60a5fa" stroke-width="1.5"/>
+      <circle cx="36" cy="0" r="5" fill="#3b82f6"/>
+      <text y="5" text-anchor="middle" fill="#fff" font-size="8">Sun</text>
+    </g>
+
+    <text y="350" text-anchor="middle" fill="#cbd5e1" font-size="11" font-weight="500">1 / 31,556,925.9747</text>
+    <text y="368" text-anchor="middle" fill="#94a3b8" font-size="10">ของปีทรอปิก (Tropical Year)</text>
+    <text y="386" text-anchor="middle" fill="#94a3b8" font-size="10">ณ วันที่ 0 มกราคม ค.ศ. 1900</text>
+    <text y="404" text-anchor="middle" fill="#cbd5e1" font-size="9">คำนวณยากและต้องรอข้อมูลดาราศาสตร์</text>
+  </g>
+
+  <!-- Stage 3: 1967 - Present (Cesium-133 Atomic Clock ΔνCs) -->
+  <g transform="translate(740, 0)" filter="url(#glowDropSec)">
+    <rect x="-65" y="115" width="130" height="26" rx="13" fill="#0284c7"/>
+    <text y="132" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="700" font-family="'JetBrains Mono',monospace">1967–ปัจจุบัน</text>
+
+    <rect x="-115" y="215" width="230" height="215" rx="14" fill="#0c4a6e" stroke="#38bdf8" stroke-width="2.5"/>
+    <text y="240" text-anchor="middle" fill="#38bdf8" font-size="13" font-weight="800">3. นาฬิกาอะตอมซีเซียม-133</text>
+    <text y="258" text-anchor="middle" fill="#bae6fd" font-size="10" font-family="'JetBrains Mono',monospace">Δν_Cs = 9,192,631,770 Hz</text>
+
+    <!-- Visual Icon (Cesium nucleus and microwave hyperfine transition) -->
+    <g transform="translate(0, 298)">
+      <circle r="14" fill="#0284c7"/>
+      <text y="4" text-anchor="middle" fill="#fff" font-size="8" font-weight="800">¹³³Cs</text>
+      <!-- Microwave radiation photons -->
+      <path d="M 18 -10 Q 25 -16 32 -10 T 46 -10" fill="none" stroke="#facc15" stroke-width="2"/>
+      <path d="M -18 -10 Q -25 -16 -32 -10 T -46 -10" fill="none" stroke="#facc15" stroke-width="2"/>
+      <text y="24" text-anchor="middle" fill="#facc15" font-size="9" font-family="'JetBrains Mono',monospace">F=4 ↔ F=3 (Hyperfine)</text>
+    </g>
+
+    <text y="348" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="700">ช่วงเวลาเท่ากับ 9,192,631,770 คาบ</text>
+    <text y="366" text-anchor="middle" fill="#bae6fd" font-size="10">ของการแผ่รังสีที่คู่กับการเปลี่ยนระดับ</text>
+    <text y="384" text-anchor="middle" fill="#fef08a" font-size="11" font-weight="700">ไฮเปอร์ไฟน์ของอะตอม ¹³³Cs</text>
+    <text y="402" text-anchor="middle" fill="#7dd3fc" font-size="9">✓ คลาดเคลื่อนไม่เกิน 1 วินาทีใน 100 ล้านปี</text>
+  </g>
+</svg>
