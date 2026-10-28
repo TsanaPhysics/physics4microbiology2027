@@ -1068,5 +1068,7 @@ $enrichmentModules = [
             }
         }
     </script>
+    <!-- 🔬 น้อง i-MicroB AI Bot Assistor (Microbiology Biophysics Assistant) -->
+    <?php include '03_physics4microbio2026/includes/imicrob_chatbot.php'; ?>
 </body>
 </html>

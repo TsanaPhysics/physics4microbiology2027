@@ -117,5 +117,9 @@
 </script>
 <!-- Universal Online Lab Report Submitter -->
 <script src="<?php echo $basePath ?? ''; ?>js/lab_online_submit.js"></script>
+
+<!-- 🔬 น้อง i-MicroB AI Bot Assistor (Microbiology Biophysics Assistant) -->
+<?php include __DIR__ . '/imicrob_chatbot.php'; ?>
+
 </body>
 </html>
