@@ -8,75 +8,94 @@ include '../includes/header.php';
 <div id="scrollProgressBar" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-cyan-400 via-emerald-400 to-indigo-500 z-[100] transition-all duration-150" style="width: 0%;"></div>
 
 <main class="font-sans antialiased min-h-screen pb-24 text-slate-100" style="background:#020617;">
-    <!-- Hero Banner Section -->
-    <section class="relative text-white overflow-hidden border-b border-slate-800/80" style="background: radial-gradient(circle at 50% 15%, #0f172a 0%, #020617 80%); padding: 90px 0 50px;">
-        <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px]"></div>
-        <div class="container mx-auto px-6 relative z-10 text-center max-w-4xl">
-            <!-- Breadcrumbs -->
-            <nav class="flex justify-center items-center flex-wrap gap-2 text-xs text-slate-400 mb-4 font-mono">
-                <a href="../../index.php" class="text-cyan-400 hover:text-cyan-300 font-bold transition-colors flex items-center gap-1.5">
-                    <i class="fas fa-house"></i> พอร์ทัลหลัก 2027
-                </a>
-                <span class="text-slate-600">/</span>
-                <a href="../index.php" class="hover:text-amber-400 transition-colors flex items-center gap-1">
-                    <i class="fas fa-book-open"></i> สารบัญ 12 บทเรียน
-                </a>
-                <span class="text-slate-600">/</span>
-                <span class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40">บทที่ 1</span>
-            </nav>
+    <!-- Hero Banner Section: Widescreen 2-Column Showcase -->
+    <section class="relative text-white overflow-hidden border-b border-slate-800/80 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 py-10 lg:py-14">
+        <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px]"></div>
+        <div class="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+                
+                <!-- Left Info & Meta Column (7 cols) -->
+                <div class="lg:col-span-7 space-y-4">
+                    <!-- Breadcrumbs -->
+                    <nav class="flex items-center flex-wrap gap-2 text-xs text-slate-400 font-mono">
+                        <a href="../../index.php" class="text-cyan-400 hover:text-cyan-300 font-bold transition-colors flex items-center gap-1.5">
+                            <i class="fas fa-house"></i> พอร์ทัลหลัก 2027
+                        </a>
+                        <span class="text-slate-600">/</span>
+                        <a href="../index.php" class="hover:text-amber-400 transition-colors flex items-center gap-1">
+                            <i class="fas fa-book-open"></i> สารบัญ 12 บทเรียน
+                        </a>
+                        <span class="text-slate-600">/</span>
+                        <span class="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40">บทที่ 1</span>
+                    </nav>
 
-            <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full text-indigo-300 font-mono text-xs mb-4 border border-indigo-500/30 bg-indigo-500/10 tracking-widest uppercase shadow-lg shadow-indigo-500/10">
-                <i class="fas fa-atom text-xs text-cyan-400"></i> MODULE 01 &bull; UNITS, METROLOGY & MICRO-PHYSICS
-            </div>
+                    <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full text-indigo-300 font-mono text-xs border border-indigo-500/30 bg-indigo-500/10 tracking-widest uppercase shadow-lg shadow-indigo-500/10">
+                        <i class="fas fa-atom text-xs text-cyan-400"></i> MODULE 01 &bull; UNITS, METROLOGY & MICRO-PHYSICS
+                    </div>
 
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-black mb-4 leading-tight tracking-tight text-white drop-shadow-md">
-                ระบบหน่วยและการวัดในโลกจุลทรรศน์
-            </h1>
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white drop-shadow-md">
+                        ระบบหน่วยและการวัดในโลกจุลทรรศน์
+                    </h1>
 
-            <!-- 3D Pixar Hero Cinematic Artwork -->
-            <div class="my-6 rounded-2xl overflow-hidden border border-cyan-500/30 shadow-2xl bg-slate-950/80 max-w-3xl mx-auto group">
-                <img src="../images/sec_3d/ch01_hero_banner_3d.jpg" alt="แบนเนอร์ 3 มิติ สไตล์พิกซาร์ บทที่ 1: ระบบหน่วยและการวัดในโลกจุลทรรศน์" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
-            </div>
+                    <p class="text-sm md:text-base text-slate-300 font-light leading-relaxed max-w-2xl">
+                        เอกสารคำสอนมาตรฐานฉบับ 3D AR ArUco &bull; รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา (สัปดาห์ที่ 1)
+                    </p>
 
-            <p class="text-sm md:text-base text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
-                เอกสารคำสอนมาตรฐานฉบับ 3D AR ArUco &bull; รายวิชา 4011111 ฟิสิกส์สำหรับจุลชีววิทยา (สัปดาห์ที่ 1)
-            </p>
+                    <!-- Quick Meta Badges -->
+                    <div class="flex flex-wrap gap-2.5 text-xs text-slate-300 font-mono pt-1">
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center gap-1.5">
+                            <i class="fas fa-clock text-amber-400"></i> บรรยาย 2 ชม. + แล็บ 3 ชม.
+                        </span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center gap-1.5">
+                            <i class="fas fa-calendar-week text-emerald-400"></i> สัปดาห์ที่ 1 (OBE มคอ.3)
+                        </span>
+                        <a href="../webar/ar_aruco_textbook.html?id=0&ar=1" target="_blank" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/40 text-cyan-300 flex items-center gap-1.5 transition">
+                            <i class="fas fa-cube text-cyan-400"></i> 3D WebAR ArUco ID: 0 ↗
+                        </a>
+                        <a href="../../virtual_lab/sim_micropipette_3d.html" target="_blank" class="px-3 py-1.5 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/40 text-purple-300 flex items-center gap-1.5 transition">
+                            <i class="fas fa-vr-cardboard text-purple-400"></i> 3D Virtual Lab ↗
+                        </a>
+                    </div>
 
-            <!-- Quick Meta Badges -->
-            <div class="mt-5 flex flex-wrap justify-center gap-2.5 text-xs text-slate-300 font-mono">
-                <span class="px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center gap-1.5">
-                    <i class="fas fa-clock text-amber-400"></i> บรรยาย 2 ชม. + แล็บ 3 ชม.
-                </span>
-                <span class="px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700/60 flex items-center gap-1.5">
-                    <i class="fas fa-calendar-week text-emerald-400"></i> สัปดาห์ที่ 1 (OBE มคอ.3)
-                </span>
-                <a href="../webar/ar_aruco_textbook.html?id=0&ar=1" target="_blank" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/40 text-cyan-300 flex items-center gap-1.5 transition">
-                    <i class="fas fa-cube text-cyan-400"></i> 3D WebAR ArUco ID: 0 ↗
-                </a>
-                <a href="../../virtual_lab/sim_micropipette_3d.html" target="_blank" class="px-3 py-1.5 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/40 text-purple-300 flex items-center gap-1.5 transition">
-                    <i class="fas fa-vr-cardboard text-purple-400"></i> 3D Virtual Lab ↗
-                </a>
-            </div>
-
-            <!-- Action CTA Buttons & Font Resizer -->
-            <div class="mt-6 flex flex-wrap justify-center items-center gap-3">
-                <a href="../labs/lab01_measurement.php" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white border border-emerald-400/30 text-xs font-bold font-mono transition flex items-center gap-2 shadow-lg shadow-emerald-950/40">
-                    <i class="fa-solid fa-flask-vial"></i> <span>เข้าสู่ Lab 01: การวัดละเอียดและทักษะไมโครปิเปต (3 ชม.)</span>
-                </a>
-                <!-- Font Resizer Pills -->
-                <div class="flex items-center bg-slate-800/90 border border-slate-700/80 rounded-xl px-2 py-1 gap-1 text-xs font-mono text-slate-300">
-                    <span class="text-[10px] text-slate-400 px-1">ขนาดฟอนต์:</span>
-                    <button type="button" onclick="adjustFontSize(-1)" class="w-6 h-6 rounded hover:bg-slate-700 flex items-center justify-center text-slate-200" title="ลดขนาดตัวอักษร">A-</button>
-                    <button type="button" onclick="adjustFontSize(0)" class="w-6 h-6 rounded hover:bg-slate-700 flex items-center justify-center text-slate-200" title="ขนาดเริ่มต้น">100%</button>
-                    <button type="button" onclick="adjustFontSize(1)" class="w-6 h-6 rounded hover:bg-slate-700 flex items-center justify-center text-slate-200" title="เพิ่มขนาดตัวอักษร">A+</button>
+                    <!-- Action CTA Buttons & Font Resizer -->
+                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                        <a href="../labs/lab01_measurement.php" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white border border-emerald-400/30 text-xs font-bold font-mono transition flex items-center gap-2 shadow-lg shadow-emerald-950/40">
+                            <i class="fa-solid fa-flask-vial"></i> <span>เข้าสู่ Lab 01: การวัดละเอียดและทักษะไมโครปิเปต (3 ชม.)</span>
+                        </a>
+                        <!-- Font Resizer Pills -->
+                        <div class="flex items-center bg-slate-800/90 border border-slate-700/80 rounded-xl px-2 py-1 gap-1 text-xs font-mono text-slate-300">
+                            <span class="text-[10px] text-slate-400 px-1">ขนาดฟอนต์:</span>
+                            <button type="button" onclick="adjustFontSize(-1)" class="w-6 h-6 rounded hover:bg-slate-700 flex items-center justify-center text-slate-200" title="ลดขนาดตัวอักษร">A-</button>
+                            <button type="button" onclick="adjustFontSize(0)" class="w-6 h-6 rounded hover:bg-slate-700 flex items-center justify-center text-slate-200" title="ขนาดเริ่มต้น">100%</button>
+                            <button type="button" onclick="adjustFontSize(1)" class="w-6 h-6 rounded hover:bg-slate-700 flex items-center justify-center text-slate-200" title="เพิ่มขนาดตัวอักษร">A+</button>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Right Column: 3D Pixar Hero Cinematic Artwork (5 cols) -->
+                <div class="lg:col-span-5">
+                    <div class="rounded-2xl overflow-hidden border border-cyan-500/40 shadow-2xl bg-slate-950/90 group relative">
+                        <div class="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-full bg-slate-950/80 border border-cyan-400/40 text-[10px] font-mono text-cyan-300 backdrop-blur-md flex items-center gap-1.5 shadow-lg">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                            <span>3D CINEMATIC ARTWORK</span>
+                        </div>
+                        <img src="../images/sec_3d/ch01_hero_banner_3d.jpg" alt="แบนเนอร์ 3 มิติ สไตล์พิกซาร์ บทที่ 1: ระบบหน่วยและการวัดในโลกจุลทรรศน์" class="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-500" loading="lazy">
+                        <div class="px-4 py-2.5 bg-slate-950/95 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-slate-400">
+                            <span class="flex items-center gap-1.5 text-cyan-300">
+                                <i class="fa-solid fa-atom"></i> Units, Metrology & Precision Skills
+                            </span>
+                            <span class="text-amber-400 font-semibold">ISO 8655 & SI 2019</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
 
     <!-- Sticky Table of Contents Quick Nav Bar -->
-    <div class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 py-2.5 shadow-md">
-        <div class="container mx-auto px-4 max-w-5xl flex items-center justify-between gap-3 overflow-x-auto text-xs font-mono whitespace-nowrap scrollbar-none">
+    <div class="sticky top-16 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 py-2.5 shadow-md">
+        <div class="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 overflow-x-auto text-xs font-mono whitespace-nowrap scrollbar-none">
             <span class="text-slate-400 font-bold flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
                 <i class="fa-solid fa-compass text-cyan-400"></i> ทางลัดหัวข้อ:
             </span>
@@ -93,9 +112,104 @@ include '../includes/header.php';
         </div>
     </div>
 
-    <!-- Main Container -->
-    <div class="container mx-auto px-4 md:px-6 mt-6 relative z-20 max-w-5xl">
-        <div id="chapterContent" class="rounded-3xl shadow-2xl overflow-hidden border p-5 sm:p-8 md:p-12 bg-slate-900/95 backdrop-blur-3xl border-slate-800 space-y-12 transition-all">
+    <!-- Main Container: Modern 2-Column Documentation / Textbook Layout -->
+    <div class="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-20">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Sticky Sidebar (3 cols) -->
+            <aside class="hidden lg:block lg:col-span-3 sticky top-28 space-y-6">
+                <!-- Card 1: สารบัญนำทางประจำบท (Interactive Navigator) -->
+                <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-xl space-y-3">
+                    <div class="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 flex items-center justify-between pb-2.5 border-b border-slate-800">
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-list-ul"></i> สารบัญประจำบท</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-500/30">4 หัวข้อ</span>
+                    </div>
+                    <nav class="space-y-1 text-xs font-mono">
+                        <a href="#curriculum-plan" class="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+                            <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-[10px] group-hover:bg-indigo-500 group-hover:text-slate-950 font-bold transition">📋</span>
+                            <span class="truncate">แผนการสอนประจำบท</span>
+                        </a>
+                        <a href="#sec-1.1" class="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+                            <span class="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[10px] group-hover:bg-cyan-500 group-hover:text-slate-950 font-bold transition">1.1</span>
+                            <span class="truncate">หน่วยเอสไอ & 7 ค่าคงตัว</span>
+                        </a>
+                        <a href="#tab-1.1" class="group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-cyan-300 hover:bg-slate-800/50 transition text-[11px] pl-6">
+                            <span>↳ ตาราง 1.1: 7 หน่วยฐาน</span>
+                        </a>
+                        <a href="#sec-1.2" class="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+                            <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] group-hover:bg-emerald-500 group-hover:text-slate-950 font-bold transition">1.2</span>
+                            <span class="truncate">การแปลงหน่วย & บันไดเลื่อน</span>
+                        </a>
+                        <a href="#sec-aruco" class="group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-emerald-300 hover:bg-slate-800/50 transition text-[11px] pl-6">
+                            <span>↳ 🥽 3D WebAR ArUco ID:0</span>
+                        </a>
+                        <a href="#sec-1.3" class="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+                            <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-[10px] group-hover:bg-amber-500 group-hover:text-slate-950 font-bold transition">1.3</span>
+                            <span class="truncate">ความเที่ยง แม่น & ไมโครปิเปต</span>
+                        </a>
+                        <a href="#sec-1.4" class="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+                            <span class="w-6 h-6 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center text-[10px] group-hover:bg-teal-500 group-hover:text-slate-950 font-bold transition">1.4</span>
+                            <span class="truncate">ปฏิบัติการที่ 1 & การวัดละเอียด</span>
+                        </a>
+                        <a href="#review-questions" class="group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
+                            <span class="w-6 h-6 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-[10px] group-hover:bg-purple-500 group-hover:text-slate-950 font-bold transition">📝</span>
+                            <span class="truncate">คำถามทบทวนท้ายบท</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Card 2: 3D Virtual Lab & WebAR Launchpad -->
+                <div class="p-5 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-900 to-indigo-950/40 border border-indigo-500/30 shadow-xl space-y-3">
+                    <div class="text-xs font-mono font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-2 pb-2.5 border-b border-slate-800">
+                        <i class="fa-solid fa-cube text-cyan-400"></i> เครื่องมือ 3D & XR ประจำบท
+                    </div>
+                    <div class="space-y-2">
+                        <a href="../webar/ar_aruco_textbook.html?id=0&ar=1" target="_blank" class="w-full py-2.5 px-3.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 font-mono text-xs font-bold transition flex items-center justify-between group">
+                            <span class="flex items-center gap-2">
+                                <i class="fa-solid fa-camera-rotate group-hover:rotate-180 transition-transform"></i> ส่อง 3D WebAR ArUco
+                            </span>
+                            <span class="text-[10px] bg-cyan-950 px-1.5 py-0.5 rounded border border-cyan-400/40">ID: 0</span>
+                        </a>
+                        <a href="../../virtual_lab/sim_micropipette_3d.html" target="_blank" class="w-full py-2.5 px-3.5 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 font-mono text-xs font-bold transition flex items-center justify-between group">
+                            <span class="flex items-center gap-2">
+                                <i class="fa-solid fa-vr-cardboard"></i> 3D P1000 Simulator
+                            </span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                        <a href="../labs/lab01_measurement.php" class="w-full py-2.5 px-3.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-mono text-xs font-bold transition flex items-center justify-between group">
+                            <span class="flex items-center gap-2">
+                                <i class="fa-solid fa-flask-vial"></i> ปฏิบัติการ Lab 01
+                            </span>
+                            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 3: ค่าคงตัวฟิสิกส์สากล (Metrology Constants) -->
+                <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs font-mono space-y-2">
+                    <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5 pb-1 border-b border-slate-800">
+                        <i class="fa-solid fa-scale-balanced"></i> ค่าคงตัวสากล SI 2019
+                    </div>
+                    <div class="space-y-1.5 text-[11px] text-slate-300">
+                        <div class="flex justify-between items-center py-0.5">
+                            <span class="text-slate-400">Planck ($h$)</span>
+                            <span class="text-cyan-300 font-bold">$6.626\times 10^{-34}\text{ J}\cdot\text{s}$</span>
+                        </div>
+                        <div class="flex justify-between items-center py-0.5">
+                            <span class="text-slate-400">Speed of light ($c$)</span>
+                            <span class="text-cyan-300 font-bold">$299,792,458\text{ m/s}$</span>
+                        </div>
+                        <div class="flex justify-between items-center py-0.5">
+                            <span class="text-slate-400">Cesium-133 ($\Delta\nu_{\text{Cs}}$)</span>
+                            <span class="text-cyan-300 font-bold">$9.192\times 10^9\text{ Hz}$</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Right Main Content Area (9 cols) -->
+            <div class="lg:col-span-9 w-full min-w-0">
+                <div id="chapterContent" class="rounded-3xl shadow-2xl overflow-hidden border p-5 sm:p-8 md:p-12 bg-slate-900/95 backdrop-blur-3xl border-slate-800 space-y-12 transition-all">
 
             <!-- Curriculum Planbox (แผนบริหารการสอนประจำบทที่ 1 — 4 Card Grid) -->
             <div id="curriculum-plan" class="p-6 md:p-8 rounded-3xl bg-gradient-to-br from-indigo-950/50 via-slate-900 to-slate-950 border border-indigo-500/30 shadow-2xl space-y-6">
@@ -1952,8 +2066,10 @@ include '../includes/header.php';
                 </a>
             </div>
 
-        </div>
-    </div>
+                </div><!-- /#chapterContent -->
+            </div><!-- /.lg:col-span-9 -->
+        </div><!-- /.grid -->
+    </div><!-- /.max-w-7xl -->
 </main>
 
 <script>

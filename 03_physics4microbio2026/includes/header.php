@@ -80,9 +80,10 @@
         }
 
         .glass-nav {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            background: rgba(10, 15, 30, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.15);
         }
 
         .lang-block { display: none; }
@@ -108,10 +109,10 @@ $currentFilename = basename($_SERVER['PHP_SELF']);
 if (strpos($currentFilename, '_en.php') !== false) $currentLang = 'en';
 elseif (strpos($currentFilename, '_zh.php') !== false) $currentLang = 'zh';
 ?>
-<body class="lang-<?php echo $currentLang; ?> pt-32 pb-16 min-h-screen">
+<body class="lang-<?php echo $currentLang; ?> min-h-screen selection:bg-cyan-500 selection:text-slate-950">
 
-<nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[96%] max-w-7xl glass-nav rounded-2xl px-5 py-3 shadow-2xl">
-    <div class="flex items-center justify-between gap-2">
+<nav class="sticky top-0 z-50 w-full glass-nav px-4 sm:px-6 lg:px-8 shadow-xl">
+    <div class="max-w-7xl 2xl:max-w-[1600px] mx-auto h-16 flex items-center justify-between gap-4">
         <!-- Logo (Links back to Master Unified Course Portal) -->
         <a href="<?php echo $basePath ?? ''; ?>../index.php" class="flex items-center space-x-3 group" title="กลับหน้าพอร์ทัลหลัก 4011111 ฟิสิกส์สำหรับจุลชีววิทยา">
             <div class="w-10 h-10 bg-gradient-to-br from-cyan-500 via-teal-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform text-slate-950 font-bold">

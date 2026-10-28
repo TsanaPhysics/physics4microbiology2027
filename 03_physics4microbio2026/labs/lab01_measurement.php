@@ -5,7 +5,7 @@ include '../includes/header.php';
 ?>
 
 <!-- 🧭 Standardized Breadcrumb & Two-Way Course Navigation Bar -->
-<div class="standardized-lab-breadcrumb max-w-7xl mx-auto px-4 sm:px-6 mb-6">
+<div class="standardized-lab-breadcrumb max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 mb-6 mt-6">
     <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 border border-emerald-500/30 rounded-2xl px-5 py-3.5 shadow-2xl backdrop-blur-xl">
         <div class="flex items-center flex-wrap gap-2 text-xs font-mono text-slate-300">
             <a href="../../index.php" class="text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1.5 transition">
@@ -36,7 +36,7 @@ include '../includes/header.php';
     </div>
 </div>
 
-<main class="font-sans antialiased min-h-screen pb-24 text-slate-100 max-w-7xl mx-auto px-4 sm:px-6">
+<main class="font-sans antialiased min-h-screen pb-24 text-slate-100 max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6">
 
     <!-- Lab Header Card -->
     <div class="bg-gradient-to-r from-slate-900 via-slate-950 to-indigo-950/40 border border-emerald-500/30 rounded-3xl p-6 sm:p-10 mb-8 shadow-2xl relative overflow-hidden">
