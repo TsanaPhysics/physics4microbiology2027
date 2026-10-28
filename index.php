@@ -500,7 +500,7 @@ $enrichmentModules = [
                     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
                         ฟิสิกส์สำหรับ<br>
                         <span class="bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent">
-                            จุลชีววิทยาสมัยใหม่
+                            จุลชีววิทยา
                         </span>
                     </h1>
                     <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">

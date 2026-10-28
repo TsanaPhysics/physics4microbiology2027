@@ -2126,11 +2126,13 @@
         }
       }
 
-      if (borderBlackCount < 13 || innerWhiteCount < 2 || innerWhiteCount > 14) return null;
+      // ArUco 4x4 outer border has 20 cells: require at least 16 (80%) solid black cells
+      if (borderBlackCount < 16 || innerWhiteCount < 2 || innerWhiteCount > 14) return null;
 
-      let bestId = -1, bestDist = 99;
+      let bestId = -1, bestDist = 99, secondBestDist = 99;
       for (let id = 0; id < 12; id++) {
         let ref = ARUCO_DICT_4X4[id];
+        let idMinDist = 99;
         for (let rot = 0; rot < 4; rot++) {
           let dist = 0;
           for (let rr = 0; rr < 4; rr++) {
@@ -2138,15 +2140,26 @@
               if (inner4x4[rr][cc] !== ref[rr][cc]) dist++;
             }
           }
-          // Prefer currentMarkerId on ties
-          if (dist < bestDist || (dist === bestDist && id === currentMarkerId)) {
-            bestDist = dist;
-            bestId = id;
-          }
+          if (dist < idMinDist) idMinDist = dist;
           ref = rotateMat90(ref);
         }
+        if (idMinDist < bestDist) {
+          secondBestDist = bestDist;
+          bestDist = idMinDist;
+          bestId = id;
+        } else if (idMinDist < secondBestDist) {
+          secondBestDist = idMinDist;
+        }
       }
-      return { bestId, bestDist, borderBlackCount, contrast: localMax - localMin };
+
+      // Strict Hamming Distance check:
+      // Only accept exact match (bestDist === 0) OR distance 1 IF margin to second-best is >= 2 bits
+      const margin = secondBestDist - bestDist;
+      if (bestDist > 1 || (bestDist === 1 && margin < 2)) {
+        return null;
+      }
+
+      return { bestId, bestDist, margin, borderBlackCount, contrast: localMax - localMin };
     }
 
     function startArUcoOpticalScanner() {
@@ -2223,16 +2236,45 @@
           }
         }
 
-        // Exact or high-confidence ArUco 4x4 match (handles any distance & monitor glare)
-        if (topMatch && topMatch.bestDist <= 2 && topMatch.borderBlackCount >= 14) {
-          opticalLockFrames = 3;
+        // 4. Temporal Multi-Frame Voting & Debounce Consensus Buffer
+        if (!window._arIdHistory) {
+          window._arIdHistory = [];
+        }
+
+        if (topMatch && topMatch.bestDist <= 1) {
+          window._arIdHistory.push(topMatch.bestId);
+        } else {
+          window._arIdHistory.push(-1);
+        }
+        if (window._arIdHistory.length > 5) {
+          window._arIdHistory.shift();
+        }
+
+        const votes = {};
+        let maxVotes = 0, winnerId = -1;
+        for (let k = 0; k < window._arIdHistory.length; k++) {
+          const vid = window._arIdHistory[k];
+          if (vid >= 0) {
+            votes[vid] = (votes[vid] || 0) + 1;
+            if (votes[vid] > maxVotes) {
+              maxVotes = votes[vid];
+              winnerId = vid;
+            }
+          }
+        }
+
+        if (winnerId >= 0 && maxVotes >= 3) {
+          opticalLockFrames = 4;
           updateReticleSignalUI(100);
-          lockArUcoTarget(topMatch.bestId);
+          if (!isTargetLocked || currentMarkerId === winnerId) {
+            lockArUcoTarget(winnerId);
+          } else if (maxVotes >= 4) {
+            lockArUcoTarget(winnerId);
+          }
           return;
         }
 
-        // 4. Computer Monitor / Textbook Optical Target Contrast Engine (Fallback)
-        // Measures center-surround contrast + high-frequency checkerboard/marker edges
+        // 5. Optical Contrast Feedback & Gentle Lock Decay
         let innerSum = 0, innerCnt = 0, outerSum = 0, outerCnt = 0, edgeHits = 0, edgeTotal = 0;
         const edgeThresh = Math.max(14, globalContrast * 0.18);
         for (let y = 12; y < 148; y += 3) {
@@ -2252,29 +2294,18 @@
           }
         }
 
-        const innerMean = innerSum / Math.max(1, innerCnt);
-        const outerMean = outerSum / Math.max(1, outerCnt);
-        const centerDiff = outerMean - innerMean; // Positive when dark marker sits on bright screen/page
+        const centerDiff = (outerSum / Math.max(1, outerCnt)) - (innerSum / Math.max(1, innerCnt));
         const edgeDensity = edgeHits / Math.max(1, edgeTotal);
 
-        const isMonitorTargetVisible =
-          (topMatch && topMatch.bestDist <= 3) ||
-          (centerDiff > 14 && edgeDensity > 0.14 && globalContrast > 32) ||
-          (edgeDensity > 0.24 && globalContrast > 42 && darkCount > 60 && darkCount < 2400);
-
-        if (isMonitorTargetVisible) {
-          opticalLockFrames = Math.min(4, opticalLockFrames + 1);
+        const isTargetInSight = (centerDiff > 12 && edgeDensity > 0.12 && globalContrast > 28);
+        if (isTargetInSight && isTargetLocked) {
+          opticalLockFrames = Math.max(2, opticalLockFrames);
         } else {
           opticalLockFrames = Math.max(0, opticalLockFrames - 1);
         }
 
-        const signalPct = Math.min(100, Math.round((opticalLockFrames / 2) * 100));
+        const signalPct = Math.min(100, Math.round((opticalLockFrames / 4) * 100));
         updateReticleSignalUI(signalPct);
-
-        if (opticalLockFrames >= 2) {
-          const lockedId = (topMatch && topMatch.bestDist <= 3) ? topMatch.bestId : currentMarkerId;
-          lockArUcoTarget(lockedId);
-        }
       }, 140);
     }
 

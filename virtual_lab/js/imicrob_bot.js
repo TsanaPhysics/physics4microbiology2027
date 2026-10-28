@@ -294,3 +294,4 @@
         if (!isOpen && bubble) bubble.classList.remove('hidden');
     }, 3000);
 })();
+

@@ -81,8 +81,9 @@
       }
       cellLums.push(row);
     }
-    if (localMax - localMin < 18) return null;
-    const thresh = localMin + (localMax - localMin) * 0.48;
+    const contrast = localMax - localMin;
+    if (contrast < 22) return null;
+    const thresh = localMin + contrast * 0.48;
 
     let borderBlackCount = 0;
     let innerWhiteCount = 0;
@@ -100,11 +101,14 @@
       }
     }
 
-    if (borderBlackCount < 11 || innerWhiteCount < 1 || innerWhiteCount > 15) return null;
+    // ArUco 4x4 outer border has 20 cells: require at least 16 (80%) solid black cells
+    // Inner 16 cells must have a valid distribution of white/black
+    if (borderBlackCount < 16 || innerWhiteCount < 2 || innerWhiteCount > 14) return null;
 
-    let bestId = -1, bestDist = 99;
+    let bestId = -1, bestDist = 99, secondBestDist = 99;
     for (let id = 0; id < 12; id++) {
       let ref = ARUCO_DICT_4X4[id];
+      let idMinDist = 99;
       for (let rot = 0; rot < 4; rot++) {
         let dist = 0;
         for (let rr = 0; rr < 4; rr++) {
@@ -112,14 +116,27 @@
             if (inner4x4[rr][cc] !== ref[rr][cc]) dist++;
           }
         }
-        if (dist < bestDist || (dist === bestDist && id === currentMarkerId)) {
-          bestDist = dist;
-          bestId = id;
-        }
+        if (dist < idMinDist) idMinDist = dist;
         ref = rotateMat90(ref);
       }
+      if (idMinDist < bestDist) {
+        secondBestDist = bestDist;
+        bestDist = idMinDist;
+        bestId = id;
+      } else if (idMinDist < secondBestDist) {
+        secondBestDist = idMinDist;
+      }
     }
-    return { bestId, bestDist, borderBlackCount, contrast: localMax - localMin };
+
+    // Strict Hamming Distance check:
+    // Only accept exact match (bestDist === 0) OR distance 1 IF margin to second-best is >= 2 bits
+    // Rejects bestDist >= 2 to prevent confusing close markers (e.g. ID 0 vs ID 8, ID 3 vs ID 11)
+    const margin = secondBestDist - bestDist;
+    if (bestDist > 1 || (bestDist === 1 && margin < 2)) {
+      return null;
+    }
+
+    return { bestId, bestDist, margin, borderBlackCount, contrast };
   };
 
   window.updateReticleSignalUI = function (pct) {
@@ -281,15 +298,52 @@
         }
       }
 
-      if (topMatch && topMatch.bestDist <= 2 && topMatch.borderBlackCount >= 12) {
-        opticalLockFrames = 3;
+      // 4. Temporal Multi-Frame Voting & Debounce Consensus Buffer
+      // Prevents single-frame noise / false positives from flipping the 3D model
+      if (!window._arIdHistory) {
+        window._arIdHistory = [];
+      }
+
+      if (topMatch && topMatch.bestDist <= 1) {
+        window._arIdHistory.push(topMatch.bestId);
+      } else {
+        window._arIdHistory.push(-1);
+      }
+      if (window._arIdHistory.length > 5) {
+        window._arIdHistory.shift();
+      }
+
+      // Count votes in the sliding window
+      const votes = {};
+      let maxVotes = 0, winnerId = -1;
+      for (let k = 0; k < window._arIdHistory.length; k++) {
+        const vid = window._arIdHistory[k];
+        if (vid >= 0) {
+          votes[vid] = (votes[vid] || 0) + 1;
+          if (votes[vid] > maxVotes) {
+            maxVotes = votes[vid];
+            winnerId = vid;
+          }
+        }
+      }
+
+      // Require at least 3 out of 5 frames agreement to lock a marker!
+      if (winnerId >= 0 && maxVotes >= 3) {
+        opticalLockFrames = 4;
         window.updateReticleSignalUI(100);
-        window.lockArUcoTarget(topMatch.bestId);
+        
+        // Hysteresis: If already locked on an ID, switching to a different ID requires 4 out of 5 votes
+        if (!isTargetLocked || currentMarkerId === winnerId) {
+          window.lockArUcoTarget(winnerId);
+        } else if (maxVotes >= 4) {
+          window.lockArUcoTarget(winnerId);
+        }
         return;
       }
 
+      // 5. Optical Contrast Feedback & Gentle Lock Decay
       let innerSum = 0, innerCnt = 0, outerSum = 0, outerCnt = 0, edgeHits = 0, edgeTotal = 0;
-      const edgeThresh = Math.max(10, globalContrast * 0.15);
+      const edgeThresh = Math.max(12, globalContrast * 0.16);
       for (let y = 12; y < 148; y += 3) {
         for (let x = 12; x < 148; x += 3) {
           const v = lumArr[y * 160 + x];
@@ -309,24 +363,16 @@
       const centerDiff = (outerSum / Math.max(1, outerCnt)) - (innerSum / Math.max(1, innerCnt));
       const edgeDensity = edgeHits / Math.max(1, edgeTotal);
 
-      const isMonitorTargetVisible =
-        (topMatch && topMatch.bestDist <= 3) ||
-        (centerDiff > 8 && edgeDensity > 0.10 && globalContrast > 22) ||
-        (edgeDensity > 0.16 && globalContrast > 28 && darkCount > 35 && darkCount < 2600);
-
-      if (isMonitorTargetVisible) {
-        opticalLockFrames = Math.min(4, opticalLockFrames + 1);
+      // If marker is in sight but slightly tilted/moving, maintain lock on CURRENT marker without switching
+      const isTargetInSight = (centerDiff > 10 && edgeDensity > 0.12 && globalContrast > 24);
+      if (isTargetInSight && isTargetLocked) {
+        opticalLockFrames = Math.max(2, opticalLockFrames);
       } else {
         opticalLockFrames = Math.max(0, opticalLockFrames - 1);
       }
 
-      const signalPct = Math.min(100, Math.round((opticalLockFrames / 2) * 100));
+      const signalPct = Math.min(100, Math.round((opticalLockFrames / 4) * 100));
       window.updateReticleSignalUI(signalPct);
-
-      if (opticalLockFrames >= 2) {
-        const lockedId = (topMatch && topMatch.bestDist <= 3) ? topMatch.bestId : currentMarkerId;
-        window.lockArUcoTarget(lockedId);
-      }
     }, 140);
   };
 
