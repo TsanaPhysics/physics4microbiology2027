@@ -95,10 +95,54 @@
         .lang-en div.lang-block[lang="en"] { display: block; }
         .lang-zh div.lang-block[lang="zh"] { display: block; }
 
-        /* Smooth Anchor Scrolling & Scroll Padding */
+        /* Smooth Anchor Scrolling & Universal Root Typography */
         html {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
             scroll-behavior: smooth;
             scroll-padding-top: 7.5rem;
+        }
+        @media (min-width: 1280px) {
+            html { font-size: 16.5px; }
+        }
+        @media (min-width: 1536px) {
+            html { font-size: 17px; }
+        }
+
+        body {
+            font-family: 'Prompt', 'Sarabun', 'Inter', sans-serif;
+            font-size: 1.05rem;
+            line-height: 1.85;
+            background-color: var(--dark-bg);
+            color: #f1f5f9;
+            letter-spacing: normal !important;
+        }
+
+        /* Global Paragraph, Article & Card Readability Overrides */
+        p, .tex-article p {
+            font-size: 1.08rem !important;
+            line-height: 1.85 !important;
+            color: #e2e8f0;
+        }
+
+        .tex-article {
+            font-size: 1.08rem !important;
+            line-height: 1.85 !important;
+        }
+
+        .tex-box-body {
+            font-size: 1.05rem !important;
+            line-height: 1.8 !important;
+        }
+
+        .tex-box-title {
+            font-size: 1.15rem !important;
+        }
+
+        .tex-figure figcaption {
+            font-size: 1rem !important;
+            line-height: 1.65 !important;
+            color: #cbd5e1 !important;
         }
 
         /* Custom Scrollbar */
@@ -238,8 +282,15 @@ elseif (strpos($currentFilename, '_zh.php') !== false) $currentLang = 'zh';
             </a>
         </div>
 
-        <!-- Language & Admin Action -->
-        <div class="flex items-center space-x-3">
+        <!-- Language, Font Scale & Admin Action -->
+        <div class="flex items-center space-x-2 sm:space-x-3">
+            <!-- Universal Font Size Adjuster -->
+            <div class="flex items-center bg-white/5 rounded-xl p-0.5 sm:p-1 border border-white/10 text-xs font-mono" title="ปรับขนาดตัวอักษรทั้งระบบ">
+                <button onclick="changeGlobalFontSize(-1)" class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-slate-300 hover:text-white hover:bg-white/10 transition" title="ลดขนาดตัวอักษร">A-</button>
+                <button onclick="changeGlobalFontSize(0)" class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-cyan-400 hover:bg-white/10 transition" title="ขนาดมาตรฐาน (100%)">A</button>
+                <button onclick="changeGlobalFontSize(1)" class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-slate-300 hover:text-white hover:bg-white/10 transition" title="เพิ่มขนาดตัวอักษร (115% / 130%)">A+</button>
+            </div>
+
             <a href="<?php echo $basePath ?? ''; ?>../admin/index.php" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5" title="ระบบลงทะเบียนและเข้าสู่ระบบนักศึกษา/อาจารย์">
                 <i class="fa-solid fa-graduation-cap"></i>
                 <span class="hidden sm:inline">ลงทะเบียน / เข้าระบบ</span>
@@ -292,6 +343,26 @@ function handleLangChange(lang) {
         setLang(lang);
     }
 }
+
+// Universal Global Font Size Controller
+function changeGlobalFontSize(dir) {
+    let scale = parseFloat(localStorage.getItem('user_font_scale') || '1.0');
+    if (dir === 0) scale = 1.0;
+    else if (dir === 1) scale = Math.min(1.4, Math.round((scale + 0.1) * 10) / 10);
+    else if (dir === -1) scale = Math.max(0.9, Math.round((scale - 0.1) * 10) / 10);
+    
+    document.documentElement.style.fontSize = (16 * scale) + 'px';
+    localStorage.setItem('user_font_scale', scale.toString());
+}
+// Apply saved font scale immediately
+(function() {
+    try {
+        const saved = localStorage.getItem('user_font_scale');
+        if (saved) {
+            document.documentElement.style.fontSize = (16 * parseFloat(saved)) + 'px';
+        }
+    } catch(e) {}
+})();
 
 document.addEventListener('DOMContentLoaded', () => {
     // Detect language from body class first (if set by server)

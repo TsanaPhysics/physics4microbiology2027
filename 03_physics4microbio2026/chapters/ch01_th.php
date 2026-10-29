@@ -75,7 +75,7 @@ include '../includes/header.php';
                 <!-- Right Column: 3D Pixar Hero Cinematic Artwork (5 cols) -->
                 <div class="lg:col-span-5">
                     <div class="rounded-2xl overflow-hidden border border-cyan-500/40 shadow-2xl bg-slate-950/90 group relative">
-                        <div class="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-full bg-slate-950/80 border border-cyan-400/40 text-[10px] font-mono text-cyan-300 backdrop-blur-md flex items-center gap-1.5 shadow-lg">
+                        <div class="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-full bg-slate-950/80 border border-cyan-400/40 text-xs font-mono text-cyan-300 backdrop-blur-md flex items-center gap-1.5 shadow-lg">
                             <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
                             <span>3D CINEMATIC ARTWORK</span>
                         </div>
@@ -94,22 +94,22 @@ include '../includes/header.php';
     </section>
 
     <!-- Sticky Table of Contents Quick Nav Bar -->
-    <div id="quick-nav-bar" class="sticky top-16 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 py-2.5 shadow-md">
-        <div class="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 overflow-x-auto text-xs font-mono whitespace-nowrap scrollbar-none">
-            <span class="text-slate-400 font-bold flex items-center gap-1.5 text-[11px] uppercase tracking-wider shrink-0">
-                <i class="fa-solid fa-compass text-cyan-400"></i> ทางลัดหัวข้อ:
+    <div id="quick-nav-bar" class="sticky top-16 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 py-3 shadow-lg">
+        <div class="max-w-7xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 overflow-x-auto text-sm font-medium whitespace-nowrap scrollbar-none">
+            <span class="text-cyan-400 font-bold flex items-center gap-2 text-xs sm:text-sm uppercase tracking-wider shrink-0">
+                <i class="fa-solid fa-compass"></i> สารบัญทางลัด:
             </span>
             <div class="flex items-center gap-2">
-                <a href="#curriculum-plan" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-indigo-600/30 text-slate-300 hover:text-indigo-300 border border-slate-700/60 transition">📋 แผนการสอน</a>
-                <a href="#sec-1.1" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-cyan-600/30 text-slate-300 hover:text-cyan-300 border border-slate-700/60 transition">1.1 หน่วยเอสไอ</a>
-                <a href="#fig-1.3" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-cyan-600/30 text-slate-300 hover:text-cyan-300 border border-slate-700/60 transition">🎡 วงล้อ 3D</a>
-                <a href="#tab-1.1" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-cyan-600/30 text-slate-300 hover:text-cyan-300 border border-slate-700/60 transition">📊 ตาราง 7 หน่วยฐาน</a>
-                <a href="#fig-1.4" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-purple-600/30 text-slate-300 hover:text-purple-300 border border-slate-700/60 transition">🧬 เครือข่าย 22 หน่วย</a>
-                <a href="#sec-1.2" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-emerald-600/30 text-slate-300 hover:text-emerald-300 border border-slate-700/60 transition">1.2 บันไดเลื่อน</a>
-                <a href="#sec-aruco" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-emerald-600/30 text-slate-300 hover:text-emerald-300 border border-slate-700/60 transition">🥽 ArUco ID:0</a>
-                <a href="#sec-1.3" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-amber-600/30 text-slate-300 hover:text-amber-300 border border-slate-700/60 transition">1.3 ความเที่ยง แม่น</a>
-                <a href="#sec-1.4" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-teal-600/30 text-slate-300 hover:text-teal-300 border border-slate-700/60 transition">1.4 ปฏิบัติการที่ 1</a>
-                <a href="#review-questions" class="quick-link px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-indigo-600/30 text-slate-300 hover:text-indigo-300 border border-slate-700/60 transition">📝 คำถามท้ายบท</a>
+                <a href="#curriculum-plan" onclick="scrollToSection('curriculum-plan'); return false;" class="quick-link px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-indigo-600/30 text-slate-200 hover:text-white border border-slate-700/80 transition text-xs sm:text-sm">📋 แผนการสอน</a>
+                <a href="#sec-1.1" onclick="scrollToSection('sec-1.1'); return false;" class="quick-link px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-cyan-600/30 text-slate-200 hover:text-white border border-slate-700/80 transition text-xs sm:text-sm">1.1 หน่วยเอสไอ</a>
+                <a href="#fig-1.3" onclick="scrollToSection('fig-1.3'); return false;" class="quick-link px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-cyan-600/30 text-slate-200 hover:text-white border border-slate-700/80 transition text-xs sm:text-sm">🎡 วงล้อ 3D</a>
+                <a href="#tab-1.1" onclick="scrollToSection('tab-1.1'); return false;" class="quick-link px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-cyan-600/30 text-slate-200 hover:text-white border border-slate-700/80 transition text-xs sm:text-sm">📊 ตาราง 7 หน่วยฐาน</a>
+                <a href="#fig-1.4" onclick="scrollToSection('fig-1.4'); return false;" class="quick-link px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-purple-600/30 text-slate-200 hover:text-white border border-slate-700/80 transition text-xs sm:text-sm">🧬 เครือข่าย 22 หน่วย</a>
+                <a href="#sec-1.2" onclick="scrollToSection('sec-1.2'); return false;" class="quick-link px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-emerald-600/30 text-slate-200 hover:text-white border border-slate-700/80 transition text-xs sm:text-sm">1.2 บันไดเลื่อน</a>
+                <a href="#sec-aruco" onclick="scrollToSection('sec-aruco'); return false;" class="quick-link px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-emerald-600/30 text-slate-200 hover:text-white border border-slate-700/80 transition text-xs sm:text-sm">🥽 ArUco ID:0</a>
+                <a href="#sec-1.3" onclick="scrollToSection('sec-1.3'); return false;" class="quick-link px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-amber-600/30 text-slate-200 hover:text-white border border-slate-700/80 transition text-xs sm:text-sm">1.3 ความเที่ยง แม่น</a>
+                <a href="#sec-1.4" onclick="scrollToSection('sec-1.4'); return false;" class="quick-link px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-teal-600/30 text-slate-200 hover:text-white border border-slate-700/80 transition text-xs sm:text-sm">1.4 ปฏิบัติการที่ 1</a>
+                <a href="#review-questions" onclick="scrollToSection('review-questions'); return false;" class="quick-link px-3 py-1.5 rounded-xl bg-slate-800/90 hover:bg-indigo-600/30 text-slate-200 hover:text-white border border-slate-700/80 transition text-xs sm:text-sm">📝 คำถามท้ายบท</a>
             </div>
         </div>
     </div>
@@ -121,61 +121,61 @@ include '../includes/header.php';
             <!-- Left Sticky Sidebar (3 cols) -->
             <aside class="hidden lg:block lg:col-span-3 sticky top-28 space-y-6">
                 <!-- Card 1: สารบัญนำทางประจำบท (Interactive Navigator) -->
-                <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-xl space-y-3">
-                    <div class="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 flex items-center justify-between pb-2.5 border-b border-slate-800">
-                        <span class="flex items-center gap-2"><i class="fa-solid fa-list-ul"></i> สารบัญประจำบท</span>
-                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-500/30">4 หัวข้อหลัก</span>
+                <div class="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-xl space-y-3.5">
+                    <div class="text-sm font-mono font-bold uppercase tracking-wider text-cyan-400 flex items-center justify-between pb-3 border-b border-slate-800">
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-list-ul text-base"></i> สารบัญประจำบท</span>
+                        <span class="text-xs px-2.5 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-500/30 font-bold">4 หัวข้อหลัก</span>
                     </div>
-                    <nav id="sidebar-toc" class="space-y-1 text-xs font-mono">
-                        <a href="#curriculum-plan" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
-                            <span class="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-[10px] group-hover:bg-indigo-500 group-hover:text-slate-950 font-bold transition">📋</span>
+                    <nav id="sidebar-toc" class="space-y-1.5 text-sm">
+                        <a href="#curriculum-plan" onclick="scrollToSection('curriculum-plan'); return false;" class="toc-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-slate-800/90 transition border border-transparent hover:border-slate-700 font-semibold">
+                            <span class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xs group-hover:bg-indigo-500 group-hover:text-slate-950 font-bold transition">📋</span>
                             <span class="truncate">แผนการสอนประจำบท</span>
                         </a>
-                        <a href="#sec-1.1" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
-                            <span class="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[10px] group-hover:bg-cyan-500 group-hover:text-slate-950 font-bold transition">1.1</span>
+                        <a href="#sec-1.1" onclick="scrollToSection('sec-1.1'); return false;" class="toc-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-slate-800/90 transition border border-transparent hover:border-slate-700 font-semibold">
+                            <span class="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs group-hover:bg-cyan-500 group-hover:text-slate-950 font-bold transition font-mono">1.1</span>
                             <span class="truncate">หน่วยเอสไอ & 7 ค่าคงตัว</span>
                         </a>
-                        <a href="#fig-1.3" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-cyan-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                        <a href="#fig-1.3" onclick="scrollToSection('fig-1.3'); return false;" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-cyan-300 hover:bg-slate-800/60 transition text-[13.5px] pl-7 border border-transparent">
                             <span>↳ 🎡 ภาพ 1.3: วงล้อ 3D 7 หน่วยฐาน</span>
                         </a>
-                        <a href="#tab-1.1" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-cyan-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                        <a href="#tab-1.1" onclick="scrollToSection('tab-1.1'); return false;" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-cyan-300 hover:bg-slate-800/60 transition text-[13.5px] pl-7 border border-transparent">
                             <span>↳ 📊 ตาราง 1.1: นิยาม 7 หน่วยฐาน</span>
                         </a>
-                        <a href="#fig-1.4" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-cyan-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                        <a href="#fig-1.4" onclick="scrollToSection('fig-1.4'); return false;" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-cyan-300 hover:bg-slate-800/60 transition text-[13.5px] pl-7 border border-transparent">
                             <span>↳ 🧬 ภาพ 1.4: เครือข่าย 22 หน่วย</span>
                         </a>
-                        <a href="#sec-1.2" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
-                            <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] group-hover:bg-emerald-500 group-hover:text-slate-950 font-bold transition">1.2</span>
+                        <a href="#sec-1.2" onclick="scrollToSection('sec-1.2'); return false;" class="toc-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-slate-800/90 transition border border-transparent hover:border-slate-700 font-semibold">
+                            <span class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs group-hover:bg-emerald-500 group-hover:text-slate-950 font-bold transition font-mono">1.2</span>
                             <span class="truncate">การแปลงหน่วย & บันไดเลื่อน</span>
                         </a>
-                        <a href="#sec-aruco" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-emerald-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                        <a href="#sec-aruco" onclick="scrollToSection('sec-aruco'); return false;" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-emerald-300 hover:bg-slate-800/60 transition text-[13.5px] pl-7 border border-transparent">
                             <span>↳ 🥽 3D WebAR ArUco ID:0</span>
                         </a>
-                        <a href="#sec-1.3" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
-                            <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-[10px] group-hover:bg-amber-500 group-hover:text-slate-950 font-bold transition">1.3</span>
+                        <a href="#sec-1.3" onclick="scrollToSection('sec-1.3'); return false;" class="toc-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-slate-800/90 transition border border-transparent hover:border-slate-700 font-semibold">
+                            <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs group-hover:bg-amber-500 group-hover:text-slate-950 font-bold transition font-mono">1.3</span>
                             <span class="truncate">เลขนัยสำคัญ & เครื่องมือวัด</span>
                         </a>
-                        <a href="#sec-1.3-sigfig" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-amber-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                        <a href="#sec-1.3-sigfig" onclick="scrollToSection('sec-1.3-sigfig'); return false;" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-amber-300 hover:bg-slate-800/60 transition text-[13.5px] pl-7 border border-transparent">
                             <span>↳ 🔢 เลขนัยสำคัญ & กฎ 5 ข้อ</span>
                         </a>
-                        <a href="#sec-1.3-rounding" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-amber-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                        <a href="#sec-1.3-rounding" onclick="scrollToSection('sec-1.3-rounding'); return false;" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-amber-300 hover:bg-slate-800/60 transition text-[13.5px] pl-7 border border-transparent">
                             <span>↳ ⚖️ การปัดเศษ (Banker's Rule)</span>
                         </a>
-                        <a href="#sec-1.3-math" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-amber-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                        <a href="#sec-1.3-math" onclick="scrollToSection('sec-1.3-math'); return false;" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-amber-300 hover:bg-slate-800/60 transition text-[13.5px] pl-7 border border-transparent">
                             <span>↳ ➕➖✖️➗ การคำนวณทศนิยม</span>
                         </a>
-                        <a href="#sec-1.3-errors" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-amber-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                        <a href="#sec-1.3-errors" onclick="scrollToSection('sec-1.3-errors'); return false;" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-amber-300 hover:bg-slate-800/60 transition text-[13.5px] pl-7 border border-transparent">
                             <span>↳ 🎯 ความคลาดเคลื่อน & ไมโครปิเปต</span>
                         </a>
-                        <a href="#sec-1.3-instruments" class="toc-link group flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-amber-300 hover:bg-slate-800/50 transition text-[11px] pl-6 border border-transparent">
+                        <a href="#sec-1.3-instruments" onclick="scrollToSection('sec-1.3-instruments'); return false;" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-amber-300 hover:bg-slate-800/60 transition text-[13.5px] pl-7 border border-transparent">
                             <span>↳ 📏 ความละเอียด & ความไวเครื่องมือ</span>
                         </a>
-                        <a href="#sec-1.4" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
-                            <span class="w-6 h-6 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center text-[10px] group-hover:bg-teal-500 group-hover:text-slate-950 font-bold transition">1.4</span>
+                        <a href="#sec-1.4" onclick="scrollToSection('sec-1.4'); return false;" class="toc-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-slate-800/90 transition border border-transparent hover:border-slate-700 font-semibold">
+                            <span class="w-7 h-7 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center text-xs group-hover:bg-teal-500 group-hover:text-slate-950 font-bold transition font-mono">1.4</span>
                             <span class="truncate">ปฏิบัติการที่ 1 & การวัดละเอียด</span>
                         </a>
-                        <a href="#review-questions" class="toc-link group flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 transition border border-transparent hover:border-slate-700">
-                            <span class="w-6 h-6 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-[10px] group-hover:bg-purple-500 group-hover:text-slate-950 font-bold transition">📝</span>
+                        <a href="#review-questions" onclick="scrollToSection('review-questions'); return false;" class="toc-link group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-200 hover:text-white hover:bg-slate-800/90 transition border border-transparent hover:border-slate-700 font-semibold">
+                            <span class="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs group-hover:bg-purple-500 group-hover:text-slate-950 font-bold transition">📝</span>
                             <span class="truncate">คำถามทบทวนท้ายบท</span>
                         </a>
                     </nav>
@@ -213,7 +213,7 @@ include '../includes/header.php';
                     <div class="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5 pb-1 border-b border-slate-800">
                         <i class="fa-solid fa-scale-balanced"></i> ค่าคงตัวสากล SI 2019
                     </div>
-                    <div class="space-y-1.5 text-[11px] text-slate-300">
+                    <div class="space-y-1.5 text-xs sm:text-sm text-slate-200">
                         <div class="flex justify-between items-center py-0.5">
                             <span class="text-slate-400">Planck ($h$)</span>
                             <span class="text-cyan-300 font-bold">$6.626\times 10^{-34}\text{ J}\cdot\text{s}$</span>
@@ -424,7 +424,7 @@ include '../includes/header.php';
                         <div class="rounded-2xl overflow-hidden border border-cyan-500/30 shadow-2xl bg-slate-950 group">
                             <img src="../images/sec_3d/ch01_scale_3d.jpg" alt="ภาพที่ 1.1 การเปรียบเทียบสเกลขนาดในโลกจุลชีววิทยา 3 มิติ" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
                         </div>
-                        <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+                        <figcaption class="mt-3 text-sm sm:text-base text-slate-300 text-center">
                             <strong class="text-cyan-400">ภาพที่ 1.1</strong>&ensp;แบบจำลอง 3 มิติแสดงการเปรียบเทียบสเกลขนาดในโลกจุลชีววิทยา: ตั้งแต่ระดับมองเห็นด้วยตาเปล่าบนจานเพาะเชื้อ ($\text{mm}$), เซลล์แบคทีเรียเดี่ยว ($\mu\text{m}$) ไปจนถึงอนุภาคแบคเทอริโอเฟจและเกลียวคู่ดีเอ็นเอ ($\text{nm}$) พร้อมหน่วยวัดมาตรฐานเอสไอ
                         </figcaption>
                     </figure>
@@ -451,7 +451,7 @@ include '../includes/header.php';
                         <div class="rounded-2xl overflow-hidden border border-cyan-500/40 shadow-2xl bg-slate-950 group">
                             <img src="../images/sec_3d/ch01_artifacts_pixar_3d.jpg" alt="วัตถุประดิษฐ์ต้นแบบประวัติศาสตร์ 3 มิติ (BIPM Historical Artifacts in 3D Pixar)" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
                         </div>
-                        <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+                        <figcaption class="mt-3 text-sm sm:text-base text-slate-300 text-center">
                             <strong class="text-cyan-400">ภาพที่ 1.2</strong>&ensp;แบบจำลอง 3 มิติวัตถุประดิษฐ์ต้นแบบทางกายภาพในอดีต (Historical Physical Artifacts in 3D Pixar): แท่งเมตรมาตรฐานหน้าตัด Tresca (1889), ก้อนมวลกิโลกรัม Le Grand K (1889) ในครอบแก้วสุญญากาศ 3 ชั้น, และหอนาฬิกาอะตอมซีเซียม ณ ห้องนิรภัยมาตรวิทยา BIPM ก่อนการปฏิวัติสู่ 7 ค่าคงตัวพื้นฐาน ค.ศ. 2019
                         </figcaption>
                     </figure>
@@ -462,7 +462,7 @@ include '../includes/header.php';
                         <div class="rounded-2xl overflow-hidden border border-cyan-500/40 shadow-2xl bg-slate-950/90 group flex justify-center items-center p-4 sm:p-6 lg:p-8 backdrop-blur-xl">
                             <img src="../images/sec_3d/ch01_si_wheel_3d.jpg" onerror="this.onerror=null; this.src='../images/sec_3d/ch01_si_wheel_3d.png';" alt="แบบจำลอง 3 มิติ สไตล์พิกซาร์ วงล้อ 7 หน่วยฐานสากลเอสไอ (The 7 SI Base Units 3D Pixar Wheel)" class="w-full max-w-2xl h-auto object-contain rounded-2xl group-hover:scale-[1.02] transition-transform duration-500 shadow-2xl" loading="lazy">
                         </div>
-                        <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+                        <figcaption class="mt-3 text-sm sm:text-base text-slate-300 text-center">
                             <strong class="text-cyan-400">ภาพที่ 1.3</strong>&ensp;แบบจำลอง 3 มิติสไตล์พิกซาร์สมจริง วงล้อ 7 หน่วยฐานสากลเอสไอ (The 7 SI Base Units 3D Pixar Wheel): โครงข่าย 7 หน่วยฐานหลัก ได้แก่ เมตร ($\text{m}$), กิโลกรัม ($\text{kg}$), วินาที ($\text{s}$), แอมแปร์ ($\text{A}$), เคลวิน ($\text{K}$), โมล ($\text{mol}$) และแคนเดลา ($\text{cd}$) ถ่ายทอดผ่านมิติแสงเงา 3 มิติสมจริง พร้อมไอคอนเครื่องมือวัดวิทยาศาสตร์และคำอธิบาย 3 ภาษา (ไทย, อังกฤษ, จีน)
                         </figcaption>
                     </figure>
@@ -485,7 +485,7 @@ include '../includes/header.php';
                                 </div>
                                 <span class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 text-xs font-mono font-bold border border-cyan-500/30">SI BASE: m</span>
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm sm:text-base text-slate-200">
                                 <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
                                     <strong class="text-amber-400 block mb-1.5"><i class="fa-solid fa-landmark"></i> นิยามในอดีต:</strong>
                                     <ul class="list-disc list-inside space-y-1">
@@ -534,7 +534,7 @@ include '../includes/header.php';
                                                 หนึ่งในสิบล้าน ($\frac{1}{10^7}$) ของระยะทางจากขั้วโลกเหนือถึงเส้นศูนย์สูตรผ่านปารีส
                                             </p>
                                         </div>
-                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[10px] font-mono text-slate-400">
+                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-xs font-mono text-slate-400">
                                             ความไม่แน่นอน: $\approx 10^{-4}$
                                         </div>
                                     </div>
@@ -552,7 +552,7 @@ include '../includes/header.php';
                                                 ระยะระหว่าง 2 รอยขีดบนแท่งโลหะผสม $\text{Pt-Ir}$ 90:10 หน้าตัดกากบาท Tresca ณ BIPM
                                             </p>
                                         </div>
-                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[10px] font-mono text-slate-400">
+                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-xs font-mono text-slate-400">
                                             ความไม่แน่นอน: $\approx 10^{-7}$
                                         </div>
                                     </div>
@@ -570,7 +570,7 @@ include '../includes/header.php';
                                                 $1{,}650{,}763.73$ เท่าของความยาวคลื่นแสงส้ม-แดงที่แผ่จากอะตอมคริปทอน-86
                                             </p>
                                         </div>
-                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[10px] font-mono text-slate-400">
+                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-xs font-mono text-slate-400">
                                             ความไม่แน่นอน: $\approx 10^{-9}$
                                         </div>
                                     </div>
@@ -588,7 +588,7 @@ include '../includes/header.php';
                                                 ระยะทางที่แสงเคลื่อนที่ในสุญญากาศ ในเวลา $\frac{1}{299{,}792{,}458}\text{ s}$
                                             </p>
                                         </div>
-                                        <div class="mt-2.5 pt-2 border-t border-emerald-500/20 text-[10px] font-mono text-emerald-300 font-bold">
+                                        <div class="mt-2.5 pt-2 border-t border-emerald-500/20 text-xs font-mono text-emerald-300 font-bold">
                                             ความไม่แน่นอน: $\Delta c = 0$ (แม่นตรงสัมบูรณ์)
                                         </div>
                                     </div>
@@ -625,7 +625,7 @@ include '../includes/header.php';
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm sm:text-base text-slate-200">
                                 <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
                                     <strong class="text-amber-400 block mb-1.5"><i class="fa-solid fa-landmark"></i> นิยามในอดีต:</strong>
                                     <ul class="list-disc list-inside space-y-1">
@@ -665,7 +665,7 @@ include '../includes/header.php';
                                                 มวลของน้ำกลั่นบริสุทธิ์ปริมาตร $1\text{ dm}^3$ ที่อุณหภูมิน้ำหนาแน่นสูงสุด ($4^\circ\text{C}$)
                                             </p>
                                         </div>
-                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[10px] font-mono text-slate-400">
+                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-xs font-mono text-slate-400">
                                             ขึ้นกับความดันและไอโซโทปน้ำ
                                         </div>
                                     </div>
@@ -683,7 +683,7 @@ include '../includes/header.php';
                                                 ทรงกระบอกโลหะผสม $\text{Pt-Ir}$ ต้นแบบนานาชาติ เก็บในครอบแก้วสุญญากาศ 3 ชั้น ณ BIPM
                                             </p>
                                         </div>
-                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[10px] font-mono text-amber-400/80">
+                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-xs font-mono text-amber-400/80">
                                             มวลคลาดเคลื่อน $\approx 50\,\mu\text{g}$ ใน 100 ปี
                                         </div>
                                     </div>
@@ -701,7 +701,7 @@ include '../includes/header.php';
                                                 ตรึงค่าคงตัวพลังค์ $h = 6.626\,070\,15 \times 10^{-34}\text{ J}\cdot\text{s}$ ผ่านสมดุลแรงแม่เหล็กไฟฟ้าควอนตัม
                                             </p>
                                         </div>
-                                        <div class="mt-2.5 pt-2 border-t border-emerald-500/20 text-[10px] font-mono text-emerald-300 font-bold">
+                                        <div class="mt-2.5 pt-2 border-t border-emerald-500/20 text-xs font-mono text-emerald-300 font-bold">
                                             ความไม่แน่นอน: $\Delta h = 0$ (แม่นตรงสัมบูรณ์)
                                         </div>
                                     </div>
@@ -721,7 +721,7 @@ include '../includes/header.php';
                                 </div>
                                 <span class="px-3 py-1 rounded-full bg-sky-500/10 text-sky-300 text-xs font-mono font-bold border border-sky-500/30">SI BASE: s</span>
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm sm:text-base text-slate-200">
                                 <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
                                     <strong class="text-amber-400 block mb-1.5"><i class="fa-solid fa-landmark"></i> นิยามในอดีต:</strong>
                                     <ul class="list-disc list-inside space-y-1">
@@ -743,13 +743,13 @@ include '../includes/header.php';
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                                 <div class="rounded-2xl overflow-hidden border border-sky-500/30 shadow-xl bg-slate-950 flex flex-col justify-between">
                                     <img src="../images/sec_3d/ch01_def_second_3d.jpg" alt="ไทม์ไลน์ 3 มิติ วิวัฒนาการนิยาม 1 วินาที" class="w-full h-auto object-cover" loading="lazy">
-                                    <div class="p-2.5 bg-slate-950/90 text-[11px] text-slate-400 text-center border-t border-slate-800 font-mono">
+                                    <div class="p-2.5 bg-slate-950/90 text-xs sm:text-sm text-slate-300 text-center border-t border-slate-800 font-mono">
                                         <strong>ไทม์ไลน์ 3 มิติ:</strong> วิวัฒนาการนิยาม 1 วินาที จากการหมุนของโลก (วันสุริยคติเฉลี่ย) สู่วงโคจรโลก (ปีทรอปิก) สู่นาฬิกาอะตอมซีเซียม
                                     </div>
                                 </div>
                                 <div class="rounded-2xl overflow-hidden border border-sky-500/30 shadow-xl bg-slate-950 flex flex-col justify-between">
                                     <img src="../images/sec_3d/ch01_cesium_clock_3d.jpg" alt="หอนาฬิกาอะตอมน้ำพุซีเซียม NIST-F2" class="w-full h-auto object-cover" loading="lazy">
-                                    <div class="p-2.5 bg-slate-950/90 text-[11px] text-slate-400 text-center border-t border-slate-800 font-mono">
+                                    <div class="p-2.5 bg-slate-950/90 text-xs sm:text-sm text-slate-300 text-center border-t border-slate-800 font-mono">
                                         <strong>นาฬิกาอะตอมน้ำพุซีเซียม (NIST-F2):</strong> ลำแสงเลเซอร์ทำให้อะตอมเย็นจัด ยิงผ่านโพรงไมโครเวฟแรมซีย์ ตรึง $\Delta\nu_{\text{Cs}} = 9{,}192{,}631{,}770\text{ Hz}$
                                     </div>
                                 </div>
@@ -777,7 +777,7 @@ include '../includes/header.php';
                                                 $\frac{1}{86{,}400}$ ของวันสุริยคติเฉลี่ยจากการหมุนรอบตัวเองของโลก ($24 \times 3{,}600\text{ s}$)
                                             </p>
                                         </div>
-                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[10px] font-mono text-slate-400">
+                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-xs font-mono text-slate-400">
                                             การหมุนของโลกช้าลง $\approx 2\text{ ms/ศตวรรษ}$
                                         </div>
                                     </div>
@@ -795,7 +795,7 @@ include '../includes/header.php';
                                                 เสี้ยวส่วน $\frac{1}{31{,}556{,}925.9747}$ ของปีทรอปิก ค.ศ. 1900 โดยอิงวงโคจรโลกรอบดวงอาทิตย์
                                             </p>
                                         </div>
-                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-[10px] font-mono text-slate-400">
+                                        <div class="mt-2.5 pt-2 border-t border-slate-800 text-xs font-mono text-slate-400">
                                             ความไม่แน่นอน: $\approx 10^{-9}$
                                         </div>
                                     </div>
@@ -813,7 +813,7 @@ include '../includes/header.php';
                                                 $9{,}192{,}631{,}770$ คาบของการแผ่รังสีทรานซิชันไฮเปอร์ไฟน์สถานะพื้นของ $^{133}\text{Cs}$
                                             </p>
                                         </div>
-                                        <div class="mt-2.5 pt-2 border-t border-emerald-500/20 text-[10px] font-mono text-emerald-300 font-bold">
+                                        <div class="mt-2.5 pt-2 border-t border-emerald-500/20 text-xs font-mono text-emerald-300 font-bold">
                                             ความไม่แน่นอน: $1\text{ s}$ ใน 100 ล้านปี ($\Delta\nu_{\text{Cs}}$ ตรึงแน่นอน)
                                         </div>
                                     </div>
@@ -836,7 +836,7 @@ include '../includes/header.php';
                                     <strong>นิยามปัจจุบัน (2019):</strong> ตรึงค่า <strong>ประจุไฟฟ้ามูลฐาน (Elementary Charge, $e$)</strong> ให้เท่ากับ $1.602\,176\,634 \times 10^{-19}\text{ C}$ ($\text{A}\cdot\text{s}$)<br>
                                     <em class="text-slate-400 text-[11px]">(ในอดีตนิยามจากแรงดึงดูดเชิงกล $2 \times 10^{-7}\text{ N/m}$ ระหว่างลวดตัวนำคู่ขนาน 2 เส้นยาวอนันต์ในสุญญากาศ)</em>
                                 </p>
-                                <div class="text-[11px] text-slate-400 font-mono border-t border-slate-800 pt-2">
+                                <div class="text-xs sm:text-sm text-slate-300 font-mono border-t border-slate-800 pt-2">
                                     <strong>จุลชีววิทยา:</strong> กระแสไฟฟ้าในเจลอิเล็กโทรโฟเรซิส (Agarose & SDS-PAGE) แยกสาย DNA/โปรตีน และการวัดสัญญาณ Patch-clamp ศักย์ไฟฟ้าเยื่อหุ้มเซลล์
                                 </div>
                             </div>
@@ -854,7 +854,7 @@ include '../includes/header.php';
                                     <strong>นิยามปัจจุบัน (2019):</strong> ตรึง <strong>ค่าคงตัวบ็อลทซ์มัน (Boltzmann Constant, $k$)</strong> ให้เท่ากับ $1.380\,649 \times 10^{-23}\text{ J/K}$ ผูกพลังงานจลน์เฉลี่ยของอนุภาคเข้ากับอุณหภูมิสัมบูรณ์<br>
                                     <em class="text-slate-400 text-[11px]">(ในอดีตนิยามจาก $\frac{1}{273.16}$ ของจุดร่วมสามของน้ำ Triple Point)</em> โดย $T_{\text{K}} = T_{^\circ\text{C}} + 273.15$
                                 </p>
-                                <div class="text-[11px] text-slate-400 font-mono border-t border-slate-800 pt-2">
+                                <div class="text-xs sm:text-sm text-slate-300 font-mono border-t border-slate-800 pt-2">
                                     <strong>จุลชีววิทยา:</strong> การบ่มเชื้อ ($37^\circ\text{C} = 310.15\text{ K}$), การฆ่าเชื้อ Autoclave ($121^\circ\text{C} = 394.15\text{ K}$), อุณหภูมิการคลายและต่อสายดีเอ็นเอใน PCR ($95^\circ\text{C}, 55^\circ\text{C}, 72^\circ\text{C}$)
                                 </div>
                             </div>
@@ -872,7 +872,7 @@ include '../includes/header.php';
                                     <strong>นิยามปัจจุบัน (2019):</strong> มีจำนวนอนุภาคมูลฐานแน่นอนเท่ากับ <strong>$6.022\,140\,76 \times 10^{23}$ อนุภาค</strong> ซึ่งคือ <strong>ค่าคงตัวอาโวกาโดร (Avogadro Constant, $N_{\text{A}}$)</strong><br>
                                     <em class="text-slate-400 text-[11px]">(ในอดีตนิยามจากจำนวนอะตอมในคาร์บอน-12 บริสุทธิ์มวล $0.012\text{ kg}$)</em>
                                 </p>
-                                <div class="text-[11px] text-slate-400 font-mono border-t border-slate-800 pt-2">
+                                <div class="text-xs sm:text-sm text-slate-300 font-mono border-t border-slate-800 pt-2">
                                     <strong>จุลชีววิทยา:</strong> การเตรียมสารละลายความเข้มข้น ($\text{M} = \text{mol/L}$, $\text{mM}$, $\mu\text{M}$), จำนวนโมเลกุลสารตั้งต้นในเอนไซม์จลนศาสตร์ และจำนวนก๊อปปี้พลาสมิดดีเอ็นเอ
                                 </div>
                             </div>
@@ -890,7 +890,7 @@ include '../includes/header.php';
                                     <strong>นิยามปัจจุบัน:</strong> ตรึง <strong>ประสิทธิผลของการส่องสว่าง (Luminous Efficacy, $K_{\text{cd}}$)</strong> ของรังสีเอกรงค์ความถี่ $540 \times 10^{12}\text{ Hz}$ (แสงสีเขียว $\lambda \approx 555\text{ nm}$) ให้มีค่าเท่ากับ $683\text{ lm/W}$ ($\text{cd}\cdot\text{sr}\cdot\text{W}^{-1}$)<br>
                                     <em class="text-slate-400 text-[11px]">(ในอดีตนิยามจากความสว่างของเทียนไขมาตรฐานไขปลาวาฬ Sperm Whale Candle)</em>
                                 </p>
-                                <div class="text-[11px] text-slate-400 font-mono border-t border-slate-800 pt-2">
+                                <div class="text-xs sm:text-sm text-slate-300 font-mono border-t border-slate-800 pt-2">
                                     <strong>จุลชีววิทยา:</strong> แสงสว่างเพาะเลี้ยงสาหร่ายเซลล์เดียวและไซยาโนแบคทีเรียใน Photobioreactor, หลอดไฟกล้องจุลทรรศน์ฟลูออเรสเซนต์, และการวัดการเรืองแสงชีวภาพ (Bioluminescence)
                                 </div>
                             </div>
@@ -919,7 +919,7 @@ include '../includes/header.php';
                             <span class="text-[11px] font-mono text-cyan-300 bg-cyan-950/90 border border-cyan-500/40 px-2.5 py-0.5 rounded-full shadow-inner">BIPM SI 2019 Standard</span>
                         </div>
                         <div class="tex-table-wrap overflow-x-auto rounded-b-xl border border-cyan-500/30 bg-slate-950/95 shadow-2xl">
-                            <table class="tex-table w-full text-xs sm:text-[13px] leading-relaxed">
+                            <table class="tex-table w-full text-sm sm:text-base leading-relaxed">
                                 <thead>
                                     <tr class="bg-slate-900/90 text-slate-100 border-b border-slate-700/80">
                                         <th class="p-3.5 text-left font-semibold min-w-[190px]">ปริมาณฐาน (Quantity)</th>
@@ -1143,13 +1143,13 @@ include '../includes/header.php';
                             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                                 <div>
                                     <div class="flex items-center gap-2 flex-wrap mb-1">
-                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 uppercase tracking-wider">
+                                        <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 uppercase tracking-wider">
                                             <i class="fa-solid fa-network-wired mr-1"></i> Coherent SI Metrology
                                         </span>
-                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                                        <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
                                             NIST SP 1247 Aligned
                                         </span>
-                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40">
+                                        <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40">
                                             🧬 22 หน่วยประยุกต์จุลทรรศน์
                                         </span>
                                     </div>
@@ -1273,7 +1273,7 @@ include '../includes/header.php';
                                 <i class="fa-solid fa-graduation-cap text-base"></i>
                                 <span>เอกสารอ้างอิงมาตรฐานมาตรวิทยาสากลประจำแผนภาพที่ 1.4 (Official Standards & References)</span>
                             </div>
-                            <span class="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 font-bold">
+                            <span class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 font-bold">
                                 BIPM / NIST / ISO / IUBMB
                             </span>
                         </div>
@@ -1299,7 +1299,7 @@ include '../includes/header.php';
                             <span class="text-[11px] font-mono text-emerald-300 bg-emerald-950/90 border border-emerald-500/40 px-2.5 py-0.5 rounded-full shadow-inner">Derived Quantities</span>
                         </div>
                         <div class="tex-table-wrap overflow-x-auto rounded-b-xl border border-emerald-500/30 bg-slate-950/95 shadow-2xl">
-                            <table class="tex-table w-full text-xs sm:text-[13px] leading-relaxed">
+                            <table class="tex-table w-full text-sm sm:text-base leading-relaxed">
                                 <thead>
                                     <tr class="bg-slate-900/90 text-slate-100 border-b border-slate-700/80">
                                         <th class="p-3.5 text-left font-semibold min-w-[190px]">ปริมาณอนุพันธ์ (Derived Quantity)</th>
@@ -1319,7 +1319,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">ความถี่</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Frequency</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Frequency</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1339,7 +1339,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">แรง</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Force</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Force</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1359,7 +1359,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">ความดันและความเค้น</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Pressure / Stress</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Pressure / Stress</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1379,7 +1379,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">ความหนืดพลวัต</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Dynamic Viscosity</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Dynamic Viscosity</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1399,7 +1399,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">พลังงาน งาน ความร้อน</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Energy / Work</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Energy / Work</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1419,7 +1419,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">กำลังไฟฟ้า</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Power</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Power</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1439,7 +1439,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">ประจุไฟฟ้า</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Electric charge</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Electric charge</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1459,7 +1459,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">ความต่างศักย์ไฟฟ้า</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Voltage / Potential</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Voltage / Potential</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1479,7 +1479,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">ความต้านทานไฟฟ้า</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Resistance</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Resistance</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1499,7 +1499,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">สภาพนำไฟฟ้า</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Conductance</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Conductance</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1519,7 +1519,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">การเร่งปฏิกิริยา</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Catalytic activity</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Catalytic activity</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1539,7 +1539,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">ฟลักซ์ส่องสว่าง & สว่าง</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Luminous Flux / Illum.</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Luminous Flux / Illum.</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1559,7 +1559,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">ปริมาณรังสีดูดกลืน</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Absorbed dose</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Absorbed dose</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1588,7 +1588,7 @@ include '../includes/header.php';
                             <span class="text-[11px] font-mono text-amber-300 bg-amber-950/90 border border-amber-500/40 px-2.5 py-0.5 rounded-full shadow-inner">Accepted Units</span>
                         </div>
                         <div class="tex-table-wrap overflow-x-auto rounded-b-xl border border-amber-500/30 bg-slate-950/95 shadow-2xl">
-                            <table class="tex-table w-full text-xs sm:text-[13px] leading-relaxed">
+                            <table class="tex-table w-full text-sm sm:text-base leading-relaxed">
                                 <thead>
                                     <tr class="bg-slate-900/90 text-slate-100 border-b border-slate-700/80">
                                         <th class="p-3.5 text-left font-semibold min-w-[190px]">ปริมาณ (Quantity)</th>
@@ -1634,7 +1634,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">ปริมาตร</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Volume</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Volume</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1653,7 +1653,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">ปริมาตรไมโครปิเปต</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Microvolume</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Microvolume</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1672,7 +1672,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">เวลาที่ไม่ใช่ SI</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Non-SI Time Units</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Non-SI Time Units</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1707,7 +1707,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">อุณหภูมิเซลเซียส</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Celsius Temperature</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Celsius Temperature</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1726,7 +1726,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">มวลชีวโมเลกุล</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Molecular mass</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Molecular mass</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1745,7 +1745,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">พลังงานโมเลกุล</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Molecular Energy</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Molecular Energy</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1764,7 +1764,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">ระยะพันธะ/ผลึก</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Bond / Lattice Length</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Bond / Lattice Length</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1783,7 +1783,7 @@ include '../includes/header.php';
                                                 </span>
                                                 <div>
                                                     <div class="font-bold text-white">ความดันก๊าซ/ของไหล</div>
-                                                    <div class="text-[11px] text-slate-400 font-mono">Fluid / Gas Pressure</div>
+                                                    <div class="text-xs sm:text-sm text-slate-300 font-mono">Fluid / Gas Pressure</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -1808,7 +1808,7 @@ include '../includes/header.php';
                             <span class="text-[11px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Prefixes</span>
                         </div>
                         <div class="tex-table-wrap overflow-x-auto rounded-b-xl border border-slate-700/80 bg-slate-950/90 shadow-xl">
-                            <table class="tex-table w-full text-xs">
+                            <table class="tex-table w-full text-sm sm:text-base">
                                 <thead>
                                     <tr class="bg-slate-800/90 text-white border-b border-slate-700">
                                         <th class="p-3 text-left">คำอุปสรรค</th>
@@ -1876,7 +1876,7 @@ include '../includes/header.php';
                         <div class="rounded-2xl overflow-hidden border border-emerald-500/30 shadow-2xl bg-slate-950 group">
                             <img src="../images/sec_3d/ch01_serial_dilution_3d.jpg" alt="ภาพที่ 1.5 การเจือจางแบบลำดับส่วน 10 เท่า Serial Dilution 3 มิติ" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
                         </div>
-                        <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+                        <figcaption class="mt-3 text-sm sm:text-base text-slate-300 text-center">
                             <strong class="text-emerald-400">ภาพที่ 1.5</strong>&ensp;แบบจำลอง 3 มิติของการเจือจางเชื้อแบบลำดับส่วน 10 เท่า (10-Fold Serial Dilution): แสดงหลอดทดลอง 5 หลอดตั้งแต่ $10^{-1}$ ถึง $10^{-5}$ พร้อมลูกศรการดูดถ่ายสารด้วยไมโครปิเปต $100\,\mu\text{L}$ และผลการเจริญของโคโลนีแบคทีเรียบนจานวุ้นเพาะเชื้อ (TNTC $\rightarrow$ 150 CFU $\rightarrow$ 15 CFU)
                         </figcaption>
                     </figure>
@@ -1890,7 +1890,7 @@ include '../includes/header.php';
                         <div class="rounded-2xl overflow-hidden border border-slate-700/80 shadow-2xl bg-slate-950 p-3 sm:p-4">
                             <img src="../images/maintex/tikz/ch01_tikz1.svg" alt="แผนภาพบันไดคำอุปสรรคขั้นละ 1,000 เท่า" class="w-full h-auto" loading="lazy">
                         </div>
-                        <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+                        <figcaption class="mt-3 text-sm sm:text-base text-slate-300 text-center">
                             <strong class="text-emerald-400">ภาพที่ 1.6</strong>&ensp;แผนภาพบันไดคำอุปสรรคขั้นละ 1,000 เท่า สำหรับการแปลงหน่วยขนาดเซลล์และปริมาตรสารละลายในห้องปฏิบัติการ
                         </figcaption>
                     </figure>
@@ -2013,7 +2013,7 @@ include '../includes/header.php';
                         <p class="text-[15px] sm:text-base leading-relaxed">
                             ในการบันทึกผลการทดลองทางวิทยาศาสตร์ ตัวเลขที่ได้จากการวัดจริงจะไม่ใช่เพียงตัวเลขทางคณิตศาสตร์บริสุทธิ์ แต่ต้องสะท้อนถึง <strong>"ขีดจำกัดความละเอียดของเครื่องมือวัด (Instrument Resolution)"</strong> ที่ใช้งานจริงเสมอ ตัวเลขที่แสดงความเที่ยงตรงของการวัดนี้เรียกว่า <strong>เลขนัยสำคัญ (Significant Figures)</strong> ซึ่งประกอบด้วย:
                         </p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-3 font-mono text-xs">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-3 font-mono text-sm sm:text-base">
                             <div class="p-4 rounded-xl bg-slate-900/90 border border-cyan-500/30 space-y-1.5">
                                 <span class="text-cyan-300 font-bold flex items-center gap-2 text-sm"><i class="fa-solid fa-check-double text-cyan-400"></i> ตัวเลขที่อ่านได้แน่นอน (Certain Digits)</span>
                                 <p class="text-slate-300 font-sans leading-relaxed">คือตัวเลขที่ตรงกับขีดสเกลจริงของเครื่องมือวัดโดยไม่ต้องคาดเดา เช่น ขีดมิลลิเมตรบนไม้บรรทัด หรือหน้าปัดดิจิทัลที่นิ่งสนิท</p>
@@ -2030,10 +2030,10 @@ include '../includes/header.php';
                                 <span class="text-xs sm:text-sm font-bold text-amber-300 flex items-center gap-2">
                                     <i class="fa-solid fa-list-check text-amber-400"></i> กฎเกณฑ์สากล 5 ข้อในการนับจำนวนเลขนัยสำคัญ (Rules for Significant Figures)
                                 </span>
-                                <span class="text-[10px] font-mono text-amber-300/80 bg-amber-950/80 border border-amber-500/30 px-2.5 py-0.5 rounded-full">IUPAC & ISO Standard</span>
+                                <span class="text-xs font-mono text-amber-300/80 bg-amber-950/80 border border-amber-500/30 px-2.5 py-0.5 rounded-full">IUPAC & ISO Standard</span>
                             </div>
                             <div class="overflow-x-auto">
-                                <table class="w-full text-xs text-left border-collapse">
+                                <table class="w-full text-sm sm:text-base text-left border-collapse">
                                     <thead>
                                         <tr class="bg-slate-950/90 border-b border-slate-800 text-slate-300 font-mono">
                                             <th class="p-3 w-12 text-center">ข้อ</th>
@@ -2049,14 +2049,14 @@ include '../includes/header.php';
                                             <td class="p-3 font-semibold text-white">ตัวเลขที่ไม่ใช่ศูนย์ทุกตัว (Non-zero digits)</td>
                                             <td class="p-3 font-mono text-cyan-300">$14.52\text{ g}$, $3.8\text{ mm}$</td>
                                             <td class="p-3 font-mono font-bold text-center text-amber-400">4 ตัว, 2 ตัว</td>
-                                            <td class="p-3 text-[11px] text-slate-400">นับเป็นเลขนัยสำคัญเสมอทุกตำแหน่ง</td>
+                                            <td class="p-3 text-xs sm:text-sm text-slate-300">นับเป็นเลขนัยสำคัญเสมอทุกตำแหน่ง</td>
                                         </tr>
                                         <tr class="hover:bg-slate-800/40">
                                             <td class="p-3 font-mono font-bold text-center text-amber-400">2</td>
                                             <td class="p-3 font-semibold text-white">เลขศูนย์ระหว่างตัวเลขอื่น (Captive zeros)</td>
                                             <td class="p-3 font-mono text-cyan-300">$1.004\text{ mL}$, $205\,\mu\text{m}$</td>
                                             <td class="p-3 font-mono font-bold text-center text-amber-400">4 ตัว, 3 ตัว</td>
-                                            <td class="p-3 text-[11px] text-slate-400">นับเป็นเลขนัยสำคัญ เพราะเป็นค่าจริงที่วัดได้ระหว่างสเกล</td>
+                                            <td class="p-3 text-xs sm:text-sm text-slate-300">นับเป็นเลขนัยสำคัญ เพราะเป็นค่าจริงที่วัดได้ระหว่างสเกล</td>
                                         </tr>
                                         <tr class="hover:bg-slate-800/40">
                                             <td class="p-3 font-mono font-bold text-center text-amber-400">3</td>
@@ -2070,19 +2070,19 @@ include '../includes/header.php';
                                             <td class="p-3 font-semibold text-white">เลขศูนย์ตามหลังและมีจุดทศนิยม (Trailing zeros with decimal)</td>
                                             <td class="p-3 font-mono text-cyan-300">$1.5000\text{ g}$, $10.0\text{ mL}$</td>
                                             <td class="p-3 font-mono font-bold text-center text-amber-400">5 ตัว, 3 ตัว</td>
-                                            <td class="p-3 text-[11px] text-slate-400"><strong>นับ</strong> เพราะสะท้อนถึงความละเอียดระดับสูงของเครื่องมือ (เช่น เครื่องชั่ง 4 ตำแหน่ง)</td>
+                                            <td class="p-3 text-xs sm:text-sm text-slate-300"><strong>นับ</strong> เพราะสะท้อนถึงความละเอียดระดับสูงของเครื่องมือ (เช่น เครื่องชั่ง 4 ตำแหน่ง)</td>
                                         </tr>
                                         <tr class="hover:bg-slate-800/40">
                                             <td class="p-3 font-mono font-bold text-center text-amber-400">5</td>
                                             <td class="p-3 font-semibold text-white">เลขศูนย์ท้ายจำนวนเต็มที่ไม่มีจุดทศนิยม (Trailing zeros without decimal)</td>
                                             <td class="p-3 font-mono text-cyan-300">$1{,}500\text{ CFU/mL}$</td>
                                             <td class="p-3 font-mono font-bold text-center text-amber-400">กำกวม (2 หรือ 4)</td>
-                                            <td class="p-3 text-[11px] text-slate-400">ควรเขียนในรูป<strong>สัญกรณ์วิทยาศาสตร์</strong> เช่น $1.5\times 10^3$ (2 ตัว) หรือ $1.500\times 10^3$ (4 ตัว)</td>
+                                            <td class="p-3 text-xs sm:text-sm text-slate-300">ควรเขียนในรูป<strong>สัญกรณ์วิทยาศาสตร์</strong> เช่น $1.5\times 10^3$ (2 ตัว) หรือ $1.500\times 10^3$ (4 ตัว)</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="p-3 bg-slate-950/90 border-t border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
+                            <div class="p-3 bg-slate-950/90 border-t border-slate-800 text-xs sm:text-sm text-slate-300 flex items-start gap-2">
                                 <i class="fa-solid fa-circle-info text-cyan-400 mt-0.5"></i>
                                 <span><strong>ตัวเลขแม่นตรง (Exact Numbers):</strong> เช่น จำนวนจานเพาะเชื้อ 6 จาน, การคูณด้วย $100\%$ ในสูตรคำนวณ, หรือคำจำกัดความ $1\text{ mL} = 1{,}000\,\mu\text{L}$ ถือว่ามีเลขนัยสำคัญเป็น <em>อนันต์ ($\infty$)</em> จะไม่นำมาจำกัดเลขนัยสำคัญในการคำนวณผลลัพธ์</span>
                             </div>
@@ -2231,7 +2231,7 @@ include '../includes/header.php';
                                 <p class="text-slate-300 leading-relaxed">
                                     มีความเบี่ยงเบนไปในทิศทางเดียวกันเสมอ (ค่าสูงกว่าจริงตลอดหรือต่ำกว่าจริงตลอด)
                                 </p>
-                                <ul class="text-[11px] text-slate-400 space-y-1 list-disc list-inside">
+                                <ul class="text-xs sm:text-sm text-slate-300 space-y-1 list-disc list-inside">
                                     <li><strong>สาเหตุ:</strong> เครื่องมือเสื่อมสภาพ, สเกลคดงอ, มี Zero Error บนเครื่องชั่ง</li>
                                     <li><strong>วิธีแก้ไข:</strong> สอบเทียบเครื่องมือ (Calibration), ปรับตั้งศูนย์ (Tare)</li>
                                 </ul>
@@ -2245,7 +2245,7 @@ include '../includes/header.php';
                                 <p class="text-slate-300 leading-relaxed">
                                     มีความผันแปรขึ้นลงไร้ทิศทางแน่นอนรอบค่าเฉลี่ยจริง
                                 </p>
-                                <ul class="text-[11px] text-slate-400 space-y-1 list-disc list-inside">
+                                <ul class="text-xs sm:text-sm text-slate-300 space-y-1 list-disc list-inside">
                                     <li><strong>สาเหตุ:</strong> ลมพัด, อุณหภูมิห้องแกว่ง, มุมสายตา (Parallax error)</li>
                                     <li><strong>วิธีแก้ไข:</strong> ทำซ้ำหลายครั้ง ($n \ge 3$) แล้วหาค่าเฉลี่ย ($\bar{x}$) และ SD</li>
                                 </ul>
@@ -2259,7 +2259,7 @@ include '../includes/header.php';
                                 <p class="text-slate-300 leading-relaxed">
                                     เกิดจากความประมาทหรือความเข้าใจผิดของผู้ทดลองเอง
                                 </p>
-                                <ul class="text-[11px] text-slate-400 space-y-1 list-disc list-inside">
+                                <ul class="text-xs sm:text-sm text-slate-300 space-y-1 list-disc list-inside">
                                     <li><strong>สาเหตุ:</strong> ดูดสารเลยจังหวะ 2, อ่านสเกลผิดขีด, จดตัวเลขสลับหลัก</li>
                                     <li><strong>วิธีแก้ไข:</strong> ต้องตัดข้อมูลชุดนั้นทิ้ง และฝึกทักษะทำซ้ำใหม่</li>
                                 </ul>
@@ -2271,7 +2271,7 @@ include '../includes/header.php';
                             <div class="rounded-2xl overflow-hidden border border-amber-500/30 shadow-2xl bg-slate-950 group">
                                 <img src="../images/sec_3d/ch01_accuracy_precision_3d.jpg" alt="เปรียบเทียบความแม่นยำและความเที่ยงตรง 3 มิติ (Accuracy vs Precision Targets)" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
                             </div>
-                            <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+                            <figcaption class="mt-3 text-sm sm:text-base text-slate-300 text-center">
                                 <strong class="text-amber-400">ภาพที่ 1.7</strong>&ensp;แบบจำลอง 3 มิติเปรียบเทียบความแตกต่างระหว่างความแม่น (Accuracy) และความเที่ยง (Precision) ผ่านเป้ายิง 4 รูปแบบ: (1) แม่นสูง-เที่ยงสูง เกาะกลุ่มตรงกลางเป้า (2) แม่นต่ำ-เที่ยงสูง เกาะกลุ่มแน่นแต่นอกเป้า (3) แม่นสูง-เที่ยงต่ำ กระจายรอบจุดกึ่งกลาง (4) แม่นต่ำ-เที่ยงต่ำ กระจายไร้ทิศทาง
                             </figcaption>
                         </figure>
@@ -2281,7 +2281,7 @@ include '../includes/header.php';
                             <div class="rounded-2xl overflow-hidden border border-amber-500/30 shadow-2xl bg-slate-950 group">
                                 <img src="../images/sec_3d/ch01_micropipette_3d.jpg" alt="ภาพตัดขวาง 3 มิติแสดงกลไกลูกสูบไมโครปิเปต 2 จังหวะ" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
                             </div>
-                            <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+                            <figcaption class="mt-3 text-sm sm:text-base text-slate-300 text-center">
                                 <strong class="text-amber-400">ภาพที่ 1.8</strong>&ensp;แบบจำลอง 3 มิติเชิงเทคนิคแสดงภาพตัดขวางของไมโครปิเปต P1000: แสดงกลไกปุ่มกด 2 จังหวะ (First Stop สำหรับดูดสาร และ Second Stop สำหรับเป่าสารออกให้หมด), สปริงสอบเทียบ, แกนลูกสูบ, หน้าปัดดิจิทัล $1{,}000\,\mu\text{L}$ และหยดของเหลวที่ปลายทิป
                             </figcaption>
                         </figure>
@@ -2349,7 +2349,7 @@ include '../includes/header.php';
                                 <p class="text-slate-300 leading-relaxed">
                                     ความใกล้เคียงระหว่าง <strong>"ค่าเฉลี่ยที่วัดได้จริง"</strong> กับ <strong>"ค่าจริงมาตรฐาน (True Value)"</strong>
                                 </p>
-                                <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400">
+                                <div class="pt-2 border-t border-slate-800 text-xs sm:text-sm text-slate-300">
                                     ประเมินด้วย <em>$\% \text{Relative Error}$</em> ยิ่งน้อยแปลว่ายิ่งแม่นสูง
                                 </div>
                             </div>
@@ -2362,7 +2362,7 @@ include '../includes/header.php';
                                 <p class="text-slate-300 leading-relaxed">
                                     ความสอดคล้องหรือความสามารถในการ <strong>"ซ้ำรอยเดิม"</strong> เมื่อทำการวัดซ้ำหลายครั้งภายใต้สภาวะเดียวกัน
                                 </p>
-                                <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400">
+                                <div class="pt-2 border-t border-slate-800 text-xs sm:text-sm text-slate-300">
                                     ประเมินด้วย <em>ส่วนเบี่ยงเบนมาตรฐาน (SD)</em> หรือ <em>$\% \text{CV}$</em>
                                 </div>
                             </div>
@@ -2375,7 +2375,7 @@ include '../includes/header.php';
                                 <p class="text-slate-300 leading-relaxed">
                                     ขนาดของการเปลี่ยนแปลงที่ <strong>"เล็กที่สุด (Least Count)"</strong> ของปริมาณที่วัด ซึ่งเครื่องมือสามารถตรวจจับและแสดงผลได้
                                 </p>
-                                <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400">
+                                <div class="pt-2 border-t border-slate-800 text-xs sm:text-sm text-slate-300">
                                     เช่น ไมโครมิเตอร์วัดได้ละเอียด $0.01\text{ mm}$, เครื่องชั่ง 4 ตำแหน่งได้ $0.0001\text{ g}$
                                 </div>
                             </div>
@@ -2400,10 +2400,10 @@ include '../includes/header.php';
                                 <span class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
                                     <i class="fa-solid fa-scale-balanced text-cyan-400"></i> ตารางเปรียบเทียบคุณลักษณะเครื่องมือวัดสำคัญในห้องปฏิบัติการจุลชีววิทยา
                                 </span>
-                                <span class="text-[10px] font-mono text-cyan-300 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-500/40">Lab Metrology Matrix</span>
+                                <span class="text-xs font-mono text-cyan-300 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-500/40">Lab Metrology Matrix</span>
                             </div>
                             <div class="overflow-x-auto">
-                                <table class="w-full text-xs text-left border-collapse">
+                                <table class="w-full text-sm sm:text-base text-left border-collapse">
                                     <thead>
                                         <tr class="bg-slate-950/90 border-b border-slate-800 text-slate-300 font-mono">
                                             <th class="p-3">เครื่องมือวัด</th>
@@ -2418,35 +2418,35 @@ include '../includes/header.php';
                                             <td class="p-3 font-semibold text-white flex items-center gap-2"><i class="fa-solid fa-ruler-combined text-teal-400"></i> เวอร์เนียร์คาลิปเปอร์</td>
                                             <td class="p-3">ความยาว มิติภายนอก/ใน</td>
                                             <td class="p-3 font-mono text-cyan-300 text-center font-bold">$0.05\text{ mm}$ หรือ $0.02\text{ mm}$</td>
-                                            <td class="p-3 text-[11px] text-slate-400">ขีดเวอร์เนียร์สเกลขยายความละเอียดสายตา 20-50 เท่า</td>
+                                            <td class="p-3 text-xs sm:text-sm text-slate-300">ขีดเวอร์เนียร์สเกลขยายความละเอียดสายตา 20-50 เท่า</td>
                                             <td class="p-3 text-slate-300">วัดเส้นผ่านศูนย์กลางวงยับยั้งเชื้อ (Inhibition Zone) ในจานเพาะเชื้อ</td>
                                         </tr>
                                         <tr class="hover:bg-slate-800/40">
                                             <td class="p-3 font-semibold text-white flex items-center gap-2"><i class="fa-solid fa-compass-drafting text-teal-400"></i> ไมโครมิเตอร์</td>
                                             <td class="p-3">ความหนา เส้นผ่านศูนย์กลางจิ๋ว</td>
                                             <td class="p-3 font-mono text-cyan-300 text-center font-bold">$0.01\text{ mm}$ ($10\,\mu\text{m}$)</td>
-                                            <td class="p-3 text-[11px] text-slate-400">ใช้หลักเกลียวละเอียด มี Ratchet Stop คุมแรงกดคงที่</td>
+                                            <td class="p-3 text-xs sm:text-sm text-slate-300">ใช้หลักเกลียวละเอียด มี Ratchet Stop คุมแรงกดคงที่</td>
                                             <td class="p-3 text-slate-300">วัดความหนาแผ่นสไลด์แก้วและ Coverslip ในงานกล้องจุลทรรศน์</td>
                                         </tr>
                                         <tr class="hover:bg-slate-800/40">
                                             <td class="p-3 font-semibold text-white flex items-center gap-2"><i class="fa-solid fa-scale-unbalanced text-amber-400"></i> เครื่องชั่งวิเคราะห์ 4 ตำแหน่ง</td>
                                             <td class="p-3">มวลสารเคมี ($m$)</td>
                                             <td class="p-3 font-mono text-cyan-300 text-center font-bold">$0.0001\text{ g}$ ($0.1\text{ mg}$)</td>
-                                            <td class="p-3 text-[11px] text-slate-400">เซนเซอร์แม่เหล็กไฟฟ้า (EMFC) ไวต่อลมและอุณหภูมิสูงมาก</td>
+                                            <td class="p-3 text-xs sm:text-sm text-slate-300">เซนเซอร์แม่เหล็กไฟฟ้า (EMFC) ไวต่อลมและอุณหภูมิสูงมาก</td>
                                             <td class="p-3 text-slate-300">ชั่งยาปฏิชีวนะ สารปฏิชีวนะมาตรฐาน และทดสอบสอบเทียบไมโครปิเปต</td>
                                         </tr>
                                         <tr class="hover:bg-slate-800/40">
                                             <td class="p-3 font-semibold text-white flex items-center gap-2"><i class="fa-solid fa-eye-dropper text-cyan-400"></i> ไมโครปิเปต P1000</td>
                                             <td class="p-3">ปริมาตรของเหลว ($V$)</td>
                                             <td class="p-3 font-mono text-cyan-300 text-center font-bold">$1\,\mu\text{L}$ (ช่วง $100\text{--}1{,}000\,\mu\text{L}$)</td>
-                                            <td class="p-3 text-[11px] text-slate-400">Air Displacement ลูกสูบกลไกเที่ยงตรงสูง ISO 8655</td>
+                                            <td class="p-3 text-xs sm:text-sm text-slate-300">Air Displacement ลูกสูบกลไกเที่ยงตรงสูง ISO 8655</td>
                                             <td class="p-3 text-slate-300">ดูดจ่ายอาหารเหลว บัฟเฟอร์ และสารแขวนลอยเซลล์แบคทีเรีย</td>
                                         </tr>
                                         <tr class="hover:bg-slate-800/40">
                                             <td class="p-3 font-semibold text-white flex items-center gap-2"><i class="fa-solid fa-chart-line text-purple-400"></i> สเปกโทรโฟโตมิเตอร์ UV-Vis</td>
                                             <td class="p-3">การดูดกลืนแสง ($\text{OD}_{600}$)</td>
                                             <td class="p-3 font-mono text-cyan-300 text-center font-bold">$0.001\text{ AU}$</td>
-                                            <td class="p-3 text-[11px] text-slate-400">ความไว $S = \varepsilon b$ วัดความชันตามกฎ Beer-Lambert</td>
+                                            <td class="p-3 text-xs sm:text-sm text-slate-300">ความไว $S = \varepsilon b$ วัดความชันตามกฎ Beer-Lambert</td>
                                             <td class="p-3 text-slate-300">ตรวจติดตามการเติบโตของประชากรแบคทีเรีย (Growth Curve)</td>
                                         </tr>
                                     </tbody>
@@ -2473,7 +2473,7 @@ include '../includes/header.php';
                         <div class="rounded-2xl overflow-hidden border border-teal-500/30 shadow-2xl bg-slate-950 group">
                             <img src="../images/sec_3d/ch01_lab_apparatus_3d.jpg" alt="ภาพที่ 1.7 ชุดอุปกรณ์ปฏิบัติการที่ 1 แบบจำลอง 3 มิติ" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
                         </div>
-                        <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
+                        <figcaption class="mt-3 text-sm sm:text-base text-slate-300 text-center">
                             <strong class="text-teal-400">ภาพที่ 1.7</strong>&ensp;แบบจำลอง 3 มิติชุดอุปกรณ์ปฏิบัติการที่ 1 (3D Pixar Style): เวอร์เนียร์คาลิปเปอร์วัดมิติจานเพาะเชื้อแก้ว, ไมโครมิเตอร์วัดความหนาแผ่นสไลด์, ไมโครปิเปต P1000 พร้อมทิปสีฟ้า และเครื่องชั่งดิจิทัลวิเคราะห์ทศนิยม 4 ตำแหน่ง ($0.0001\text{ g}$)
                         </figcaption>
                     </figure>
@@ -2544,7 +2544,7 @@ include '../includes/header.php';
                                 <i class="fa-solid fa-pen-to-square"></i> 3. ตารางบันทึกผลการทดลอง (สำหรับนักศึกษาบันทึกค่าจริง)
                             </h4>
                             <div class="tex-table-wrap overflow-x-auto rounded-xl border border-slate-700/80 bg-slate-950/90 shadow-lg">
-                                <table class="tex-table w-full text-xs">
+                                <table class="tex-table w-full text-sm sm:text-base">
                                     <thead>
                                         <tr class="bg-slate-800/90 text-white border-b border-slate-700">
                                             <th class="p-3 text-left">รายการที่วัด</th>
@@ -2924,7 +2924,7 @@ function renderBaseUnitsGrid() {
 
     container.innerHTML = SI_BASE_DATA.map(b => `
         <div onclick="selectSiBase('${b.id}')" id="card-base-${b.id}" class="si-base-card cursor-pointer p-3 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-600 transition-all text-center group hover:scale-[1.03]">
-            <div class="text-[10px] font-mono font-bold text-slate-400 group-hover:text-white transition uppercase">${b.name_en}</div>
+            <div class="text-xs font-mono font-bold text-slate-400 group-hover:text-white transition uppercase">${b.name_en}</div>
             <div class="text-2xl font-black my-0.5 tracking-tight" style="color: ${b.color};">${b.sym}</div>
             <div class="text-[10.5px] font-bold text-slate-300">${b.name_th}</div>
             <div class="text-[9px] text-slate-500 mt-1 line-clamp-1">${b.tag}</div>
@@ -3019,7 +3019,7 @@ function renderInspectorCard(u) {
     // Parent base badges
     const parentBadges = u.parents.map(p => {
         const b = SI_BASE_DATA.find(x => x.id === p);
-        return `<span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-slate-800 text-slate-300 border border-slate-700">หน่วยฐาน: ${b ? b.sym + ' (' + b.name_th + ')' : p}</span>`;
+        return `<span class="px-2 py-0.5 rounded-md text-xs font-mono font-bold bg-slate-800 text-slate-300 border border-slate-700">หน่วยฐาน: ${b ? b.sym + ' (' + b.name_th + ')' : p}</span>`;
     }).join(' ');
 
     // Mini Calculator HTML
@@ -3031,15 +3031,15 @@ function renderInspectorCard(u) {
                     <span class="text-xs font-bold text-purple-300 flex items-center gap-1.5">
                         <i class="fa-solid fa-calculator"></i> ตัวแปลงหน่วยอัตราเร่งเอนไซม์ (Enzyme Units ↔ Katal)
                     </span>
-                    <span class="text-[10px] font-mono text-slate-500">1 U = 16.67 nkat</span>
+                    <span class="text-xs font-mono text-slate-500">1 U = 16.67 nkat</span>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="text-[11px] text-slate-400 block mb-1">Enzyme Unit (U หรือ µmol/min):</label>
+                        <label class="text-xs sm:text-sm text-slate-300 block mb-1">Enzyme Unit (U หรือ µmol/min):</label>
                         <input type="number" id="calc-u-val" value="100" oninput="calcEnzymeKat('u')" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-purple-500 font-mono">
                     </div>
                     <div>
-                        <label class="text-[11px] text-slate-400 block mb-1">Nanokatal (nkat หรือ nmol/s):</label>
+                        <label class="text-xs sm:text-sm text-slate-300 block mb-1">Nanokatal (nkat หรือ nmol/s):</label>
                         <input type="number" id="calc-nkat-val" value="1666.7" oninput="calcEnzymeKat('nkat')" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-purple-500 font-mono">
                     </div>
                 </div>
@@ -3055,11 +3055,11 @@ function renderInspectorCard(u) {
                     <span class="text-xs font-bold text-rose-300 flex items-center gap-1.5">
                         <i class="fa-solid fa-temperature-arrow-up"></i> คำนวณความดันไอน้ำอิ่มตัว Autoclave (Temperature → Saturated Pressure)
                     </span>
-                    <span class="text-[10px] font-mono text-slate-500">Antoine Eq. Approximation</span>
+                    <span class="text-xs font-mono text-slate-500">Antoine Eq. Approximation</span>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="text-[11px] text-slate-400 block mb-1">อุณหภูมิในหม้อนึ่ง (°C):</label>
+                        <label class="text-xs sm:text-sm text-slate-300 block mb-1">อุณหภูมิในหม้อนึ่ง (°C):</label>
                         <input type="range" id="calc-temp-slider" min="100" max="135" value="121" oninput="calcAutoclavePressure(this.value)" class="w-full accent-rose-500">
                         <div class="flex justify-between text-[10px] text-slate-500 font-mono"><span>100°C</span><span id="calc-temp-disp" class="text-rose-400 font-bold">121°C</span><span>135°C</span></div>
                     </div>
@@ -3077,15 +3077,15 @@ function renderInspectorCard(u) {
                     <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
                         <i class="fa-solid fa-rotate"></i> แปลงความเร็วรอบเครื่องปั่นเหวี่ยง (RPM ↔ RCF / g-force)
                     </span>
-                    <span class="text-[10px] font-mono text-slate-500">RCF = 1.118×10⁻⁵ × r × RPM²</span>
+                    <span class="text-xs font-mono text-slate-500">RCF = 1.118×10⁻⁵ × r × RPM²</span>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                        <label class="text-[11px] text-slate-400 block mb-1">ความเร็วรอบ (RPM):</label>
+                        <label class="text-xs sm:text-sm text-slate-300 block mb-1">ความเร็วรอบ (RPM):</label>
                         <input type="number" id="calc-rpm-val" value="10000" oninput="calcCentrifugeRcf()" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-amber-500 font-mono">
                     </div>
                     <div>
-                        <label class="text-[11px] text-slate-400 block mb-1">รัศมีโรเตอร์ r (cm):</label>
+                        <label class="text-xs sm:text-sm text-slate-300 block mb-1">รัศมีโรเตอร์ r (cm):</label>
                         <input type="number" id="calc-radius-val" value="8.5" step="0.5" oninput="calcCentrifugeRcf()" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-amber-500 font-mono">
                     </div>
                     <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-xs flex flex-col justify-center">
@@ -3103,15 +3103,15 @@ function renderInspectorCard(u) {
                     <span class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
                         <i class="fa-solid fa-bolt"></i> คำนวณสนามไฟฟ้าในถังเจลอิเล็กโทรโฟรีซิส (Electrophoresis Voltage & Field)
                     </span>
-                    <span class="text-[10px] font-mono text-slate-500">E = V / d</span>
+                    <span class="text-xs font-mono text-slate-500">E = V / d</span>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
-                        <label class="text-[11px] text-slate-400 block mb-1">แรงดันไฟฟ้า (V):</label>
+                        <label class="text-xs sm:text-sm text-slate-300 block mb-1">แรงดันไฟฟ้า (V):</label>
                         <input type="number" id="calc-volt-val" value="100" oninput="calcGelField()" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-emerald-500 font-mono">
                     </div>
                     <div>
-                        <label class="text-[11px] text-slate-400 block mb-1">ระยะห่างขั้ว d (cm):</label>
+                        <label class="text-xs sm:text-sm text-slate-300 block mb-1">ระยะห่างขั้ว d (cm):</label>
                         <input type="number" id="calc-dist-val" value="20" oninput="calcGelField()" class="w-full px-3 py-1.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-emerald-500 font-mono">
                     </div>
                     <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-xs flex flex-col justify-center">
@@ -3144,7 +3144,7 @@ function renderInspectorCard(u) {
                         <span>หมวดหมู่: <strong style="color: ${u.color};">${u.domain_name}</strong></span>
                     </div>
                     <div class="mt-2.5 flex items-center gap-1.5 flex-wrap">
-                        <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider mr-1">ประกอบจาก:</span>
+                        <span class="text-xs font-mono text-slate-400 uppercase tracking-wider mr-1">ประกอบจาก:</span>
                         ${parentBadges}
                     </div>
                 </div>
@@ -3181,12 +3181,12 @@ function renderInspectorCard(u) {
                     <h5 class="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
                         <i class="fa-solid fa-square-root-variable text-cyan-400"></i> สมการฟิสิกส์จุลทรรศน์ที่เกี่ยวข้อง:
                     </h5>
-                    <span class="text-[10px] font-mono text-slate-500">Biophysical Formula</span>
+                    <span class="text-xs font-mono text-slate-500">Biophysical Formula</span>
                 </div>
                 <div class="p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-900 border border-cyan-500/30 text-center font-mono text-sm sm:text-base text-cyan-200 overflow-x-auto min-h-[62px] flex items-center justify-center shadow-inner">
                     $$${u.physics_eq}$$
                 </div>
-                <p class="text-[11px] text-slate-400 leading-relaxed">
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
                     ความเที่ยงตรงของการทดลองขึ้นอยู่กับการสอบเทียบเครื่องมือวัดตามหน่วยฐาน SI เพื่อลดความไม่แน่นอน ($U_{95}$) ให้ต่ำกว่าเกณฑ์ควบคุมคุณภาพ
                 </p>
             </div>
@@ -3355,14 +3355,14 @@ function initTocScrollSpy() {
         sidebarLinks.forEach(link => {
             const href = link.getAttribute('href');
             if (href === `#${activeId}`) {
-                link.classList.add('bg-cyan-950/80', 'text-cyan-300', 'border-cyan-500/50', 'shadow-sm');
-                link.classList.remove('text-slate-300', 'text-slate-400', 'border-transparent');
+                link.classList.add('bg-cyan-950/90', 'text-cyan-300', 'border-cyan-500/60', 'shadow-md', 'scale-[1.02]');
+                link.classList.remove('text-slate-200', 'text-slate-300', 'text-slate-400', 'border-transparent');
             } else {
-                link.classList.remove('bg-cyan-950/80', 'text-cyan-300', 'border-cyan-500/50', 'shadow-sm');
-                if (link.classList.contains('pl-6')) {
-                    link.classList.add('text-slate-400', 'border-transparent');
-                } else {
+                link.classList.remove('bg-cyan-950/90', 'text-cyan-300', 'border-cyan-500/60', 'shadow-md', 'scale-[1.02]');
+                if (link.classList.contains('pl-7')) {
                     link.classList.add('text-slate-300', 'border-transparent');
+                } else {
+                    link.classList.add('text-slate-200', 'border-transparent');
                 }
             }
         });
@@ -3370,14 +3370,28 @@ function initTocScrollSpy() {
         quickLinks.forEach(link => {
             const href = link.getAttribute('href');
             if (href === `#${activeId}`) {
-                link.classList.add('bg-cyan-500/30', 'text-cyan-300', 'border-cyan-400', 'shadow-sm');
-                link.classList.remove('bg-slate-800/80', 'text-slate-300');
+                link.classList.add('bg-cyan-500/30', 'text-cyan-300', 'border-cyan-400', 'shadow-sm', 'font-bold');
+                link.classList.remove('bg-slate-800/90', 'text-slate-200');
             } else {
-                link.classList.remove('bg-cyan-500/30', 'text-cyan-300', 'border-cyan-400', 'shadow-sm');
-                link.classList.add('bg-slate-800/80', 'text-slate-300');
+                link.classList.remove('bg-cyan-500/30', 'text-cyan-300', 'border-cyan-400', 'shadow-sm', 'font-bold');
+                link.classList.add('bg-slate-800/90', 'text-slate-200');
             }
         });
     }
+
+    window.setActiveNav = setActive;
+
+    // Attach click smooth-scroll to all sidebar and quick-nav links
+    document.querySelectorAll('#sidebar-toc a, #quick-nav-bar a').forEach(a => {
+        a.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href && href.startsWith('#') && href.length > 1) {
+                e.preventDefault();
+                const targetId = href.substring(1);
+                scrollToSection(targetId);
+            }
+        });
+    });
 
     if ('IntersectionObserver' in window && elements.length > 0) {
         const observer = new IntersectionObserver((entries) => {
@@ -3394,6 +3408,28 @@ function initTocScrollSpy() {
         elements.forEach(el => observer.observe(el));
     }
 }
+
+// Universal Smooth Scroll function with sticky header offset
+function scrollToSection(targetId) {
+    const el = document.getElementById(targetId);
+    if (!el) return;
+    const headerOffset = 115;
+    const elementPosition = el.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+    window.scrollTo({
+        top: Math.max(0, offsetPosition),
+        behavior: 'smooth'
+    });
+
+    if (history.pushState) {
+        history.pushState(null, null, '#' + targetId);
+    }
+    if (typeof window.setActiveNav === 'function') {
+        window.setActiveNav(targetId);
+    }
+}
+window.scrollToSection = scrollToSection;
 
 // Font Size Adjuster
 let currentFontSizeLevel = 0;

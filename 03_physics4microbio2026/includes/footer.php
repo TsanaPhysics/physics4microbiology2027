@@ -105,13 +105,36 @@
 
 <!-- Scripts -->
 <script>
-    // Smooth scroll for anchor links
+    // Smooth scroll for anchor links with offset protection and dot-in-id support (e.g. #sec-1.1)
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
+            const href = this.getAttribute('href');
+            if (!href || href === '#' || href.length < 2) return;
+            
+            const rawId = decodeURIComponent(href.slice(1));
+            // Use getElementById to avoid CSS selector dot-as-class parsing error
+            const target = document.getElementById(rawId) || document.querySelector(`[id="${CSS.escape(rawId)}"]`);
+            if (target) {
+                e.preventDefault();
+                // Sticky header height (64px) + sticky quick-nav/padding (approx 50px)
+                const headerOffset = 115;
+                const elementPosition = target.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: Math.max(0, offsetPosition),
+                    behavior: 'smooth'
+                });
+
+                if (history.pushState) {
+                    history.pushState(null, null, href);
+                }
+
+                // If active nav setter exists, invoke it immediately
+                if (typeof setActiveNav === 'function') {
+                    setActiveNav(rawId);
+                }
+            }
         });
     });
 </script>
