@@ -215,16 +215,16 @@ include '../includes/header.php';
                     </div>
                     <div class="space-y-1.5 text-xs sm:text-sm text-slate-200">
                         <div class="flex justify-between items-center py-0.5">
-                            <span class="text-slate-400">Planck ($h$)</span>
-                            <span class="text-cyan-300 font-bold">$6.626\times 10^{-34}\text{ J}\cdot\text{s}$</span>
+                            <span class="text-slate-400">Planck (<em>h</em>)</span>
+                            <span class="text-cyan-300 font-bold">6.626 × 10⁻³⁴ J·s</span>
                         </div>
                         <div class="flex justify-between items-center py-0.5">
-                            <span class="text-slate-400">Speed of light ($c$)</span>
-                            <span class="text-cyan-300 font-bold">$299,792,458\text{ m/s}$</span>
+                            <span class="text-slate-400">Speed of light (<em>c</em>)</span>
+                            <span class="text-cyan-300 font-bold">299,792,458 m/s</span>
                         </div>
                         <div class="flex justify-between items-center py-0.5">
-                            <span class="text-slate-400">Cesium-133 ($\Delta\nu_{\text{Cs}}$)</span>
-                            <span class="text-cyan-300 font-bold">$9.192\times 10^9\text{ Hz}$</span>
+                            <span class="text-slate-400">Cesium-133 (Δν<sub>Cs</sub>)</span>
+                            <span class="text-cyan-300 font-bold">9.192 × 10⁹ Hz</span>
                         </div>
                     </div>
                 </div>
@@ -1799,67 +1799,417 @@ include '../includes/header.php';
                         </div>
                     </div>
 
-                    <!-- TABLE 1.4: PREFIXES -->
-                    <div class="tex-tablefig mt-8 scroll-mt-20" id="tab-1.4">
-                        <div class="p-3 bg-gradient-to-r from-purple-950/60 to-slate-900 rounded-t-xl border border-b-0 border-slate-700/80 flex items-center justify-between flex-wrap gap-2">
-                            <span class="text-xs sm:text-sm font-bold text-purple-300 flex items-center gap-2">
-                                <i class="fa-solid fa-arrow-down-wide-short text-purple-400"></i> ตารางที่ 1.4 คำอุปสรรคเอสไอ (SI Prefixes) ที่พบบ่อยที่สุดในห้องปฏิบัติการจุลชีววิทยาและฟิสิกส์การวัด
-                            </span>
-                            <span class="text-[11px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Prefixes</span>
+                    <!-- TABLE 1.4: PREFIXES (Comprehensive Cosmic to Subatomic Scale) -->
+                    <div class="tex-tablefig mt-10 scroll-mt-28" id="tab-1.4">
+                        <!-- Header Banner -->
+                        <div class="p-4 sm:p-5 bg-gradient-to-r from-purple-950 via-slate-900 to-indigo-950 rounded-t-2xl border border-b-0 border-purple-500/40 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div>
+                                <div class="flex items-center gap-2 flex-wrap mb-1.5">
+                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 uppercase tracking-wider">
+                                        <i class="fa-solid fa-arrows-left-right-to-line mr-1"></i> Scale Spectrum
+                                    </span>
+                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                                        BIPM SI Brochure (9th Ed.) Aligned
+                                    </span>
+                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                                        $10^{24} \longleftrightarrow 10^{-18}$
+                                    </span>
+                                </div>
+                                <h3 class="text-lg sm:text-xl md:text-2xl font-black text-white tracking-wide flex items-center gap-2.5">
+                                    <strong class="text-purple-400">ตารางที่ 1.4</strong> คำอุปสรรคสากลเอสไอ (SI Prefixes) เปรียบเทียบขนาดตั้งแต่ขอบเขตจักรวาล สู่มนุษย์ จุลินทรีย์ ไวรัส และควาร์ก
+                                </h3>
+                                <p class="text-xs sm:text-sm text-slate-300 mt-1 leading-relaxed">
+                                    Cosmic to Subatomic Metrology Spectrum: บูรณาการมิติความยาว มวล ปริมาตร และข้อมูลพันธุศาสตร์ จากเอกภพ ($\sim 10^{26}\text{ m}$) สู่สิ่งมีชีวิต มนุษย์ ($10^0\text{ m}$) จานเพาะเชื้อ ($10^{-2}\text{ m}$) แบคทีเรีย ($10^{-6}\text{ m}$) ไวรัส ($10^{-9}\text{ m}$) จนถึงอนุภาคมูลฐาน ($10^{-18}\text{ m}$)
+                                </p>
+                            </div>
+
+                            <!-- Filter Pills -->
+                            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs self-start md:self-center shrink-0 bg-slate-950/80 p-1.5 rounded-xl border border-slate-800">
+                                <button type="button" onclick="filterPrefixRow('all', this)" class="prefix-btn px-2.5 py-1 rounded-lg text-xs font-bold transition bg-purple-500 text-slate-950 shadow-md shadow-purple-500/30">ทั้งหมด (All)</button>
+                                <button type="button" onclick="filterPrefixRow('macro', this)" class="prefix-btn px-2.5 py-1 rounded-lg text-xs font-bold transition bg-slate-800 text-slate-300 hover:text-white">🌌 จักรวาล/มหภาค</button>
+                                <button type="button" onclick="filterPrefixRow('human', this)" class="prefix-btn px-2.5 py-1 rounded-lg text-xs font-bold transition bg-slate-800 text-slate-300 hover:text-white">🧍 มนุษย์</button>
+                                <button type="button" onclick="filterPrefixRow('micro', this)" class="prefix-btn px-2.5 py-1 rounded-lg text-xs font-bold transition bg-slate-800 text-slate-300 hover:text-white">🔬 จุลชีวะ/นาโน</button>
+                                <button type="button" onclick="filterPrefixRow('subatomic', this)" class="prefix-btn px-2.5 py-1 rounded-lg text-xs font-bold transition bg-slate-800 text-slate-300 hover:text-white">⚛️ อะตอม/ควาร์ก</button>
+                            </div>
                         </div>
-                        <div class="tex-table-wrap overflow-x-auto rounded-b-xl border border-slate-700/80 bg-slate-950/90 shadow-xl">
-                            <table class="tex-table w-full text-sm sm:text-base">
+
+                        <!-- Table Container -->
+                        <div class="tex-table-wrap overflow-x-auto rounded-b-2xl border border-purple-500/40 bg-slate-950/95 shadow-2xl">
+                            <table class="tex-table w-full text-sm sm:text-base leading-relaxed border-collapse">
                                 <thead>
-                                    <tr class="bg-slate-800/90 text-white border-b border-slate-700">
-                                        <th class="p-3 text-left">คำอุปสรรค</th>
-                                        <th class="p-3 text-center">สัญลักษณ์</th>
-                                        <th class="p-3 text-center">ตัวคูณฐานสิบ</th>
-                                        <th class="p-3 text-left">ตัวอย่างการใช้งานจริงในงานจุลชีววิทยา</th>
+                                    <tr class="bg-slate-900 text-white border-b border-slate-700/80 text-xs sm:text-sm uppercase tracking-wider font-mono">
+                                        <th class="p-3.5 text-left">คำอุปสรรค &amp; สัญลักษณ์</th>
+                                        <th class="p-3.5 text-center">ตัวคูณฐานสิบ ($10^n$)</th>
+                                        <th class="p-3.5 text-left min-w-[240px]">ภาพประกอบวัตถุตัวแทนขนาดจริง</th>
+                                        <th class="p-3.5 text-left">ตัวอย่างการใช้งานจริงทางฟิสิกส์ &amp; จุลชีววิทยา</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-slate-800">
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">กิโล (kilo)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{k}$</td>
-                                        <td class="p-3 text-center font-mono">$10^3 = 1{,}000$</td>
-                                        <td class="p-3">กิโลกรัม ($\text{kg}$), กิโลดาลตัน ($\text{kDa}$ ขนาดโมเลกุลโปรตีน), กิโลเบสคู่ ($\text{kb}$ ความยาวสาย DNA)</td>
+                                <tbody class="divide-y divide-slate-800" id="prefix-table-body">
+                                    <!-- Group 1: Macro & Cosmic Scale -->
+                                    <tr class="bg-slate-900/60 text-xs font-bold text-purple-300 uppercase tracking-wider border-y border-purple-900/50" data-group="macro">
+                                        <td colspan="4" class="px-4 py-2 flex items-center gap-2">
+                                            <i class="fa-solid fa-galaxy text-purple-400"></i> โซนสเกลมหภาคและจักรวาลวิทยา (Macro &amp; Cosmic Scales: $10^{24}$ ถึง $10^3$)
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">เซนติ (centi)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{c}$</td>
-                                        <td class="p-3 text-center font-mono">$10^{-2} = 0.01$</td>
-                                        <td class="p-3">เซนติเมตร ($\text{cm}$ ขนาดจานเพาะเชื้อ $9\text{ cm}$), เซนติพอยส์ ($\text{cP}$ ความหนืดของน้ำกลั่น $1\text{ cP}$)</td>
+                                    <tr class="hover:bg-slate-900/70 transition prefix-row" data-group="macro">
+                                        <td class="p-3.5 font-bold text-white">
+                                            <div class="text-base text-purple-300">ยอตตะ (yotta)</div>
+                                            <span class="inline-block px-2 py-0.5 mt-1 rounded bg-purple-950 text-purple-300 border border-purple-500/30 font-mono text-xs font-bold">Y</span>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-300 text-base">
+                                            $10^{24}$
+                                            <div class="text-xs text-slate-400 font-sans mt-0.5">ล้านล้านล้านล้านเท่า</div>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-24 h-16 rounded-xl overflow-hidden border border-slate-700 shrink-0 shadow-md bg-slate-900 group">
+                                                    <img src="../images/prefixes/scale_universe.jpg" alt="จักรวาลที่สังเกตได้ (Observable Universe)" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" loading="lazy">
+                                                </div>
+                                                <div>
+                                                    <strong class="text-white block text-sm sm:text-base">🌌 ขอบเขตเอกภพ</strong>
+                                                    <span class="text-xs text-slate-400 font-mono">Observable Universe $\sim 8.8\times 10^{26}\text{ m}$ (~93 พันล้านปีแสง)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-slate-300 text-xs sm:text-sm">
+                                            <strong class="text-purple-300 block mb-0.5">ดาราศาสตร์ฟิสิกส์ &amp; พลังงานคอสมิก:</strong>
+                                            ใช้ระบุระยะทางขอบเขตเอกภพที่สังเกตได้ และการแผ่รังสีไมโครเวฟพื้นหลังของเอกภพ (CMBR) ที่เป็นต้นกำเนิดของธาตุทางชีววิทยา
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">มิลลิ (milli)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{m}$</td>
-                                        <td class="p-3 text-center font-mono">$10^{-3} = 0.001$</td>
-                                        <td class="p-3">มิลลิเมตร ($\text{mm}$ วัดขนาดโคโลนีแบคทีเรีย $1\text{--}5\text{ mm}$), มิลลิลิตร ($\text{mL}$), มิลลิกรัม ($\text{mg}$)</td>
+
+                                    <tr class="hover:bg-slate-900/70 transition prefix-row" data-group="macro">
+                                        <td class="p-3.5 font-bold text-white">
+                                            <div class="text-base text-purple-300">เซตตะ (zetta)</div>
+                                            <span class="inline-block px-2 py-0.5 mt-1 rounded bg-purple-950 text-purple-300 border border-purple-500/30 font-mono text-xs font-bold">Z</span>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-300 text-base">
+                                            $10^{21}$
+                                            <div class="text-xs text-slate-400 font-sans mt-0.5">พันล้านล้านล้านเท่า</div>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-24 h-16 rounded-xl overflow-hidden border border-slate-700 shrink-0 shadow-md bg-slate-900 group">
+                                                    <img src="../images/prefixes/scale_galaxy.jpg" alt="กาแล็กซีทางช้างเผือก (Milky Way Galaxy)" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" loading="lazy">
+                                                </div>
+                                                <div>
+                                                    <strong class="text-white block text-sm sm:text-base">🌌 กาแล็กซีทางช้างเผือก</strong>
+                                                    <span class="text-xs text-slate-400 font-mono">Milky Way Galaxy $\approx 10^{21}\text{ m}$ (~100,000 ปีแสง)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-slate-300 text-xs sm:text-sm">
+                                            <strong class="text-purple-300 block mb-0.5">ชีวสารสนเทศระดับโลก (Global Bio-Data):</strong>
+                                            ขนาดข้อมูลการถอดรหัสพันธุกรรมจุลินทรีย์และสิ่งมีชีวิตทั่วโลกที่จัดเก็บบนคลาวด์ระดับ <strong>Zettabytes (ZB)</strong>
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">ไมโคร (micro)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\mu$</td>
-                                        <td class="p-3 text-center font-mono">$10^{-6} = 0.000\,001$</td>
-                                        <td class="p-3">ไมโครเมตร ($\mu\text{m}$ เซลล์แบคทีเรีย <em>E. coli</em> $1\text{--}2\,\mu\text{m}$), ไมโครลิตร ($\mu\text{L}$ ปริมาตรไมโครปิเปต)</td>
+
+                                    <tr class="hover:bg-slate-900/70 transition prefix-row" data-group="macro">
+                                        <td class="p-3.5 font-bold text-white">
+                                            <div class="text-base text-purple-300">จิกะ (giga)</div>
+                                            <span class="inline-block px-2 py-0.5 mt-1 rounded bg-purple-950 text-purple-300 border border-purple-500/30 font-mono text-xs font-bold">G</span>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-300 text-base">
+                                            $10^9$
+                                            <div class="text-xs text-slate-400 font-sans mt-0.5">หนึ่งพันล้านเท่า ($10^9$)</div>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-24 h-16 rounded-xl overflow-hidden border border-slate-700 shrink-0 shadow-md bg-slate-900 group">
+                                                    <img src="../images/prefixes/scale_solar_sun.jpg" alt="ดวงอาทิตย์ (The Sun)" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" loading="lazy">
+                                                </div>
+                                                <div>
+                                                    <strong class="text-white block text-sm sm:text-base">☀️ ดวงอาทิตย์</strong>
+                                                    <span class="text-xs text-slate-400 font-mono">Sun Diameter $\approx 1.39\times 10^9\text{ m}$ ($1.39\text{ Gm}$)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-slate-300 text-xs sm:text-sm">
+                                            <strong class="text-cyan-300 block mb-0.5">จีโนมิกส์ &amp; คลื่นแม่เหล็กไฟฟ้า:</strong>
+                                            จำนวนคู่เบสในจีโนมมนุษย์ $\sim 3.2\text{ Gigabases}$ ($3.2\times 10^9\text{ bp}$), คลื่นไมโครเวฟฆ่าเชื้อ $\text{GHz}$, ความจุข้อมูล $\text{GB}$
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">นาโน (nano)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{n}$</td>
-                                        <td class="p-3 text-center font-mono">$10^{-9} = 10^{-9}$</td>
-                                        <td class="p-3">นาโนเมตร ($\text{nm}$ ไวรัส $20\text{--}300\text{ nm}$, รูพรุนแผ่นกรอง $220\text{ nm}$, ความยาวคลื่นแสง $\lambda = 600\text{ nm}$)</td>
+
+                                    <tr class="hover:bg-slate-900/70 transition prefix-row" data-group="macro">
+                                        <td class="p-3.5 font-bold text-white">
+                                            <div class="text-base text-purple-300">เมกะ (mega)</div>
+                                            <span class="inline-block px-2 py-0.5 mt-1 rounded bg-purple-950 text-purple-300 border border-purple-500/30 font-mono text-xs font-bold">M</span>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-300 text-base">
+                                            $10^6$
+                                            <div class="text-xs text-slate-400 font-sans mt-0.5">หนึ่งล้านเท่า ($1{,}000{,}000$)</div>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-24 h-16 rounded-xl overflow-hidden border border-slate-700 shrink-0 shadow-md bg-slate-900 group">
+                                                    <img src="../images/prefixes/scale_earth.jpg" alt="ดาวเคราะห์โลก (Planet Earth)" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" loading="lazy">
+                                                </div>
+                                                <div>
+                                                    <strong class="text-white block text-sm sm:text-base">🌍 ดาวเคราะห์โลก</strong>
+                                                    <span class="text-xs text-slate-400 font-mono">Earth Diameter $\approx 1.27\times 10^7\text{ m}$ ($12.7\text{ Mm}$)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-slate-300 text-xs sm:text-sm">
+                                            <strong class="text-cyan-300 block mb-0.5">โครโมโซมแบคทีเรีย &amp; ความดันสูง:</strong>
+                                            ความยาวสายดีเอ็นเอของแบคทีเรีย *E. coli* มีขนาด $\sim 4.6\text{ Megabases}$ ($4.6\times 10^6\text{ bp}$), ความดันออสโมซิสในเซลล์ $\text{MPa}$
+                                        </td>
                                     </tr>
-                                    <tr class="hover:bg-slate-900/60">
-                                        <td class="p-3 font-bold text-white">พิโก (pico)</td>
-                                        <td class="p-3 text-center font-mono font-bold text-cyan-400">$\text{p}$</td>
-                                        <td class="p-3 text-center font-mono">$10^{-12} = 10^{-12}$</td>
-                                        <td class="p-3">พิโกกรัม ($\text{pg}$ มวลของแบคทีเรีย 1 เซลล์ $\approx 1\text{ pg}$), พิโกนิวตัน ($\text{pN}$ แรงขับเคลื่อนของมอเตอร์โมเลกุล)</td>
+
+                                    <tr class="hover:bg-slate-900/70 transition prefix-row" data-group="macro">
+                                        <td class="p-3.5 font-bold text-white">
+                                            <div class="text-base text-purple-300">กิโล (kilo)</div>
+                                            <span class="inline-block px-2 py-0.5 mt-1 rounded bg-purple-950 text-purple-300 border border-purple-500/30 font-mono text-xs font-bold">k</span>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-300 text-base">
+                                            $10^3$
+                                            <div class="text-xs text-slate-400 font-sans mt-0.5">หนึ่งพันเท่า ($1{,}000$)</div>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-24 h-16 rounded-xl overflow-hidden border border-slate-700 shrink-0 shadow-md bg-slate-900 group">
+                                                    <img src="../images/prefixes/scale_mountain.jpg" alt="ยอดเขาเอเวอเรสต์ (Mt. Everest)" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" loading="lazy">
+                                                </div>
+                                                <div>
+                                                    <strong class="text-white block text-sm sm:text-base">🏔️ ภูเขาสูง / ระยะทาง</strong>
+                                                    <span class="text-xs text-slate-400 font-mono">Mt. Everest Height $\approx 8.85\text{ km}$ ($8{,}848\text{ m}$)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-slate-300 text-xs sm:text-sm">
+                                            <strong class="text-cyan-300 block mb-0.5">มวลโมเลกุลโปรตีน &amp; ยีน:</strong>
+                                            กิโลกรัม ($\text{kg}$), กิโลดาลตัน ($\text{kDa}$ เช่น เอนไซม์ Taq DNA Polymerase มีมวล $\approx 94\text{ kDa}$), กิโลเบสคู่ ($\text{kb}$ ความยาวพลาสมิด)
+                                        </td>
+                                    </tr>
+
+                                    <!-- Group 2: Human Scale Baseline -->
+                                    <tr class="bg-slate-900/60 text-xs font-bold text-amber-300 uppercase tracking-wider border-y border-amber-900/50" data-group="human">
+                                        <td colspan="4" class="px-4 py-2 flex items-center gap-2">
+                                            <i class="fa-solid fa-person text-amber-400"></i> สเกลสิ่งมีชีวิตมนุษย์และสิ่งแวดล้อมห้องปฏิบัติการ (Human Scale Baseline: $10^0 = 1$)
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-900/70 transition prefix-row" data-group="human">
+                                        <td class="p-3.5 font-bold text-white">
+                                            <div class="text-base text-amber-300">หน่วยฐาน (Base Unit)</div>
+                                            <span class="inline-block px-2 py-0.5 mt-1 rounded bg-amber-950 text-amber-300 border border-amber-500/30 font-mono text-xs font-bold">$10^0 = 1$</span>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-amber-300 text-base">
+                                            $10^0 = 1$
+                                            <div class="text-xs text-slate-400 font-sans mt-0.5">หน่วยมาตรฐานสากล</div>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-24 h-16 rounded-xl overflow-hidden border border-slate-700 shrink-0 shadow-md bg-slate-900 group">
+                                                    <img src="../images/prefixes/scale_human.jpg" alt="มนุษย์และโต๊ะปฏิบัติการ (Human Being & Lab Bench)" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" loading="lazy">
+                                                </div>
+                                                <div>
+                                                    <strong class="text-white block text-sm sm:text-base">🧍 มนุษย์ / นักจุลชีววิทยา</strong>
+                                                    <span class="text-xs text-slate-400 font-mono">Human Height $\approx 1.7\text{ m}$, โต๊ะแล็บ $\approx 1\text{ m}$</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-slate-300 text-xs sm:text-sm">
+                                            <strong class="text-amber-300 block mb-0.5">ระดับสายตาและการทำงาน:</strong>
+                                            ความสูงนักวิจัย $\sim 1.7\text{ m}$, ปริมาตรอาหารเลี้ยงเชื้อขวดใหญ่ $1\text{ L}$, เวลาบ่มเพาะเชื้อ $1\text{ s}$, มวลสารอาหารตั้งต้น $1\text{ kg}$
+                                        </td>
+                                    </tr>
+
+                                    <!-- Group 3: Microbiology & Laboratory Scale -->
+                                    <tr class="bg-slate-900/60 text-xs font-bold text-emerald-300 uppercase tracking-wider border-y border-emerald-900/50" data-group="micro">
+                                        <td colspan="4" class="px-4 py-2 flex items-center gap-2">
+                                            <i class="fa-solid fa-microscope text-emerald-400"></i> โซนสเกลห้องปฏิบัติการและโลกจุลทรรศน์ (Microbiology &amp; Nano Scales: $10^{-1}$ ถึง $10^{-9}$)
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-900/70 transition prefix-row" data-group="micro">
+                                        <td class="p-3.5 font-bold text-white">
+                                            <div class="text-base text-emerald-300">เซนติ (centi)</div>
+                                            <span class="inline-block px-2 py-0.5 mt-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/30 font-mono text-xs font-bold">c</span>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-300 text-base">
+                                            $10^{-2}$
+                                            <div class="text-xs text-slate-400 font-sans mt-0.5">หนึ่งในร้อย ($0.01$)</div>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-24 h-16 rounded-xl overflow-hidden border border-slate-700 shrink-0 shadow-md bg-slate-900 group">
+                                                    <img src="../images/prefixes/scale_petri.jpg" alt="จานเพาะเชื้อวุ้น (Petri Dish)" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" loading="lazy">
+                                                </div>
+                                                <div>
+                                                    <strong class="text-white block text-sm sm:text-base">🧫 จานเพาะเชื้อวุ้น</strong>
+                                                    <span class="text-xs text-slate-400 font-mono">Petri Dish Diameter $\approx 9\text{ cm}$ ($0.09\text{ m}$)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-slate-300 text-xs sm:text-sm">
+                                            <strong class="text-emerald-300 block mb-0.5">ภาชนะเพาะเลี้ยงเชื้อ &amp; พยาธิ:</strong>
+                                            วัดขนาดจานเลี้ยงเชื้อวุ้น ($9\text{ cm}$), ความยาวลำตัวพยาธิใบไม้ ($1\text{--}3\text{ cm}$), เซนติพอยส์ ($\text{cP}$ ความหนืดน้ำ $1\text{ cP}$)
+                                        </td>
+                                    </tr>
+
+                                    <tr class="hover:bg-slate-900/70 transition prefix-row" data-group="micro">
+                                        <td class="p-3.5 font-bold text-white">
+                                            <div class="text-base text-emerald-300">มิลลิ (milli)</div>
+                                            <span class="inline-block px-2 py-0.5 mt-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/30 font-mono text-xs font-bold">m</span>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-300 text-base">
+                                            $10^{-3}$
+                                            <div class="text-xs text-slate-400 font-sans mt-0.5">หนึ่งในพัน ($0.001$)</div>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-24 h-16 rounded-xl overflow-hidden border border-slate-700 shrink-0 shadow-md bg-slate-900 group">
+                                                    <img src="../images/prefixes/scale_colony.jpg" alt="โคโลนีแบคทีเรียบนจานวุ้น (Bacterial Colony)" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" loading="lazy">
+                                                </div>
+                                                <div>
+                                                    <strong class="text-white block text-sm sm:text-base">🧫 โคโลนีแบคทีเรีย</strong>
+                                                    <span class="text-xs text-slate-400 font-mono">Bacterial Colony $\approx 1\text{--}5\text{ mm}$ ($10^{-3}\text{ m}$)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-slate-300 text-xs sm:text-sm">
+                                            <strong class="text-emerald-300 block mb-0.5">การวัดละเอียดบนจานวุ้น &amp; ตวงสาร:</strong>
+                                            วัดวงใสยับยั้งเชื้อ (Inhibition Zone $15\text{--}25\text{ mm}$), มิลลิลิตร ($\text{mL}$ หลอดทดลอง), มิลลิกรัม ($\text{mg}$ ผงสารเคมี)
+                                        </td>
+                                    </tr>
+
+                                    <tr class="hover:bg-slate-900/70 transition prefix-row" data-group="micro">
+                                        <td class="p-3.5 font-bold text-white">
+                                            <div class="text-base text-emerald-300">ไมโคร (micro)</div>
+                                            <span class="inline-block px-2 py-0.5 mt-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/30 font-mono text-xs font-bold">$\mu$</span>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-300 text-base">
+                                            $10^{-6}$
+                                            <div class="text-xs text-slate-400 font-sans mt-0.5">หนึ่งในล้าน ($10^{-6}$)</div>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-24 h-16 rounded-xl overflow-hidden border border-slate-700 shrink-0 shadow-md bg-slate-900 group">
+                                                    <img src="../images/prefixes/scale_bacteria.jpg" alt="เซลล์แบคทีเรีย E. coli (Bacterial Cell)" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" loading="lazy">
+                                                </div>
+                                                <div>
+                                                    <strong class="text-white block text-sm sm:text-base">🔬 เซลล์แบคทีเรีย</strong>
+                                                    <span class="text-xs text-slate-400 font-mono">*E. coli* Cell Length $\approx 1\text{--}2\,\mu\text{m}$ ($10^{-6}\text{ m}$)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-slate-300 text-xs sm:text-sm">
+                                            <strong class="text-emerald-300 block mb-0.5">ระดับเซลล์ &amp; ไมโครปิเปต:</strong>
+                                            ขนาดเซลล์แบคทีเรีย ($\mu\text{m}$ กล้องจุลทรรศน์ $1{,}000\times$), ไมโครลิตร ($\mu\text{L}$ ดูดจ่ายด้วยไมโครปิเปต P20/P200/P1000)
+                                        </td>
+                                    </tr>
+
+                                    <tr class="hover:bg-slate-900/70 transition prefix-row" data-group="micro">
+                                        <td class="p-3.5 font-bold text-white">
+                                            <div class="text-base text-emerald-300">นาโน (nano)</div>
+                                            <span class="inline-block px-2 py-0.5 mt-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/30 font-mono text-xs font-bold">n</span>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-300 text-base">
+                                            $10^{-9}$
+                                            <div class="text-xs text-slate-400 font-sans mt-0.5">หนึ่งในพันล้าน ($10^{-9}$)</div>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-24 h-16 rounded-xl overflow-hidden border border-slate-700 shrink-0 shadow-md bg-slate-900 group">
+                                                    <img src="../images/prefixes/scale_virus.jpg" alt="อนุภาคไวรัสและดีเอ็นเอ (Virus & DNA)" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" loading="lazy">
+                                                </div>
+                                                <div>
+                                                    <strong class="text-white block text-sm sm:text-base">🦠 อนุภาคไวรัส &amp; DNA</strong>
+                                                    <span class="text-xs text-slate-400 font-mono">Virus Diameter $\approx 20\text{--}100\text{ nm}$ ($10^{-9}\text{ m}$)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-slate-300 text-xs sm:text-sm">
+                                            <strong class="text-emerald-300 block mb-0.5">ไวรัสวิทยา &amp; ชีวโมเลกุล:</strong>
+                                            แบคทีริโอฟาจ T4 ($200\text{ nm}$), ไวรัสโคโรนา ($100\text{ nm}$), รูพรุนแผ่นกรองปลอดเชื้อ ($220\text{ nm}$), ความกว้าง DNA ($2\text{ nm}$), คลื่นแสง $\lambda = 600\text{ nm}$
+                                        </td>
+                                    </tr>
+
+                                    <!-- Group 4: Subatomic & Quantum Scale -->
+                                    <tr class="bg-slate-900/60 text-xs font-bold text-blue-300 uppercase tracking-wider border-y border-blue-900/50" data-group="subatomic">
+                                        <td colspan="4" class="px-4 py-2 flex items-center gap-2">
+                                            <i class="fa-solid fa-atom text-blue-400"></i> โซนสเกลระดับอะตอมและอนุภาคมูลฐาน (Subatomic &amp; Quantum Scales: $10^{-12}$ ถึง $10^{-18}$)
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-900/70 transition prefix-row" data-group="subatomic">
+                                        <td class="p-3.5 font-bold text-white">
+                                            <div class="text-base text-blue-300">พิโก (pico)</div>
+                                            <span class="inline-block px-2 py-0.5 mt-1 rounded bg-blue-950 text-blue-300 border border-blue-500/30 font-mono text-xs font-bold">p</span>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-300 text-base">
+                                            $10^{-12}$
+                                            <div class="text-xs text-slate-400 font-sans mt-0.5">หนึ่งในล้านล้าน ($10^{-12}$)</div>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-24 h-16 rounded-xl overflow-hidden border border-slate-700 shrink-0 shadow-md bg-slate-900 group">
+                                                    <img src="../images/prefixes/scale_atom.jpg" alt="อะตอมไฮโดรเจน (Hydrogen Atom)" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" loading="lazy">
+                                                </div>
+                                                <div>
+                                                    <strong class="text-white block text-sm sm:text-base">⚛️ อะตอมของธาตุ</strong>
+                                                    <span class="text-xs text-slate-400 font-mono">Hydrogen Atom $\approx 106\text{ pm}$ ($1.06\times 10^{-10}\text{ m}$)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-slate-300 text-xs sm:text-sm">
+                                            <strong class="text-blue-300 block mb-0.5">มวลเซลล์แบคทีเรีย &amp; แรงโมเลกุล:</strong>
+                                            มวลของแบคทีเรียหนึ่งเซลล์ $\approx 1\text{ pg}$ ($1\times 10^{-12}\text{ g}$), แรงขับเคลื่อนของมอเตอร์แฟลกเจลลา $\text{pN}$ (Optical Tweezers)
+                                        </td>
+                                    </tr>
+
+                                    <tr class="hover:bg-slate-900/70 transition prefix-row" data-group="subatomic">
+                                        <td class="p-3.5 font-bold text-white">
+                                            <div class="text-base text-blue-300">เฟมโต (femto)</div>
+                                            <span class="inline-block px-2 py-0.5 mt-1 rounded bg-blue-950 text-blue-300 border border-blue-500/30 font-mono text-xs font-bold">f</span>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-300 text-base">
+                                            $10^{-15}$
+                                            <div class="text-xs text-slate-400 font-sans mt-0.5">หนึ่งในพันล้านล้าน</div>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-24 h-16 rounded-xl overflow-hidden border border-slate-700 shrink-0 shadow-md bg-slate-900 group">
+                                                    <img src="../images/prefixes/scale_nucleus.jpg" alt="นิวเคลียสอะตอมและโปรตอน (Nucleus & Proton)" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" loading="lazy">
+                                                </div>
+                                                <div>
+                                                    <strong class="text-white block text-sm sm:text-base">⚛️ นิวเคลียสอะตอม / โปรตอน</strong>
+                                                    <span class="text-xs text-slate-400 font-mono">Proton Diameter $\approx 1.7\text{ fm}$ ($1.7\times 10^{-15}\text{ m}$)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-slate-300 text-xs sm:text-sm">
+                                            <strong class="text-blue-300 block mb-0.5">ปริมาตรเซลล์แบคทีเรียเดี่ยว &amp; นิวเคลียร์:</strong>
+                                            ปริมาตรของเซลล์แบคทีเรีย *E. coli* 1 เซลล์ มีขนาดประมาณ $1\text{ fL}$ ($1\times 10^{-15}\text{ L}$), พัลส์แสงเลเซอร์เฟมโตวินาที ($\text{fs}$)
+                                        </td>
+                                    </tr>
+
+                                    <tr class="hover:bg-slate-900/70 transition prefix-row" data-group="subatomic">
+                                        <td class="p-3.5 font-bold text-white">
+                                            <div class="text-base text-blue-300">อัตโต (atto)</div>
+                                            <span class="inline-block px-2 py-0.5 mt-1 rounded bg-blue-950 text-blue-300 border border-blue-500/30 font-mono text-xs font-bold">a</span>
+                                        </td>
+                                        <td class="p-3.5 text-center font-mono font-bold text-cyan-300 text-base">
+                                            $10^{-18}$
+                                            <div class="text-xs text-slate-400 font-sans mt-0.5">หนึ่งในล้านล้านล้าน</div>
+                                        </td>
+                                        <td class="p-3.5">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-24 h-16 rounded-xl overflow-hidden border border-slate-700 shrink-0 shadow-md bg-slate-900 group">
+                                                    <img src="../images/prefixes/scale_quark.jpg" alt="ควาร์กและอนุภาคมูลฐาน (Quark & Standard Model)" class="w-full h-full object-cover group-hover:scale-110 transition duration-300" loading="lazy">
+                                                </div>
+                                                <div>
+                                                    <strong class="text-white block text-sm sm:text-base">⚛️ ควาร์ก / อิเล็กตรอน</strong>
+                                                    <span class="text-xs text-slate-400 font-mono">Quark Boundary $< 10^{-18}\text{ m}$ ($< 1\text{ am}$)</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="p-3.5 text-slate-300 text-xs sm:text-sm">
+                                            <strong class="text-blue-300 block mb-0.5">ชีววิทยาระดับโมเลกุลเดี่ยว (Single-Molecule):</strong>
+                                            วัดปริมาณสารพันธุกรรมหรือสารพิษตัวอย่างระดับอัตโตโมล ($\text{amol} = 10^{-18}\text{ mol}$), อิเล็กตรอนฟิสิกส์ชั้นสูง
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                </div>
-            </section>
+                    </div></section>
 
             <!-- SECTION 1.2 -->
             <section id="sec-1.2" class="tex-section scroll-mt-32">
@@ -3448,6 +3798,28 @@ function adjustFontSize(dir) {
         else if (currentFontSizeLevel === 2) content.style.fontSize = '120%';
     }
 }
+
+// SI Prefix Filter Function
+function filterPrefixRow(group, btn) {
+    document.querySelectorAll('.prefix-btn').forEach(b => {
+        b.classList.remove('bg-purple-500', 'text-slate-950', 'shadow-md', 'shadow-purple-500/30');
+        b.classList.add('bg-slate-800', 'text-slate-300');
+    });
+    if (btn) {
+        btn.classList.add('bg-purple-500', 'text-slate-950', 'shadow-md', 'shadow-purple-500/30');
+        btn.classList.remove('bg-slate-800', 'text-slate-300');
+    }
+    
+    document.querySelectorAll('#prefix-table-body tr.prefix-row').forEach(row => {
+        const rowGroup = row.getAttribute('data-group');
+        if (group === 'all' || rowGroup === group) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+window.filterPrefixRow = filterPrefixRow;
 </script>
 
 <?php include '../includes/footer.php'; ?>
