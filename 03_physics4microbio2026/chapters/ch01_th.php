@@ -460,7 +460,7 @@ include '../includes/header.php';
                     <figure class="tex-figure tex-figure-photo my-8 scroll-mt-32" id="fig-1.3">
                         <span id="fig-si-wheel"></span>
                         <div class="rounded-2xl overflow-hidden border border-cyan-500/40 shadow-2xl bg-slate-950/90 group flex justify-center items-center p-4 sm:p-6 lg:p-8 backdrop-blur-xl">
-                            <img src="../images/sec_3d/ch01_si_wheel_3d.jpg" alt="แบบจำลอง 3 มิติ สไตล์พิกซาร์ วงล้อ 7 หน่วยฐานสากลเอสไอ (The 7 SI Base Units 3D Pixar Wheel)" class="w-full max-w-2xl h-auto object-contain rounded-2xl group-hover:scale-[1.02] transition-transform duration-500 shadow-2xl" loading="lazy">
+                            <img src="../images/sec_3d/ch01_si_wheel_3d.jpg" onerror="this.onerror=null; this.src='../images/sec_3d/ch01_si_wheel_3d.png';" alt="แบบจำลอง 3 มิติ สไตล์พิกซาร์ วงล้อ 7 หน่วยฐานสากลเอสไอ (The 7 SI Base Units 3D Pixar Wheel)" class="w-full max-w-2xl h-auto object-contain rounded-2xl group-hover:scale-[1.02] transition-transform duration-500 shadow-2xl" loading="lazy">
                         </div>
                         <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
                             <strong class="text-cyan-400">ภาพที่ 1.3</strong>&ensp;แบบจำลอง 3 มิติสไตล์พิกซาร์สมจริง วงล้อ 7 หน่วยฐานสากลเอสไอ (The 7 SI Base Units 3D Pixar Wheel): โครงข่าย 7 หน่วยฐานหลัก ได้แก่ เมตร ($\text{m}$), กิโลกรัม ($\text{kg}$), วินาที ($\text{s}$), แอมแปร์ ($\text{A}$), เคลวิน ($\text{K}$), โมล ($\text{mol}$) และแคนเดลา ($\text{cd}$) ถ่ายทอดผ่านมิติแสงเงา 3 มิติสมจริง พร้อมไอคอนเครื่องมือวัดวิทยาศาสตร์และคำอธิบาย 3 ภาษา (ไทย, อังกฤษ, จีน)
