@@ -323,7 +323,7 @@ include '../includes/header.php';
                                     <strong class="text-white flex items-center gap-1.5 mb-1">
                                         <i class="fa-solid fa-flag text-rose-400 text-xs"></i> ขั้นนำเข้าสู่บทเรียน (Engagement):
                                     </strong>
-                                    <p class="text-slate-300 leading-relaxed">ยกกรณีศึกษาแล็บจริง การดูดสารละลายผิดหน่วยระหว่าง $100\text{ }\mu\text{L}$ กับ $1\text{ mL}$ ที่ทำให้ความเข้มข้นเชื้อคลาดเคลื่อน 10 เท่า</p>
+                                    <p class="text-slate-300 leading-relaxed">ยกกรณีศึกษาแล็บจริง การดูดสารละลายผิดหน่วยระหว่าง $100\,\mu\text{L}$ กับ $1\text{ mL}$ ที่ทำให้ความเข้มข้นเชื้อคลาดเคลื่อน 10 เท่า</p>
                                 </div>
                                 <div class="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
                                     <strong class="text-white flex items-center gap-1.5 mb-1">
@@ -951,7 +951,7 @@ include '../includes/header.php';
                                         <td class="p-3.5 text-slate-200">
                                             <div class="flex flex-wrap gap-1.5 mb-2">
                                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-virus text-cyan-400"></i> ไวรัส T4 ($100\text{ nm}$)</span>
-                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-teal-500/20 text-teal-300 border border-teal-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-bacterium text-teal-400"></i> แบคทีเรีย <em>E. coli</em> ($2\text{ }\mu\text{m}$)</span>
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-teal-500/20 text-teal-300 border border-teal-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-bacterium text-teal-400"></i> แบคทีเรีย <em>E. coli</em> ($2\,\mu\text{m}$)</span>
                                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono text-[11px] shadow-sm"><i class="fa-solid fa-circle-dot text-emerald-400"></i> โคโลนีวุ้น ($2\text{ mm}$)</span>
                                             </div>
                                             <div class="text-xs text-slate-300 leading-relaxed">
@@ -1261,10 +1261,31 @@ include '../includes/header.php';
                         <!-- Card Footer Caption -->
                         <div class="rounded-b-2xl border border-t-0 border-emerald-500/40 bg-slate-900/95 p-3.5 sm:p-4 text-xs text-slate-400 text-center shadow-xl">
                             <figcaption>
-                                <strong class="text-emerald-400">ภาพที่ 1.4</strong>&ensp;แผนผังเครือข่ายความเชื่อมโยงจาก 7 หน่วยฐานสากลเอสไอ สู่ 22 หน่วยอนุพัทธ์สำคัญในงานจุลชีววิทยาเชิงโต้ตอบ (Interactive SI Base to Derived Units Hierarchy in Microbiology): พัฒนาตามแนวทางมาตรฐาน NIST SP 1247 โดยถอดรหัสสายสัมพันธ์การคูณ (เส้นทึบ) และการหาร (เส้นประ) พร้อมเชื่อมโยงตัวอย่างจริงในห้องปฏิบัติการจุลชีววิทยา เช่น อัตราเร่งเอนไซม์ ($	ext{kat}$), ความดันหม้อนึ่งไอและออสโมซิส ($	ext{Pa}$), พลังงาน ATP ($	ext{J}$), เจลอิเล็กโทรโฟรีซิส ($	ext{V, }\Omega$), และการฉายรังสีแกมมาฆ่าเชื้อ ($	ext{Gy, Sv}$)
+                                <strong class="text-emerald-400">ภาพที่ 1.4</strong>&ensp;แผนผังเครือข่ายความเชื่อมโยงจาก 7 หน่วยฐานสากลเอสไอ สู่ 22 หน่วยอนุพัทธ์สำคัญในงานจุลชีววิทยาเชิงโต้ตอบ (Interactive SI Base to Derived Units Hierarchy in Microbiology): พัฒนาตามแนวทางมาตรฐาน NIST SP 1247 โดยถอดรหัสสายสัมพันธ์การคูณ (เส้นทึบ) และการหาร (เส้นประ) พร้อมเชื่อมโยงตัวอย่างจริงในห้องปฏิบัติการจุลชีววิทยา เช่น อัตราเร่งเอนไซม์ ($\text{kat}$), ความดันหม้อนึ่งไอและออสโมซิส ($\text{Pa}$), พลังงาน ATP ($\text{J}$), เจลอิเล็กโทรโฟรีซิส ($\text{V}, \Omega$), และการฉายรังสีแกมมาฆ่าเชื้อ ($\text{Gy}, \text{Sv}$)
                             </figcaption>
                         </div>
                     </figure>
+
+                    <!-- Metrological References for Figure 1.4 -->
+                    <div class="my-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-slate-900/90 via-slate-950 to-slate-900/90 border border-emerald-500/30 text-xs text-slate-300 shadow-xl space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 flex-wrap gap-2">
+                            <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                                <i class="fa-solid fa-graduation-cap text-base"></i>
+                                <span>เอกสารอ้างอิงมาตรฐานมาตรวิทยาสากลประจำแผนภาพที่ 1.4 (Official Standards & References)</span>
+                            </div>
+                            <span class="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 font-bold">
+                                BIPM / NIST / ISO / IUBMB
+                            </span>
+                        </div>
+                        <ul class="space-y-2 text-[11px] sm:text-xs text-slate-300 font-mono leading-relaxed list-disc list-inside">
+                            <li><strong class="text-white">BIPM (2019):</strong> <em>Le Système international d'unités / The International System of Units (SI)</em>, 9th edition, Bureau International des Poids et Mesures (BIPM), Sèvres, France. (Table 4: Coherent derived units in the SI with special names and symbols).</li>
+                            <li><strong class="text-white">NIST (2020):</strong> <em>The International System of Units (SI) — Base Units and Derived Units</em>, NIST Special Publication 1247 (SP 1247), National Institute of Standards and Technology, U.S. Department of Commerce. DOI: 10.6028/NIST.SP.1247.</li>
+                            <li><strong class="text-white">ISO/IEC 80000 Series (2019–2022):</strong> <em>Quantities and units</em>, Parts 1–14, International Organization for Standardization / International Electrotechnical Commission, Geneva, Switzerland.</li>
+                            <li><strong class="text-white">IUBMB (1972/2001):</strong> <em>Enzyme Nomenclature: Recommendations of the Nomenclature Committee of the International Union of Biochemistry and Molecular Biology on the Nomenclature and Classification of Enzymes</em> (Katal definition).</li>
+                            <li><strong class="text-white">ICRP (2007) & WHO:</strong> <em>The 2007 Recommendations of the International Commission on Radiological Protection</em>, ICRP Publication 103, Annals of the ICRP, 37(2-4) (Gray and Sievert radiation dosimetry guidelines).</li>
+                            <li><strong class="text-white">IUPAC (2007):</strong> <em>Quantities, Units and Symbols in Physical Chemistry</em> (The Green Book), 3rd edition, IUPAC &amp; Royal Society of Chemistry, Cambridge, UK.</li>
+                        </ul>
+                    </div>
 
                     <!-- TABLE 1.2: SI DERIVED UNITS -->
                     <div class="tex-tablefig mt-10 scroll-mt-20" id="tab-1.2">
@@ -1638,9 +1659,9 @@ include '../includes/header.php';
                                         </td>
                                         <td class="p-3.5 text-cyan-300 font-semibold">ไมโครลิตร (microlitre)</td>
                                         <td class="p-3.5 text-center font-mono font-bold text-amber-400 bg-amber-950/40 rounded-lg py-1 px-2">$\mu\text{L}$</td>
-                                        <td class="p-3.5 font-mono text-emerald-400">$1\text{ }\mu\text{L} = 10^{-6}\text{ L} = 10^{-9}\text{ m}^3 = 1\text{ mm}^3$</td>
+                                        <td class="p-3.5 font-mono text-emerald-400">$1\,\mu\text{L} = 10^{-6}\text{ L} = 10^{-9}\text{ m}^3 = 1\text{ mm}^3$</td>
                                         <td class="p-3.5 text-slate-200">
-                                            <i class="fa-solid fa-vial text-cyan-400 mr-1.5"></i>ปริมาตรมาตรฐานของการดูดจ่ายสารด้วย<span class="whitespace-nowrap font-medium text-white">ไมโครปิเปต P20, P200, P1000</span> และปฏิกิริยา <span class="whitespace-nowrap font-medium text-white">PCR ($20\text{--}50\text{ }\mu\text{L}$)</span>
+                                            <i class="fa-solid fa-vial text-cyan-400 mr-1.5"></i>ปริมาตรมาตรฐานของการดูดจ่ายสารด้วย<span class="whitespace-nowrap font-medium text-white">ไมโครปิเปต P20, P200, P1000</span> และปฏิกิริยา <span class="whitespace-nowrap font-medium text-white">PCR ($20\text{--}50\,\mu\text{L}$)</span>
                                         </td>
                                     </tr>
                                     <tr class="hover:bg-sky-950/20 transition-colors">
@@ -1819,7 +1840,7 @@ include '../includes/header.php';
                                         <td class="p-3 font-bold text-white">ไมโคร (micro)</td>
                                         <td class="p-3 text-center font-mono font-bold text-cyan-400">$\mu$</td>
                                         <td class="p-3 text-center font-mono">$10^{-6} = 0.000\,001$</td>
-                                        <td class="p-3">ไมโครเมตร ($\mu\text{m}$ เซลล์แบคทีเรีย <em>E. coli</em> $1\text{--}2\text{ }\mu\text{m}$), ไมโครลิตร ($\mu\text{L}$ ปริมาตรไมโครปิเปต)</td>
+                                        <td class="p-3">ไมโครเมตร ($\mu\text{m}$ เซลล์แบคทีเรีย <em>E. coli</em> $1\text{--}2\,\mu\text{m}$), ไมโครลิตร ($\mu\text{L}$ ปริมาตรไมโครปิเปต)</td>
                                     </tr>
                                     <tr class="hover:bg-slate-900/60">
                                         <td class="p-3 font-bold text-white">นาโน (nano)</td>
@@ -1856,7 +1877,7 @@ include '../includes/header.php';
                             <img src="../images/sec_3d/ch01_serial_dilution_3d.jpg" alt="ภาพที่ 1.5 การเจือจางแบบลำดับส่วน 10 เท่า Serial Dilution 3 มิติ" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
                         </div>
                         <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
-                            <strong class="text-emerald-400">ภาพที่ 1.5</strong>&ensp;แบบจำลอง 3 มิติของการเจือจางเชื้อแบบลำดับส่วน 10 เท่า (10-Fold Serial Dilution): แสดงหลอดทดลอง 5 หลอดตั้งแต่ $10^{-1}$ ถึง $10^{-5}$ พร้อมลูกศรการดูดถ่ายสารด้วยไมโครปิเปต $100\text{ }\mu\text{L}$ และผลการเจริญของโคโลนีแบคทีเรียบนจานวุ้นเพาะเชื้อ (TNTC $\rightarrow$ 150 CFU $\rightarrow$ 15 CFU)
+                            <strong class="text-emerald-400">ภาพที่ 1.5</strong>&ensp;แบบจำลอง 3 มิติของการเจือจางเชื้อแบบลำดับส่วน 10 เท่า (10-Fold Serial Dilution): แสดงหลอดทดลอง 5 หลอดตั้งแต่ $10^{-1}$ ถึง $10^{-5}$ พร้อมลูกศรการดูดถ่ายสารด้วยไมโครปิเปต $100\,\mu\text{L}$ และผลการเจริญของโคโลนีแบคทีเรียบนจานวุ้นเพาะเชื้อ (TNTC $\rightarrow$ 150 CFU $\rightarrow$ 15 CFU)
                         </figcaption>
                     </figure>
 
@@ -1922,10 +1943,10 @@ include '../includes/header.php';
                         </div>
                         <ul class="text-xs sm:text-sm space-y-2 text-slate-300 list-disc list-inside">
                             <li>
-                                <strong>แปลงจากหน่วยใหญ่ไปหน่วยเล็ก</strong> (เดินลงบันได 1 ขั้น)&emsp; <strong class="text-emerald-400">ให้คูณด้วย $1{,}000$</strong> (หรือเลื่อนจุดทศนิยมไปทางขวา 3 ตำแหน่ง) เช่น $1\text{ mL} = 1{,}000\text{ }\mu\text{L}$ และ $1\text{ }\mu\text{m} = 1{,}000\text{ nm}$
+                                <strong>แปลงจากหน่วยใหญ่ไปหน่วยเล็ก</strong> (เดินลงบันได 1 ขั้น)&emsp; <strong class="text-emerald-400">ให้คูณด้วย $1{,}000$</strong> (หรือเลื่อนจุดทศนิยมไปทางขวา 3 ตำแหน่ง) เช่น $1\text{ mL} = 1{,}000\,\mu\text{L}$ และ $1\,\mu\text{m} = 1{,}000\text{ nm}$
                             </li>
                             <li>
-                                <strong>แปลงจากหน่วยเล็กไปหน่วยใหญ่</strong> (เดินขึ้นบันได 1 ขั้น)&emsp; <strong class="text-cyan-400">ให้หารด้วย $1{,}000$</strong> (หรือเลื่อนจุดทศนิยมไปทางซ้าย 3 ตำแหน่ง) เช่น $250\text{ }\mu\text{L} = \frac{250}{1{,}000} = 0.250\text{ mL}$
+                                <strong>แปลงจากหน่วยเล็กไปหน่วยใหญ่</strong> (เดินขึ้นบันได 1 ขั้น)&emsp; <strong class="text-cyan-400">ให้หารด้วย $1{,}000$</strong> (หรือเลื่อนจุดทศนิยมไปทางซ้าย 3 ตำแหน่ง) เช่น $250\,\mu\text{L} = \frac{250}{1{,}000} = 0.250\text{ mL}$
                             </li>
                         </ul>
                     </div>
@@ -1939,13 +1960,13 @@ include '../includes/header.php';
                             <span class="px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-mono">Worked Example</span>
                         </div>
                         <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                            <strong>โจทย์ปัญหา:</strong> นักศึกษาจุลชีววิทยาส่องกล้องจุลทรรศน์พบเซลล์แบคทีเรีย <em>Bacillus subtilis</em> มีความยาวเฉลี่ย $4.5\text{ }\mu\text{m}$ และในการเตรียมปฏิกิริยาพีซีอาร์ (PCR) ต้องใช้ไมโครปิเปตดูดสารละลายบัฟเฟอร์ปริมาตร $0.05\text{ mL}$ จงหาว่า (ก) แบคทีเรียชนิดนี้มีความยาวกี่มิลลิเมตร ($\text{mm}$) และกี่นาโนเมตร ($\text{nm}$) และ (ข) ต้องตั้งค่าไมโครปิเปตเป็นกี่ไมโครลิตร ($\mu\text{L}$)
+                            <strong>โจทย์ปัญหา:</strong> นักศึกษาจุลชีววิทยาส่องกล้องจุลทรรศน์พบเซลล์แบคทีเรีย <em>Bacillus subtilis</em> มีความยาวเฉลี่ย $4.5\,\mu\text{m}$ และในการเตรียมปฏิกิริยาพีซีอาร์ (PCR) ต้องใช้ไมโครปิเปตดูดสารละลายบัฟเฟอร์ปริมาตร $0.05\text{ mL}$ จงหาว่า (ก) แบคทีเรียชนิดนี้มีความยาวกี่มิลลิเมตร ($\text{mm}$) และกี่นาโนเมตร ($\text{nm}$) และ (ข) ต้องตั้งค่าไมโครปิเปตเป็นกี่ไมโครลิตร ($\mu\text{L}$)
                         </p>
                         <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3 text-xs sm:text-sm">
                             <strong class="text-emerald-400 block font-mono text-xs uppercase tracking-wider">💡 วิธีทำทีละขั้นตอนฉบับเข้าใจง่าย:</strong>
                             <ol class="space-y-3 list-decimal list-inside text-slate-300">
                                 <li>
-                                    <strong>ขั้นที่ 1 แปลงความยาวแบคทีเรีย $4.5\text{ }\mu\text{m}$ เป็น $\text{mm}$ และ $\text{nm}$</strong>
+                                    <strong>ขั้นที่ 1 แปลงความยาวแบคทีเรีย $4.5\,\mu\text{m}$ เป็น $\text{mm}$ และ $\text{nm}$</strong>
                                     <div class="pl-5 pt-1 space-y-2">
                                         <p>• จาก $\mu\text{m}$ ไปเป็น $\text{mm}$ คือการเดินขึ้นบันได 1 ขั้น (หน่วยเล็กไปหน่วยใหญ่) จึงนำมา<strong>หารด้วย $1{,}000$</strong>:
                                             $$\text{ความยาวในหน่วยมิลลิเมตร} = \frac{4.5}{1{,}000} = 0.0045\text{ mm}$$
@@ -1959,13 +1980,13 @@ include '../includes/header.php';
                                     <strong>ขั้นที่ 2 แปลงปริมาตรสารละลาย $0.05\text{ mL}$ เป็น $\mu\text{L}$</strong>
                                     <div class="pl-5 pt-1">
                                         <p>• จาก $\text{mL}$ ไปเป็น $\mu\text{L}$ คือการเดินลงบันได 1 ขั้น จึงนำมา<strong>คูณด้วย $1{,}000$</strong>:
-                                            $$\text{ปริมาตรไมโครปิเปต} = 0.05 \times 1{,}000 = 50\text{ }\mu\text{L}$$
+                                            $$\text{ปริมาตรไมโครปิเปต} = 0.05 \times 1{,}000 = 50\,\mu\text{L}$$
                                         </p>
                                     </div>
                                 </li>
                             </ol>
                             <div class="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-mono text-xs">
-                                <strong>สรุปคำตอบ:</strong> แบคทีเรียมีความยาวเท่ากับ $0.0045\text{ mm}$ หรือ $4{,}500\text{ nm}$ และต้องตั้งค่าไมโครปิเปตที่ $50\text{ }\mu\text{L}$
+                                <strong>สรุปคำตอบ:</strong> แบคทีเรียมีความยาวเท่ากับ $0.0045\text{ mm}$ หรือ $4{,}500\text{ nm}$ และต้องตั้งค่าไมโครปิเปตที่ $50\,\mu\text{L}$
                             </div>
                         </div>
                     </div>
@@ -2033,7 +2054,7 @@ include '../includes/header.php';
                                         <tr class="hover:bg-slate-800/40">
                                             <td class="p-3 font-mono font-bold text-center text-amber-400">2</td>
                                             <td class="p-3 font-semibold text-white">เลขศูนย์ระหว่างตัวเลขอื่น (Captive zeros)</td>
-                                            <td class="p-3 font-mono text-cyan-300">$1.004\text{ mL}$, $205\text{ }\mu\text{m}$</td>
+                                            <td class="p-3 font-mono text-cyan-300">$1.004\text{ mL}$, $205\,\mu\text{m}$</td>
                                             <td class="p-3 font-mono font-bold text-center text-amber-400">4 ตัว, 3 ตัว</td>
                                             <td class="p-3 text-[11px] text-slate-400">นับเป็นเลขนัยสำคัญ เพราะเป็นค่าจริงที่วัดได้ระหว่างสเกล</td>
                                         </tr>
@@ -2063,7 +2084,7 @@ include '../includes/header.php';
                             </div>
                             <div class="p-3 bg-slate-950/90 border-t border-slate-800 text-[11px] text-slate-400 flex items-start gap-2">
                                 <i class="fa-solid fa-circle-info text-cyan-400 mt-0.5"></i>
-                                <span><strong>ตัวเลขแม่นตรง (Exact Numbers):</strong> เช่น จำนวนจานเพาะเชื้อ 6 จาน, การคูณด้วย $100\%$ ในสูตรคำนวณ, หรือคำจำกัดความ $1\text{ mL} = 1{,}000\text{ }\mu\text{L}$ ถือว่ามีเลขนัยสำคัญเป็น <em>อนันต์ ($\infty$)</em> จะไม่นำมาจำกัดเลขนัยสำคัญในการคำนวณผลลัพธ์</span>
+                                <span><strong>ตัวเลขแม่นตรง (Exact Numbers):</strong> เช่น จำนวนจานเพาะเชื้อ 6 จาน, การคูณด้วย $100\%$ ในสูตรคำนวณ, หรือคำจำกัดความ $1\text{ mL} = 1{,}000\,\mu\text{L}$ ถือว่ามีเลขนัยสำคัญเป็น <em>อนันต์ ($\infty$)</em> จะไม่นำมาจำกัดเลขนัยสำคัญในการคำนวณผลลัพธ์</span>
                             </div>
                         </div>
                     </div>
@@ -2261,12 +2282,12 @@ include '../includes/header.php';
                                 <img src="../images/sec_3d/ch01_micropipette_3d.jpg" alt="ภาพตัดขวาง 3 มิติแสดงกลไกลูกสูบไมโครปิเปต 2 จังหวะ" class="w-full h-auto object-cover group-hover:scale-[1.01] transition-transform duration-500" loading="lazy">
                             </div>
                             <figcaption class="mt-3 text-xs sm:text-sm text-slate-400 text-center">
-                                <strong class="text-amber-400">ภาพที่ 1.8</strong>&ensp;แบบจำลอง 3 มิติเชิงเทคนิคแสดงภาพตัดขวางของไมโครปิเปต P1000: แสดงกลไกปุ่มกด 2 จังหวะ (First Stop สำหรับดูดสาร และ Second Stop สำหรับเป่าสารออกให้หมด), สปริงสอบเทียบ, แกนลูกสูบ, หน้าปัดดิจิทัล $1{,}000\text{ }\mu\text{L}$ และหยดของเหลวที่ปลายทิป
+                                <strong class="text-amber-400">ภาพที่ 1.8</strong>&ensp;แบบจำลอง 3 มิติเชิงเทคนิคแสดงภาพตัดขวางของไมโครปิเปต P1000: แสดงกลไกปุ่มกด 2 จังหวะ (First Stop สำหรับดูดสาร และ Second Stop สำหรับเป่าสารออกให้หมด), สปริงสอบเทียบ, แกนลูกสูบ, หน้าปัดดิจิทัล $1{,}000\,\mu\text{L}$ และหยดของเหลวที่ปลายทิป
                             </figcaption>
                         </figure>
 
                         <p class="text-[15px] sm:text-base leading-relaxed">
-                            หากเราต้องการตรวจสอบว่าไมโครปิเปตในห้องปฏิบัติการยังมีความแม่นยำหรือไม่ เราสามารถใช้วิธีชั่งมวลของน้ำกลั่นที่ดูดออกมา เนื่องจากน้ำบริสุทธิ์ที่อุณหภูมิห้องมีความหนาแน่นประมาณ $1\text{ g/mL}$ หรือกล่าวได้ว่า <strong>น้ำกลั่นปริมาตร $1{,}000\text{ }\mu\text{L}$ ($1\text{ mL}$) จะมีมวลเท่ากับ $1.0000\text{ g}$ และน้ำกลั่น $100\text{ }\mu\text{L}$ จะมีมวลเท่ากับ $0.1000\text{ g}$</strong> โดยคำนวณเปอร์เซ็นต์ความคลาดเคลื่อนสัมพัทธ์ได้ดังนี้
+                            หากเราต้องการตรวจสอบว่าไมโครปิเปตในห้องปฏิบัติการยังมีความแม่นยำหรือไม่ เราสามารถใช้วิธีชั่งมวลของน้ำกลั่นที่ดูดออกมา เนื่องจากน้ำบริสุทธิ์ที่อุณหภูมิห้องมีความหนาแน่นประมาณ $1\text{ g/mL}$ หรือกล่าวได้ว่า <strong>น้ำกลั่นปริมาตร $1{,}000\,\mu\text{L}$ ($1\text{ mL}$) จะมีมวลเท่ากับ $1.0000\text{ g}$ และน้ำกลั่น $100\,\mu\text{L}$ จะมีมวลเท่ากับ $0.1000\text{ g}$</strong> โดยคำนวณเปอร์เซ็นต์ความคลาดเคลื่อนสัมพัทธ์ได้ดังนี้
                         </p>
 
                         <!-- Formula Highlight Card: Responsive & Overflow-Safe -->
@@ -2403,7 +2424,7 @@ include '../includes/header.php';
                                         <tr class="hover:bg-slate-800/40">
                                             <td class="p-3 font-semibold text-white flex items-center gap-2"><i class="fa-solid fa-compass-drafting text-teal-400"></i> ไมโครมิเตอร์</td>
                                             <td class="p-3">ความหนา เส้นผ่านศูนย์กลางจิ๋ว</td>
-                                            <td class="p-3 font-mono text-cyan-300 text-center font-bold">$0.01\text{ mm}$ ($10\text{ }\mu\text{m}$)</td>
+                                            <td class="p-3 font-mono text-cyan-300 text-center font-bold">$0.01\text{ mm}$ ($10\,\mu\text{m}$)</td>
                                             <td class="p-3 text-[11px] text-slate-400">ใช้หลักเกลียวละเอียด มี Ratchet Stop คุมแรงกดคงที่</td>
                                             <td class="p-3 text-slate-300">วัดความหนาแผ่นสไลด์แก้วและ Coverslip ในงานกล้องจุลทรรศน์</td>
                                         </tr>
@@ -2417,7 +2438,7 @@ include '../includes/header.php';
                                         <tr class="hover:bg-slate-800/40">
                                             <td class="p-3 font-semibold text-white flex items-center gap-2"><i class="fa-solid fa-eye-dropper text-cyan-400"></i> ไมโครปิเปต P1000</td>
                                             <td class="p-3">ปริมาตรของเหลว ($V$)</td>
-                                            <td class="p-3 font-mono text-cyan-300 text-center font-bold">$1\text{ }\mu\text{L}$ (ช่วง $100\text{--}1{,}000\text{ }\mu\text{L}$)</td>
+                                            <td class="p-3 font-mono text-cyan-300 text-center font-bold">$1\,\mu\text{L}$ (ช่วง $100\text{--}1{,}000\,\mu\text{L}$)</td>
                                             <td class="p-3 text-[11px] text-slate-400">Air Displacement ลูกสูบกลไกเที่ยงตรงสูง ISO 8655</td>
                                             <td class="p-3 text-slate-300">ดูดจ่ายอาหารเหลว บัฟเฟอร์ และสารแขวนลอยเซลล์แบคทีเรีย</td>
                                         </tr>
@@ -2487,7 +2508,7 @@ include '../includes/header.php';
                                 </label>
                                 <label class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 cursor-pointer hover:bg-slate-800/40 transition">
                                     <input type="checkbox" checked class="rounded border-slate-700 text-teal-500 focus:ring-0">
-                                    <span>ไมโครปิเปต P1000 ($100\text{--}1{,}000\text{ }\mu\text{L}$) & ทิปสีฟ้า</span>
+                                    <span>ไมโครปิเปต P1000 ($100\text{--}1{,}000\,\mu\text{L}$) & ทิปสีฟ้า</span>
                                 </label>
                                 <label class="flex items-center gap-2 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 cursor-pointer hover:bg-slate-800/40 transition">
                                     <input type="checkbox" checked class="rounded border-slate-700 text-teal-500 focus:ring-0">
@@ -2511,7 +2532,7 @@ include '../includes/header.php';
                                 <div class="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
                                     <strong class="text-white block">ตอนที่ 2: การตรวจสอบความแม่นและความเที่ยงของไมโครปิเปต</strong>
                                     <p class="leading-relaxed">
-                                        วางบีกเกอร์พลาสติกขนาดเล็กบนเครื่องชั่งดิจิทัลแล้วกดปุ่มเซตศูนย์ (<strong>Tare</strong>) จากนั้นตั้งค่าไมโครปิเปต P1000 ที่ปริมาตร $500\text{ }\mu\text{L}$ ดูดน้ำกลั่นหยดลงในบีกเกอร์ อ่านค่ามวลเป็นกรัม ($\text{g}$) ทำซ้ำ 3 ครั้ง แล้วคำนวณค่าเฉลี่ยและเปอร์เซ็นต์ความคลาดเคลื่อนเทียบกับค่ามาตรฐาน $0.5000\text{ g}$
+                                        วางบีกเกอร์พลาสติกขนาดเล็กบนเครื่องชั่งดิจิทัลแล้วกดปุ่มเซตศูนย์ (<strong>Tare</strong>) จากนั้นตั้งค่าไมโครปิเปต P1000 ที่ปริมาตร $500\,\mu\text{L}$ ดูดน้ำกลั่นหยดลงในบีกเกอร์ อ่านค่ามวลเป็นกรัม ($\text{g}$) ทำซ้ำ 3 ครั้ง แล้วคำนวณค่าเฉลี่ยและเปอร์เซ็นต์ความคลาดเคลื่อนเทียบกับค่ามาตรฐาน $0.5000\text{ g}$
                                     </p>
                                 </div>
                             </div>
@@ -2552,7 +2573,7 @@ include '../includes/header.php';
                                             <td class="p-3 text-slate-300 font-mono">............ $\mu\text{m}$</td>
                                         </tr>
                                         <tr>
-                                            <td class="p-3 font-semibold text-white">มวลน้ำกลั่นจากปิเปต $500\text{ }\mu\text{L}$ ($\text{g}$)</td>
+                                            <td class="p-3 font-semibold text-white">มวลน้ำกลั่นจากปิเปต $500\,\mu\text{L}$ ($\text{g}$)</td>
                                             <td class="p-3 text-center font-mono text-slate-400">............</td>
                                             <td class="p-3 text-center font-mono text-slate-400">............</td>
                                             <td class="p-3 text-center font-mono text-slate-400">............</td>
@@ -2587,7 +2608,7 @@ include '../includes/header.php';
                     <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2">
                         <div class="flex items-start justify-between gap-3">
                             <p class="leading-relaxed font-medium">
-                                <strong class="text-indigo-400">ข้อที่ 1:</strong> เซลล์ยีสต์ <em>Saccharomyces cerevisiae</em> มีเส้นผ่านศูนย์กลางประมาณ $6\text{ }\mu\text{m}$ จงแปลงค่าดังกล่าวให้เป็นหน่วยมิลลิเมตร ($\text{mm}$) และนาโนเมตร ($\text{nm}$) โดยใช้เทคนิคบันไดขั้นละ $1{,}000$
+                                <strong class="text-indigo-400">ข้อที่ 1:</strong> เซลล์ยีสต์ <em>Saccharomyces cerevisiae</em> มีเส้นผ่านศูนย์กลางประมาณ $6\,\mu\text{m}$ จงแปลงค่าดังกล่าวให้เป็นหน่วยมิลลิเมตร ($\text{mm}$) และนาโนเมตร ($\text{nm}$) โดยใช้เทคนิคบันไดขั้นละ $1{,}000$
                             </p>
                             <button type="button" onclick="toggleHint('hint-1')" class="px-2.5 py-1 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-xs font-mono shrink-0 transition">
                                 <i class="fa-solid fa-key"></i> เฉลย
@@ -2612,9 +2633,9 @@ include '../includes/header.php';
                         </div>
                         <div id="hint-2" class="hidden mt-2 p-3 rounded-lg bg-indigo-950/30 border border-indigo-500/30 text-xs text-slate-300 space-y-1">
                             <p><strong>แนวคิด:</strong></p>
-                            <p>• แปลงปริมาตร: $0.25\text{ mL} \times 1{,}000 = 250\text{ }\mu\text{L}$</p>
-                            <p>• ปริมาตร $250\text{ }\mu\text{L}$ เกินช่วงของ P20 ($2\text{--}20\text{ }\mu\text{L}$) และ P200 ($20\text{--}200\text{ }\mu\text{L}$)</p>
-                            <p>• ดังนั้นต้องเลือกใช้ <strong>P1000</strong> ($100\text{--}1{,}000\text{ }\mu\text{L}$) และตั้งหน้าปัดไว้ที่ <strong>$250\text{ }\mu\text{L}$</strong></p>
+                            <p>• แปลงปริมาตร: $0.25\text{ mL} \times 1{,}000 = 250\,\mu\text{L}$</p>
+                            <p>• ปริมาตร $250\,\mu\text{L}$ เกินช่วงของ P20 ($2\text{--}20\,\mu\text{L}$) และ P200 ($20\text{--}200\,\mu\text{L}$)</p>
+                            <p>• ดังนั้นต้องเลือกใช้ <strong>P1000</strong> ($100\text{--}1{,}000\,\mu\text{L}$) และตั้งหน้าปัดไว้ที่ <strong>$250\,\mu\text{L}$</strong></p>
                         </div>
                     </div>
 
@@ -2622,7 +2643,7 @@ include '../includes/header.php';
                     <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2">
                         <div class="flex items-start justify-between gap-3">
                             <p class="leading-relaxed font-medium">
-                                <strong class="text-indigo-400">ข้อที่ 3:</strong> ในการทดสอบไมโครปิเปตที่ตั้งค่าไว้ $200\text{ }\mu\text{L}$ นักศึกษาชั่งมวลน้ำกลั่น 3 ครั้ง ได้ค่า $0.198\text{ g}$, $0.199\text{ g}$ และ $0.197\text{ g}$ จงหาค่าเฉลี่ยและเปอร์เซ็นต์ความคลาดเคลื่อนเทียบกับค่ามาตรฐาน $0.200\text{ g}$
+                                <strong class="text-indigo-400">ข้อที่ 3:</strong> ในการทดสอบไมโครปิเปตที่ตั้งค่าไว้ $200\,\mu\text{L}$ นักศึกษาชั่งมวลน้ำกลั่น 3 ครั้ง ได้ค่า $0.198\text{ g}$, $0.199\text{ g}$ และ $0.197\text{ g}$ จงหาค่าเฉลี่ยและเปอร์เซ็นต์ความคลาดเคลื่อนเทียบกับค่ามาตรฐาน $0.200\text{ g}$
                             </p>
                             <button type="button" onclick="toggleHint('hint-3')" class="px-2.5 py-1 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-xs font-mono shrink-0 transition">
                                 <i class="fa-solid fa-key"></i> เฉลย
@@ -2689,7 +2710,7 @@ const SI_BASE_DATA = [
 const SI_DERIVED_DATA = [
     {
         id: 'kat', sym: 'kat', name_en: 'katal', name_th: 'คาตัล', qty_th: 'อัตราเร่งปฏิกิริยาของเอนไซม์ (Catalytic Activity)',
-        formula_si: '\\text{mol}\\cdot\\text{s}^{-1}', formula_coherent: '\\text{mol/s}', parents: ['mol', 's'], domain: 'enzyme', domain_name: 'เอนไซม์ & ชีวเคมี', color: '#d946ef',
+        formula_si: '\\text{mol}\\cdot\\text{s}^{-1}', formula_coherent: '\\text{mol/s}', formula_coherent_clean: 'mol/s', formula_si_clean: 'mol·s⁻¹', official_ref: 'BIPM SI Brochure Table 4; CGPM Res. 12 (1999); IUBMB Enzyme Nomenclature (1972/2001); IUPAC Gold Book', parents: ['mol', 's'], domain: 'enzyme', domain_name: 'เอนไซม์ & ชีวเคมี', color: '#d946ef',
         micro_app: 'การตรวจวัดอัตราเร่งปฏิกิริยาของเอนไซม์สำคัญ เช่น Catalase Test ในเชื้อ Staphylococcus aureus, Taq DNA Polymerase ในปฏิกิริยา PCR, และเอนไซม์ Beta-lactamase ในเชื้อดื้อยาปฏิชีวนะ',
         physics_eq: 'v = \\frac{V_{\\max}[S]}{K_m + [S]}, \\quad 1\\text{ U} = 16.67\\text{ nkat} = 1.667\\times 10^{-8}\\text{ kat}',
         lab_note: 'ตามมาตรฐานสากล IUBMB / IUPAC หน่วยอย่างเป็นทางการของเอนไซม์คือ katal (kat) โดย 1 kat คือเอนไซม์ที่เร่งเปลี่ยนสับสเตรตได้ 1 โมลต่อวินาที',
@@ -2697,7 +2718,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'Pa', sym: 'Pa', name_en: 'pascal', name_th: 'ปาสคาล', qty_th: 'ความดันและความเค้น (Pressure & Stress)',
-        formula_si: '\\text{kg}\\cdot\\text{m}^{-1}\\cdot\\text{s}^{-2}', formula_coherent: '\\text{N/m}^2', parents: ['kg', 'm', 's'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#f43f5e',
+        formula_si: '\\text{kg}\\cdot\\text{m}^{-1}\\cdot\\text{s}^{-2}', formula_coherent: '\\text{N/m}^2', formula_coherent_clean: 'N/m²', formula_si_clean: 'kg·m⁻¹·s⁻²', official_ref: 'BIPM SI Brochure Table 4; CGPM 14th Res. 3 (1971); ISO 80000-4:2019; USP/BP Autoclave Standards', parents: ['kg', 'm', 's'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#f43f5e',
         micro_app: 'ความดันไอน้ำอิ่มตัวในหม้อนึ่งฆ่าเชื้อ Autoclave (103 kPa หรือ 15 psi ที่ 121°C), แรงดันออสโมซิส (Osmotic Pressure) ของผนังเซลล์แบคทีเรียแกรมบวก (1.5-2.5 MPa) และความดันอากาศบวก/ลบในตู้ Biosafety Cabinet',
         physics_eq: 'P_{\\text{gauge}} = P_{\\text{abs}} - P_{\\text{atm}}, \\quad \\Pi = iCRT \\text{ (Van \'t Hoff Equation)}',
         lab_note: 'ที่อุณหภูมิ 121°C ไอน้ำอิ่มตัวต้องรักษาความดัน 15 psi (103 kPa) นานอย่างน้อย 15 นาที เพื่อทำลายสปอร์ของ Geobacillus stearothermophilus ให้หมดสิ้น',
@@ -2705,7 +2726,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'V', sym: 'V', name_en: 'volt', name_th: 'โวลต์', qty_th: 'ความต่างศักย์และแรงเคลื่อนไฟฟ้า (Electric Potential & EMF)',
-        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-3}\\cdot\\text{A}^{-1}', formula_coherent: '\\text{W/A}', parents: ['kg', 'm', 's', 'A'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#10b981',
+        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-3}\\cdot\\text{A}^{-1}', formula_coherent: '\\text{W/A}', formula_coherent_clean: 'W/A', formula_si_clean: 'kg·m²·s⁻³·A⁻¹', official_ref: 'BIPM SI Brochure Table 4; CGPM 9th Res. 7 (1948); ISO 80000-6:2022; Josephson Constant K_J-90', parents: ['kg', 'm', 's', 'A'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#10b981',
         micro_app: 'การแยกขนาดชิ้นส่วนดีเอ็นเอด้วย Agarose Gel Electrophoresis (ใช้ 80-120 V), ศักย์ไฟฟ้าเยื่อหุ้มเซลล์ของแบคทีเรีย (Membrane Potential ประมาณ -70 ถึง -120 mV) ซึ่งขับเคลื่อนการสังเคราะห์ ATP ผ่าน Proton Motive Force (PMF)',
         physics_eq: 'E = \\frac{V}{d}, \\quad v_{\\text{migration}} = \\mu_e E = \\mu_e \\frac{V}{d}, \\quad PMF = \\Delta \\psi - \\frac{2.3 RT}{F}\\Delta pH',
         lab_note: 'การตั้งค่าโวลต์ในถังรันเจลควรอยู่ที่ประมาณ 5 V/cm ของระยะห่างระหว่างขั้วไฟฟ้า เพื่อป้องกันไม่ให้เจลร้อนจนเสียสภาพหรือแถบดีเอ็นเอคดงอ',
@@ -2713,7 +2734,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'Gy', sym: 'Gy', name_en: 'gray', name_th: 'เกรย์', qty_th: 'ปริมาณรังสีดูดกลืน (Absorbed Dose)',
-        formula_si: '\\text{m}^2\\cdot\\text{s}^{-2}', formula_coherent: '\\text{J/kg}', parents: ['m', 's'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#ef4444',
+        formula_si: '\\text{m}^2\\cdot\\text{s}^{-2}', formula_coherent: '\\text{J/kg}', formula_coherent_clean: 'J/kg', formula_si_clean: 'm²·s⁻²', official_ref: 'BIPM SI Brochure Table 4; CGPM 15th Res. 9 (1975); ICRU Report 85; ISO 80000-10:2019', parents: ['m', 's'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#ef4444',
         micro_app: 'การปลอดเชื้อวัสดุอุปกรณ์การแพทย์และจานเพาะเชื้อพลาสติกด้วยรังสีแกมมา Cobalt-60 หรือ Electron Beam ที่ระดับ 25 kGy (25,000 Gy) เพื่อทำลาย DNA และเอนไซม์ของจุลินทรีย์โดยไม่ทำให้พลาสติกละลาย',
         physics_eq: 'D = \\frac{\\Delta E_{\\text{absorbed}}}{\\Delta m}, \\quad N_t = N_0 \\times 10^{-D / D_{10}} \\quad (SAL = 10^{-6})',
         lab_note: 'ค่า D10 คือปริมาณรังสีที่ลดจำนวนเชื้อลง 90% การฉายรังสี 25 kGy รับประกันระดับความปลอดเชื้อ Sterility Assurance Level ตามมาตรฐานสากล',
@@ -2721,7 +2742,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'Hz', sym: 'Hz', name_en: 'hertz', name_th: 'เฮิรตซ์', qty_th: 'ความถี่ (Frequency)',
-        formula_si: '\\text{s}^{-1}', formula_coherent: '1/s', parents: ['s'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#eab308',
+        formula_si: '\\text{s}^{-1}', formula_coherent: '1/s', formula_coherent_clean: '1/s', formula_si_clean: 's⁻¹', official_ref: 'BIPM SI Brochure Table 4; CGPM 9th Res. 7 (1948); IEC 60027-1; ISO 80000-3:2019', parents: ['s'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#eab308',
         micro_app: 'ความถี่รอบการหมุนของเครื่องปั่นเหวี่ยงตกตะกอน Centrifuge (12,000 RPM = 200 Hz), ความถี่อัลตราโซนิกของเครื่องสลายเซลล์ Sonicator (20-40 kHz), และความถี่การหมุนของแฟลกเจลลาแบคทีเรีย (200-300 Hz)',
         physics_eq: 'f = \\frac{\\text{RPM}}{60}, \\quad \\text{RCF} (g) = 1.118 \\times 10^{-5} \\times r_{\\text{cm}} \\times (\\text{RPM})^2',
         lab_note: 'ในงานวิจัยจุลชีววิทยาต้องระบุแรงเหวี่ยงเป็นค่า RCF (×g) เสมอ แทนที่จะบอกเพียง RPM เพื่อให้ห้องแล็บอื่นที่ใช้รัศมีโรเตอร์ต่างกันสามารถทำซ้ำได้ผลตรงกัน',
@@ -2729,7 +2750,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'S', sym: 'S', name_en: 'siemens', name_th: 'ซีเมนส์', qty_th: 'สภาพนำไฟฟ้า (Electrical Conductance)',
-        formula_si: '\\text{kg}^{-1}\\cdot\\text{m}^{-2}\\cdot\\text{s}^3\\cdot\\text{A}^2', formula_coherent: '1/\\Omega', parents: ['kg', 'm', 's', 'A'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#10b981',
+        formula_si: '\\text{kg}^{-1}\\cdot\\text{m}^{-2}\\cdot\\text{s}^3\\cdot\\text{A}^2', formula_coherent: '1/\\Omega', formula_coherent_clean: '1/Ω (A/V)', formula_si_clean: 'kg⁻¹·m⁻²·s³·A²', official_ref: 'BIPM SI Brochure Table 4; CGPM 14th Res. 3 (1971); ISO 80000-6:2022; Standard Methods 2510', parents: ['kg', 'm', 's', 'A'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#10b981',
         micro_app: 'การตรวจวัดความบริสุทธิ์ของน้ำเกรดเตรียมบัฟเฟอร์และงานวิจัยอณูชีววิทยา (Milli-Q Water ต้องมีสภาพนำไฟฟ้า < 0.055 µS/cm หรือ 18.2 MΩ·cm) และการวัดสภาพนำไฟฟ้าของน้ำทิ้งบำบัด',
         physics_eq: 'G = \\frac{1}{R} = \\sigma \\frac{A}{L}, \\quad \\sigma = \\sum c_i z_i \\lambda_i',
         lab_note: 'หากน้ำกลั่นมีสภาพนำไฟฟ้าสูง แสดงว่ามีไอออนโลหะปนเปื้อน ซึ่งอาจยับยั้งการทำงานของเอนไซม์ Taq DNA Polymerase หรือทำให้เจลอิเล็กโทรโฟรีซิสร้อนจัด',
@@ -2737,7 +2758,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'J', sym: 'J', name_en: 'joule', name_th: 'จูล', qty_th: 'พลังงานและงาน (Energy & Work)',
-        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-2}', formula_coherent: '\\text{N}\\cdot\\text{m}', parents: ['kg', 'm', 's'], domain: 'enzyme', domain_name: 'เอนไซม์ & ชีวเคมี', color: '#f97316',
+        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-2}', formula_coherent: '\\text{N}\\cdot\\text{m}', formula_coherent_clean: 'N·m', formula_si_clean: 'kg·m²·s⁻²', official_ref: 'BIPM SI Brochure Table 4; CGPM 9th Res. 7 (1948); ISO 80000-5:2019; IUPAC Green Book (2007)', parents: ['kg', 'm', 's'], domain: 'enzyme', domain_name: 'เอนไซม์ & ชีวเคมี', color: '#f97316',
         micro_app: 'พลังงานพันธะเคมีฟอสเฟตพลังงานสูงใน ATP (-30.5 kJ/mol), พลังงานจลน์ของโรเตอร์เครื่องปั่นเหวี่ยง, และความร้อนแฝงในการกลายเป็นไอของน้ำในหม้อนึ่ง Autoclave',
         physics_eq: '\\Delta G = \\Delta G^\\circ + RT \\ln Q, \\quad E_k = \\frac{1}{2} I \\omega^2',
         lab_note: 'พลังงาน 30.5 kJ ต่อโมลของ ATP คือหน่วยเงินตราพลังงานสากลที่จุลินทรีย์ใช้ขับเคลื่อนทุกกระบวนการในเซลล์',
@@ -2745,7 +2766,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'N', sym: 'N', name_en: 'newton', name_th: 'นิวตัน', qty_th: 'แรงกลศาสตร์ (Force)',
-        formula_si: '\\text{kg}\\cdot\\text{m}\\cdot\\text{s}^{-2}', formula_coherent: '\\text{kg}\\cdot\\text{m/s}^2', parents: ['kg', 'm', 's'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#ef4444',
+        formula_si: '\\text{kg}\\cdot\\text{m}\\cdot\\text{s}^{-2}', formula_coherent: '\\text{kg}\\cdot\\text{m/s}^2', formula_coherent_clean: 'kg·m/s²', formula_si_clean: 'kg·m·s⁻²', official_ref: 'BIPM SI Brochure Table 4; CGPM 9th Res. 7 (1948); ISO 80000-4:2019; Stokes Drag Hydrodynamics', parents: ['kg', 'm', 's'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#ef4444',
         micro_app: 'แรงหนืดต้านทานการเคลื่อนที่ของแบคทีเรียในของเหลว (Stokes Drag Force), แรงเหวี่ยงหนีศูนย์กลางในการตกตะกอนเซลล์, และทอร์กของโรเตอร์แฟลกเจลลา (~4,000 pN·nm)',
         physics_eq: 'F_{\\text{drag}} = 6\\pi \\eta r v \\text{ (Stokes\' Law)}, \\quad F_{\\text{cf}} = m \\omega^2 r',
         lab_note: 'ในระดับเซลล์จุลทรรศน์ แรงหนืดมีอิทธิพลเหนือกว่าแรงเฉื่อยอย่างมหาศาล (Low Reynolds Number, Re << 1)',
@@ -2753,7 +2774,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'C', sym: 'C', name_en: 'coulomb', name_th: 'คูลอมบ์', qty_th: 'ประจุไฟฟ้า (Electric Charge)',
-        formula_si: '\\text{A}\\cdot\\text{s}', formula_coherent: '\\text{A}\\cdot\\text{s}', parents: ['A', 's'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#22c55e',
+        formula_si: '\\text{A}\\cdot\\text{s}', formula_coherent: '\\text{A}\\cdot\\text{s}', formula_coherent_clean: 'A·s', formula_si_clean: 'A·s', official_ref: 'BIPM SI Brochure Table 4; CGPM 9th Res. 7 (1948); CGPM 26th Res. 1 (2018); ISO 80000-6:2022', parents: ['A', 's'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#22c55e',
         micro_app: 'ประจุไฟฟ้าลบสุทธิบนพื้นผิวผนังเซลล์แบคทีเรียและโครงสร้างฟอสเฟตของสาย DNA ซึ่งกำหนดค่าศักย์ซีตา (Zeta Potential) และอัตราการเคลื่อนที่ในอิเล็กโทรโฟรีซิส',
         physics_eq: 'q = I \\times t, \\quad \\zeta = \\frac{4\\pi \\eta v}{\\varepsilon E} \\text{ (Smoluchowski Eq)}',
         lab_note: 'ประจุลบของกรดฟอสฟอริกบนสายดีเอ็นเอทำให้ดีเอ็นเอทุกขนาดเคลื่อนที่เข้าหาขั้วบวก (Anode) ในสนามไฟฟ้า',
@@ -2761,7 +2782,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'degC', sym: '°C', name_en: 'degree Celsius', name_th: 'องศาเซลเซียส', qty_th: 'อุณหภูมิเซลเซียส (Celsius Temperature)',
-        formula_si: 'T/\\text{K} - 273.15', formula_coherent: 'K - 273.15', parents: ['K'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#0284c7',
+        formula_si: 'T/\\text{K} - 273.15', formula_coherent: 'K - 273.15', formula_coherent_clean: 'K - 273.15', formula_si_clean: 'T/K - 273.15', official_ref: 'BIPM SI Brochure Table 4 & Sec. 2.3.1; CGPM 9th Res. 3 (1948); ISO 80000-5:2019; CLSI Protocols', parents: ['K'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#0284c7',
         micro_app: 'อุณหภูมิเพาะเลี้ยงเชื้อมาตรฐานในตู้อบ Incubator (37°C สำหรับแบคทีเรียก่อโรคในมนุษย์, 28-30°C สำหรับราและแบคทีเรียพืช), นึ่งฆ่าเชื้อ 121°C, และเก็บรักษาหัวเชื้อที่ -80°C',
         physics_eq: 'T_{\\text{°C}} = T_{\\text{K}} - 273.15, \\quad Q = mc\\Delta T',
         lab_note: 'การเบี่ยงเบนของอุณหภูมิตู้อบเพาะเชื้อเพียง ±1°C สามารถเปลี่ยนอัตราการเติบโตและการแสดงออกของยีนพิษในแบคทีเรียได้อย่างมีนัยสำคัญ',
@@ -2769,7 +2790,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'lx', sym: 'lx', name_en: 'lux', name_th: 'ลักซ์', qty_th: 'ความส่องสว่าง (Illuminance)',
-        formula_si: '\\text{cd}\\cdot\\text{sr}\\cdot\\text{m}^{-2}', formula_coherent: '\\text{lm/m}^2', parents: ['cd', 'm'], domain: 'optics', domain_name: 'กล้อง & แสง', color: '#38bdf8',
+        formula_si: '\\text{cd}\\cdot\\text{sr}\\cdot\\text{m}^{-2}', formula_coherent: '\\text{lm/m}^2', formula_coherent_clean: 'lm/m²', formula_si_clean: 'cd·sr·m⁻²', official_ref: 'BIPM SI Brochure Table 4; CGPM 9th Res. 7 (1948); CIE S 017/E:2020 (ILV); ISO 80000-7:2019', parents: ['cd', 'm'], domain: 'optics', domain_name: 'กล้อง & แสง', color: '#38bdf8',
         micro_app: 'ความส่องสว่างใน Photobioreactor เพาะเลี้ยงสาหร่ายเซลล์เดียวและไซยาโนแบคทีเรีย (2,000-5,000 lx) และระดับความสว่างหน้าโต๊ะทำงานในห้องแล็บ (500 lx)',
         physics_eq: 'E_v = \\frac{\\Phi_v}{A} = \\frac{I_v \\cos\\theta}{r^2}',
         lab_note: 'การเพาะเลี้ยงจุลินทรีย์สังเคราะห์แสงต้องควบคุมความเข้มแสงให้เหมาะสม แสงที่จ้าเกินไปจะเกิด Photoinhibition ยับยั้งการเจริญเติบโต',
@@ -2777,7 +2798,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'W', sym: 'W', name_en: 'watt', name_th: 'วัตต์', qty_th: 'กำลังงานและความร้อน (Power & Heat Flow)',
-        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-3}', formula_coherent: '\\text{J/s}', parents: ['kg', 'm', 's'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#eab308',
+        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-3}', formula_coherent: '\\text{J/s}', formula_coherent_clean: 'J/s', formula_si_clean: 'kg·m²·s⁻³', official_ref: 'BIPM SI Brochure Table 4; CGPM 9th Res. 7 (1948); ISO 80000-4:2019; Metabolic Calorimetry', parents: ['kg', 'm', 's'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#eab308',
         micro_app: 'กำลังไฟฟ้าของฮีตเตอร์ในหม้อนึ่งฆ่าเชื้อ Autoclave (1,500-3,000 W), มอเตอร์เครื่องเขย่าสาร Shaking Incubator, และหลอดไฟฮาโลเจนในกล้องจุลทรรศน์',
         physics_eq: 'P = \\frac{W}{t} = V \\times I = I^2 R',
         lab_note: 'กำลังงานความร้อนต้องสัมพันธ์กับปริมาตรสารละลายที่ต้องการนึ่งฆ่าเชื้อ เพื่อให้มั่นใจว่าอุณหภูมิถึง 121°C ตลอดทั่วทั้งภาชนะ',
@@ -2785,7 +2806,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'Wb', sym: 'Wb', name_en: 'weber', name_th: 'เวเบอร์', qty_th: 'ฟลักซ์แม่เหล็ก (Magnetic Flux)',
-        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-2}\\cdot\\text{A}^{-1}', formula_coherent: '\\text{V}\\cdot\\text{s}', parents: ['kg', 'm', 's', 'A'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#06b6d4',
+        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-2}\\cdot\\text{A}^{-1}', formula_coherent: '\\text{V}\\cdot\\text{s}', formula_coherent_clean: 'V·s', formula_si_clean: 'kg·m²·s⁻²·A⁻¹', official_ref: 'BIPM SI Brochure Table 4; CGPM 9th Res. 7 (1948); IEC 60050-121; ISO 80000-6:2022', parents: ['kg', 'm', 's', 'A'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#06b6d4',
         micro_app: 'ฟลักซ์แม่เหล็กในแท่งกวนสารเคมี Magnetic Stirrer อัตโนมัติสำหรับละลายอาหารเลี้ยงเชื้อผง เช่น Nutrient Agar หรือ LB Broth',
         physics_eq: '\\Phi_B = B \\cdot A \\cos\\theta, \\quad \\mathcal{E} = -\\frac{d\\Phi_B}{dt}',
         lab_note: 'การกวนสารละลายด้วยแม่เหล็กช่วยให้อาหารเลี้ยงเชื้อละลายเป็นเนื้อเดียวกันก่อนนำไปผ่านกระบวนการนึ่งฆ่าเชื้อ',
@@ -2793,7 +2814,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'T', sym: 'T', name_en: 'tesla', name_th: 'เทสลา', qty_th: 'ความเข้มสนามแม่เหล็ก (Magnetic Field)',
-        formula_si: '\\text{kg}\\cdot\\text{s}^{-2}\\cdot\\text{A}^{-1}', formula_coherent: '\\text{Wb/m}^2', parents: ['kg', 's', 'A'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#f59e0b',
+        formula_si: '\\text{kg}\\cdot\\text{s}^{-2}\\cdot\\text{A}^{-1}', formula_coherent: '\\text{Wb/m}^2', formula_coherent_clean: 'Wb/m²', formula_si_clean: 'kg·s⁻²·A⁻¹', official_ref: 'BIPM SI Brochure Table 4; CGPM 11th Res. 12 (1960); ISO 80000-6:2022; Biomagnetic Separation', parents: ['kg', 's', 'A'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#f59e0b',
         micro_app: 'ความเข้มสนามแม่เหล็กของแท่นแยกสาร Magnetic Separation Rack (0.2-0.5 T) สำหรับการดูดจับอนุภาคแม่เหล็กในการสกัด DNA/RNA อัตโนมัติ',
         physics_eq: 'F = q(v \\times B), \\quad B = \\frac{\\mu_0 I}{2\\pi r}',
         lab_note: 'เทคโนโลยี Magnetic Bead Extraction ให้ความบริสุทธิ์ของกรดนิวคลีอิกสูงมาก เหมาะสำหรับการทำ Real-time PCR และ Next-Generation Sequencing',
@@ -2801,7 +2822,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'lm', sym: 'lm', name_en: 'lumen', name_th: 'ลูเมน', qty_th: 'ฟลักซ์ส่องสว่าง (Luminous Flux)',
-        formula_si: '\\text{cd}\\cdot\\text{sr}', formula_coherent: '\\text{cd}\\cdot\\text{sr}', parents: ['cd'], domain: 'optics', domain_name: 'กล้อง & แสง', color: '#c084fc',
+        formula_si: '\\text{cd}\\cdot\\text{sr}', formula_coherent: '\\text{cd}\\cdot\\text{sr}', formula_coherent_clean: 'cd·sr', formula_si_clean: 'cd·sr', official_ref: 'BIPM SI Brochure Table 4; CGPM 9th Res. 7 (1948); CGPM 26th (2018) (K_cd = 683 lm/W); ISO 80000-7:2019', parents: ['cd'], domain: 'optics', domain_name: 'กล้อง & แสง', color: '#c084fc',
         micro_app: 'ฟลักซ์การแผ่รังสีของหลอดไฟ UV-C 254 nm ที่ใช้ทำลายเชื้อในตู้ปลอดเชื้อ และฟลักซ์แสงส่องผ่านตัวอย่างในกล้องจุลทรรศน์ฟลูออเรสเซนต์',
         physics_eq: '\\Phi_v = \\int I_v d\\Omega, \\quad \\text{Fluorescence Emission Intensity}',
         lab_note: 'หลอด UV-C ต้องมีฟลักซ์การแผ่รังสีเพียงพอและควรเปลี่ยนหลอดตามชั่วโมงการใช้งานที่กำหนดเพื่อรักษาประสิทธิภาพการฆ่าเชื้อ',
@@ -2809,7 +2830,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'Bq', sym: 'Bq', name_en: 'becquerel', name_th: 'เบกเคอเรล', qty_th: 'กัมมันตภาพรังสี (Radioactivity)',
-        formula_si: '\\text{s}^{-1}', formula_coherent: '1/s', parents: ['s'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#f59e0b',
+        formula_si: '\\text{s}^{-1}', formula_coherent: '1/s', formula_coherent_clean: '1/s', formula_si_clean: 's⁻¹', official_ref: 'BIPM SI Brochure Table 4; CGPM 15th Res. 8 (1975); ISO 80000-10:2019; IAEA GSR Part 3', parents: ['s'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#f59e0b',
         micro_app: 'อัตราการสลายตัวของสารไอโซโทปกัมมันตรังสีที่ใช้ติดฉลากติดตามในงานอณูพันธุศาสตร์ เช่น ฟอสฟอรัส-32 (P-32) สำหรับติดฉลาก DNA probe และกำมะถัน-35 (S-35) สำหรับโปรตีน',
         physics_eq: 'A = \\lambda N = \\frac{\\ln 2}{T_{1/2}} N',
         lab_note: '1 Bq หมายถึงมีการสลายตัวของนิวเคลียสกัมมันตรังสี 1 ครั้งต่อวินาที (1 Ci = 3.7 × 10^10 Bq)',
@@ -2817,7 +2838,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'ohm', sym: 'Ω', name_en: 'ohm', name_th: 'โอห์ม', qty_th: 'ความต้านทานไฟฟ้า (Electrical Resistance)',
-        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-3}\\cdot\\text{A}^{-2}', formula_coherent: '\\text{V/A}', parents: ['kg', 'm', 's', 'A'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#14b8a6',
+        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-3}\\cdot\\text{A}^{-2}', formula_coherent: '\\text{V/A}', formula_coherent_clean: 'V/A', formula_si_clean: 'kg·m²·s⁻³·A⁻²', official_ref: 'BIPM SI Brochure Table 4; CGPM 9th Res. 7 (1948); Von Klitzing Constant R_K-90; ISO 80000-6:2022', parents: ['kg', 'm', 's', 'A'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#14b8a6',
         micro_app: 'ความต้านทานไฟฟ้าของสารละลายบัฟเฟอร์ Tris-Acetate-EDTA (TAE) และถังเจลไฟฟ้า, ความต้านทานเยื่อหุ้มเซลล์ (Membrane Resistance)',
         physics_eq: 'R = \\frac{V}{I} = \\rho \\frac{L}{A}',
         lab_note: 'หากความต้านทานของระบบต่ำเกินไป (เช่น ใส่เกลือเข้มข้นเกินไปในบัฟเฟอร์) กระแสจะไหลสูงมากจนเกิดความร้อนสะสมทำให้เจลละลาย',
@@ -2825,7 +2846,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'H', sym: 'H', name_en: 'henry', name_th: 'เฮนรี', qty_th: 'ความเหนี่ยวนำไฟฟ้า (Inductance)',
-        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-2}\\cdot\\text{A}^{-2}', formula_coherent: '\\text{Wb/A}', parents: ['kg', 'm', 's', 'A'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#06b6d4',
+        formula_si: '\\text{kg}\\cdot\\text{m}^2\\cdot\\text{s}^{-2}\\cdot\\text{A}^{-2}', formula_coherent: '\\text{Wb/A}', formula_coherent_clean: 'Wb/A', formula_si_clean: 'kg·m²·s⁻²·A⁻²', official_ref: 'BIPM SI Brochure Table 4; CGPM 9th Res. 7 (1948); ISO 80000-6:2022 (Electromagnetism)', parents: ['kg', 'm', 's', 'A'], domain: 'physics', domain_name: 'ปั่นเหวี่ยง & กลศาสตร์', color: '#06b6d4',
         micro_app: 'ความเหนี่ยวนำในขดลวดสเตเตอร์ของมอเตอร์ไร้แปรงถ่าน (Brushless Motor) ในเครื่อง Ultracentrifuge ซึ่งหมุนด้วยความเร็วสูงกว่า 100,000 RPM',
         physics_eq: 'V_L = -L \\frac{dI}{dt}, \\quad U = \\frac{1}{2} L I^2',
         lab_note: 'การควบคุมความเหนี่ยวนำและกระแสขับเคลื่อนช่วยให้การหมุนนุ่มนวล ลดแรงสั่นสะเทือนที่อาจรบกวนชั้นตะกอนสารแขวนลอยของเซลล์',
@@ -2833,7 +2854,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'F', sym: 'F', name_en: 'farad', name_th: 'ฟารัด', qty_th: 'ความจุไฟฟ้า (Capacitance)',
-        formula_si: '\\text{kg}^{-1}\\cdot\\text{m}^{-2}\\cdot\\text{s}^4\\cdot\\text{A}^2', formula_coherent: '\\text{C/V}', parents: ['kg', 'm', 's', 'A'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#ec4899',
+        formula_si: '\\text{kg}^{-1}\\cdot\\text{m}^{-2}\\cdot\\text{s}^4\\cdot\\text{A}^2', formula_coherent: '\\text{C/V}', formula_coherent_clean: 'C/V', formula_si_clean: 'kg⁻¹·m⁻²·s⁴·A²', official_ref: 'BIPM SI Brochure Table 4; CGPM 9th Res. 7 (1948); ISO 80000-6:2022; Bioelectrochemistry Standards', parents: ['kg', 'm', 's', 'A'], domain: 'electro', domain_name: 'เจลไฟฟ้า & เยื่อเซลล์', color: '#ec4899',
         micro_app: 'ตัวเก็บประจุในเครื่องถ่ายยีนเข้าเซลล์แบคทีเรียด้วยคลื่นไฟฟ้า (Electroporator เช่น 25 µF) และความจุไฟฟ้าของเยื่อหุ้มเซลล์ชีวภาพ (~1 µF/cm²)',
         physics_eq: 'C = \\frac{q}{V} = \\varepsilon \\frac{A}{d}, \\quad \\tau = RC \\text{ (Time Constant)}',
         lab_note: 'ค่าคงตัวเวลา (Time Constant, tau = RC) ในการทำ Electroporation มีความสำคัญยิ่ง หากเกิด Arcing (ประกายไฟลัดวงจร) เซลล์จะตายทั้งหมด',
@@ -2841,7 +2862,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'sr', sym: 'sr', name_en: 'steradian', name_th: 'สเตอเรเดียน', qty_th: 'มุมตัน (Solid Angle)',
-        formula_si: '\\text{m}^2/\\text{m}^2 = 1', formula_coherent: '1', parents: ['m'], domain: 'optics', domain_name: 'กล้อง & แสง', color: '#a855f7',
+        formula_si: '\\text{m}^2/\\text{m}^2 = 1', formula_coherent: '1', formula_coherent_clean: 'm²/m² (1)', formula_si_clean: 'm²/m² = 1', official_ref: 'BIPM SI Brochure Table 4; CGPM 11th Res. 12 (1960) & CGPM 20th Res. 8 (1995); ISO 80000-3:2019', parents: ['m'], domain: 'optics', domain_name: 'กล้อง & แสง', color: '#a855f7',
         micro_app: 'มุมตันของการรับแสงของเลนส์ใกล้วัตถุกล้องจุลทรรศน์ ซึ่งสัมพันธ์กับ Numerical Aperture (NA) และขีดจำกัดการแจกแจงรายละเอียดของภาพ (Resolution Limit)',
         physics_eq: '\\Omega = 2\\pi(1 - \\cos\\alpha), \\quad d_{\\min} = \\frac{\\lambda}{2 \\text{NA}} = \\frac{\\lambda}{2 n \\sin\\alpha}',
         lab_note: 'เลนส์ใกล้วัตถุที่มีค่า NA สูงจะรับแสงได้เป็นมุมตันกว้างขึ้น ให้ภาพจุลินทรีย์ที่คมชัดและแยกรายละเอียดชิ้นส่วนเซลล์ได้ดีขึ้น',
@@ -2849,7 +2870,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'Sv', sym: 'Sv', name_en: 'sievert', name_th: 'ซีเวิร์ต', qty_th: 'ปริมาณรังสีสมมูลและประสิทธิผล (Dose Equivalent)',
-        formula_si: '\\text{m}^2\\cdot\\text{s}^{-2}', formula_coherent: '\\text{J/kg}', parents: ['m', 's'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#ef4444',
+        formula_si: '\\text{m}^2\\cdot\\text{s}^{-2}', formula_coherent: '\\text{J/kg}', formula_coherent_clean: 'J/kg', formula_si_clean: 'm²·s⁻²', official_ref: 'BIPM SI Brochure Table 4; CGPM 16th Res. 5 (1979); ICRP Pub. 103 (2007); WHO Radiation Safety', parents: ['m', 's'], domain: 'autoclave', domain_name: 'นึ่งฆ่าเชื้อ & ปลอดเชื้อ', color: '#ef4444',
         micro_app: 'เกณฑ์การประเมินความปลอดภัยทางรังสีของบุคลากรและนักวิจัยที่ปฏิบัติงานกับสารไอโซโทปหรือห้องฉายรังสีฆ่าเชื้อชีวภาพ (ขีดจำกัดไม่เกิน 20 mSv/ปี)',
         physics_eq: 'H = D \\times W_R, \\quad E = \\sum H_T \\times W_T',
         lab_note: 'Sievert เป็นหน่วยที่คำนึงถึงผลกระทบทางชีววิทยาต่อเนื้อเยื่อของมนุษย์ แตกต่างจาก Gray ซึ่งเป็นปริมาณพลังงานทางกายภาพที่ดูดกลืนล้วนๆ',
@@ -2857,7 +2878,7 @@ const SI_DERIVED_DATA = [
     },
     {
         id: 'rad', sym: 'rad', name_en: 'radian', name_th: 'เรเดียน', qty_th: 'มุมระนาบ (Plane Angle)',
-        formula_si: '\\text{m/m} = 1', formula_coherent: '1', parents: ['m'], domain: 'optics', domain_name: 'กล้อง & แสง', color: '#8b5cf6',
+        formula_si: '\\text{m/m} = 1', formula_coherent: '1', formula_coherent_clean: 'm/m (1)', formula_si_clean: 'm/m = 1', official_ref: 'BIPM SI Brochure Table 4; CGPM 11th Res. 12 (1960) & CGPM 20th Res. 8 (1995); ISO 80000-3:2019', parents: ['m'], domain: 'optics', domain_name: 'กล้อง & แสง', color: '#8b5cf6',
         micro_app: 'มุมการเลี้ยวเบนของแสงในกล้องจุลทรรศน์คอนฟอคอล (Confocal Microscopy), การคำนวณมุมกระเจิงของแสงในเครื่องตรวจนับเซลล์ Flow Cytometry, และมุมการกระจายตัวของสปอร์เชื้อรา',
         physics_eq: '\\theta = \\frac{s}{r}, \\quad \\sin\\theta = 1.22 \\frac{\\lambda}{D} \\text{ (Airy Disk Angle)}',
         lab_note: 'การวัดมุมกระเจิงแสงมุมตรง (Forward Scatter, FSC) ในเครื่อง Flow Cytometer ใช้ประเมินขนาดสัมพัทธ์ของเซลล์แบคทีเรียและเม็ดเลือด',
@@ -2921,7 +2942,7 @@ function renderDerivedUnitsGrid(data) {
     container.innerHTML = data.map(d => `
         <div onclick="selectSiUnit('${d.id}')" id="card-unit-${d.id}" class="si-unit-card cursor-pointer p-3 rounded-xl bg-slate-900/80 border border-slate-800/90 hover:border-slate-600 transition-all text-center group hover:scale-[1.03] shadow-md relative overflow-hidden">
             <div class="flex items-center justify-between gap-1 mb-1">
-                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-950 text-slate-400">${d.formula_coherent}</span>
+                <span class="text-[9px] font-mono px-2 py-0.5 rounded-md bg-slate-950 text-emerald-300 font-bold border border-slate-800/80 shadow-inner">${d.formula_coherent_clean || d.formula_coherent}</span>
                 <span class="w-2 h-2 rounded-full" style="background-color: ${d.color};"></span>
             </div>
             <div class="text-2xl font-black tracking-tight" style="color: ${d.color};">${d.sym}</div>
@@ -3114,7 +3135,7 @@ function renderInspectorCard(u) {
                         <h4 class="text-xl sm:text-2xl font-black text-white tracking-tight">${u.name_th} (${u.name_en})</h4>
                         <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-500/40 shadow-inner">
                             <i class="fa-solid fa-atom text-[10px] text-cyan-400"></i>
-                            <span>$\\\\mathrm{${u.sym}} = ${u.formula_si}$</span>
+                            <span>${u.sym} = ${u.formula_si_clean || u.formula_si}</span>
                         </div>
                     </div>
                     <div class="text-xs font-bold text-slate-300 mt-1.5 flex items-center gap-2.5 flex-wrap">
@@ -3130,10 +3151,10 @@ function renderInspectorCard(u) {
             </div>
             <div class="px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-right self-start shadow-lg backdrop-blur-sm min-w-[200px]">
                 <span class="text-[10px] text-slate-400 font-mono font-semibold block uppercase tracking-wider mb-1">
-                    <i class="fa-solid fa-link text-indigo-400 mr-1"></i> นิยามอนุพัทธ์สากล (Coherent)
+                    <i class="fa-solid fa-link text-indigo-400 mr-1"></i> นิยามอนุพัทธ์สากล (Coherent Derivation)
                 </span>
                 <div class="text-sm sm:text-base font-black font-mono text-emerald-300 overflow-x-auto">
-                    $1\\\\text{ ${u.sym}} = ${u.formula_coherent}$
+                    1 ${u.sym} = ${u.formula_coherent_clean || u.formula_coherent}
                 </div>
             </div>
         </div>
@@ -3167,6 +3188,22 @@ function renderInspectorCard(u) {
                 </div>
                 <p class="text-[11px] text-slate-400 leading-relaxed">
                     ความเที่ยงตรงของการทดลองขึ้นอยู่กับการสอบเทียบเครื่องมือวัดตามหน่วยฐาน SI เพื่อลดความไม่แน่นอน ($U_{95}$) ให้ต่ำกว่าเกณฑ์ควบคุมคุณภาพ
+                </p>
+            </div>
+        </div>
+
+        <!-- Official Metrology Reference Box -->
+        <div class="mt-4 p-3.5 sm:p-4 rounded-xl bg-slate-950/90 border border-slate-800 flex items-start gap-3 shadow-md">
+            <div class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0 mt-0.5 shadow-sm">
+                <i class="fa-solid fa-book-bookmark text-xs"></i>
+            </div>
+            <div class="space-y-1 min-w-0 flex-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-[10.5px] font-mono font-bold text-cyan-400 uppercase tracking-wider">มาตรฐานการอ้างอิงเชิงมาตรวิทยา (Official Metrology Reference):</span>
+                    <span class="px-2 py-0.2 rounded-full text-[9px] font-mono font-semibold bg-cyan-950 text-cyan-300 border border-cyan-500/30">BIPM / NIST / ISO Aligned</span>
+                </div>
+                <p class="text-[11px] sm:text-xs font-mono text-slate-300 leading-relaxed break-words">
+                    ${u.official_ref || 'BIPM SI Brochure (9th ed. 2019) Table 4; NIST SP 1247 Coherent Derived Units'}
                 </p>
             </div>
         </div>
